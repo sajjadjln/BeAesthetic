@@ -1,0 +1,719 @@
+<title>BeAesthetic Screens</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap">
+<style>
+/* Layout: a review board — intro, then phone mockups that wrap into columns; each phone carries its own fixed theme. */
+:root {
+  --page-bg: #0A0C0B; --page-fg: #E6EAE8; --page-muted: #8D9692; --page-line: #222826; --page-acc: #5BD994;
+  --font-ui: "Vazirmatn", "Noto Sans Arabic", system-ui, sans-serif;
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) { --page-bg: #E9ECEA; --page-fg: #121614; --page-muted: #5C6662; --page-line: #CFD5D2; --page-acc: #1D8A55; color-scheme: light; }
+}
+:root[data-theme="light"] { --page-bg: #E9ECEA; --page-fg: #121614; --page-muted: #5C6662; --page-line: #CFD5D2; --page-acc: #1D8A55; color-scheme: light; }
+
+/* Mockup themes — the app's real tokens (docs/DESIGN.md) */
+.m-dark {
+  --bg:#0E1110; --sf:#151918; --sf2:#1C211F; --bd:#262C2A; --t1:#EDF0EE; --t2:#909A96; --t3:#6B7571; --on-acc:#0E1110;
+  --acc:#34C47A; --acc-sub:#0C2619; --acc-on:#5BD994; --w0:#262C2A; --w1:#114029; --w2:#176B43; --w3:#22A565; --w4:#5BD994;
+  --sp:#5560C9; --sp-sub:#1F2448; --sp-on:#8C95EA; --nt-sub:#36280D; --nt-on:#E8B04B; --frame:#2A302E;
+}
+.m-light {
+  --bg:#F6F7F6; --sf:#FFFFFF; --sf2:#EDF0EE; --bd:#DCE1DE; --t1:#0E1110; --t2:#5F6965; --t3:#8A948F; --on-acc:#FFFFFF;
+  --acc:#1D8A55; --acc-sub:#E4F7EC; --acc-on:#176B43; --w0:#DCE1DE; --w1:#C4F0D6; --w2:#93E6B6; --w3:#22A565; --w4:#176B43;
+  --sp:#8C95EA; --sp-sub:#D3D7F8; --sp-on:#3E479E; --nt-sub:#FBEFD6; --nt-on:#8A5A10; --frame:#C9D0CC;
+}
+
+* { box-sizing: border-box; }
+body { background: var(--page-bg); color: var(--page-fg); font-family: var(--font-ui); margin: 0; }
+.wrap { max-width: 1240px; margin: 0 auto; padding: 32px 16px 64px; }
+.intro { display: grid; gap: 12px; max-width: 760px; margin-bottom: 40px; }
+.intro h1 { font-size: 30px; font-weight: 800; margin: 0; letter-spacing: -0.01em; }
+.intro p { margin: 0; color: var(--page-muted); line-height: 1.7; font-size: 15px; }
+.rules { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+.rules span { border: 1px solid var(--page-line); border-radius: 999px; padding: 4px 12px; font-size: 13px; color: var(--page-fg); }
+.rules b { color: var(--page-acc); font-weight: 600; }
+
+.gallery { display: flex; flex-wrap: wrap; gap: 48px 32px; justify-content: center; align-items: flex-start; }
+figure { margin: 0; width: 360px; max-width: 100%; display: grid; gap: 16px; }
+figcaption { display: grid; gap: 6px; font-size: 13.5px; line-height: 1.65; color: var(--page-muted); }
+figcaption .ref { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--page-acc); }
+figcaption strong { color: var(--page-fg); font-size: 16px; font-weight: 700; }
+figcaption ul { margin: 0; padding-inline-start: 18px; display: grid; gap: 2px; }
+
+/* ---------- Phone ---------- */
+.phone { width: 360px; max-width: 100%; background: var(--bg); color: var(--t1); border-radius: 32px; overflow: hidden;
+  border: 1px solid var(--frame); box-shadow: 0 24px 60px -24px rgba(0,0,0,.55); font-family: var(--font-ui); font-size: 15px; line-height: 1.7; }
+.phone button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; text-align: start; }
+.phone button:focus-visible { outline: 2px solid var(--acc); outline-offset: 2px; border-radius: 10px; }
+.status { display: flex; justify-content: space-between; align-items: center; padding: 12px 22px 4px; font-size: 12px; font-weight: 600; }
+.status .bat { color: var(--t2); font-weight: 500; }
+.content { display: flex; flex-direction: column; gap: 12px; padding: 8px 16px 24px; }
+.i { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+.i.sm { width: 16px; height: 16px; } .i.xs { width: 14px; height: 14px; }
+[dir="rtl"] .fwd { transform: scaleX(-1); }
+.row { display: flex; align-items: center; gap: 8px; }
+.between { justify-content: space-between; }
+.grow { flex: 1; min-width: 0; }
+.col { display: flex; flex-direction: column; }
+
+.t-head { font-size: 24px; font-weight: 700; line-height: 1.45; }
+.t-title { font-size: 18px; font-weight: 700; line-height: 1.5; }
+.t-sub { font-size: 16px; font-weight: 600; line-height: 1.6; }
+.t-strong { font-size: 15px; font-weight: 500; }
+.t-lbl { font-size: 13px; font-weight: 500; line-height: 1.6; }
+.t-cap { font-size: 12px; line-height: 1.6; }
+.t-over { font-size: 11px; font-weight: 600; line-height: 1.5; }
+.t-num { font-size: 28px; font-weight: 700; line-height: 1.2; font-variant-numeric: tabular-nums; }
+.c2 { color: var(--t2); } .c3 { color: var(--t3); } .cacc { color: var(--acc-on); } .csp { color: var(--sp-on); } .cnt { color: var(--nt-on); }
+
+.card { background: var(--sf); border-radius: 16px; }
+.pad { padding: 16px; }
+.chip { display: inline-flex; align-items: center; gap: 4px; border-radius: 999px; padding: 2px 12px; font-size: 13px; font-weight: 500; white-space: nowrap; line-height: 1.7; }
+.chip.acc { background: var(--acc-sub); color: var(--acc-on); }
+.chip.sp { background: var(--sp-sub); color: var(--sp-on); }
+.chip.nt { background: var(--nt-sub); color: var(--nt-on); }
+.chip.neu { background: var(--sf2); color: var(--t2); }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.icon-btn { width: 40px; height: 40px; display: grid; place-items: center; color: var(--t2); border-radius: 12px; }
+.divider { height: 1px; background: var(--bd); margin: 0 16px; }
+
+/* Wall cells */
+.cell { display: block; width: 32px; height: 32px; border-radius: 6px; background: var(--w0); }
+.cell.l1 { background: var(--w1); } .cell.l2 { background: var(--w2); } .cell.l3 { background: var(--w3); } .cell.l4 { background: var(--w4); }
+.cell.sp { background: var(--sp); }
+.cell.fu { background: transparent; box-shadow: inset 0 0 0 1px var(--bd); }
+.cell.today { outline: 2px solid var(--acc); outline-offset: 2px; }
+.cell.s { width: 10px; height: 10px; border-radius: 2px; }
+.cell.s.today { outline-width: 1px; outline-offset: 1px; }
+.cell.m { width: 24px; height: 24px; border-radius: 5px; }
+
+/* Checklist */
+.item { display: flex; align-items: center; gap: 12px; width: 100%; padding: 10px 16px; min-height: 56px; }
+.check { width: 26px; height: 26px; border-radius: 50%; box-shadow: inset 0 0 0 2px var(--t3); display: grid; place-items: center; flex: none; transition: background .15s; }
+.check .i { width: 16px; height: 16px; stroke: var(--on-acc); stroke-width: 2.6; opacity: 0; }
+.item[aria-pressed="true"] .check { background: var(--acc); box-shadow: none; }
+.item[aria-pressed="true"] .check .i { opacity: 1; }
+.item[aria-pressed="true"] .ilabel { color: var(--t2); }
+.itxt { display: flex; flex-direction: column; flex: 1; min-width: 0; }
+.ilabel { display: inline-flex; align-items: center; gap: 6px; font-weight: 500; }
+.ilabel .star { color: var(--nt-on); }
+.isub { font-size: 12px; color: var(--t3); }
+
+/* Block header */
+.bh { display: flex; align-items: center; gap: 8px; padding: 12px 16px; min-height: 56px; width: 100%; }
+.bh .bicon { color: var(--t2); }
+.block.current .bh .bicon { color: var(--acc-on); }
+.bh .prog { color: var(--t2); font-size: 13px; font-weight: 500; margin-inline-start: auto; font-variant-numeric: tabular-nums; }
+.bh .chev { color: var(--t3); width: 18px; height: 18px; }
+.block .extra { padding: 0 16px 14px; font-size: 13px; font-weight: 500; }
+
+/* Buttons */
+.btn { display: flex; align-items: center; justify-content: center; gap: 8px; height: 48px; border-radius: 12px; font-size: 16px !important; font-weight: 600; width: 100%; text-align: center !important; }
+.btn.pri { background: var(--acc); color: var(--on-acc) !important; }
+.btn.sec { background: var(--sf2); }
+.btn.ghost { box-shadow: inset 0 0 0 1px var(--bd); color: var(--t2) !important; }
+.btn.text { height: 40px; color: var(--t2) !important; font-size: 14px !important; font-weight: 500; }
+
+/* Bottom nav */
+.bnav { display: grid; grid-template-columns: repeat(4, 1fr); background: var(--sf); border-top: 1px solid var(--bd); padding: 8px 8px 12px; }
+.tab { display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 13px; font-weight: 500; color: var(--t2); }
+.tab .pill { width: 56px; height: 30px; border-radius: 999px; display: grid; place-items: center; }
+.tab.on { color: var(--t1); }
+.tab.on .pill { background: var(--acc-sub); color: var(--acc-on); }
+
+/* Today specifics */
+.days { display: flex; justify-content: space-between; }
+.day { display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: 12px; color: var(--t3); }
+.day.is-today { color: var(--t1); font-weight: 600; }
+.wo { border: 1px solid var(--acc-sub); display: flex; flex-direction: column; gap: 12px; }
+.tile { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; background: var(--acc-sub); color: var(--acc-on); flex: none; }
+.minbar { display: none; }
+.phone.min-on .minbar { display: flex; }
+.phone.min-on .hide-in-min { display: none; }
+.minbar { flex-direction: column; background: var(--sp-sub); border-radius: 16px; }
+.minbar .head { display: flex; align-items: center; gap: 10px; padding: 14px 16px 6px; color: var(--sp-on); }
+
+/* Wall */
+.journey-scroll { overflow-x: auto; }
+.journey { display: grid; grid-template-rows: repeat(7, 10px); grid-auto-flow: column; grid-auto-columns: 10px; gap: 3px; width: max-content; margin: 0 auto; }
+.months { position: relative; height: 18px; width: 296px; margin: 6px auto 0; font-size: 11px; font-weight: 600; color: var(--t3); }
+.months span { position: absolute; top: 0; }
+.legend { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-size: 12px; color: var(--t3); }
+.legend .gap { width: 10px; }
+.wrow { display: flex; align-items: center; gap: 8px; padding: 8px; border-radius: 12px; }
+.wrow.cur { background: var(--sf); }
+.wrow .wlab { display: flex; flex-direction: column; min-width: 64px; }
+.wrow .wdays { display: flex; gap: 3px; }
+.wrow .chip { margin-inline-start: auto; }
+
+/* Proof */
+.stats { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.stat { padding: 16px; display: flex; flex-direction: column; gap: 2px; }
+.stat .from { display: flex; align-items: center; gap: 6px; margin-top: 4px; }
+.chart svg { display: block; width: 100%; height: auto; }
+.chart text { fill: var(--t2); font-family: var(--font-ui); font-size: 11px; }
+.chart .gl { stroke: var(--bd); }
+.chart .ln { stroke: var(--acc-on); fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+.chart .ft { stroke: var(--t3); fill: none; stroke-width: 2; stroke-dasharray: 4 5; }
+.chart .dt { fill: var(--acc-on); }
+.chart .vl { fill: var(--t1); font-size: 12px; font-weight: 600; }
+.photos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.ph { aspect-ratio: 4 / 5; max-width: 100%; border-radius: 12px; background: var(--sf2); display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 4px; padding-bottom: 8px; }
+.ph .head { width: 22px; height: 22px; border-radius: 50%; background: var(--bd); }
+.ph .torso { width: 40px; height: 44px; border-radius: 16px 16px 4px 4px; background: var(--bd); }
+.ph .t-over { color: var(--t3); }
+
+/* Workout */
+.topbar { display: flex; align-items: center; gap: 8px; padding: 4px 8px 0; }
+.bar { height: 4px; background: var(--bd); border-radius: 999px; overflow: hidden; margin: 0 16px; }
+.bar > i { display: block; height: 100%; width: 33%; background: var(--acc); border-radius: 999px; }
+.set { display: flex; align-items: center; gap: 12px; padding: 10px 16px; min-height: 52px; }
+.set .done-dot { width: 26px; height: 26px; border-radius: 50%; background: var(--acc); display: grid; place-items: center; color: var(--on-acc); flex: none; }
+.set .idle-dot { width: 26px; height: 26px; border-radius: 50%; box-shadow: inset 0 0 0 2px var(--acc); flex: none; }
+.set.active { background: var(--sf2); border-radius: 12px; margin: 4px 8px; padding: 12px 8px 12px 8px; flex-wrap: wrap; }
+.stepper { display: flex; align-items: center; gap: 12px; margin-inline-start: auto; }
+.stepper button { width: 44px; height: 44px; border-radius: 12px; background: var(--sf); display: grid; place-items: center; color: var(--t1); }
+.stepper output { min-width: 44px; text-align: center; font-size: 32px; font-weight: 800; font-variant-numeric: tabular-nums; }
+.seg { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; background: var(--sf2); border-radius: 12px; padding: 4px; }
+.seg button { height: 40px; border-radius: 9px; text-align: center; font-size: 14px; font-weight: 500; color: var(--t2); }
+.seg button[aria-pressed="true"] { background: var(--sf); color: var(--t1); box-shadow: 0 1px 0 rgba(0,0,0,.2); }
+.hint { display: flex; gap: 10px; align-items: flex-start; background: var(--acc-sub); color: var(--acc-on); border-radius: 14px; padding: 12px 14px; font-size: 13px; line-height: 1.7; }
+.nextrow { display: flex; align-items: center; gap: 10px; padding: 10px 16px; color: var(--t2); font-size: 14px; }
+.nextrow .n { width: 24px; height: 24px; border-radius: 8px; background: var(--sf2); display: grid; place-items: center; font-size: 12px; color: var(--t3); flex: none; }
+
+/* Ritual */
+.steps { display: flex; gap: 8px; }
+.step { flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px; height: 36px; border-radius: 10px; font-size: 13px; font-weight: 600; background: var(--sf2); color: var(--t2); }
+.step.done { background: var(--acc-sub); color: var(--acc-on); }
+.step.now { background: var(--sf); color: var(--t1); box-shadow: inset 0 0 0 1px var(--acc); }
+.win { display: flex; align-items: center; gap: 10px; font-size: 14px; }
+.win .i { color: var(--acc-on); }
+.dchips { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+.dchip { display: flex; flex-direction: column; align-items: center; gap: 0; padding: 8px 0; border-radius: 12px; background: var(--sf2); color: var(--t2); font-size: 13px; font-weight: 600; text-align: center !important; }
+.dchip small { font-size: 11px; font-weight: 500; color: var(--t3); }
+.dchip[aria-pressed="true"] { background: var(--sp-sub); color: var(--sp-on); box-shadow: inset 0 0 0 1px var(--sp); }
+.dchip[aria-pressed="true"] small { color: var(--sp-on); }
+.snack { display: flex; align-items: center; gap: 10px; padding: 12px 16px; min-height: 52px; border-top: 1px solid var(--bd); }
+.snack:first-child { border-top: 0; }
+.snack .dname { width: 64px; flex: none; font-size: 14px; font-weight: 600; }
+.field { background: var(--sf2); border-radius: 12px; padding: 12px 14px; border: 1px solid var(--bd); color: var(--t1); font: inherit; width: 100%; }
+
+.system { margin-top: 64px; display: grid; gap: 20px; }
+.system h2 { font-size: 20px; margin: 0; }
+.swatches { display: flex; flex-wrap: wrap; gap: 24px; }
+.sw-group { display: grid; gap: 8px; font-size: 13px; color: var(--page-muted); }
+.sw-row { display: flex; gap: 6px; }
+.sw-row span { width: 28px; height: 28px; border-radius: 6px; box-shadow: inset 0 0 0 1px rgba(127,127,127,.25); }
+
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+  <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></symbol>
+  <symbol id="i-today" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="m8 12 3 3 5-6"/></symbol>
+  <symbol id="i-wall" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></symbol>
+  <symbol id="i-proof" viewBox="0 0 24 24"><path d="M22 7 13.5 15.5 8.5 10.5 2 17"/><path d="M16 7h6v6"/></symbol>
+  <symbol id="i-week" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></symbol>
+  <symbol id="i-dumbbell" viewBox="0 0 24 24"><path d="M6 7v10M18 7v10M3 9.5v5M21 9.5v5M6 12h12"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></symbol>
+  <symbol id="i-chev" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></symbol>
+  <symbol id="i-chev-down" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+  <symbol id="i-back" viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></symbol>
+  <symbol id="i-camera" viewBox="0 0 24 24"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></symbol>
+  <symbol id="i-settings" viewBox="0 0 24 24"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
+  <symbol id="i-sunrise" viewBox="0 0 24 24"><path d="M12 2v6M4.93 10.93l1.41 1.41M2 18h2M20 18h2M19.07 10.93l-1.41 1.41M22 22H2M16 18a4 4 0 0 0-8 0M8 6l4-4 4 4"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></symbol>
+  <symbol id="i-sunset" viewBox="0 0 24 24"><path d="M12 10V2M4.93 10.93l1.41 1.41M2 18h2M20 18h2M19.07 10.93l-1.41 1.41M22 22H2M16 18a4 4 0 0 0-8 0M16 6l-4 4-4-4"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></symbol>
+  <symbol id="i-trophy" viewBox="0 0 24 24"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6M18 9h1.5a2.5 2.5 0 0 0 0-5H18M4 22h16M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22M18 2H6v7a6 6 0 0 0 12 0V2Z"/></symbol>
+  <symbol id="i-leaf" viewBox="0 0 24 24"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></symbol>
+  <symbol id="i-backup" viewBox="0 0 24 24"><path d="M4 14.9A7 7 0 1 1 15.7 8h1.8a4.5 4.5 0 0 1 2.5 8.2"/><path d="m9 17 3 3 3-3M12 12v8"/></symbol>
+</svg>
+
+<main class="wrap">
+  <header class="intro">
+    <h1>BeAesthetic</h1>
+    <p>Phase 3 screen mockups, built from the same tokens as the Figma file. The app UI is in Persian and right-to-left; the notes under each screen are in English. Checkboxes, the minimum-day button, the set stepper, the effort picker and the special-day chips all work, so you can feel the scoring rules.</p>
+    <div class="rules">
+      <span><b>Green</b> = done / progress</span>
+      <span><b>Amber</b> = due, never red</span>
+      <span><b>Indigo</b> = special day</span>
+      <span>Time flows right → left</span>
+      <span>Week starts Saturday</span>
+    </div>
+  </header>
+
+  <section class="gallery">
+
+    <!-- 01 Today (dark) -->
+    <figure>
+      <div id="today-dark"></div>
+      <figcaption>
+        <span class="ref">01 · Today · dark</span>
+        <strong>Today, Monday of week 5</strong>
+        <ul>
+          <li>Tap any item: the block count, the day count and this week's Monday square all update with the real scoring rule (gray → 1 → ≥50% → ≥80% → 100%).</li>
+          <li>The current block is open, the rest are collapsed. A due interval routine (nails) surfaces in its block with an amber chip.</li>
+          <li>Try “Minimum day”: everything else hides and only the 4 floor items stay.</li>
+        </ul>
+      </figcaption>
+    </figure>
+
+    <!-- 02 Wall -->
+    <figure>
+      <div class="phone m-dark" dir="rtl" lang="fa">
+        <div class="status"><span>۰۷:۰۳</span><span class="bat">۸۴٪</span></div>
+        <div class="content">
+          <div class="col"><span class="t-head">دیوار</span><span class="t-cap c2">۲۳ هفته — ۱۸ مهر تا ۲۹ اسفند ۱۴۰۵</span></div>
+          <div class="card pad row between" style="padding:16px 24px">
+            <div class="col" style="align-items:center"><span class="t-title cacc">۳۲ از ۳۳</span><span class="t-cap c2">روز حضور</span></div>
+            <div class="col" style="align-items:center"><span class="t-title">۸۵٪</span><span class="t-cap c2">میانگین هفته‌ها</span></div>
+            <div class="col" style="align-items:center"><span class="t-title csp">۲</span><span class="t-cap c2">روز ویژه</span></div>
+          </div>
+          <div class="card pad col" style="gap:12px">
+            <div class="row between"><span class="t-sub">کل مسیر</span><span class="t-cap c3">روز ۳۳ از ۱۶۲</span></div>
+            <div class="journey-scroll"><div class="journey" id="journey"></div>
+              <div class="months"><span style="right:0">مهر</span><span style="right:26px">آبان</span><span style="right:78px">آذر</span><span style="right:130px">دی</span><span style="right:182px">بهمن</span><span style="right:247px">اسفند</span></div>
+            </div>
+          </div>
+          <div class="legend">
+            <span>کمتر</span><i class="cell s"></i><i class="cell s l1"></i><i class="cell s l2"></i><i class="cell s l3"></i><i class="cell s l4"></i><span>بیشتر</span>
+            <span class="gap"></span><i class="cell s sp"></i><span>ویژه</span><span class="gap"></span><i class="cell s fu"></i><span>آینده</span>
+          </div>
+          <div class="col" style="gap:4px">
+            <span class="t-sub" style="margin-bottom:4px">هفته به هفته</span>
+            <div id="weekrows" class="col" style="gap:4px"></div>
+          </div>
+          <span class="t-cap csp">هفته ۳: دو روز بیماری. ویژه حساب شد و در میانگین نیامد.</span>
+        </div>
+        <nav class="bnav" aria-label="ناوبری">
+          <button class="tab"><span class="pill"><svg class="i"><use href="#i-today"/></svg></span>امروز</button>
+          <button class="tab on"><span class="pill"><svg class="i"><use href="#i-wall"/></svg></span>دیوار</button>
+          <button class="tab"><span class="pill"><svg class="i"><use href="#i-proof"/></svg></span>پیشرفت</button>
+          <button class="tab"><span class="pill"><svg class="i"><use href="#i-week"/></svg></span>هفته</button>
+        </nav>
+      </div>
+      <figcaption>
+        <span class="ref">02 · Wall</span>
+        <strong>The whole journey, one square per day</strong>
+        <ul>
+          <li>Week 1 is the right-most column; Saturday is the top row. Future days are outlines you fill in.</li>
+          <li>Week rows show the score per week. Week 2's gray day is a gap, not a mark against you.</li>
+          <li>Special days (indigo) are left out of the weekly average.</li>
+        </ul>
+      </figcaption>
+    </figure>
+
+    <!-- 03 Proof -->
+    <figure>
+      <div class="phone m-dark" dir="rtl" lang="fa">
+        <div class="status"><span>۰۷:۰۴</span><span class="bat">۸۴٪</span></div>
+        <div class="content">
+          <div class="col"><span class="t-head">پیشرفت</span><span class="t-cap c2">از روز صفر (۱۷ مهر) تا امروز · ۳۳ روز</span></div>
+          <div class="row" style="background:var(--sp-sub);border-radius:16px;padding:12px 16px;gap:12px">
+            <svg class="i csp"><use href="#i-camera"/></svg>
+            <div class="col grow"><span class="t-strong">چک‌این بعدی: جمعه ۱۴ آذر</span><span class="t-cap c2">وزن، متر، ۳ عکس</span></div>
+            <span class="t-lbl csp">۲۵ روز دیگر</span>
+          </div>
+          <span class="t-sub">از روز صفر</span>
+          <div class="stats">
+            <div class="card stat"><span class="t-lbl c2">بارفیکس</span><span class="t-num">۷</span><span class="from"><span class="chip acc">+۳</span><span class="t-cap c3">از ۴</span></span></div>
+            <div class="card stat"><span class="t-lbl c2">شنا سوئدی</span><span class="t-num">۲۶</span><span class="from"><span class="chip acc">+۸</span><span class="t-cap c3">از ۱۸</span></span></div>
+            <div class="card stat"><span class="t-lbl c2">پلانک</span><span class="t-num">۷۰<small style="font-size:16px">ث</small></span><span class="from"><span class="chip acc">+۲۵ث</span><span class="t-cap c3">از ۴۵ث</span></span></div>
+            <div class="card stat"><span class="t-lbl c2">دور کمر</span><span class="t-num">۸۶<small style="font-size:14px"> سانت</small></span><span class="from"><span class="chip acc">−۲</span><span class="t-cap c3">از ۸۸</span></span></div>
+          </div>
+          <div class="card pad col chart" style="gap:10px">
+            <div class="row between">
+              <div class="col"><span class="t-strong">بارفیکس — بیشترین تکرار</span><span class="t-cap c3">تست هر ۲ هفته</span></div>
+              <span class="chip acc"><svg class="i xs"><use href="#i-trophy"/></svg>رکورد جدید</span>
+            </div>
+            <svg viewBox="0 0 296 150" role="img" aria-label="بارفیکس: روز صفر ۴، هفته ۲ ۵، هفته ۴ ۷">
+              <line class="gl" x1="0" x2="296" y1="104" y2="104"/><line class="gl" x1="0" x2="296" y1="80" y2="80"/><line class="gl" x1="0" x2="296" y1="56" y2="56"/><line class="gl" x1="0" x2="296" y1="32" y2="32"/>
+              <path class="ft" d="M92 32 L20 32"/>
+              <path class="ln" d="M268 104 L180 80 L92 32"/>
+              <circle class="dt" cx="268" cy="104" r="5"/><circle class="dt" cx="180" cy="80" r="5"/><circle class="dt" cx="92" cy="32" r="6"/>
+              <text class="vl" x="268" y="92" text-anchor="middle">۴</text><text class="vl" x="180" y="68" text-anchor="middle">۵</text><text class="vl" x="92" y="20" text-anchor="middle">۷</text>
+              <text x="268" y="140" text-anchor="middle">روز ۰</text><text x="180" y="140" text-anchor="middle">هفته ۲</text><text x="92" y="140" text-anchor="middle">هفته ۴</text><text x="20" y="140" text-anchor="middle" style="fill:var(--t3)">هفته ۶</text>
+            </svg>
+          </div>
+          <div class="card pad row" style="gap:12px">
+            <div class="col grow"><span class="t-lbl c2">وزن · هفتگی</span><span class="row" style="gap:8px"><span class="t-title">۷۷٫۱ کیلو</span><span class="chip neu">−۱٫۳</span></span></div>
+            <svg viewBox="0 0 120 40" width="120" height="40" aria-label="روند وزن پنج هفته" role="img"><path d="M112 10 L88 14 L64 17 L40 23 L12 30" fill="none" stroke="var(--t2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="30" r="3.5" fill="var(--t1)"/></svg>
+          </div>
+          <div class="card pad col" style="gap:12px">
+            <div class="row between"><span class="t-sub">عکس‌ها</span><span class="t-cap c3">۲ از ۷</span></div>
+            <div class="col" style="gap:6px">
+              <span class="row" style="gap:6px"><span class="t-lbl">هفته ۴</span><span class="t-cap c3">جمعه ۱۵ آبان</span></span>
+              <div class="photos"><div class="ph"><i class="head"></i><i class="torso"></i><span class="t-over">جلو</span></div><div class="ph"><i class="head"></i><i class="torso"></i><span class="t-over">بغل</span></div><div class="ph"><i class="head"></i><i class="torso"></i><span class="t-over">پشت</span></div></div>
+            </div>
+            <div class="col" style="gap:6px">
+              <span class="row" style="gap:6px"><span class="t-lbl">روز صفر</span><span class="t-cap c3">جمعه ۱۷ مهر</span></span>
+              <div class="photos"><div class="ph"><i class="head"></i><i class="torso"></i><span class="t-over">جلو</span></div><div class="ph"><i class="head"></i><i class="torso"></i><span class="t-over">بغل</span></div><div class="ph"><i class="head"></i><i class="torso"></i><span class="t-over">پشت</span></div></div>
+            </div>
+            <span class="t-cap c3">مقایسه‌ی کنار هم از چک‌این سوم (هفته ۸) فعال می‌شود؛ آن موقع تفاوت دیدنی است.</span>
+          </div>
+        </div>
+        <nav class="bnav" aria-label="ناوبری">
+          <button class="tab"><span class="pill"><svg class="i"><use href="#i-today"/></svg></span>امروز</button>
+          <button class="tab"><span class="pill"><svg class="i"><use href="#i-wall"/></svg></span>دیوار</button>
+          <button class="tab on"><span class="pill"><svg class="i"><use href="#i-proof"/></svg></span>پیشرفت</button>
+          <button class="tab"><span class="pill"><svg class="i"><use href="#i-week"/></svg></span>هفته</button>
+        </nav>
+      </div>
+      <figcaption>
+        <span class="ref">03 · Proof</span>
+        <strong>Proof wall, strength first</strong>
+        <ul>
+          <li>“Since Day 0” cards lead with the numbers that move fastest: reps and hold times.</li>
+          <li>The chart runs right → left like the Wall; the dashed segment is the next test.</li>
+          <li>Photos are listed by check-in. Side-by-side comparison unlocks at the 3rd set, when the change is visible.</li>
+        </ul>
+      </figcaption>
+    </figure>
+
+    <!-- 04 Workout session -->
+    <figure>
+      <div class="phone m-dark" dir="rtl" lang="fa" id="workout">
+        <div class="status"><span>۱۹:۱۲</span><span class="bat">۶۱٪</span></div>
+        <div class="topbar">
+          <button class="icon-btn" aria-label="بازگشت"><svg class="i fwd"><use href="#i-back"/></svg></button>
+          <div class="col grow"><span class="t-sub">تمرین B · بالاتنه</span><span class="t-cap c2">حرکت ۲ از ۶ · ۱۲ دقیقه</span></div>
+        </div>
+        <div class="bar" style="margin-top:8px"><i></i></div>
+        <div class="content" style="padding-top:16px">
+          <div class="card col" style="padding:16px 0 8px">
+            <div class="row between" style="padding:0 16px">
+              <span class="t-title">شنا سوئدی</span>
+              <span class="chip neu">۳ ست · ۸ تا ۱۲</span>
+            </div>
+            <div class="col" style="padding:6px 16px 10px">
+              <span class="t-cap c2">دفعه قبل (شنبه): ۱۲، ۱۲، ۱۰</span>
+              <span class="t-lbl cacc">هدف امروز: ۱۲، ۱۲، ۱۱</span>
+            </div>
+            <div class="divider"></div>
+            <div class="set"><span class="done-dot"><svg class="i sm" style="stroke-width:2.8"><use href="#i-check"/></svg></span><span class="t-strong grow">ست ۱</span><span class="t-sub">۱۲ تکرار</span></div>
+            <div class="set"><span class="done-dot"><svg class="i sm" style="stroke-width:2.8"><use href="#i-check"/></svg></span><span class="t-strong grow">ست ۲</span><span class="t-sub">۱۲ تکرار</span></div>
+            <div class="set active">
+              <span class="idle-dot"></span><span class="t-strong">ست ۳</span>
+              <div class="stepper">
+                <button data-step="1" aria-label="یکی بیشتر"><svg class="i"><use href="#i-plus"/></svg></button>
+                <output id="reps" aria-live="polite">۱۱</output>
+                <button data-step="-1" aria-label="یکی کمتر"><svg class="i"><use href="#i-minus"/></svg></button>
+              </div>
+            </div>
+          </div>
+          <div class="col" style="gap:8px">
+            <span class="t-lbl c2">این حرکت چطور بود؟</span>
+            <div class="seg" role="group" aria-label="سختی">
+              <button aria-pressed="false">آسان</button><button aria-pressed="true">خوب</button><button aria-pressed="false">سخت</button><button aria-pressed="false">حداکثر</button>
+            </div>
+          </div>
+          <div class="hint"><svg class="i sm" style="margin-top:3px"><use href="#i-trophy"/></svg><span>اگر هر ۳ ست به ۱۲ برسد، دفعه‌ی بعد پیشنهاد می‌دهم: <b>شنا با پای بالا</b>. تصمیم با خودت است.</span></div>
+          <div class="card col" style="padding:6px 0">
+            <span class="t-over c3" style="padding:8px 16px 0">بعدی</span>
+            <div class="nextrow"><span class="n">۳</span><span class="grow">بارفیکس منفی</span><span class="t-cap c3">۳ × ۵</span></div>
+            <div class="nextrow"><span class="n">۴</span><span class="grow">پلانک</span><span class="t-cap c3">۳ × ۶۰ث</span></div>
+          </div>
+          <button class="btn pri" id="logset">ثبت ست ۳ · ۱۱ تکرار</button>
+          <button class="btn text">پایان تمرین</button>
+        </div>
+      </div>
+      <figcaption>
+        <span class="ref">04 · Workout session</span>
+        <strong>One set at a time, one tap per set</strong>
+        <ul>
+          <li>Each set is pre-filled with today's target, so logging is usually one tap. Use − / + only when reality differs.</li>
+          <li>Last session's numbers and today's target sit above the sets: a small, concrete win every session.</li>
+          <li>Effort is 4 words instead of a 1–10 scale. Progression is a suggestion you accept, never a silent change.</li>
+        </ul>
+      </figcaption>
+    </figure>
+
+    <!-- 05 Friday ritual -->
+    <figure>
+      <div class="phone m-dark" dir="rtl" lang="fa" id="ritual">
+        <div class="status"><span>۱۹:۴۰</span><span class="bat">۵۲٪</span></div>
+        <div class="content">
+          <div class="col"><span class="t-cap c2">جمعه ۱۵ آبان · پایان هفته ۴</span><span class="t-head">مرور و برنامه‌ی هفته</span></div>
+          <div class="steps"><span class="step done"><svg class="i xs"><use href="#i-check"/></svg>۱ · مرور</span><span class="step now">۲ · برنامه</span></div>
+          <div class="card pad col" style="gap:12px">
+            <div class="row between"><span class="t-sub">هفته ۴ بسته شد</span><span class="chip acc">۸۸٪</span></div>
+            <div class="days" id="ritual-week"></div>
+            <span class="t-cap c2">۷ از ۷ روز حضور · یک روز حداقلی (چهارشنبه)</span>
+            <div class="divider" style="margin:0"></div>
+            <div class="win"><svg class="i sm"><use href="#i-trophy"/></svg><span>رکورد جدید: بارفیکس ۷ (قبلی ۵)</span></div>
+            <div class="win"><svg class="i sm"><use href="#i-check"/></svg><span>پوست شب: ۷ از ۷</span></div>
+            <div class="win"><svg class="i sm"><use href="#i-proof"/></svg><span>وزن این هفته: ۷۷٫۵ کیلو (−۰٫۴)</span></div>
+          </div>
+          <div class="col" style="gap:8px">
+            <div class="row between"><span class="t-sub">روزهای ویژه‌ی هفته ۵</span><span class="t-cap c3" id="cap-note">حداکثر ۲ روز</span></div>
+            <div class="dchips" id="dchips"></div>
+          </div>
+          <div class="col" style="gap:8px">
+            <span class="t-sub">اسنک هر روز</span>
+            <div class="card col" id="snacks"></div>
+          </div>
+          <div class="col" style="gap:8px">
+            <label class="t-sub" for="focus">تمرکز هفته</label>
+            <input class="field" id="focus" value="مسواک شب، بدون استثنا">
+          </div>
+          <button class="btn pri">بستن هفته ۴ و شروع هفته ۵</button>
+          <span class="row t-cap c3" style="justify-content:center;gap:6px"><svg class="i xs"><use href="#i-backup"/></svg>بعد از بستن، پشتیبان هفتگی ساخته می‌شود</span>
+        </div>
+      </div>
+      <figcaption>
+        <span class="ref">05 · Friday ritual</span>
+        <strong>Close the week, open the next</strong>
+        <ul>
+          <li>Review comes first and lists only wins and facts. The minimum day is mentioned neutrally.</li>
+          <li>Tap day chips to mark special days ahead; the cap of 2 is enforced.</li>
+          <li>Each day's snack shows up the night before in Today's Night block. Finishing the ritual runs the weekly backup.</li>
+        </ul>
+      </figcaption>
+    </figure>
+
+    <!-- 06 Today (light) -->
+    <figure>
+      <div id="today-light"></div>
+      <figcaption>
+        <span class="ref">06 · Today · light</span>
+        <strong>Same screen, light theme</strong>
+        <ul>
+          <li>Same token names, light values. The Wall greens get darker as you do more, so “more” stays “stronger” on a white background.</li>
+          <li>The app follows the system theme; dark is the default.</li>
+        </ul>
+      </figcaption>
+    </figure>
+
+    <!-- 07 Today (English, LTR) -->
+    <figure>
+      <div class="phone m-dark" dir="ltr" lang="en" data-lang="en">
+        <div class="status"><span>07:02</span><span class="bat">84%</span></div>
+        <div class="content">
+          <div class="row between" style="align-items:flex-start">
+            <div class="col"><span class="t-head">Mon, 18 Aban</span><span class="t-cap c2">9 Nov 2026 · Week 5 of 23</span></div>
+            <button class="icon-btn" aria-label="Settings"><svg class="i"><use href="#i-settings"/></svg></button>
+          </div>
+          <div class="chips"><span class="chip acc">Training day</span><span class="chip neu">Week focus: night brushing</span></div>
+          <div class="card pad col hide-in-min" style="gap:12px">
+            <div class="row between"><span class="t-sub">This week</span><span class="t-lbl cacc" data-daycount data-fmt="Today {d} of {t}">Today 3 of 12</span></div>
+            <div class="days">
+              <span class="day"><i class="cell l4"></i>S</span><span class="day"><i class="cell l3"></i>S</span><span class="day is-today"><i class="cell l1 today" data-todaycell></i>M</span><span class="day"><i class="cell fu"></i>T</span><span class="day"><i class="cell fu"></i>W</span><span class="day"><i class="cell fu"></i>T</span><span class="day"><i class="cell fu"></i>F</span>
+            </div>
+          </div>
+          <section class="card block current hide-in-min" data-block data-total="4">
+            <div class="bh"><svg class="i bicon"><use href="#i-sunrise"/></svg><div class="col"><span class="t-title">Morning</span><span class="t-cap c3">07:00</span></div><span class="chip acc">Now</span><span class="prog" data-prog data-fmt="{d} of {t}">3 of 4</span><svg class="i chev"><use href="#i-chev-down"/></svg></div>
+            <div class="divider"></div>
+            <button class="item" aria-pressed="true" data-item><span class="check"><svg class="i"><use href="#i-check"/></svg></span><span class="itxt"><span class="ilabel">Morning skincare <svg class="i xs star"><use href="#i-star"/></svg></span></span></button>
+            <button class="item" aria-pressed="true" data-item><span class="check"><svg class="i"><use href="#i-check"/></svg></span><span class="itxt"><span class="ilabel">Brush teeth</span></span></button>
+            <button class="item" aria-pressed="true" data-item><span class="check"><svg class="i"><use href="#i-check"/></svg></span><span class="itxt"><span class="ilabel">Creatine 5 g</span></span></button>
+            <button class="item" aria-pressed="false" data-item><span class="check"><svg class="i"><use href="#i-check"/></svg></span><span class="itxt"><span class="ilabel">Protein with breakfast</span></span></button>
+          </section>
+          <div class="card pad wo hide-in-min">
+            <div class="row"><span class="tile"><svg class="i"><use href="#i-dumbbell"/></svg></span><div class="col grow"><span class="t-title">Workout B · Upper body</span><span class="t-cap c2">6 exercises · about 45 min</span></div><span class="chip neu">19:00</span></div>
+            <span class="t-cap c3">Last push-ups: 12, 12, 10 — today's target: 12, 12, 11</span>
+            <button class="btn pri">Start workout</button>
+          </div>
+          <section class="card block hide-in-min" data-block data-total="2"><div class="bh"><svg class="i bicon"><use href="#i-sun"/></svg><div class="col"><span class="t-title">Midday</span><span class="t-cap c3">13:30</span></div><span class="prog" data-prog data-fmt="{d} of {t}">0 of 2</span><svg class="i chev fwd"><use href="#i-chev"/></svg></div></section>
+          <section class="card block hide-in-min" data-block data-total="3"><div class="bh"><svg class="i bicon"><use href="#i-sunset"/></svg><div class="col"><span class="t-title">Evening</span><span class="t-cap c3">19:00</span></div><span class="prog" data-prog data-fmt="{d} of {t}">0 of 3</span><svg class="i chev fwd"><use href="#i-chev"/></svg></div>
+            <button class="item" aria-pressed="false" data-item><span class="check"><svg class="i"><use href="#i-check"/></svg></span><span class="itxt"><span class="ilabel">Trim nails</span><span class="isub">Every 14 days · last: 22 Mehr</span></span><span class="chip nt">Due</span></button>
+          </section>
+          <section class="card block hide-in-min" data-block data-total="3"><div class="bh"><svg class="i bicon"><use href="#i-moon"/></svg><div class="col"><span class="t-title">Night</span><span class="t-cap c3">22:30</span></div><span class="prog" data-prog data-fmt="{d} of {t}">0 of 3</span><svg class="i chev fwd"><use href="#i-chev"/></svg></div>
+            <div class="extra"><span class="c3">Tomorrow's snack: </span>oat energy balls</div></section>
+          <section class="minbar" data-block data-total="4">
+            <div class="head"><svg class="i"><use href="#i-leaf"/></svg><div class="col"><span class="t-sub" style="color:var(--t1)">Minimum day</span><span class="t-cap">These 4 still count as showing up</span></div><span class="prog t-lbl" style="margin-inline-start:auto" data-prog data-fmt="{d} of {t}">2 of 4</span></div>
+            <button class="item" aria-pressed="true" data-item><span class="check"><svg class="i"><use href="#i-check"/></svg></span><span class="itxt"><span class="ilabel">Brush teeth (AM)</span></span></button>
+            <button class="item" aria-pressed="true" data-item><span class="check"><svg class="i"><use href="#i-check"/></svg></span><span class="itxt"><span class="ilabel">Creatine</span></span></button>
+            <button class="item" aria-pressed="false" data-item><span class="check"><svg class="i"><use href="#i-check"/></svg></span><span class="itxt"><span class="ilabel">10 push-ups</span></span></button>
+            <button class="item" aria-pressed="false" data-item><span class="check"><svg class="i"><use href="#i-check"/></svg></span><span class="itxt"><span class="ilabel">Brush teeth (PM)</span></span></button>
+          </section>
+          <button class="btn ghost" data-min data-on="Back to the full day" data-off="Hard day? Minimum day"><svg class="i sm"><use href="#i-shield"/></svg><span>Hard day? Minimum day</span></button>
+        </div>
+        <nav class="bnav" aria-label="Navigation">
+          <button class="tab on"><span class="pill"><svg class="i"><use href="#i-today"/></svg></span>Today</button>
+          <button class="tab"><span class="pill"><svg class="i"><use href="#i-wall"/></svg></span>Wall</button>
+          <button class="tab"><span class="pill"><svg class="i"><use href="#i-proof"/></svg></span>Proof</button>
+          <button class="tab"><span class="pill"><svg class="i"><use href="#i-week"/></svg></span>Week</button>
+        </nav>
+      </div>
+      <figcaption>
+        <span class="ref">07 · Today · English</span>
+        <strong>English, left-to-right</strong>
+        <ul>
+          <li>The layout mirrors: checks move to the left and Saturday is the first column on the left.</li>
+          <li>The Jalali date stays primary in English too (“18 Aban”), with Gregorian underneath.</li>
+        </ul>
+      </figcaption>
+    </figure>
+  </section>
+
+  <section class="system">
+    <h2>Wall scale in both themes</h2>
+    <div class="swatches">
+      <div class="sw-group m-dark"><span>Dark · 0 → 4 · special</span><div class="sw-row"><span style="background:var(--w0)"></span><span style="background:var(--w1)"></span><span style="background:var(--w2)"></span><span style="background:var(--w3)"></span><span style="background:var(--w4)"></span><span style="background:var(--sp)"></span></div></div>
+      <div class="sw-group m-light"><span style="color:var(--page-muted)">Light · 0 → 4 · special</span><div class="sw-row"><span style="background:var(--w0)"></span><span style="background:var(--w1)"></span><span style="background:var(--w2)"></span><span style="background:var(--w3)"></span><span style="background:var(--w4)"></span><span style="background:var(--sp)"></span></div></div>
+      <div class="sw-group m-dark"><span>Accent · due · special (dark)</span><div class="sw-row"><span style="background:var(--acc)"></span><span style="background:var(--acc-sub)"></span><span style="background:var(--nt-on)"></span><span style="background:var(--nt-sub)"></span><span style="background:var(--sp-on)"></span><span style="background:var(--sp-sub)"></span></div></div>
+    </div>
+  </section>
+</main>
+
+<template id="tpl-today">
+  <div class="phone" dir="rtl" lang="fa" data-lang="fa">
+    <div class="status"><span>۰۷:۰۲</span><span class="bat">۸۴٪</span></div>
+    <div class="content">
+      <div class="row between" style="align-items:flex-start">
+        <div class="col"><span class="t-head">دوشنبه ۱۸ آبان</span><span class="t-cap c2">Mon 9 Nov 2026 · هفته ۵ از ۲۳</span></div>
+        <button class="icon-btn" aria-label="تنظیمات"><svg class="i"><use href="#i-settings"/></svg></button>
+      </div>
+      <div class="chips"><span class="chip acc">روز تمرین</span><span class="chip neu">تمرکز هفته: مسواک شب</span></div>
+      <div class="card pad col hide-in-min" style="gap:12px">
+        <div class="row between"><span class="t-sub">این هفته</span><span class="t-lbl cacc" data-daycount data-fmt="امروز {d} از {t}">امروز ۳ از ۱۲</span></div>
+        <div class="days">
+          <span class="day"><i class="cell l4"></i>ش</span><span class="day"><i class="cell l3"></i>ی</span><span class="day is-today"><i class="cell l1 today" data-todaycell></i>د</span><span class="day"><i class="cell fu"></i>س</span><span class="day"><i class="cell fu"></i>چ</span><span class="day"><i class="cell fu"></i>پ</span><span class="day"><i class="cell fu"></i>ج</span>
+        </div>
+      </div>
+      <section class="card block current hide-in-min" data-block data-total="4">
+        <div class="bh"><svg class="i bicon"><use href="#i-sunrise"/></svg><div class="col"><span class="t-title">صبح</span><span class="t-cap c3">۰۷:۰۰</span></div><span class="chip acc">الان</span><span class="prog" data-prog data-fmt="{d} از {t}">۳ از ۴</span><svg class="i chev"><use href="#i-chev-down"/></svg></div>
+        <div class="divider"></div>
+        <button class="item" aria-pressed="true" data-item><span class="check"><svg class="i"><use href="#i-check"/></svg></span><span class="itxt"><span class="ilabel">روتین پوست صبح <svg class="i xs star" aria-label="غیرقابل‌حذف"><use href="#i-star"/></svg></span></span></button>
+        <button class="item" aria-pressed="true" data-item><span class="check"><svg class="i"><use href="#i-check"/></svg></span><span class="itxt"><span class="ilabel">مسواک صبح</span></span></button>
+        <button class="item" aria-pressed="true" data-item><span class="check"><svg class="i"><use href="#i-check"/></svg></span><span class="itxt"><span class="ilabel">کراتین ۵ گرم</span></span></button>
+        <button class="item" aria-pressed="false" data-item><span class="check"><svg class="i"><use href="#i-check"/></svg></span><span class="itxt"><span class="ilabel">پروتئین با صبحانه</span></span></button>
+      </section>
+      <div class="card pad wo hide-in-min">
+        <div class="row"><span class="tile"><svg class="i"><use href="#i-dumbbell"/></svg></span><div class="col grow"><span class="t-title">تمرین B · بالاتنه</span><span class="t-cap c2">۶ حرکت · حدود ۴۵ دقیقه</span></div><span class="chip neu">۱۹:۰۰</span></div>
+        <span class="t-cap c3">دفعه قبل شنا: ۱۲، ۱۲، ۱۰ — هدف امروز: ۱۲، ۱۲، ۱۱</span>
+        <button class="btn pri">شروع تمرین</button>
+      </div>
+      <section class="card block hide-in-min" data-block data-total="2"><div class="bh"><svg class="i bicon"><use href="#i-sun"/></svg><div class="col"><span class="t-title">ظهر</span><span class="t-cap c3">۱۳:۳۰</span></div><span class="prog" data-prog data-fmt="{d} از {t}">۰ از ۲</span><svg class="i chev fwd"><use href="#i-chev"/></svg></div></section>
+      <section class="card block hide-in-min" data-block data-total="3"><div class="bh"><svg class="i bicon"><use href="#i-sunset"/></svg><div class="col"><span class="t-title">عصر</span><span class="t-cap c3">۱۹:۰۰</span></div><span class="prog" data-prog data-fmt="{d} از {t}">۰ از ۳</span><svg class="i chev fwd"><use href="#i-chev"/></svg></div>
+        <button class="item" aria-pressed="false" data-item><span class="check"><svg class="i"><use href="#i-check"/></svg></span><span class="itxt"><span class="ilabel">کوتاه کردن ناخن</span><span class="isub">هر ۱۴ روز · آخرین بار: ۲۲ مهر</span></span><span class="chip nt">موعدش رسیده</span></button>
+      </section>
+      <section class="card block hide-in-min" data-block data-total="3"><div class="bh"><svg class="i bicon"><use href="#i-moon"/></svg><div class="col"><span class="t-title">شب</span><span class="t-cap c3">۲۲:۳۰</span></div><span class="prog" data-prog data-fmt="{d} از {t}">۰ از ۳</span><svg class="i chev fwd"><use href="#i-chev"/></svg></div>
+        <div class="extra"><span class="c3">اسنک فردا: </span>توپ انرژی جو دوسر</div></section>
+      <section class="minbar" data-block data-total="4">
+        <div class="head"><svg class="i"><use href="#i-leaf"/></svg><div class="col"><span class="t-sub" style="color:var(--t1)">روز حداقلی</span><span class="t-cap">همین ۴ کار هم حضور حساب می‌شود</span></div><span class="prog t-lbl" style="margin-inline-start:auto" data-prog data-fmt="{d} از {t}">۲ از ۴</span></div>
+        <button class="item" aria-pressed="true" data-item><span class="check"><svg class="i"><use href="#i-check"/></svg></span><span class="itxt"><span class="ilabel">مسواک صبح</span></span></button>
+        <button class="item" aria-pressed="true" data-item><span class="check"><svg class="i"><use href="#i-check"/></svg></span><span class="itxt"><span class="ilabel">کراتین</span></span></button>
+        <button class="item" aria-pressed="false" data-item><span class="check"><svg class="i"><use href="#i-check"/></svg></span><span class="itxt"><span class="ilabel">۱۰ شنا</span></span></button>
+        <button class="item" aria-pressed="false" data-item><span class="check"><svg class="i"><use href="#i-check"/></svg></span><span class="itxt"><span class="ilabel">مسواک شب</span></span></button>
+      </section>
+      <button class="btn ghost" data-min data-on="برگشت به روز کامل" data-off="امروز سخته؟ روز حداقلی"><svg class="i sm"><use href="#i-shield"/></svg><span>امروز سخته؟ روز حداقلی</span></button>
+    </div>
+    <nav class="bnav" aria-label="ناوبری">
+      <button class="tab on"><span class="pill"><svg class="i"><use href="#i-today"/></svg></span>امروز</button>
+      <button class="tab"><span class="pill"><svg class="i"><use href="#i-wall"/></svg></span>دیوار</button>
+      <button class="tab"><span class="pill"><svg class="i"><use href="#i-proof"/></svg></span>پیشرفت</button>
+      <button class="tab"><span class="pill"><svg class="i"><use href="#i-week"/></svg></span>هفته</button>
+    </nav>
+  </div>
+</template>
+
+<script>
+(function () {
+  var FA = "۰۱۲۳۴۵۶۷۸۹";
+  function num(n, lang) { var s = String(n); return lang === "en" ? s : s.replace(/\d/g, function (d) { return FA[d]; }); }
+  function fill(fmt, d, t, lang) { return fmt.replace("{d}", num(d, lang)).replace("{t}", num(t, lang)); }
+
+  // Today: instantiate the Persian template twice (dark + light)
+  var tpl = document.getElementById("tpl-today");
+  [["today-dark", "m-dark"], ["today-light", "m-light"]].forEach(function (p) {
+    var node = tpl.content.firstElementChild.cloneNode(true);
+    node.classList.add(p[1]);
+    document.getElementById(p[0]).replaceWith(node);
+  });
+
+  // Scoring rule from the spec (§6.2): 0 = nothing, 1 = anything or floor done, 2 ≥ 50%, 3 ≥ 80%, 4 = 100%
+  function level(done, total, floorDone) {
+    if (total === 0) return 0;
+    var pct = done / total;
+    if (pct >= 1) return 4; if (pct >= 0.8) return 3; if (pct >= 0.5) return 2;
+    return (done > 0 || floorDone) ? 1 : 0;
+  }
+
+  document.querySelectorAll(".phone[data-lang]").forEach(function (ph) {
+    var lang = ph.getAttribute("data-lang");
+    function refresh() {
+      var d = 0, t = 0;
+      ph.querySelectorAll("[data-block]").forEach(function (b) {
+        var done = b.querySelectorAll('[data-item][aria-pressed="true"]').length;
+        var total = +b.getAttribute("data-total");
+        var p = b.querySelector("[data-prog]");
+        if (p) p.textContent = fill(p.getAttribute("data-fmt"), done, total, lang);
+        if (!b.classList.contains("minbar")) { d += done; t += total; }
+      });
+      var min = ph.querySelector(".minbar");
+      var floorDone = min && min.querySelectorAll('[data-item][aria-pressed="true"]').length === +min.getAttribute("data-total");
+      var dc = ph.querySelector("[data-daycount]");
+      if (dc) dc.textContent = fill(dc.getAttribute("data-fmt"), d, t, lang);
+      var cell = ph.querySelector("[data-todaycell]");
+      if (cell) { cell.className = "cell today l" + level(d, t, floorDone); }
+    }
+    ph.addEventListener("click", function (e) {
+      var it = e.target.closest("[data-item]");
+      if (it && ph.contains(it)) { it.setAttribute("aria-pressed", it.getAttribute("aria-pressed") === "true" ? "false" : "true"); refresh(); return; }
+      var mb = e.target.closest("[data-min]");
+      if (mb) { var on = ph.classList.toggle("min-on"); mb.querySelector("span").textContent = mb.getAttribute(on ? "data-on" : "data-off"); }
+    });
+    refresh();
+  });
+
+  // Wall: 23 weeks × 7 days, Saturday first; week 1 first (renders right-most in RTL)
+  var LV = { 1: ["4","3","4","2","4","3","4"], 2: ["3","4","2","0","3","4","3"], 3: ["sp","sp","2","3","4","4","3"], 4: ["4","4","3","4","1","3","4"], 5: ["4","3","today","fu","fu","fu","fu"] };
+  function cls(v) { return v === "sp" ? "sp" : v === "fu" ? "fu" : v === "today" ? "l1 today" : "l" + v; }
+  var j = document.getElementById("journey");
+  for (var w = 1; w <= 23; w++) for (var dd = 0; dd < 7; dd++) {
+    var c = document.createElement("i"); c.className = "cell s " + cls(LV[w] ? LV[w][dd] : "fu"); j.appendChild(c);
+  }
+  var RANGE = { 5: "۱۷ تا ۲۳ آبان", 4: "۱۰ تا ۱۶ آبان", 3: "۳ تا ۹ آبان", 2: "۲۶ مهر تا ۲ آبان", 1: "۱۹ تا ۲۵ مهر" };
+  var SCORE = { 5: ["neu","جاری"], 4: ["acc","۸۸٪"], 3: ["acc","۸۵٪"], 2: ["neu","۷۴٪"], 1: ["acc","۹۱٪"] };
+  var wr = document.getElementById("weekrows");
+  [5,4,3,2,1].forEach(function (wk) {
+    var r = document.createElement("div"); r.className = "wrow" + (wk === 5 ? " cur" : "");
+    var cells = LV[wk].map(function (v) { return '<i class="cell m ' + cls(v) + '"></i>'; }).join("");
+    r.innerHTML = '<span class="wlab"><span class="t-lbl">هفته ' + num(wk, "fa") + '</span><span class="t-over c3">' + RANGE[wk] + '</span></span><span class="wdays">' + cells + '</span><span class="chip ' + SCORE[wk][0] + '">' + SCORE[wk][1] + '</span>';
+    wr.appendChild(r);
+  });
+
+  // Workout stepper + effort
+  var wo = document.getElementById("workout"), reps = 11, out = document.getElementById("reps"), log = document.getElementById("logset");
+  wo.addEventListener("click", function (e) {
+    var s = e.target.closest("[data-step]");
+    if (s) { reps = Math.max(0, Math.min(30, reps + +s.getAttribute("data-step"))); out.textContent = num(reps, "fa"); log.textContent = "ثبت ست ۳ · " + num(reps, "fa") + " تکرار"; return; }
+    var seg = e.target.closest(".seg button");
+    if (seg) seg.parentNode.querySelectorAll("button").forEach(function (b) { b.setAttribute("aria-pressed", b === seg ? "true" : "false"); });
+  });
+
+  // Ritual: last week's row, special-day chips (cap 2), snack list
+  var rw = document.getElementById("ritual-week");
+  ["ش","ی","د","س","چ","پ","ج"].forEach(function (d, i) { var s = document.createElement("span"); s.className = "day"; s.innerHTML = '<i class="cell ' + cls(LV[4][i]) + '"></i>' + d; rw.appendChild(s); });
+  var DAYS = [["ش","۱۷"],["ی","۱۸"],["د","۱۹"],["س","۲۰"],["چ","۲۱"],["پ","۲۲"],["ج","۲۳"]];
+  var dc = document.getElementById("dchips"), note = document.getElementById("cap-note");
+  DAYS.forEach(function (d, i) {
+    var b = document.createElement("button"); b.className = "dchip"; b.setAttribute("aria-pressed", i === 3 ? "true" : "false");
+    b.innerHTML = d[0] + "<small>" + (i === 3 ? "سفر" : d[1]) + "</small>"; b.dataset.date = d[1]; dc.appendChild(b);
+  });
+  dc.addEventListener("click", function (e) {
+    var b = e.target.closest(".dchip"); if (!b) return;
+    var on = b.getAttribute("aria-pressed") === "true";
+    var count = dc.querySelectorAll('[aria-pressed="true"]').length;
+    if (!on && count >= 2) { note.textContent = "سقف ۲ روز پر است"; note.className = "t-cap cnt"; return; }
+    b.setAttribute("aria-pressed", on ? "false" : "true");
+    b.querySelector("small").textContent = on ? b.dataset.date : "ویژه";
+    note.textContent = "حداکثر ۲ روز"; note.className = "t-cap c3";
+  });
+  var SN = [["شنبه","ماست یونانی و گردو"],["یکشنبه","توپ انرژی جو دوسر"],["دوشنبه","توپ انرژی جو دوسر"],["سه‌شنبه","روز ویژه · اختیاری"],["چهارشنبه","تخم‌مرغ آب‌پز و خیار"],["پنج‌شنبه","پنیر و نان سنگک"],["جمعه","میوه برای کوه"]];
+  var sn = document.getElementById("snacks");
+  SN.forEach(function (s, i) {
+    var r = document.createElement("button"); r.className = "snack";
+    r.innerHTML = '<span class="dname">' + s[0] + '</span><span class="grow ' + (i === 3 ? "csp" : "") + '">' + s[1] + '</span><svg class="i sm c3 fwd"><use href="#i-chev"/></svg>';
+    sn.appendChild(r);
+  });
+})();
+</script>

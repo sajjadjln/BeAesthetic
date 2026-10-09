@@ -3,7 +3,9 @@
 Figma file: https://www.figma.com/design/1DzXN6iOhAa0PsnLDSjOAg
 
 - **Design System** page: tokens, text styles and components.
-- **Screens** page: mockups.
+- **Screens** page: mockups (01 Today, 02 Wall).
+
+HTML mockups of all screens: `docs/design/screens.html` (open it in a browser; the checklists and controls work).
 
 ## Visual direction: "Quiet strength"
 
@@ -81,12 +83,12 @@ Persian text needs more line-height than Latin. The values above are tuned for V
 | # | Screen | Status |
 |---|---|---|
 | 01 | Today (dark) | ✅ In Figma |
-| 02 | Wall (dark) | ✅ In Figma. Known issue: week labels clipped (fix pending) |
-| 03 | Proof (dark) | ⏳ Blocked: Figma Starter plan limit |
-| 04 | Workout session (dark) | ⏳ Blocked |
-| 05 | Friday ritual (review → plan) | ⏳ Blocked |
-| 06 | Today (light) | ⏳ Blocked: swap Theme · Dark → Theme · Light |
-| 07 | Today (English, left-to-right) | ⏳ Blocked |
+| 02 | Wall (dark) | ✅ In Figma (week labels clipped there) and in HTML |
+| 03 | Proof (dark) | ✅ HTML |
+| 04 | Workout session (dark) | ✅ HTML |
+| 05 | Friday ritual (review → plan) | ✅ HTML |
+| 06 | Today (light) | ✅ HTML |
+| 07 | Today (English, left-to-right) | ✅ HTML |
 
 ## Design decisions to confirm
 
