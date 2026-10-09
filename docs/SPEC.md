@@ -263,7 +263,7 @@ Settings          (key-value) language, digits, primaryCalendar, dayRolloverHour
                   specialDayCapPerWeek, followUpMinutes, backupFolderUri, programStartDate
 ```
 
-Derived values (day score, wall level, weekly score, next due date, PRs, "since Day 0" changes) are **computed, not stored**. They are pure functions, and they are where unit tests focus.
+Derived values (day score, grid level, weekly score, next due date, PRs, "since Day 0" changes) are **computed, not stored**. They are pure functions, and they are where unit tests focus.
 
 ## 10. Localization
 - Persian is the default and runs right-to-left; English is available. Every string comes from resource files and nothing is hard-coded.
