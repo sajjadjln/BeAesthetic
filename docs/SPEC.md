@@ -7,13 +7,13 @@ Items marked **[OPEN]** need your answer. Items marked **[DEFAULT]** are my choi
 
 ## 1. Vision
 
-> BeAesthetic is my personal Android coach for a 23-week transformation (17 Mehr 1405 to 29 Esfand 1405 / 9 Oct 2026 to 20 Mar 2027). Each day it tells me exactly what to do, from morning to night, and reminds me reliably, even on a Xiaomi and without Google services. Everything I do fills a GitHub-style wall: effort shows as green and bad days show as gaps, never red. A "minimum day" keeps me on the wall when life gets hard. Every Friday I close the week with a short review and plan the next one. Strength numbers prove progress in the first weeks; measurements and photos prove it over months. It works in Persian and English, with Jalali and Gregorian dates, and it backs itself up automatically so nothing is ever lost.
+> BeAesthetic is my personal Android coach for a 23-week transformation (17 Mehr 1405 to 29 Esfand 1405 / 9 Oct 2026 to 20 Mar 2027). Each day it tells me exactly what to do, from morning to night, and reminds me reliably, even on a Xiaomi and without Google services. Everything I do fills a GitHub-style dashboard grid: effort shows as green and bad days show as gaps, never red. A "minimum day" keeps me on the dashboard when life gets hard. Every Friday I close the week with a short review and plan the next one. Strength numbers prove progress in the first weeks; measurements and photos prove it over months. It works in Persian and English, with Jalali and Gregorian dates, and it backs itself up automatically so nothing is ever lost.
 
 ### Design principles (used to settle arguments)
 1. **Today first.** The app's main job is to answer "what do I do now?" Everything else is secondary.
 2. **One tap to log.** If logging something takes more than one tap, it needs a strong reason.
 3. **Gaps, not failures.** Nothing is ever red, there are no streaks that reset, and there is no backlog of missed items. Coming back is always easy.
-4. **Proof early.** Strength numbers and the wall show progress in weeks 1–4, before the mirror changes.
+4. **Proof early.** Strength numbers and the dashboard show progress in weeks 1–4, before the mirror changes.
 5. **Never lose data, never miss a reminder silently.** Reliability is a feature, not an afterthought.
 6. **Small.** If a feature doesn't serve the 23-week goal, it isn't in the app.
 
@@ -46,12 +46,12 @@ Items marked **[OPEN]** need your answer. Items marked **[DEFAULT]** are my choi
 |---|---|---|
 | M1 | **Today screen** | The day split into blocks: Morning, Midday, Evening, Night. The block for the current time is expanded. Tap an item to complete it. |
 | M2 | **Routines** | Daily items, items on specific weekdays, and **"every N days from the last time"** items. Each item can be marked non-negotiable and/or part of the minimum day. |
-| M3 | **Minimum day** | A one-tap mode that shows only the floor items. Doing the floor guarantees the day at least the lightest green. |
-| M4 | **Workout log** | Your program loaded from the plan you'll paste. Each session shows the last session's numbers and today's target. You log reps or seconds plus effort for each set. |
+| M3 | **Minimum day** | A two-way switch at the top of Today: روز کامل (full day) / روز حداقلی (minimum day). Minimum shows only the floor items. Doing the floor guarantees the day at least the lightest green. |
+| M4 | **Workout log** | Your program loaded from the plan you'll paste. Each session shows the last session's numbers, and each set is pre-filled with them. You log reps or seconds plus effort for each set. |
 | M5 | **Strength tests** | Pull-ups, push-ups, plank, dead hang and one leg-health test. Every 2 weeks **[DEFAULT, confirm]**. |
-| M6 | **The Wall** | A GitHub-style grid covering the whole program: green intensity = % of the day done, gray = nothing done, its own color for special days. Tap a square to see that day. |
+| M6 | **Dashboard (داشبورد)** | A GitHub-style grid covering the whole program: green intensity = % of the day done, gray = nothing done, its own color for special days. Tap a square to see that day. |
 | M7 | **Proof** | Weight (weekly), tape measurements and photos (every 4 weeks), strength numbers. Cards showing "since Day 0", plus simple line charts. |
-| M8 | **Friday ritual** | Review (this week's row on the wall, wins, personal records) and then plan (special days, the snack for each night, one focus for the week). About 10 minutes. |
+| M8 | **Friday ritual** | Review (this week's row, wins, personal records) and then plan (special days, and a free-text snack note for each day that opens like a drop-down). About 10 minutes. |
 | M9 | **Reminders** | One notification per block at fixed times, with separate Normal and Friday profiles. One follow-up only for non-negotiables. Fully local, no Google services. |
 | M10 | **Reliability setup** | A setup screen for Xiaomi/MIUI/HyperOS and other aggressive phones (Autostart, battery settings), a test notification, and detection of reminders that fired late or not at all. |
 | M11 | **Backup** | Automatic weekly zip (data and photos) into a folder you choose, synced to your PC with Syncthing. Plus manual export/import and a restore flow that has been tested. |
@@ -72,7 +72,7 @@ Items marked **[OPEN]** need your answer. Items marked **[DEFAULT]** are my choi
 
 ### 3.3 Deliberately out of scope
 - Calorie and protein tracking. (Protein stays only as three checklist items, see §5.)
-- A general task manager and a general calendar.
+- A general calendar and a full task manager (projects, priorities). Simple one-off tasks are in scope (repeat = once).
 - Accounts, cloud login, Firebase, Google Play Services, analytics and crash-reporting SDKs.
 - Social features, sharing and leaderboards.
 - Health Connect, Google Fit and wearables.
@@ -84,16 +84,18 @@ Items marked **[OPEN]** need your answer. Items marked **[DEFAULT]** are my choi
 The bottom navigation has 4 tabs (mirrored in right-to-left mode). Settings is opened from the top bar.
 
 1. **Today** (امروز): the home screen.
-   - Header: Jalali date with Gregorian underneath, the day type (Training / Rest / Friday), the week number ("Week 3 of 23"), this week's focus.
+   - Header: Jalali date with Gregorian underneath, the week number ("Week 3 of 23"), a settings gear, and the full/minimum day switch.
    - Blocks: Morning / Midday / Evening / Night, each with its items. Due "every N days" items show a small "due" label.
    - Workout item: opens the **Workout session** screen.
-   - Minimum-day toggle.
    - On Friday: a "Start weekly ritual" card.
    - On check-in Fridays: a "Check-in: weight, tape, photos" card.
    - After 2 or more days without opening the app: a "Welcome back" card. It never lists what you missed.
-2. **Wall** (دیوار): the full program grid, a weekly score for each row, a legend. Tap a day to see its items.
+2. **Dashboard** (داشبورد): the full program grid, a weekly score for each row, a legend. Tap a day to see its items.
 3. **Proof** (پیشرفت): "since Day 0" cards (weight Δ, waist Δ, best pull-ups, plank time…), the strength chart, weight and measurement charts, photo sets in a timeline.
-4. **Week** (هفته): this week's plan (day types, special days, the snack for each night, the focus), plus the Friday ritual flow.
+4. **Week** (هفته): this week's plan (special days, the snack note for each day), plus the Friday ritual flow.
+5. **Settings** (تنظیمات, gear on Today): reminder health, Tasks & routines, Reminders & alarms, Workout program, Backup, Language & calendar, Xiaomi setup.
+   - **Tasks & routines**: every routine and one-off task, grouped by part of the day. Add/edit in a bottom sheet: name, part of day, repeat (every day / chosen weekdays / every N days / once), optional own reminder time, non-negotiable, in minimum day.
+   - **Reminders & alarms**: block times for normal days and Friday, separate alarms for tasks with their own time, follow-up delay, Friday ritual time, a test button.
 
 **Full-screen flows:**
 - Workout session
@@ -111,10 +113,10 @@ The bottom navigation has 4 tabs (mirrored in right-to-left mode). Settings is o
 3. **Night.** The 22:30 **[DEFAULT]** notification shows "Night: skincare, brush, prep tomorrow's snack: *oat balls*".
 4. **Friday ritual.**
    - Review: this week's row, the weekly score, PRs and best routines (in a neutral tone).
-   - Plan: mark special days in advance (for example travel), check the snack for each night, write one focus sentence.
+   - Plan: mark special days in advance (for example travel) and write each day's snack note (any length, e.g. a full recipe).
    - The weekly backup runs when you finish.
 5. **Check-in Friday.** In the morning: weigh-in, then tape (5 numbers), then 3 photos (front, side, back) with the same instructions every time.
-6. **Bad day.** Open Today and tap "Minimum day". Only the 3–4 floor items show. Do them and the square turns light green.
+6. **Bad day.** Open Today and switch to "روز حداقلی". Only the 3–4 floor items show. Do them and the square turns light green.
 7. **Coming back after an absence.** The "Welcome back" card offers to "Start with a minimum day". Days you missed are just gray. There's no list of misses and no catch-up notifications.
 
 ## 5. Default routine set (editable in the app)
@@ -135,7 +137,7 @@ The bottom navigation has 4 tabs (mirrored in right-to-left mode). Settings is o
 | Shampoo | Evening | Every 3 days from the last one (≈ twice a week) | | |
 | Night skincare | Night | Daily | ✔ | |
 | Brush teeth (PM) | Night | Daily | ✔ | ✔ |
-| Prep tomorrow's snack | Night | Daily (shows the planned snack) | | |
+| Prepare tomorrow's snack (میان‌وعده) | Night | Daily (opens the day's snack note) | | |
 | Nails | Evening | Every 14 days from the last time | | |
 | Beard trim | Evening | Every N days **[OPEN: N?]** | | |
 | Haircut | (any) | Every N days **[OPEN: N?]** | | |
@@ -147,7 +149,7 @@ Non-negotiables are chosen per item in the app. The ✔ marks above are only my 
 
 ### 6.1 Which day an action counts for
 - The day **rolls over at 04:00**, not at midnight **[DEFAULT]**. Brushing your teeth at 00:30 counts for the evening it belongs to.
-- **Edit window:** you can tick or untick items for today and yesterday only. Older days are read-only, so the wall stays honest without becoming a source of guilt.
+- **Edit window:** you can tick or untick items for today and yesterday only. Older days are read-only, so the dashboard stays honest without becoming a source of guilt.
 
 ### 6.2 Day score and wall colors
 - **Due items** for a day are:
@@ -174,7 +176,7 @@ Non-negotiables are chosen per item in the app. The ✔ marks above are only my 
 
 ### 6.4 Workout progression **[OPEN: confirm option B from round 3]**
 - Each exercise has a set count and a rep range (or a time range for holds).
-- The target for today is last session's numbers. When every set reaches the top of the range, the app suggests "+1 rep per set" or moving to the next (harder) version of the exercise. You confirm or ignore the suggestion; the app never changes your plan silently.
+- Each set is pre-filled with last session's numbers; no separate "target" is shown. When every set reaches the top of the range, the app suggests "+1 rep per set" or moving to the next (harder) version of the exercise. You confirm or ignore the suggestion; the app never changes your plan silently.
 - Effort is logged once per exercise as Easy / Good / Hard / Max (4 buttons). This is a simpler version of the 1–10 effort scale (RPE).
 - A **personal record (PR)** is a new best on reps × sets for an exercise or a strength-test value. PRs show up in the Friday review and on Proof.
 
@@ -235,13 +237,13 @@ All times are **[DEFAULT]**, based on waking at 06:45. Bedtime is **[OPEN]**.
 Dates are stored as Gregorian `LocalDate` (ISO). Jalali exists only in the presentation layer.
 
 ```
-Routine           id, titleFa, titleEn, block, scheduleType(DAILY|WEEKDAYS|INTERVAL|MIN_DAY_ONLY),
-                  weekdays?, intervalDays?, startDate, isNonNegotiable, inMinimumDay, sortOrder, active
+Routine           id, title, block, scheduleType(DAILY|WEEKDAYS|INTERVAL|ONCE|MIN_DAY_ONLY),
+                  weekdays?, intervalDays?, onceDate?, ownReminderTime?, startDate,
+                  isNonNegotiable, inMinimumDay, sortOrder, active
 Completion        id, routineId, date, completedAt
 DayMeta           date, specialType?(SICK|TRAVEL|OFF), minimumDayMode, note?
-WeekPlan          weekStart(Sat), focus?, ritualCompletedAt?, reviewNote?
-Snack             id, name, note?
-NightSnack        date, snackId               -- "prep tonight for tomorrow"
+WeekPlan          weekStart(Sat), ritualCompletedAt?, reviewNote?
+SnackNote         date, text                  -- free text, shown the night before as "prepare tomorrow's snack"
 
 Exercise          id, nameFa, nameEn, kind(REPS|SECONDS), progressionNextId?
 Workout           id, name, weekday           -- e.g. A=Sat, B=Mon, C=Wed
