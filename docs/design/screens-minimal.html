@@ -1,0 +1,501 @@
+<title>BeAesthetic Minimal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap">
+<style>
+/* Layout: phones on a quiet board. Minimal concept: one ring, icon tiles, almost no words. */
+:root {
+  --page-bg: #0A0C0B; --page-fg: #E6EAE8; --page-muted: #8D9692; --page-acc: #5BD994;
+  --font-ui: "Vazirmatn", "Noto Sans Arabic", system-ui, sans-serif;
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) { --page-bg: #E9ECEA; --page-fg: #121614; --page-muted: #5C6662; --page-acc: #1D8A55; color-scheme: light; }
+}
+:root[data-theme="light"] { --page-bg: #E9ECEA; --page-fg: #121614; --page-muted: #5C6662; --page-acc: #1D8A55; color-scheme: light; }
+
+.m-dark { --bg:#0E1110; --sf:#151918; --sf2:#1C211F; --bd:#262C2A; --t1:#EDF0EE; --t2:#909A96; --t3:#5E6864; --on-acc:#0E1110;
+  --acc:#34C47A; --acc-sub:#0F2E1F; --acc-on:#5BD994; --sp:#5560C9; --sp-sub:#1F2448; --sp-on:#8C95EA; --nt:#E8B04B; --frame:#2A302E; --scrim: rgba(0,0,0,.6); }
+.m-light { --bg:#F6F7F6; --sf:#FFFFFF; --sf2:#EDF0EE; --bd:#DCE1DE; --t1:#0E1110; --t2:#5F6965; --t3:#9AA39F; --on-acc:#FFFFFF;
+  --acc:#1D8A55; --acc-sub:#E4F7EC; --acc-on:#176B43; --sp:#8C95EA; --sp-sub:#D3D7F8; --sp-on:#3E479E; --nt:#C98A1B; --frame:#C9D0CC; --scrim: rgba(14,17,16,.35); }
+
+* { box-sizing: border-box; }
+body { background: var(--page-bg); color: var(--page-fg); font-family: var(--font-ui); margin: 0; }
+.wrap { max-width: 1240px; margin: 0 auto; padding: 32px 16px 64px; }
+.intro { display: grid; gap: 8px; margin-bottom: 36px; }
+.intro h1 { font-size: 30px; font-weight: 800; margin: 0; }
+.intro p { margin: 0; color: var(--page-muted); font-size: 15px; line-height: 1.7; max-width: 640px; }
+.gallery { display: flex; flex-wrap: wrap; gap: 44px 32px; justify-content: center; align-items: flex-start; }
+figure { margin: 0; width: 360px; max-width: 100%; display: grid; gap: 12px; }
+figcaption { font-size: 13.5px; color: var(--page-muted); line-height: 1.6; }
+figcaption b { color: var(--page-fg); display: block; font-size: 15px; }
+
+/* Phone */
+.phone { position: relative; width: 360px; max-width: 100%; min-height: 740px; background: var(--bg); color: var(--t1); border-radius: 32px; overflow: hidden;
+  border: 1px solid var(--frame); box-shadow: 0 24px 60px -24px rgba(0,0,0,.55); font-family: var(--font-ui); font-size: 15px; line-height: 1.6;
+  display: flex; flex-direction: column; }
+:where(.phone) button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+:where(.phone) button:focus-visible { outline: 2px solid var(--acc); outline-offset: 2px; border-radius: 12px; }
+.status { display: flex; justify-content: space-between; padding: 12px 22px 0; font-size: 12px; font-weight: 600; color: var(--t2); }
+.body { flex: 1; display: flex; flex-direction: column; gap: 20px; padding: 16px 20px 20px; }
+.i { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+.i.lg { width: 30px; height: 30px; } .i.sm { width: 18px; height: 18px; } .i.xs { width: 14px; height: 14px; stroke-width: 2.4; }
+[dir="rtl"] .fwd { transform: scaleX(-1); }
+.row { display: flex; align-items: center; gap: 10px; }
+.grow { flex: 1; min-width: 0; }
+.muted { color: var(--t2); } .faint { color: var(--t3); }
+.round { width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; color: var(--t2); background: var(--sf); flex: none; }
+.round[aria-pressed="true"] { background: var(--sp-sub); color: var(--sp-on); }
+
+/* Nav: 3 icons, no labels */
+.nav { display: flex; justify-content: space-around; padding: 10px 24px 18px; }
+.nav button { width: 64px; height: 44px; display: grid; place-items: center; color: var(--t3); border-radius: 999px; position: relative; }
+.nav button.on { color: var(--t1); }
+.nav button.on::after { content: ""; position: absolute; bottom: 2px; width: 5px; height: 5px; border-radius: 50%; background: var(--acc); }
+
+/* Today */
+.date { display: flex; flex-direction: column; }
+.date .d1 { font-size: 26px; font-weight: 800; line-height: 1.3; }
+.date .d2 { font-size: 13px; color: var(--t2); }
+.hero { display: flex; flex-direction: column; align-items: center; gap: 14px; }
+.ring { position: relative; width: 168px; height: 168px; }
+.ring svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+.ring .trk { stroke: var(--sf2); }
+.ring .val { stroke: var(--acc); transition: stroke-dashoffset .4s ease; }
+.ring .mid { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; }
+.ring .big { font-size: 52px; font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums; }
+.ring .small { font-size: 14px; color: var(--t2); margin-top: 4px; }
+.week { display: flex; gap: 10px; }
+.wd { width: 14px; height: 14px; border-radius: 50%; background: var(--sf2); }
+.wd.l1 { background: color-mix(in srgb, var(--acc) 30%, var(--sf2)); }
+.wd.l2 { background: color-mix(in srgb, var(--acc) 55%, var(--sf2)); }
+.wd.l3 { background: color-mix(in srgb, var(--acc) 80%, var(--sf2)); }
+.wd.l4 { background: var(--acc); }
+.wd.today { box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--acc); }
+.wd.fu { background: transparent; box-shadow: inset 0 0 0 1.5px var(--bd); }
+.times { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; background: var(--sf); border-radius: 18px; padding: 6px; }
+.times button { height: 44px; border-radius: 13px; display: grid; place-items: center; color: var(--t3); position: relative; }
+.times button[aria-pressed="true"] { background: var(--sf2); color: var(--t1); }
+.times button .pip { position: absolute; top: 8px; inset-inline-end: 14px; width: 6px; height: 6px; border-radius: 50%; background: var(--nt); }
+.times button.full::before { content: ""; position: absolute; bottom: 6px; width: 4px; height: 4px; border-radius: 50%; background: var(--acc); }
+.tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.tile { position: relative; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-between; gap: 18px; min-height: 104px; padding: 16px; border-radius: 20px; background: var(--sf); text-align: start; transition: background .15s; }
+.tile .ic { color: var(--t2); }
+.tile .lb { font-size: 15px; font-weight: 600; }
+.tile .ok { position: absolute; top: 14px; inset-inline-end: 14px; width: 24px; height: 24px; border-radius: 50%; box-shadow: inset 0 0 0 2px var(--bd); display: grid; place-items: center; }
+.tile .ok .i { opacity: 0; color: var(--on-acc); }
+.tile[aria-pressed="true"] { background: var(--acc-sub); }
+.tile[aria-pressed="true"] .ic { color: var(--acc-on); }
+.tile[aria-pressed="true"] .ok { background: var(--acc); box-shadow: none; }
+.tile[aria-pressed="true"] .ok .i { opacity: 1; }
+.tile .star { position: absolute; bottom: 16px; inset-inline-end: 16px; width: 6px; height: 6px; border-radius: 50%; background: var(--nt); }
+.tile.due:not([aria-pressed="true"]) { box-shadow: inset 0 0 0 1.5px var(--nt); }
+.tile.wide { grid-column: span 2; flex-direction: row; align-items: center; min-height: 84px; }
+.tile.wide .play { margin-inline-start: auto; width: 48px; height: 48px; border-radius: 50%; background: var(--acc); color: var(--on-acc); display: grid; place-items: center; }
+.tile.wide .play .i { fill: currentColor; stroke: none; }
+.phone.min-on .tile:not(.floor) { display: none; }
+.phone.min-on .times { visibility: hidden; height: 0; padding: 0; margin-top: -20px; }
+.minlabel { display: none; text-align: center; color: var(--sp-on); font-weight: 600; font-size: 14px; }
+.phone.min-on .minlabel { display: block; }
+
+/* Workout */
+.top { display: flex; align-items: center; justify-content: space-between; padding: 8px 12px 0; }
+.dots { display: flex; gap: 6px; }
+.dots i { width: 22px; height: 4px; border-radius: 999px; background: var(--sf2); }
+.dots i.on { background: var(--acc); }
+.ex { text-align: center; display: grid; gap: 4px; margin-top: 12px; }
+.ex .name { font-size: 26px; font-weight: 800; }
+.sets { display: flex; justify-content: center; gap: 14px; }
+.sets span { width: 48px; height: 48px; border-radius: 50%; display: grid; place-items: center; font-weight: 700; font-size: 17px; background: var(--sf); color: var(--t3); }
+.sets span.done { background: var(--acc-sub); color: var(--acc-on); }
+.sets span.cur { box-shadow: inset 0 0 0 2px var(--acc); color: var(--t1); }
+.counter { display: flex; align-items: center; justify-content: center; gap: 22px; margin-top: 8px; }
+.counter button { width: 60px; height: 60px; border-radius: 50%; background: var(--sf); display: grid; place-items: center; }
+.counter output { font-size: 96px; font-weight: 800; line-height: 1; min-width: 120px; text-align: center; font-variant-numeric: tabular-nums; }
+.prev { text-align: center; color: var(--t3); font-size: 14px; letter-spacing: .04em; }
+.effort { display: flex; justify-content: center; gap: 10px; }
+.effort button { width: 60px; height: 52px; border-radius: 16px; background: var(--sf); display: flex; align-items: flex-end; justify-content: center; gap: 4px; padding-bottom: 14px; }
+.effort button i { width: 6px; border-radius: 2px; background: var(--bd); }
+.effort button[aria-pressed="true"] { background: var(--sf2); box-shadow: inset 0 0 0 1.5px var(--acc); }
+.effort button[aria-pressed="true"] i.f { background: var(--acc); }
+.go { margin: auto auto 8px; width: 84px; height: 84px; border-radius: 50%; background: var(--acc); color: var(--on-acc); display: grid; place-items: center; }
+.go .i { width: 36px; height: 36px; stroke-width: 2.6; }
+
+/* Progress */
+.compare { position: relative; display: grid; grid-template-columns: 1fr 1fr; height: 230px; border-radius: 24px; overflow: hidden; background: var(--sf); }
+.compare .side { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding-bottom: 14px; gap: 6px; }
+.compare .side:first-child { background: var(--sf2); }
+.fig { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.fig .h { width: 34px; height: 34px; border-radius: 50%; background: var(--bd); }
+.fig .t { width: 70px; height: 120px; border-radius: 30px 30px 10px 10px; background: var(--bd); }
+.fig.after .t { width: 64px; border-radius: 34px 34px 12px 12px; background: color-mix(in srgb, var(--acc) 22%, var(--bd)); }
+.compare .lbl { font-size: 12px; color: var(--t2); font-weight: 600; }
+.compare .handle { position: absolute; top: 0; bottom: 0; left: 50%; width: 2px; background: var(--t1); transform: translateX(-1px); }
+.compare .handle::after { content: ""; position: absolute; top: 50%; left: 50%; width: 30px; height: 30px; border-radius: 50%; background: var(--t1); transform: translate(-50%, -50%); box-shadow: 0 2px 8px rgba(0,0,0,.4); }
+.metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.metric { background: var(--sf); border-radius: 20px; padding: 14px 16px; display: grid; gap: 6px; }
+.metric .top2 { display: flex; align-items: center; justify-content: space-between; color: var(--t2); }
+.metric .v { font-size: 30px; font-weight: 800; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.metric .v small { font-size: 14px; font-weight: 600; color: var(--t2); }
+.delta { display: inline-flex; align-items: center; gap: 2px; color: var(--acc-on); font-size: 13px; font-weight: 700; }
+.bars { background: var(--sf); border-radius: 20px; padding: 16px; display: grid; gap: 10px; }
+.bars .cols { display: flex; align-items: flex-end; gap: 4px; height: 64px; }
+.bars .cols i { flex: 1; border-radius: 3px; background: var(--sf2); height: 8px; }
+.bars .cols i.v { background: var(--acc); }
+.bars .cols i.now { background: color-mix(in srgb, var(--acc) 45%, var(--sf2)); }
+.bars .ends { display: flex; justify-content: space-between; font-size: 11px; color: var(--t3); font-weight: 600; }
+
+/* Plan */
+.h1 { font-size: 26px; font-weight: 800; }
+.daysel { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+.daysel button { aspect-ratio: 1; border-radius: 50%; background: var(--sf); display: grid; place-items: center; font-weight: 700; font-size: 14px; color: var(--t2); }
+.daysel button[aria-pressed="true"] { background: var(--sp-sub); color: var(--sp-on); box-shadow: inset 0 0 0 1.5px var(--sp); }
+.snk { background: var(--sf); border-radius: 20px; overflow: hidden; }
+.snk .r { border-top: 1px solid var(--bd); }
+.snk .r:first-child { border-top: 0; }
+.snk .hd { display: flex; align-items: center; gap: 12px; width: 100%; padding: 0 16px; min-height: 54px; }
+.snk .dl { width: 30px; height: 30px; border-radius: 50%; background: var(--sf2); display: grid; place-items: center; font-weight: 700; font-size: 13px; }
+.snk .hd .i.app { color: var(--t3); }
+.snk .r.has .hd .i.app { color: var(--acc-on); }
+.snk .hd .chev { margin-inline-start: auto; color: var(--t3); transition: transform .15s; }
+.snk .r.open .chev { transform: rotate(180deg); }
+.snk .bd { display: none; padding: 0 16px 14px; }
+.snk .r.open .bd { display: block; }
+textarea.note { width: 100%; border-radius: 14px; border: 1px solid var(--bd); background: var(--sf2); color: var(--t1); font: inherit; font-size: 14px; line-height: 1.8; padding: 10px 12px; resize: vertical; }
+.wide-btn { height: 54px; border-radius: 18px; background: var(--acc); color: var(--on-acc); font-weight: 700; font-size: 16px; display: grid; place-items: center; width: 100%; margin-top: auto; }
+
+/* Settings */
+.set-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.set-grid button { background: var(--sf); border-radius: 20px; padding: 18px 16px; display: flex; flex-direction: column; align-items: flex-start; gap: 20px; min-height: 112px; text-align: start; }
+.set-grid .ic { color: var(--t2); }
+.set-grid .lb { font-weight: 600; }
+.health { display: flex; align-items: center; gap: 10px; background: var(--acc-sub); color: var(--acc-on); border-radius: 18px; padding: 14px 16px; font-weight: 600; }
+
+/* Editor sheet */
+.sheet-wrap { position: absolute; inset: 0; background: var(--scrim); display: flex; align-items: flex-end; }
+.sheet { width: 100%; background: var(--sf); border-radius: 28px 28px 0 0; padding: 10px 20px 22px; display: grid; gap: 18px; }
+.grab { width: 36px; height: 4px; border-radius: 999px; background: var(--bd); margin: 2px auto 0; }
+.iconpick { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; }
+.iconpick button { aspect-ratio: 1; border-radius: 14px; background: var(--sf2); display: grid; place-items: center; color: var(--t2); }
+.iconpick button[aria-pressed="true"] { background: var(--acc-sub); color: var(--acc-on); box-shadow: inset 0 0 0 1.5px var(--acc); }
+.name { font-size: 22px; font-weight: 700; border: 0; border-bottom: 1px solid var(--bd); background: none; color: var(--t1); font-family: inherit; padding: 4px 0 8px; width: 100%; }
+.pick4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.pick4 button { height: 48px; border-radius: 14px; background: var(--sf2); display: grid; place-items: center; color: var(--t3); font-size: 13px; font-weight: 600; }
+.pick4 button[aria-pressed="true"] { background: var(--t1); color: var(--bg); }
+.toggles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.toggles button { border-radius: 16px; background: var(--sf2); padding: 12px 8px; display: flex; flex-direction: column; align-items: center; gap: 6px; color: var(--t3); font-size: 13px; font-weight: 600; }
+.toggles button[aria-pressed="true"] { color: var(--t1); background: var(--bd); }
+.toggles button[aria-pressed="true"] .i { color: var(--acc-on); }
+.toggles button[aria-pressed="true"][data-k="star"] .i { color: var(--nt); }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+  <symbol id="i-home" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/></symbol>
+  <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-8M22 20H2"/></symbol>
+  <symbol id="i-cal" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="3"/><path d="M16 2v4M8 2v4M3 10h18"/></symbol>
+  <symbol id="i-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.6 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></symbol>
+  <symbol id="i-leaf" viewBox="0 0 24 24"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></symbol>
+  <symbol id="i-sunrise" viewBox="0 0 24 24"><path d="M12 2v6M4.93 10.93l1.41 1.41M2 18h2M20 18h2M19.07 10.93l-1.41 1.41M22 22H2M16 18a4 4 0 0 0-8 0M8 6l4-4 4 4"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></symbol>
+  <symbol id="i-sunset" viewBox="0 0 24 24"><path d="M12 10V2M4.93 10.93l1.41 1.41M2 18h2M20 18h2M19.07 10.93l-1.41 1.41M22 22H2M16 18a4 4 0 0 0-8 0M16 6l-4 4-4-4"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></symbol>
+  <symbol id="i-drop" viewBox="0 0 24 24"><path d="M12 2.7s6 6.3 6 11.3a6 6 0 0 1-12 0c0-5 6-11.3 6-11.3z"/><path d="M9.5 14.5a2.5 2.5 0 0 0 2.5 2.5"/></symbol>
+  <symbol id="i-tooth" viewBox="0 0 24 24"><path d="M7 3C5 3 3.5 4.8 3.5 7.2c0 3 1.5 4.3 2 7 .5 3 1 7 2.8 7 1.6 0 1.6-4.5 3.7-4.5s2.1 4.5 3.7 4.5c1.8 0 2.3-4 2.8-7 .5-2.7 2-4 2-7C20.5 4.8 19 3 17 3c-2 0-3 1-5 1S9 3 7 3z"/></symbol>
+  <symbol id="i-pill" viewBox="0 0 24 24"><path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"/><path d="m8.5 8.5 7 7"/></symbol>
+  <symbol id="i-egg" viewBox="0 0 24 24"><path d="M12 22c-4.4 0-7-3-7-7.5C5 9 8.5 2 12 2s7 7 7 12.5c0 4.5-2.6 7.5-7 7.5z"/></symbol>
+  <symbol id="i-dumbbell" viewBox="0 0 24 24"><path d="M6 7v10M18 7v10M3 9.5v5M21 9.5v5M6 12h12"/></symbol>
+  <symbol id="i-scissors" viewBox="0 0 24 24"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4 8.12 15.88M14.47 14.48 20 20M8.12 8.12 12 12"/></symbol>
+  <symbol id="i-apple" viewBox="0 0 24 24"><path d="M12 7c-2-1.5-7-1.5-7 4.5S8 21 10 21c1 0 1.3-.5 2-.5s1 .5 2 .5c2 0 5-3.5 5-9.5S14 5.5 12 7z"/><path d="M12 7c0-2 1-3.5 3-4"/></symbol>
+  <symbol id="i-shower" viewBox="0 0 24 24"><path d="M4 21V9a5 5 0 0 1 9-3"/><path d="M10 8h10"/><path d="M12 12v1M15 12v1M18 12v1M13.5 16v1M16.5 16v1M15 20v1"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+  <symbol id="i-up" viewBox="0 0 24 24"><path d="m6 15 6-6 6 6"/></symbol>
+  <symbol id="i-down" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+  <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10.3 21a1.94 1.94 0 0 0 3.4 0"/></symbol>
+  <symbol id="i-list" viewBox="0 0 24 24"><path d="M9 6h11M9 12h11M9 18h11"/><path d="m3 6 1.5 1.5L7 5M3 12l1.5 1.5L7 11M3 18l1.5 1.5L7 17"/></symbol>
+  <symbol id="i-cloud" viewBox="0 0 24 24"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></symbol>
+  <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></symbol>
+  <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></symbol>
+  <symbol id="i-plane" viewBox="0 0 24 24"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/></symbol>
+  <symbol id="i-weight" viewBox="0 0 24 24"><path d="M6 7h12l2 13H4z"/><circle cx="12" cy="5" r="2"/></symbol>
+  <symbol id="i-ruler" viewBox="0 0 24 24"><path d="M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.4 2.4 0 0 1 0-3.4l2.6-2.6a2.4 2.4 0 0 1 3.4 0Z"/><path d="m14.5 12.5 2-2M11.5 9.5l2-2M8.5 6.5l2-2M17.5 15.5l2-2"/></symbol>
+  <symbol id="i-timer" viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2M10 2h4"/></symbol>
+  <symbol id="i-pullup" viewBox="0 0 24 24"><path d="M3 4h18"/><path d="M8 4v4l2 3M16 4v4l-2 3"/><circle cx="12" cy="10" r="2"/><path d="M12 12v5M12 17l-2 4M12 17l2 4"/></symbol>
+  <symbol id="i-chev" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+</svg>
+
+<main class="wrap">
+  <header class="intro">
+    <h1>BeAesthetic · Minimal</h1>
+    <p>A simpler concept: one ring for the day, big icon tiles instead of lists, numbers instead of sentences. Tap the tiles, the time-of-day icons, the leaf, the counter and the day circles. The detailed version is kept as a separate page.</p>
+  </header>
+
+  <section class="gallery">
+
+    <figure>
+      <div id="today-dark"></div>
+      <figcaption><b>Today</b>Ring = today. Dots = this week. Icons switch morning / midday / evening / night. Leaf = minimum day.</figcaption>
+    </figure>
+
+    <!-- Workout -->
+    <figure>
+      <div class="phone m-dark" dir="rtl" lang="fa" id="workout">
+        <div class="status"><span>۱۹:۱۲</span><span>۶۱٪</span></div>
+        <div class="top"><button class="round" aria-label="بستن"><svg class="i"><use href="#i-x"/></svg></button><div class="dots" aria-label="حرکت ۲ از ۶"><i class="on"></i><i class="on"></i><i></i><i></i><i></i><i></i></div><span style="width:44px"></span></div>
+        <div class="body">
+          <div class="ex"><span class="name">شنا سوئدی</span></div>
+          <div class="sets"><span class="done">۱۲</span><span class="done">۱۲</span><span class="cur" id="cur-set">۱۰</span></div>
+          <div class="counter">
+            <button data-step="1" aria-label="یکی بیشتر"><svg class="i"><use href="#i-plus"/></svg></button>
+            <output id="reps">۱۰</output>
+            <button data-step="-1" aria-label="یکی کمتر"><svg class="i"><use href="#i-minus"/></svg></button>
+          </div>
+          <div class="prev">قبلی ۱۲ · ۱۲ · ۱۰</div>
+          <div class="effort" role="group" aria-label="سختی">
+            <button aria-pressed="false" aria-label="آسان"><i class="f" style="height:8px"></i><i style="height:14px"></i><i style="height:20px"></i><i style="height:26px"></i></button>
+            <button aria-pressed="true" aria-label="خوب"><i class="f" style="height:8px"></i><i class="f" style="height:14px"></i><i style="height:20px"></i><i style="height:26px"></i></button>
+            <button aria-pressed="false" aria-label="سخت"><i class="f" style="height:8px"></i><i class="f" style="height:14px"></i><i class="f" style="height:20px"></i><i style="height:26px"></i></button>
+            <button aria-pressed="false" aria-label="حداکثر"><i class="f" style="height:8px"></i><i class="f" style="height:14px"></i><i class="f" style="height:20px"></i><i class="f" style="height:26px"></i></button>
+          </div>
+          <button class="go" aria-label="ثبت"><svg class="i"><use href="#i-check"/></svg></button>
+        </div>
+      </div>
+      <figcaption><b>Workout</b>One big number, pre-filled from last time. Bars = how hard. Big check = log the set.</figcaption>
+    </figure>
+
+    <!-- Progress -->
+    <figure>
+      <div class="phone m-dark" dir="rtl" lang="fa">
+        <div class="status"><span>۰۷:۰۴</span><span>۸۴٪</span></div>
+        <div class="body">
+          <div class="compare" aria-label="مقایسه عکس روز صفر و هفته ۴">
+            <div class="side"><div class="fig"><i class="h"></i><i class="t"></i></div><span class="lbl">روز ۰</span></div>
+            <div class="side"><div class="fig after"><i class="h"></i><i class="t"></i></div><span class="lbl">هفته ۴</span></div>
+            <span class="handle"></span>
+          </div>
+          <div class="metrics">
+            <div class="metric"><div class="top2"><svg class="i sm"><use href="#i-pullup"/></svg><span class="delta"><svg class="i xs"><use href="#i-up"/></svg>۳</span></div><span class="v">۷</span></div>
+            <div class="metric"><div class="top2"><svg class="i sm"><use href="#i-dumbbell"/></svg><span class="delta"><svg class="i xs"><use href="#i-up"/></svg>۸</span></div><span class="v">۲۶</span></div>
+            <div class="metric"><div class="top2"><svg class="i sm"><use href="#i-timer"/></svg><span class="delta"><svg class="i xs"><use href="#i-up"/></svg>۲۵</span></div><span class="v">۷۰<small>ث</small></span></div>
+            <div class="metric"><div class="top2"><svg class="i sm"><use href="#i-ruler"/></svg><span class="delta"><svg class="i xs"><use href="#i-down"/></svg>۲</span></div><span class="v">۸۶<small>cm</small></span></div>
+          </div>
+          <div class="bars" aria-label="درصد هفته‌ها">
+            <div class="cols" id="bars"></div>
+            <div class="ends"><span>مهر</span><span>اسفند</span></div>
+          </div>
+        </div>
+        <nav class="nav"><button aria-label="امروز"><svg class="i"><use href="#i-home"/></svg></button><button class="on" aria-label="پیشرفت"><svg class="i"><use href="#i-chart"/></svg></button><button aria-label="هفته"><svg class="i"><use href="#i-cal"/></svg></button></nav>
+      </div>
+      <figcaption><b>Progress</b>Photo slider on top, four numbers with arrows, one bar per week.</figcaption>
+    </figure>
+
+    <!-- Plan -->
+    <figure>
+      <div class="phone m-dark" dir="rtl" lang="fa" id="plan">
+        <div class="status"><span>۱۹:۴۰</span><span>۵۲٪</span></div>
+        <div class="body">
+          <span class="h1">هفته ۵</span>
+          <div class="daysel" id="daysel"></div>
+          <div class="snk" id="snk"></div>
+          <button class="wide-btn">شروع</button>
+        </div>
+        <nav class="nav"><button aria-label="امروز"><svg class="i"><use href="#i-home"/></svg></button><button aria-label="پیشرفت"><svg class="i"><use href="#i-chart"/></svg></button><button class="on" aria-label="هفته"><svg class="i"><use href="#i-cal"/></svg></button></nav>
+      </div>
+      <figcaption><b>Week plan (Friday)</b>Tap a day circle to mark it special (max 2). Apple rows open the snack note.</figcaption>
+    </figure>
+
+    <!-- Settings -->
+    <figure>
+      <div class="phone m-dark" dir="rtl" lang="fa">
+        <div class="status"><span>۲۱:۰۵</span><span>۴۰٪</span></div>
+        <div class="body">
+          <div class="health"><svg class="i"><use href="#i-shield"/></svg><span>یادآورها سالم‌اند</span></div>
+          <div class="set-grid">
+            <button><svg class="i lg ic"><use href="#i-list"/></svg><span class="lb">کارها</span></button>
+            <button><svg class="i lg ic"><use href="#i-bell"/></svg><span class="lb">یادآورها</span></button>
+            <button><svg class="i lg ic"><use href="#i-dumbbell"/></svg><span class="lb">تمرین</span></button>
+            <button><svg class="i lg ic"><use href="#i-cloud"/></svg><span class="lb">پشتیبان</span></button>
+            <button><svg class="i lg ic"><use href="#i-globe"/></svg><span class="lb">زبان</span></button>
+            <button><svg class="i lg ic"><use href="#i-gear"/></svg><span class="lb">گوشی</span></button>
+          </div>
+        </div>
+        <nav class="nav"><button class="on" aria-label="امروز"><svg class="i"><use href="#i-home"/></svg></button><button aria-label="پیشرفت"><svg class="i"><use href="#i-chart"/></svg></button><button aria-label="هفته"><svg class="i"><use href="#i-cal"/></svg></button></nav>
+      </div>
+      <figcaption><b>Settings</b>Gear on Today. Six tiles: tasks, reminders, workout, backup, language, phone setup.</figcaption>
+    </figure>
+
+    <!-- Task editor -->
+    <figure>
+      <div class="phone m-dark" dir="rtl" lang="fa" id="editor">
+        <div class="status"><span>۲۱:۰۷</span><span>۴۰٪</span></div>
+        <div class="sheet-wrap">
+          <div class="sheet">
+            <div class="grab"></div>
+            <input class="name" id="task-name" value="ناخن" aria-label="نام">
+            <div class="iconpick" data-pick>
+              <button aria-pressed="false" aria-label="پوست"><svg class="i"><use href="#i-drop"/></svg></button>
+              <button aria-pressed="false" aria-label="مسواک"><svg class="i"><use href="#i-tooth"/></svg></button>
+              <button aria-pressed="false" aria-label="مکمل"><svg class="i"><use href="#i-pill"/></svg></button>
+              <button aria-pressed="false" aria-label="دوش"><svg class="i"><use href="#i-shower"/></svg></button>
+              <button aria-pressed="true" aria-label="قیچی"><svg class="i"><use href="#i-scissors"/></svg></button>
+              <button aria-pressed="false" aria-label="خوراکی"><svg class="i"><use href="#i-apple"/></svg></button>
+            </div>
+            <div class="pick4" data-pick aria-label="بخش روز">
+              <button aria-pressed="false" aria-label="صبح"><svg class="i"><use href="#i-sunrise"/></svg></button>
+              <button aria-pressed="false" aria-label="ظهر"><svg class="i"><use href="#i-sun"/></svg></button>
+              <button aria-pressed="true" aria-label="عصر"><svg class="i"><use href="#i-sunset"/></svg></button>
+              <button aria-pressed="false" aria-label="شب"><svg class="i"><use href="#i-moon"/></svg></button>
+            </div>
+            <div class="pick4" data-pick aria-label="تکرار">
+              <button aria-pressed="false">هر روز</button>
+              <button aria-pressed="false">روزها</button>
+              <button aria-pressed="true">۱۴ روز</button>
+              <button aria-pressed="false">یک بار</button>
+            </div>
+            <div class="toggles">
+              <button aria-pressed="false" data-k="bell"><svg class="i"><use href="#i-bell"/></svg>ساعت</button>
+              <button aria-pressed="false" data-k="star"><svg class="i"><use href="#i-star"/></svg>مهم</button>
+              <button aria-pressed="false" data-k="leaf"><svg class="i"><use href="#i-leaf"/></svg>حداقلی</button>
+            </div>
+            <button class="wide-btn">ذخیره</button>
+          </div>
+        </div>
+      </div>
+      <figcaption><b>Add / edit a task</b>Name, icon, part of day, repeat, and three toggles: own alarm time, important (one extra reminder), part of minimum day.</figcaption>
+    </figure>
+
+    <figure>
+      <div id="today-light"></div>
+      <figcaption><b>Light theme</b>Same screen, light colors.</figcaption>
+    </figure>
+  </section>
+</main>
+
+<template id="tpl-today">
+  <div class="phone" dir="rtl" lang="fa">
+    <div class="status"><span>۰۷:۰۲</span><span>۸۴٪</span></div>
+    <div class="body">
+      <div class="row">
+        <div class="date grow"><span class="d1">دوشنبه</span><span class="d2">۱۸ آبان · هفته ۵</span></div>
+        <button class="round" data-min aria-pressed="false" aria-label="روز حداقلی"><svg class="i"><use href="#i-leaf"/></svg></button>
+        <button class="round" aria-label="تنظیمات"><svg class="i"><use href="#i-gear"/></svg></button>
+      </div>
+      <div class="hero">
+        <div class="ring">
+          <svg viewBox="0 0 120 120" aria-hidden="true"><circle class="trk" cx="60" cy="60" r="52" fill="none" stroke-width="10"/><circle class="val" cx="60" cy="60" r="52" fill="none" stroke-width="10" stroke-linecap="round" stroke-dasharray="326.7" stroke-dashoffset="326.7"/></svg>
+          <div class="mid"><span class="big" data-done>۳</span><span class="small" data-total>از ۱۲</span></div>
+        </div>
+        <div class="week" aria-label="این هفته"><i class="wd l4"></i><i class="wd l3"></i><i class="wd today l1" data-todaydot></i><i class="wd fu"></i><i class="wd fu"></i><i class="wd fu"></i><i class="wd fu"></i></div>
+      </div>
+      <span class="minlabel">روز حداقلی</span>
+      <div class="times" role="group" aria-label="بخش روز">
+        <button aria-pressed="true" data-t="m" aria-label="صبح"><svg class="i"><use href="#i-sunrise"/></svg></button>
+        <button aria-pressed="false" data-t="d" aria-label="ظهر"><svg class="i"><use href="#i-sun"/></svg></button>
+        <button aria-pressed="false" data-t="e" aria-label="عصر"><svg class="i"><use href="#i-sunset"/></svg><span class="pip"></span></button>
+        <button aria-pressed="false" data-t="n" aria-label="شب"><svg class="i"><use href="#i-moon"/></svg></button>
+      </div>
+      <div class="tiles"></div>
+    </div>
+    <nav class="nav"><button class="on" aria-label="امروز"><svg class="i"><use href="#i-home"/></svg></button><button aria-label="پیشرفت"><svg class="i"><use href="#i-chart"/></svg></button><button aria-label="هفته"><svg class="i"><use href="#i-cal"/></svg></button></nav>
+  </div>
+</template>
+
+<script>
+(function () {
+  var FA = "۰۱۲۳۴۵۶۷۸۹";
+  function fa(n) { return String(n).replace(/\d/g, function (d) { return FA[d]; }); }
+  function press(group, btn) { group.querySelectorAll("button").forEach(function (b) { b.setAttribute("aria-pressed", b === btn ? "true" : "false"); }); }
+
+  // Today's tasks: [label, icon, done, flags]  flags: s = important, f = in minimum day, d = due, w = workout tile
+  var TASKS = {
+    m: [["پوست","drop",1,"s"],["مسواک","tooth",1,"f"],["کراتین","pill",1,"f"],["پروتئین","egg",0,""]],
+    d: [["ویتامین D","sun",0,""],["پروتئین","egg",0,""]],
+    e: [["تمرین B","dumbbell",0,"w"],["پروتئین","egg",0,""],["ناخن","scissors",0,"d"]],
+    n: [["پوست","drop",0,"s"],["مسواک","tooth",0,"sf"],["میان‌وعده","apple",0,""]]
+  };
+  var MIN = [["مسواک","tooth",1],["کراتین","pill",1],["۱۰ شنا","dumbbell",0],["مسواک شب","tooth",0]];
+
+  function tileHTML(t, key, idx, floor) {
+    var wide = t[3] && t[3].indexOf("w") > -1;
+    var cls = "tile" + (wide ? " wide" : "") + (t[3] && t[3].indexOf("d") > -1 ? " due" : "") + (floor ? " floor" : "");
+    if (wide) return '<button class="' + cls + '" aria-pressed="' + (t[2] ? "true" : "false") + '" data-k="' + key + '" data-i="' + idx + '"><svg class="i lg ic"><use href="#i-' + t[1] + '"/></svg><span class="lb">' + t[0] + '</span><span class="play"><svg class="i fwd"><use href="#i-play"/></svg></span></button>';
+    return '<button class="' + cls + '" aria-pressed="' + (t[2] ? "true" : "false") + '" data-k="' + key + '" data-i="' + idx + '"><svg class="i lg ic"><use href="#i-' + t[1] + '"/></svg><span class="lb">' + t[0] + '</span><span class="ok"><svg class="i xs"><use href="#i-check"/></svg></span>' + (t[3] && t[3].indexOf("s") > -1 ? '<span class="star" aria-label="مهم"></span>' : "") + '</button>';
+  }
+
+  var tpl = document.getElementById("tpl-today");
+  [["today-dark", "m-dark"], ["today-light", "m-light"]].forEach(function (p) {
+    var ph = tpl.content.firstElementChild.cloneNode(true);
+    ph.classList.add(p[1]);
+    document.getElementById(p[0]).replaceWith(ph);
+    var state = JSON.parse(JSON.stringify(TASKS)), minState = JSON.parse(JSON.stringify(MIN));
+    var cur = "m", tiles = ph.querySelector(".tiles"), ring = ph.querySelector(".val");
+    function render() {
+      if (ph.classList.contains("min-on")) tiles.innerHTML = minState.map(function (t, i) { return tileHTML(t, "min", i, true); }).join("");
+      else tiles.innerHTML = state[cur].map(function (t, i) { return tileHTML(t, cur, i, true); }).join("");
+      var done = 0, total = 0;
+      Object.keys(state).forEach(function (k) {
+        var d = state[k].filter(function (t) { return t[2]; }).length; done += d; total += state[k].length;
+        var b = ph.querySelector('[data-t="' + k + '"]'); b.classList.toggle("full", d === state[k].length);
+      });
+      ph.querySelector("[data-done]").textContent = fa(done);
+      ph.querySelector("[data-total]").textContent = "از " + fa(total);
+      ring.style.strokeDashoffset = 326.7 * (1 - done / total);
+      var pct = done / total, lv = pct >= 1 ? 4 : pct >= .8 ? 3 : pct >= .5 ? 2 : done > 0 ? 1 : 0;
+      ph.querySelector("[data-todaydot]").className = "wd today l" + lv;
+    }
+    ph.addEventListener("click", function (e) {
+      var t = e.target.closest(".tile");
+      if (t) { var arr = t.dataset.k === "min" ? minState : state[t.dataset.k]; var it = arr[+t.dataset.i]; it[2] = it[2] ? 0 : 1; render(); return; }
+      var tb = e.target.closest("[data-t]");
+      if (tb) { cur = tb.dataset.t; press(tb.parentNode, tb); render(); return; }
+      var mb = e.target.closest("[data-min]");
+      if (mb) { var on = ph.classList.toggle("min-on"); mb.setAttribute("aria-pressed", on); render(); }
+    });
+    render();
+  });
+
+  // Workout
+  var reps = 10, out = document.getElementById("reps"), wo = document.getElementById("workout");
+  wo.addEventListener("click", function (e) {
+    var s = e.target.closest("[data-step]");
+    if (s) { reps = Math.max(0, Math.min(40, reps + +s.dataset.step)); out.textContent = fa(reps); document.getElementById("cur-set").textContent = fa(reps); return; }
+    var ef = e.target.closest(".effort button"); if (ef) press(ef.parentNode, ef);
+  });
+
+  // Progress: one bar per week (23), weeks 1–4 done, week 5 in progress
+  var W = [91, 74, 85, 88, 40], bars = document.getElementById("bars");
+  for (var i = 0; i < 23; i++) { var b = document.createElement("i"); if (i < W.length) { b.style.height = W[i] * 0.64 + "px"; b.className = i === 4 ? "now" : "v"; } bars.appendChild(b); }
+
+  // Plan: day circles (max 2 special) + snack notes
+  var DL = ["ش","ی","د","س","چ","پ","ج"], ds = document.getElementById("daysel");
+  DL.forEach(function (d, i) { var b = document.createElement("button"); b.textContent = d; b.setAttribute("aria-pressed", i === 3 ? "true" : "false"); b.setAttribute("aria-label", "روز " + d); ds.appendChild(b); });
+  ds.addEventListener("click", function (e) {
+    var b = e.target.closest("button"); if (!b) return;
+    var on = b.getAttribute("aria-pressed") === "true";
+    if (!on && ds.querySelectorAll('[aria-pressed="true"]').length >= 2) { b.animate([{ transform: "translateX(-3px)" }, { transform: "translateX(3px)" }, { transform: "none" }], 180); return; }
+    b.setAttribute("aria-pressed", on ? "false" : "true");
+  });
+  var NOTES = ["ماست یونانی و گردو", "توپ انرژی جو دوسر:\n۱ پیمانه جو دوسر، ۲ قاشق کره بادام‌زمینی، ۱ قاشق عسل، کمی کاکائو. گلوله کن، ۳۰ دقیقه یخچال.", "توپ انرژی (از دیروز)", "", "تخم‌مرغ آب‌پز و خیار", "", "میوه و آجیل برای کوه"];
+  var snk = document.getElementById("snk");
+  DL.forEach(function (d, i) {
+    var r = document.createElement("div"); r.className = "r" + (NOTES[i] ? " has" : "") + (i === 1 ? " open" : "");
+    r.innerHTML = '<button class="hd" aria-expanded="' + (i === 1) + '"><span class="dl">' + d + '</span><svg class="i app"><use href="#i-apple"/></svg><svg class="i sm chev"><use href="#i-chev"/></svg></button><div class="bd"><textarea class="note" id="note-' + i + '" rows="' + (NOTES[i].length > 40 ? 4 : 2) + '" aria-label="میان‌وعده ' + d + '"></textarea></div>';
+    r.querySelector("textarea").value = NOTES[i];
+    snk.appendChild(r);
+  });
+  snk.addEventListener("click", function (e) { var h = e.target.closest(".hd"); if (!h) return; var o = h.parentNode.classList.toggle("open"); h.setAttribute("aria-expanded", o); });
+  snk.addEventListener("input", function (e) { if (e.target.matches("textarea")) e.target.closest(".r").classList.toggle("has", !!e.target.value.trim()); });
+
+  // Editor pickers & toggles
+  var ed = document.getElementById("editor");
+  ed.addEventListener("click", function (e) {
+    var b = e.target.closest("[data-pick] button"); if (b) { press(b.parentNode, b); return; }
+    var t = e.target.closest(".toggles button"); if (t) t.setAttribute("aria-pressed", t.getAttribute("aria-pressed") === "true" ? "false" : "true");
+  });
+})();
+</script>

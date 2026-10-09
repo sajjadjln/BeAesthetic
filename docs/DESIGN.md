@@ -5,7 +5,9 @@ Figma file: https://www.figma.com/design/1DzXN6iOhAa0PsnLDSjOAg
 - **Design System** page: tokens, text styles and components.
 - **Screens** page: mockups (01 Today, 02 Wall).
 
-HTML mockups of all screens: `docs/design/screens.html` (open it in a browser; the checklists and controls work).
+HTML mockups (open in a browser; the controls work):
+- `docs/design/screens-minimal.html`: **minimal concept**. A day ring, icon tiles per part of the day, a big-number workout counter, a photo slider, one bar per week, 3 icon tabs.
+- `docs/design/screens-detailed.html`: detailed concept (round 2), kept for reference.
 
 ## Visual direction: "Quiet strength"
 
