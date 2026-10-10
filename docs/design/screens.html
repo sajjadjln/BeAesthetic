@@ -1,0 +1,804 @@
+<title>BeAesthetic Screens</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap">
+<style>
+/* Layout: phones on a quiet board. Combined design: minimal Today/Workout/Settings/editor, detailed Dashboard/Progress/Week/Tasks/Reminders. */
+:root {
+  --page-bg: #0A0C0B; --page-fg: #E6EAE8; --page-muted: #8D9692; --page-line: #222826; --page-acc: #5BD994;
+  --font-ui: "Vazirmatn", "Noto Sans Arabic", system-ui, sans-serif;
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) { --page-bg: #E9ECEA; --page-fg: #121614; --page-muted: #5C6662; --page-line: #CFD5D2; --page-acc: #1D8A55; color-scheme: light; }
+}
+:root[data-theme="light"] { --page-bg: #E9ECEA; --page-fg: #121614; --page-muted: #5C6662; --page-line: #CFD5D2; --page-acc: #1D8A55; color-scheme: light; }
+
+.m-dark { --bg:#0E1110; --sf:#151918; --sf2:#1C211F; --bd:#262C2A; --t1:#EDF0EE; --t2:#909A96; --t3:#6B7571; --on-acc:#0E1110;
+  --acc:#34C47A; --acc-sub:#0F2E1F; --acc-on:#5BD994; --w0:#262C2A; --w1:#114029; --w2:#176B43; --w3:#22A565; --w4:#5BD994;
+  --sp:#5560C9; --sp-sub:#1F2448; --sp-on:#8C95EA; --nt:#E8B04B; --nt-sub:#36280D; --frame:#2A302E; --scrim: rgba(0,0,0,.6); }
+.m-light { --bg:#F6F7F6; --sf:#FFFFFF; --sf2:#EDF0EE; --bd:#DCE1DE; --t1:#0E1110; --t2:#5F6965; --t3:#8A948F; --on-acc:#FFFFFF;
+  --acc:#1D8A55; --acc-sub:#E4F7EC; --acc-on:#176B43; --w0:#DCE1DE; --w1:#C4F0D6; --w2:#93E6B6; --w3:#22A565; --w4:#176B43;
+  --sp:#8C95EA; --sp-sub:#D3D7F8; --sp-on:#3E479E; --nt:#B07610; --nt-sub:#FBEFD6; --frame:#C9D0CC; --scrim: rgba(14,17,16,.35); }
+
+* { box-sizing: border-box; }
+body { background: var(--page-bg); color: var(--page-fg); font-family: var(--font-ui); margin: 0; }
+.wrap { max-width: 1240px; margin: 0 auto; padding: 32px 16px 64px; }
+.intro { display: grid; gap: 8px; margin-bottom: 36px; }
+.intro h1 { font-size: 30px; font-weight: 800; margin: 0; }
+.intro p { margin: 0; color: var(--page-muted); font-size: 15px; line-height: 1.7; max-width: 660px; }
+.gallery { display: flex; flex-wrap: wrap; gap: 44px 32px; justify-content: center; align-items: flex-start; }
+figure { margin: 0; width: 360px; max-width: 100%; display: grid; gap: 12px; }
+figcaption { font-size: 13.5px; color: var(--page-muted); line-height: 1.6; }
+figcaption b { color: var(--page-fg); display: block; font-size: 15px; }
+.group-title { width: 100%; font-size: 12px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--page-muted); border-top: 1px solid var(--page-line); padding-top: 22px; margin-top: 6px; }
+
+/* ---------- Phone shell ---------- */
+.phone { position: relative; width: 360px; max-width: 100%; min-height: 740px; background: var(--bg); color: var(--t1); border-radius: 32px; overflow: hidden;
+  border: 1px solid var(--frame); box-shadow: 0 24px 60px -24px rgba(0,0,0,.55); font-family: var(--font-ui); font-size: 15px; line-height: 1.6;
+  display: flex; flex-direction: column; }
+:where(.phone) button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; text-align: start; }
+:where(.phone) button:focus-visible, :where(.phone) input:focus-visible { outline: 2px solid var(--acc); outline-offset: 2px; border-radius: 12px; }
+.status { display: flex; justify-content: space-between; padding: 12px 22px 0; font-size: 12px; font-weight: 600; color: var(--t2); }
+.body { flex: 1; display: flex; flex-direction: column; gap: 16px; padding: 14px 16px 20px; }
+.i { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+.i.lg { width: 30px; height: 30px; } .i.sm { width: 18px; height: 18px; } .i.xs { width: 14px; height: 14px; stroke-width: 2.4; }
+[dir="rtl"] .fwd { transform: scaleX(-1); }
+.row { display: flex; align-items: center; gap: 10px; }
+.between { justify-content: space-between; }
+.grow { flex: 1; min-width: 0; }
+.col { display: flex; flex-direction: column; }
+.c2 { color: var(--t2); } .c3 { color: var(--t3); } .cacc { color: var(--acc-on); } .csp { color: var(--sp-on); } .cnt { color: var(--nt); }
+.t-head { font-size: 24px; font-weight: 800; line-height: 1.45; }
+.t-title { font-size: 18px; font-weight: 700; line-height: 1.5; }
+.t-sub { font-size: 16px; font-weight: 600; line-height: 1.6; }
+.t-strong { font-size: 15px; font-weight: 500; }
+.t-lbl { font-size: 13px; font-weight: 500; }
+.t-cap { font-size: 12px; }
+.t-over { font-size: 11px; font-weight: 600; }
+.t-num { font-size: 28px; font-weight: 700; line-height: 1.2; font-variant-numeric: tabular-nums; }
+.card { background: var(--sf); border-radius: 16px; }
+.pad { padding: 16px; }
+.chip { display: inline-flex; align-items: center; gap: 4px; border-radius: 999px; padding: 1px 10px; font-size: 12px; font-weight: 600; white-space: nowrap; line-height: 1.8; flex: none; }
+.chip.acc { background: var(--acc-sub); color: var(--acc-on); }
+.chip.sp { background: var(--sp-sub); color: var(--sp-on); }
+.chip.nt { background: var(--nt-sub); color: var(--nt); }
+.chip.neu { background: var(--sf2); color: var(--t2); }
+.round { width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; color: var(--t2); background: var(--sf); flex: none; }
+.round[aria-pressed="true"] { background: var(--sp-sub); color: var(--sp-on); }
+.topbar { display: flex; align-items: center; gap: 8px; padding: 6px 8px 0; }
+.icon-btn { width: 44px; height: 44px; display: grid; place-items: center; color: var(--t2); border-radius: 12px; flex: none; }
+.divider { height: 1px; background: var(--bd); }
+.btn { display: flex; align-items: center; justify-content: center; gap: 8px; height: 52px; border-radius: 16px; font-size: 16px; font-weight: 700; width: 100%; text-align: center; }
+.btn.pri { background: var(--acc); color: var(--on-acc); }
+.btn.sec { background: var(--sf); color: var(--t1); }
+.seg { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 4px; background: var(--sf2); border-radius: 12px; padding: 4px; }
+.seg button { height: 38px; border-radius: 9px; text-align: center; font-size: 14px; font-weight: 500; color: var(--t2); display: flex; align-items: center; justify-content: center; }
+.seg button[aria-pressed="true"] { background: var(--sf); color: var(--t1); box-shadow: 0 1px 0 rgba(0,0,0,.2); }
+.switch { width: 44px; height: 26px; border-radius: 999px; background: var(--bd); position: relative; flex: none; transition: background .15s; }
+.switch::after { content: ""; position: absolute; top: 3px; inset-inline-start: 3px; width: 20px; height: 20px; border-radius: 50%; background: var(--t2); transition: inset-inline-start .15s, background .15s; }
+.switch[aria-checked="true"] { background: var(--acc); }
+.switch[aria-checked="true"]::after { inset-inline-start: 21px; background: var(--on-acc); }
+
+/* Nav: icons only */
+.nav { display: flex; justify-content: space-around; padding: 8px 16px 16px; border-top: 1px solid var(--bd); background: var(--bg); }
+.nav button { width: 60px; height: 46px; display: grid; place-items: center; color: var(--t3); position: relative; }
+.nav button.on { color: var(--t1); }
+.nav button.on::after { content: ""; position: absolute; bottom: 2px; left: 50%; width: 5px; height: 5px; margin-left: -2.5px; border-radius: 50%; background: var(--acc); }
+
+/* ---------- Today (minimal) ---------- */
+.date { display: flex; flex-direction: column; }
+.date .d1 { font-size: 26px; font-weight: 800; line-height: 1.3; }
+.date .d2 { font-size: 13px; color: var(--t2); }
+.hero { display: flex; flex-direction: column; align-items: center; gap: 14px; }
+.ring { position: relative; width: 164px; height: 164px; }
+.ring svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+.ring .trk { stroke: var(--sf2); }
+.ring .val { stroke: var(--acc); transition: stroke-dashoffset .4s ease; }
+.ring .mid { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; }
+.ring .big { font-size: 52px; font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums; }
+.ring .small { font-size: 14px; color: var(--t2); margin-top: 4px; }
+.week { display: flex; gap: 10px; }
+.wd { width: 14px; height: 14px; border-radius: 50%; background: var(--w0); }
+.wd.l1 { background: var(--w1); } .wd.l2 { background: var(--w2); } .wd.l3 { background: var(--w3); } .wd.l4 { background: var(--w4); }
+.wd.today { box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--acc); }
+.wd.fu { background: transparent; box-shadow: inset 0 0 0 1.5px var(--bd); }
+.times { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; background: var(--sf); border-radius: 18px; padding: 6px; }
+.times button { height: 44px; border-radius: 13px; display: grid; place-items: center; color: var(--t3); position: relative; }
+.times button[aria-pressed="true"] { background: var(--sf2); color: var(--t1); }
+.times button.full::before { content: ""; position: absolute; bottom: 5px; width: 4px; height: 4px; border-radius: 50%; background: var(--acc); }
+.tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.tile { position: relative; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-between; gap: 16px; min-height: 108px; padding: 16px; border-radius: 20px; background: var(--sf); transition: background .15s; }
+.tile .ic { color: var(--t2); }
+.tile .lb { font-size: 15px; font-weight: 600; }
+.tile .ok { position: absolute; top: 14px; inset-inline-end: 14px; width: 24px; height: 24px; border-radius: 50%; box-shadow: inset 0 0 0 2px var(--bd); display: grid; place-items: center; }
+.tile .ok .i { opacity: 0; color: var(--on-acc); }
+.tile .tag { position: absolute; bottom: 14px; inset-inline-end: 12px; }
+.tile .imp-tag { position: absolute; bottom: 16px; inset-inline-end: 14px; font-size: 12px; font-weight: 700; color: var(--nt); }
+.tile.imp { box-shadow: inset 0 0 0 1.5px var(--nt); }
+.tile.due { box-shadow: inset 0 0 0 1.5px var(--nt); }
+.tile[aria-pressed="true"] { background: var(--acc-sub); box-shadow: none; }
+.tile[aria-pressed="true"] .ic { color: var(--acc-on); }
+.tile[aria-pressed="true"] .ok { background: var(--acc); box-shadow: none; }
+.tile[aria-pressed="true"] .ok .i { opacity: 1; }
+.tile[aria-pressed="true"] .tag { display: none; }
+.tile[aria-pressed="true"] .imp-tag { color: var(--acc-on); opacity: .7; }
+.tile.wide { grid-column: span 2; flex-direction: row; align-items: center; min-height: 84px; }
+.tile.wide .play { margin-inline-start: auto; width: 48px; height: 48px; border-radius: 50%; background: var(--acc); color: var(--on-acc); display: grid; place-items: center; }
+.tile.wide .play .i { fill: currentColor; stroke: none; }
+.phone.min-on .times { display: none; }
+.minlabel { display: none; text-align: center; color: var(--sp-on); font-weight: 700; font-size: 14px; }
+.phone.min-on .minlabel { display: block; }
+
+/* ---------- Dashboard (detailed) ---------- */
+.cell { display: block; width: 32px; height: 32px; border-radius: 6px; background: var(--w0); }
+.cell.l1 { background: var(--w1); } .cell.l2 { background: var(--w2); } .cell.l3 { background: var(--w3); } .cell.l4 { background: var(--w4); }
+.cell.sp { background: var(--sp); }
+.cell.fu { background: transparent; box-shadow: inset 0 0 0 1px var(--bd); }
+.cell.today { outline: 2px solid var(--acc); outline-offset: 2px; }
+.cell.s { width: 10px; height: 10px; border-radius: 2px; }
+.cell.s.today { outline-width: 1px; outline-offset: 1px; }
+.cell.m { width: 24px; height: 24px; border-radius: 5px; }
+.journey-scroll { overflow-x: auto; }
+.journey { display: grid; grid-template-rows: repeat(7, 10px); grid-auto-flow: column; grid-auto-columns: 10px; gap: 3px; width: max-content; margin: 0 auto; }
+.months { position: relative; height: 18px; width: 296px; margin: 6px auto 0; font-size: 11px; font-weight: 600; color: var(--t3); }
+.months span { position: absolute; top: 0; }
+.legend { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-size: 12px; color: var(--t3); }
+.legend .gap { width: 10px; }
+.wrow { display: flex; align-items: center; gap: 8px; padding: 8px; border-radius: 12px; }
+.wrow.cur { background: var(--sf); }
+.wrow .wlab { display: flex; flex-direction: column; min-width: 64px; }
+.wrow .wdays { display: flex; gap: 3px; }
+.wrow .chip { margin-inline-start: auto; }
+
+/* ---------- Progress (detailed) ---------- */
+.stats { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.stat { padding: 16px; display: flex; flex-direction: column; gap: 2px; }
+.stat .from { display: flex; align-items: center; gap: 6px; margin-top: 4px; }
+.chart svg { display: block; width: 100%; height: auto; }
+.chart text { fill: var(--t2); font-family: var(--font-ui); font-size: 11px; }
+.chart .gl { stroke: var(--bd); }
+.chart .ln { stroke: var(--acc-on); fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+.chart .ft { stroke: var(--t3); fill: none; stroke-width: 2; stroke-dasharray: 4 5; }
+.chart .dt { fill: var(--acc-on); }
+.chart .vl { fill: var(--t1); font-size: 12px; font-weight: 600; }
+.photos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.ph { aspect-ratio: 4 / 5; max-width: 100%; border-radius: 12px; background: var(--sf2); display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 4px; padding-bottom: 8px; }
+.ph .head { width: 22px; height: 22px; border-radius: 50%; background: var(--bd); }
+.ph .torso { width: 40px; height: 44px; border-radius: 16px 16px 4px 4px; background: var(--bd); }
+.ph .t-over { color: var(--t3); }
+
+/* ---------- Workout (minimal) ---------- */
+.wtop { display: flex; align-items: center; justify-content: space-between; padding: 8px 12px 0; }
+.dots { display: flex; gap: 6px; }
+.dots i { width: 22px; height: 4px; border-radius: 999px; background: var(--sf2); }
+.dots i.on { background: var(--acc); }
+.ex { text-align: center; margin-top: 8px; font-size: 26px; font-weight: 800; }
+.sets { display: flex; justify-content: center; gap: 14px; }
+.sets span { width: 48px; height: 48px; border-radius: 50%; display: grid; place-items: center; font-weight: 700; font-size: 17px; background: var(--sf); color: var(--t3); }
+.sets span.done { background: var(--acc-sub); color: var(--acc-on); }
+.sets span.cur { box-shadow: inset 0 0 0 2px var(--acc); color: var(--t1); }
+.counter { display: flex; align-items: center; justify-content: center; gap: 22px; }
+.counter button { width: 60px; height: 60px; border-radius: 50%; background: var(--sf); display: grid; place-items: center; }
+.counter output { font-size: 96px; font-weight: 800; line-height: 1; min-width: 120px; text-align: center; font-variant-numeric: tabular-nums; }
+.prev { text-align: center; color: var(--t3); font-size: 14px; }
+.effort { display: grid; gap: 10px; background: var(--sf); border-radius: 20px; padding: 16px 18px; }
+.effort .lblrow { display: flex; justify-content: space-between; align-items: baseline; }
+.effort .val { font-size: 22px; font-weight: 800; color: var(--acc-on); font-variant-numeric: tabular-nums; }
+.effort .ends { display: flex; justify-content: space-between; font-size: 11px; color: var(--t3); font-weight: 600; }
+input[type="range"].seek { -webkit-appearance: none; appearance: none; width: 100%; height: 28px; background: transparent; margin: 0; }
+input[type="range"].seek::-webkit-slider-runnable-track { height: 6px; border-radius: 999px; background: linear-gradient(to left, var(--acc) var(--p, 60%), var(--sf2) var(--p, 60%)); }
+input[type="range"].seek::-webkit-slider-thumb { -webkit-appearance: none; width: 24px; height: 24px; border-radius: 50%; background: var(--t1); margin-top: -9px; box-shadow: 0 0 0 4px var(--acc); }
+input[type="range"].seek::-moz-range-track { height: 6px; border-radius: 999px; background: var(--sf2); }
+input[type="range"].seek::-moz-range-progress { height: 6px; border-radius: 999px; background: var(--acc); }
+input[type="range"].seek::-moz-range-thumb { width: 22px; height: 22px; border-radius: 50%; background: var(--t1); border: 3px solid var(--acc); }
+.go { margin: auto auto 6px; width: 80px; height: 80px; border-radius: 50%; background: var(--acc); color: var(--on-acc); display: grid; place-items: center; }
+.go .i { width: 34px; height: 34px; stroke-width: 2.6; }
+
+/* ---------- Week plan (detailed) ---------- */
+.steps { display: flex; gap: 8px; }
+.step { flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px; height: 36px; border-radius: 10px; font-size: 13px; font-weight: 600; background: var(--sf2); color: var(--t2); }
+.step.done { background: var(--acc-sub); color: var(--acc-on); }
+.step.now { background: var(--sf); color: var(--t1); box-shadow: inset 0 0 0 1px var(--acc); }
+.days { display: flex; justify-content: space-between; }
+.day { display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: 12px; color: var(--t3); }
+.win { display: flex; align-items: center; gap: 10px; font-size: 14px; }
+.win .i { color: var(--acc-on); }
+.dchips { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+.dchip { display: flex; flex-direction: column; align-items: center; padding: 8px 0; border-radius: 12px; background: var(--sf2); color: var(--t2); font-size: 13px; font-weight: 600; text-align: center; }
+.dchip small { font-size: 11px; font-weight: 500; color: var(--t3); }
+.dchip[aria-pressed="true"] { background: var(--sp-sub); color: var(--sp-on); box-shadow: inset 0 0 0 1px var(--sp); }
+.dchip[aria-pressed="true"] small { color: var(--sp-on); }
+.acc-row { border-top: 1px solid var(--bd); }
+.acc-row:first-child { border-top: 0; }
+.acc-head { display: flex; align-items: center; gap: 10px; width: 100%; padding: 0 16px; min-height: 52px; }
+.acc-head .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--acc); flex: none; }
+.acc-head .dot.empty { background: transparent; box-shadow: inset 0 0 0 1.5px var(--t3); }
+.acc-head .chev { color: var(--t3); transition: transform .15s; }
+.acc-row.open .acc-head .chev { transform: rotate(180deg); }
+.acc-body { display: none; padding: 0 16px 14px; }
+.acc-row.open .acc-body { display: block; }
+.field { background: var(--sf2); border-radius: 12px; padding: 10px 12px; border: 1px solid var(--bd); color: var(--t1); font: inherit; font-size: 14px; width: 100%; line-height: 1.8; resize: vertical; }
+
+/* ---------- Settings (minimal) ---------- */
+.set-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.set-grid button { background: var(--sf); border-radius: 20px; padding: 18px 16px; display: flex; flex-direction: column; align-items: flex-start; gap: 20px; min-height: 112px; }
+.set-grid .ic { color: var(--t2); }
+.set-grid .lb { font-weight: 600; }
+.health { display: flex; align-items: center; gap: 10px; background: var(--acc-sub); color: var(--acc-on); border-radius: 18px; padding: 14px 16px; font-weight: 600; }
+
+/* ---------- Lists (Tasks, Reminders, Workout plan) ---------- */
+.list { display: flex; flex-direction: column; }
+.li { display: flex; align-items: center; gap: 12px; width: 100%; padding: 12px 16px; min-height: 56px; border-top: 1px solid var(--bd); }
+.li:first-child { border-top: 0; }
+.li .meta { margin-inline-start: auto; color: var(--t3); font-size: 13px; display: flex; align-items: center; gap: 4px; white-space: nowrap; }
+.sec-title { font-size: 13px; font-weight: 600; color: var(--t3); padding: 4px 4px 0; }
+.time { font-size: 16px; font-weight: 600; font-variant-numeric: tabular-nums; background: var(--sf2); border-radius: 10px; padding: 4px 12px; }
+.badges { display: inline-flex; gap: 4px; color: var(--t3); }
+.badges .imp { color: var(--nt); } .badges .leaf { color: var(--sp-on); }
+.fab { position: absolute; bottom: 20px; inset-inline-start: 20px; height: 52px; padding: 0 20px; border-radius: 16px; background: var(--acc); color: var(--on-acc); display: flex; align-items: center; gap: 8px; font-weight: 700; box-shadow: 0 8px 20px -6px rgba(0,0,0,.5); }
+.statuscard { display: flex; align-items: center; gap: 12px; background: var(--acc-sub); border-radius: 16px; padding: 12px 16px; }
+.statuscard .i { color: var(--acc-on); }
+
+/* ---------- Task editor (minimal + alarm) ---------- */
+.sheet-wrap { position: absolute; inset: 0; background: var(--scrim); display: flex; align-items: flex-end; }
+.sheet { width: 100%; background: var(--sf); border-radius: 28px 28px 0 0; padding: 10px 18px 20px; display: grid; gap: 16px; }
+.grab { width: 36px; height: 4px; border-radius: 999px; background: var(--bd); margin: 2px auto 0; }
+.name { font-size: 22px; font-weight: 700; border: 0; border-bottom: 1px solid var(--bd); background: none; color: var(--t1); font-family: inherit; padding: 4px 0 8px; width: 100%; }
+.iconpick { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; }
+.iconpick button { aspect-ratio: 1; border-radius: 14px; background: var(--sf2); display: grid; place-items: center; color: var(--t2); }
+.iconpick button[aria-pressed="true"] { background: var(--acc-sub); color: var(--acc-on); box-shadow: inset 0 0 0 1.5px var(--acc); }
+.pick4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.pick4 button { height: 46px; border-radius: 14px; background: var(--sf2); display: grid; place-items: center; color: var(--t3); font-size: 13px; font-weight: 600; text-align: center; }
+.pick4 button[aria-pressed="true"] { background: var(--t1); color: var(--bg); }
+.alarm { background: var(--sf2); border-radius: 18px; padding: 12px 14px; display: grid; gap: 12px; }
+.alarm .bigtime { font-size: 34px; font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums; }
+.alarm.off .when { display: none; }
+.dcircles { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+.dcircles button { aspect-ratio: 1; border-radius: 50%; background: var(--sf); display: grid; place-items: center; font-weight: 700; font-size: 13px; color: var(--t3); }
+.dcircles button[aria-pressed="true"] { background: var(--acc); color: var(--on-acc); }
+.toggles { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.toggles button { border-radius: 16px; background: var(--sf2); padding: 12px; display: flex; align-items: center; gap: 8px; color: var(--t3); font-size: 14px; font-weight: 600; }
+.toggles button[aria-pressed="true"] { color: var(--t1); box-shadow: inset 0 0 0 1.5px var(--bd); }
+.toggles button[aria-pressed="true"][data-k="imp"] { color: var(--nt); box-shadow: inset 0 0 0 1.5px var(--nt); }
+.toggles button[aria-pressed="true"][data-k="min"] { color: var(--sp-on); box-shadow: inset 0 0 0 1.5px var(--sp); }
+
+/* ---------- Workout plan ---------- */
+.plan-days { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+.plan-days button { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 8px 0; border-radius: 14px; background: var(--sf); color: var(--t3); font-weight: 700; font-size: 14px; text-align: center; }
+.plan-days button small { font-size: 10.5px; font-weight: 600; }
+.plan-days button.train { color: var(--acc-on); }
+.plan-days button[aria-pressed="true"] { background: var(--acc-sub); box-shadow: inset 0 0 0 1.5px var(--acc); color: var(--t1); }
+.exrow { border-top: 1px solid var(--bd); }
+.exrow:first-child { border-top: 0; }
+.exhead { display: flex; align-items: center; gap: 10px; width: 100%; padding: 0 12px 0 16px; min-height: 56px; }
+.exhead .grip { color: var(--t3); }
+.exhead .chev { color: var(--t3); transition: transform .15s; }
+.exrow.open .exhead .chev { transform: rotate(180deg); }
+.exbody { display: none; padding: 0 16px 16px; gap: 12px; }
+.exrow.open .exbody { display: grid; }
+.ministep { display: flex; align-items: center; gap: 8px; }
+.ministep button { width: 36px; height: 36px; border-radius: 10px; background: var(--sf2); display: grid; place-items: center; }
+.ministep span { min-width: 44px; text-align: center; font-weight: 700; font-variant-numeric: tabular-nums; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+  <symbol id="i-home" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/></symbol>
+  <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></symbol>
+  <symbol id="i-chart" viewBox="0 0 24 24"><path d="M22 7 13.5 15.5 8.5 10.5 2 17"/><path d="M16 7h6v6"/></symbol>
+  <symbol id="i-cal" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="3"/><path d="M16 2v4M8 2v4M3 10h18"/></symbol>
+  <symbol id="i-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.6 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></symbol>
+  <symbol id="i-leaf" viewBox="0 0 24 24"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></symbol>
+  <symbol id="i-sunrise" viewBox="0 0 24 24"><path d="M12 2v6M4.93 10.93l1.41 1.41M2 18h2M20 18h2M19.07 10.93l-1.41 1.41M22 22H2M16 18a4 4 0 0 0-8 0M8 6l4-4 4 4"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></symbol>
+  <symbol id="i-sunset" viewBox="0 0 24 24"><path d="M12 10V2M4.93 10.93l1.41 1.41M2 18h2M20 18h2M19.07 10.93l-1.41 1.41M22 22H2M16 18a4 4 0 0 0-8 0M16 6l-4 4-4-4"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></symbol>
+  <symbol id="i-drop" viewBox="0 0 24 24"><path d="M12 2.7s6 6.3 6 11.3a6 6 0 0 1-12 0c0-5 6-11.3 6-11.3z"/><path d="M9.5 14.5a2.5 2.5 0 0 0 2.5 2.5"/></symbol>
+  <symbol id="i-tooth" viewBox="0 0 24 24"><path d="M7 3C5 3 3.5 4.8 3.5 7.2c0 3 1.5 4.3 2 7 .5 3 1 7 2.8 7 1.6 0 1.6-4.5 3.7-4.5s2.1 4.5 3.7 4.5c1.8 0 2.3-4 2.8-7 .5-2.7 2-4 2-7C20.5 4.8 19 3 17 3c-2 0-3 1-5 1S9 3 7 3z"/></symbol>
+  <symbol id="i-pill" viewBox="0 0 24 24"><path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"/><path d="m8.5 8.5 7 7"/></symbol>
+  <symbol id="i-egg" viewBox="0 0 24 24"><path d="M12 22c-4.4 0-7-3-7-7.5C5 9 8.5 2 12 2s7 7 7 12.5c0 4.5-2.6 7.5-7 7.5z"/></symbol>
+  <symbol id="i-dumbbell" viewBox="0 0 24 24"><path d="M6 7v10M18 7v10M3 9.5v5M21 9.5v5M6 12h12"/></symbol>
+  <symbol id="i-scissors" viewBox="0 0 24 24"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4 8.12 15.88M14.47 14.48 20 20M8.12 8.12 12 12"/></symbol>
+  <symbol id="i-apple" viewBox="0 0 24 24"><path d="M12 7c-2-1.5-7-1.5-7 4.5S8 21 10 21c1 0 1.3-.5 2-.5s1 .5 2 .5c2 0 5-3.5 5-9.5S14 5.5 12 7z"/><path d="M12 7c0-2 1-3.5 3-4"/></symbol>
+  <symbol id="i-shower" viewBox="0 0 24 24"><path d="M4 21V9a5 5 0 0 1 9-3"/><path d="M10 8h10"/><path d="M12 12v1M15 12v1M18 12v1M13.5 16v1M16.5 16v1M15 20v1"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+  <symbol id="i-back" viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></symbol>
+  <symbol id="i-chev" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+  <symbol id="i-chev-side" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></symbol>
+  <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10.3 21a1.94 1.94 0 0 0 3.4 0"/></symbol>
+  <symbol id="i-list" viewBox="0 0 24 24"><path d="M9 6h11M9 12h11M9 18h11"/><path d="m3 6 1.5 1.5L7 5M3 12l1.5 1.5L7 11M3 18l1.5 1.5L7 17"/></symbol>
+  <symbol id="i-cloud" viewBox="0 0 24 24"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></symbol>
+  <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></symbol>
+  <symbol id="i-phone" viewBox="0 0 24 24"><rect x="6" y="2" width="12" height="20" rx="2"/><path d="M11 18h2"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></symbol>
+  <symbol id="i-flag" viewBox="0 0 24 24"><path d="M4 22V4M4 4h13l-2 4 2 4H4"/></symbol>
+  <symbol id="i-camera" viewBox="0 0 24 24"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></symbol>
+  <symbol id="i-trophy" viewBox="0 0 24 24"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6M18 9h1.5a2.5 2.5 0 0 0 0-5H18M4 22h16M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22M18 2H6v7a6 6 0 0 0 12 0V2Z"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></symbol>
+  <symbol id="i-repeat" viewBox="0 0 24 24"><path d="m17 2 4 4-4 4M3 11v-1a4 4 0 0 1 4-4h14M7 22l-4-4 4-4M21 13v1a4 4 0 0 1-4 4H3"/></symbol>
+  <symbol id="i-grip" viewBox="0 0 24 24"><circle cx="9" cy="6" r="1"/><circle cx="15" cy="6" r="1"/><circle cx="9" cy="12" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="9" cy="18" r="1"/><circle cx="15" cy="18" r="1"/></symbol>
+  <symbol id="i-mountain" viewBox="0 0 24 24"><path d="m8 3 4 8 5-5 5 15H2L8 3z"/></symbol>
+</svg>
+
+<main class="wrap">
+  <header class="intro">
+    <h1>BeAesthetic</h1>
+    <p>The combined design: the minimal Today, Workout, Settings and task editor, plus the detailed Dashboard, Progress, Week plan, Tasks and Reminders, and a new Workout plan screen. Everything you can tap works.</p>
+  </header>
+
+  <section class="gallery">
+
+    <!-- 01 Today -->
+    <figure>
+      <div id="today-dark"></div>
+      <figcaption><b>01 · امروز</b>Ring = today, dots = this week. Gold outline + «مهم» = important; «موعدش رسیده» = an interval task that is due. Leaf = minimum day.</figcaption>
+    </figure>
+
+    <!-- 02 Dashboard -->
+    <figure>
+      <div class="phone m-dark" dir="rtl" lang="fa">
+        <div class="status"><span>۰۷:۰۳</span><span>۸۴٪</span></div>
+        <div class="body">
+          <div class="col"><span class="t-head">داشبورد</span><span class="t-cap c2">۱۸ مهر تا ۲۹ اسفند ۱۴۰۵</span></div>
+          <div class="card row" style="padding:16px 24px;justify-content:space-around">
+            <div class="col" style="align-items:center"><span class="t-title cacc">۳۰ از ۳۱</span><span class="t-cap c2">روز حضور</span></div>
+            <div class="col" style="align-items:center"><span class="t-title csp">۲</span><span class="t-cap c2">روز ویژه</span></div>
+          </div>
+          <div class="card pad col" style="gap:12px">
+            <div class="row between"><span class="t-sub">کل مسیر</span><span class="t-cap c3">روز ۳۱ از ۱۶۲</span></div>
+            <div class="journey-scroll"><div class="journey" id="journey"></div>
+              <div class="months"><span style="right:0">مهر</span><span style="right:26px">آبان</span><span style="right:78px">آذر</span><span style="right:130px">دی</span><span style="right:182px">بهمن</span><span style="right:247px">اسفند</span></div>
+            </div>
+          </div>
+          <div class="legend">
+            <span>کمتر</span><i class="cell s"></i><i class="cell s l1"></i><i class="cell s l2"></i><i class="cell s l3"></i><i class="cell s l4"></i><span>بیشتر</span>
+            <span class="gap"></span><i class="cell s sp"></i><span>ویژه</span>
+          </div>
+          <div class="col" style="gap:4px">
+            <span class="t-sub" style="margin-bottom:4px">هفته به هفته</span>
+            <div id="weekrows" class="col" style="gap:4px"></div>
+          </div>
+        </div>
+        <nav class="nav" data-nav="1"></nav>
+      </div>
+      <figcaption><b>02 · داشبورد</b>All 23 weeks, week 1 on the right. Gray = gap, indigo = special day.</figcaption>
+    </figure>
+
+    <!-- 03 Progress -->
+    <figure>
+      <div class="phone m-dark" dir="rtl" lang="fa">
+        <div class="status"><span>۰۷:۰۴</span><span>۸۴٪</span></div>
+        <div class="body">
+          <div class="col"><span class="t-head">پیشرفت</span><span class="t-cap c2">از روز صفر · ۳۱ روز</span></div>
+          <div class="row" style="background:var(--sp-sub);border-radius:16px;padding:12px 16px;gap:12px">
+            <svg class="i csp"><use href="#i-camera"/></svg>
+            <div class="col grow"><span class="t-strong">چک‌این ماهانه: جمعه ۱۴ آذر</span><span class="t-cap c2">وزن، متر، ۳ عکس</span></div>
+            <span class="t-lbl csp">۲۵ روز</span>
+          </div>
+          <div class="stats">
+            <div class="card stat"><span class="t-lbl c2">بارفیکس</span><span class="t-num">۷</span><span class="from"><span class="chip acc">+۳</span><span class="t-cap c3">از ۴</span></span></div>
+            <div class="card stat"><span class="t-lbl c2">شنا سوئدی</span><span class="t-num">۲۶</span><span class="from"><span class="chip acc">+۸</span><span class="t-cap c3">از ۱۸</span></span></div>
+            <div class="card stat"><span class="t-lbl c2">پلانک</span><span class="t-num">۷۰<small style="font-size:16px">ث</small></span><span class="from"><span class="chip acc">+۲۵ث</span><span class="t-cap c3">از ۴۵ث</span></span></div>
+            <div class="card stat"><span class="t-lbl c2">دور کمر</span><span class="t-num">۸۶<small style="font-size:14px"> سانت</small></span><span class="from"><span class="chip acc">−۲</span><span class="t-cap c3">از ۸۸</span></span></div>
+          </div>
+          <div class="card pad col chart" style="gap:10px">
+            <div class="row between"><span class="t-strong">بارفیکس</span><span class="chip acc"><svg class="i xs"><use href="#i-trophy"/></svg>رکورد</span></div>
+            <svg viewBox="0 0 296 150" role="img" aria-label="بارفیکس: روز صفر ۴، هفته ۲ ۵، هفته ۴ ۷">
+              <line class="gl" x1="0" x2="296" y1="104" y2="104"/><line class="gl" x1="0" x2="296" y1="80" y2="80"/><line class="gl" x1="0" x2="296" y1="56" y2="56"/><line class="gl" x1="0" x2="296" y1="32" y2="32"/>
+              <path class="ft" d="M92 32 L20 32"/>
+              <path class="ln" d="M268 104 L180 80 L92 32"/>
+              <circle class="dt" cx="268" cy="104" r="5"/><circle class="dt" cx="180" cy="80" r="5"/><circle class="dt" cx="92" cy="32" r="6"/>
+              <text class="vl" x="268" y="92" text-anchor="middle">۴</text><text class="vl" x="180" y="68" text-anchor="middle">۵</text><text class="vl" x="92" y="20" text-anchor="middle">۷</text>
+              <text x="268" y="140" text-anchor="middle">روز ۰</text><text x="180" y="140" text-anchor="middle">هفته ۲</text><text x="92" y="140" text-anchor="middle">هفته ۴</text><text x="20" y="140" text-anchor="middle" style="fill:var(--t3)">هفته ۶</text>
+            </svg>
+          </div>
+          <div class="card pad row" style="gap:12px">
+            <div class="col grow"><span class="t-lbl c2">وزن</span><span class="row" style="gap:8px"><span class="t-title">۷۷٫۱ کیلو</span><span class="chip neu">−۱٫۳</span></span></div>
+            <svg viewBox="0 0 120 40" width="120" height="40" aria-label="روند وزن پنج هفته" role="img"><path d="M112 10 L88 14 L64 17 L40 23 L12 30" fill="none" stroke="var(--t2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="30" r="3.5" fill="var(--t1)"/></svg>
+          </div>
+          <div class="card pad col" style="gap:12px">
+            <div class="row between"><span class="t-sub">عکس‌های ماهانه</span><span class="t-cap c3">۲ از ۷</span></div>
+            <div class="col" style="gap:6px">
+              <span class="row" style="gap:6px"><span class="t-lbl">آبان</span><span class="t-cap c3">جمعه ۱۵ آبان</span></span>
+              <div class="photos"><div class="ph"><i class="head"></i><i class="torso"></i><span class="t-over">جلو</span></div><div class="ph"><i class="head"></i><i class="torso"></i><span class="t-over">بغل</span></div><div class="ph"><i class="head"></i><i class="torso"></i><span class="t-over">پشت</span></div></div>
+            </div>
+            <div class="col" style="gap:6px">
+              <span class="row" style="gap:6px"><span class="t-lbl">مهر · روز صفر</span><span class="t-cap c3">جمعه ۱۷ مهر</span></span>
+              <div class="photos"><div class="ph"><i class="head"></i><i class="torso"></i><span class="t-over">جلو</span></div><div class="ph"><i class="head"></i><i class="torso"></i><span class="t-over">بغل</span></div><div class="ph"><i class="head"></i><i class="torso"></i><span class="t-over">پشت</span></div></div>
+            </div>
+          </div>
+        </div>
+        <nav class="nav" data-nav="2"></nav>
+      </div>
+      <figcaption><b>03 · پیشرفت</b>Strength first, then weight and monthly photos (one set per month, 7 in total).</figcaption>
+    </figure>
+
+    <!-- 04 Workout -->
+    <figure>
+      <div class="phone m-dark" dir="rtl" lang="fa" id="workout">
+        <div class="status"><span>۱۹:۱۲</span><span>۶۱٪</span></div>
+        <div class="wtop"><button class="round" aria-label="بستن"><svg class="i"><use href="#i-x"/></svg></button><div class="dots" aria-label="حرکت ۲ از ۶"><i class="on"></i><i class="on"></i><i></i><i></i><i></i><i></i></div><span style="width:44px"></span></div>
+        <div class="body">
+          <div class="ex">شنا سوئدی</div>
+          <div class="sets"><span class="done">۱۲</span><span class="done">۱۲</span><span class="cur" id="cur-set">۱۰</span></div>
+          <div class="counter">
+            <button data-step="1" aria-label="یکی بیشتر"><svg class="i"><use href="#i-plus"/></svg></button>
+            <output id="reps">۱۰</output>
+            <button data-step="-1" aria-label="یکی کمتر"><svg class="i"><use href="#i-minus"/></svg></button>
+          </div>
+          <div class="prev">قبلی ۱۲ · ۱۲ · ۱۰</div>
+          <div class="effort">
+            <input class="seek" type="range" id="effort" min="1" max="10" value="6" aria-label="درجه سختی">
+            <div class="lblrow"><span class="t-lbl c2">درجه سختی</span><span class="val" id="effort-val">۶</span></div>
+          </div>
+          <button class="go" aria-label="ثبت"><svg class="i"><use href="#i-check"/></svg></button>
+        </div>
+      </div>
+      <figcaption><b>04 · تمرین</b>Big number pre-filled from last time. Slider for how hard (1–10). Check = log the set.</figcaption>
+    </figure>
+
+    <!-- 05 Week plan -->
+    <figure>
+      <div class="phone m-dark" dir="rtl" lang="fa">
+        <div class="status"><span>۱۹:۴۰</span><span>۵۲٪</span></div>
+        <div class="body">
+          <div class="col"><span class="t-cap c2">جمعه ۱۵ آبان</span><span class="t-head">مرور و برنامه‌ی هفته</span></div>
+          <div class="steps"><span class="step done"><svg class="i xs"><use href="#i-check"/></svg>مرور</span><span class="step now">برنامه</span></div>
+          <div class="card pad col" style="gap:12px">
+            <div class="row between"><span class="t-sub">هفته ۴</span><span class="chip acc">۸۸٪</span></div>
+            <div class="days" id="ritual-week"></div>
+            <div class="divider"></div>
+            <div class="win"><svg class="i sm"><use href="#i-trophy"/></svg><span>بارفیکس ۷ (قبلی ۵)</span></div>
+            <div class="win"><svg class="i sm"><use href="#i-check"/></svg><span>پوست شب ۷ از ۷</span></div>
+          </div>
+          <div class="col" style="gap:8px">
+            <div class="row between"><span class="t-sub">روزهای ویژه</span><span class="t-cap c3" id="cap-note">حداکثر ۲</span></div>
+            <div class="dchips" id="dchips"></div>
+          </div>
+          <div class="col" style="gap:8px">
+            <span class="t-sub">میان‌وعده‌ها</span>
+            <div class="card col" id="snacks"></div>
+          </div>
+          <button class="btn pri">شروع هفته ۵</button>
+        </div>
+        <nav class="nav" data-nav="3"></nav>
+      </div>
+      <figcaption><b>05 · هفته (جمعه)</b>Review, special days (max 2), and each day's snack as a drop-down note.</figcaption>
+    </figure>
+
+    <div class="group-title">Settings and everything under it (gear on امروز)</div>
+
+    <!-- 06 Settings -->
+    <figure>
+      <div class="phone m-dark" dir="rtl" lang="fa">
+        <div class="status"><span>۲۱:۰۵</span><span>۴۰٪</span></div>
+        <div class="topbar"><button class="icon-btn" aria-label="بازگشت"><svg class="i fwd"><use href="#i-back"/></svg></button><span class="t-title">تنظیمات</span></div>
+        <div class="body">
+          <div class="health"><svg class="i"><use href="#i-shield"/></svg><span>یادآورها سالم‌اند</span></div>
+          <div class="set-grid">
+            <button><svg class="i lg ic"><use href="#i-list"/></svg><span class="lb">کارها</span></button>
+            <button><svg class="i lg ic"><use href="#i-bell"/></svg><span class="lb">یادآورها</span></button>
+            <button><svg class="i lg ic"><use href="#i-dumbbell"/></svg><span class="lb">برنامه تمرین</span></button>
+            <button><svg class="i lg ic"><use href="#i-cloud"/></svg><span class="lb">پشتیبان</span></button>
+            <button><svg class="i lg ic"><use href="#i-globe"/></svg><span class="lb">زبان</span></button>
+            <button><svg class="i lg ic"><use href="#i-phone"/></svg><span class="lb">گوشی</span></button>
+          </div>
+        </div>
+      </div>
+      <figcaption><b>06 · تنظیمات</b>Six tiles. «گوشی» = Xiaomi battery and autostart setup.</figcaption>
+    </figure>
+
+    <!-- 07 Tasks -->
+    <figure>
+      <div class="phone m-dark" dir="rtl" lang="fa">
+        <div class="status"><span>۲۱:۰۶</span><span>۴۰٪</span></div>
+        <div class="topbar"><button class="icon-btn" aria-label="بازگشت"><svg class="i fwd"><use href="#i-back"/></svg></button><span class="t-title grow">کارها</span></div>
+        <div class="body" style="padding-bottom:96px">
+          <div class="seg" data-seg role="group" aria-label="فیلتر"><button aria-pressed="true">همه</button><button aria-pressed="false">صبح</button><button aria-pressed="false">ظهر</button><button aria-pressed="false">عصر</button><button aria-pressed="false">شب</button></div>
+          <span class="sec-title">یک‌باره</span>
+          <div class="card list">
+            <button class="li"><div class="col grow"><span class="t-strong">خرید جو دوسر و گردو</span><span class="t-cap c3">پنج‌شنبه · عصر</span></div></button>
+          </div>
+          <span class="sec-title">صبح</span>
+          <div class="card list">
+            <button class="li"><div class="col grow"><span class="t-strong">روتین پوست صبح</span><span class="t-cap c3">هر روز</span></div><span class="chip nt">مهم</span></button>
+            <button class="li"><div class="col grow"><span class="t-strong">مسواک صبح</span><span class="t-cap c3">هر روز</span></div><span class="badges"><svg class="i xs leaf"><use href="#i-leaf"/></svg></span></button>
+            <button class="li"><div class="col grow"><span class="t-strong">کراتین ۵ گرم</span><span class="t-cap c3">هر روز</span></div><span class="badges"><svg class="i xs leaf"><use href="#i-leaf"/></svg></span></button>
+          </div>
+          <span class="sec-title">ظهر</span>
+          <div class="card list">
+            <button class="li"><div class="col grow"><span class="t-strong">ویتامین D</span><span class="t-cap c3">هر روز · زنگ ۱۴:۰۰</span></div><span class="badges"><svg class="i xs"><use href="#i-bell"/></svg></span></button>
+          </div>
+          <span class="sec-title">عصر</span>
+          <div class="card list">
+            <button class="li"><div class="col grow"><span class="t-strong">کوتاه کردن ناخن</span><span class="t-cap c3">هر ۱۴ روز</span></div><span class="badges"><svg class="i xs"><use href="#i-repeat"/></svg></span></button>
+            <button class="li"><div class="col grow"><span class="t-strong">شامپو</span><span class="t-cap c3">هر ۳ روز</span></div><span class="badges"><svg class="i xs"><use href="#i-repeat"/></svg></span></button>
+          </div>
+        </div>
+        <button class="fab"><svg class="i"><use href="#i-plus"/></svg>کار جدید</button>
+      </div>
+      <figcaption><b>07 · کارها</b>Every routine and one-off task, grouped by part of the day.</figcaption>
+    </figure>
+
+    <!-- 08 Task editor -->
+    <figure>
+      <div class="phone m-dark" dir="rtl" lang="fa" id="editor">
+        <div class="status"><span>۲۱:۰۷</span><span>۴۰٪</span></div>
+        <div class="sheet-wrap">
+          <div class="sheet">
+            <div class="grab"></div>
+            <input class="name" id="task-name" value="ویتامین D" aria-label="نام">
+            <div class="iconpick" data-pick>
+              <button aria-pressed="false" aria-label="پوست"><svg class="i"><use href="#i-drop"/></svg></button>
+              <button aria-pressed="false" aria-label="مسواک"><svg class="i"><use href="#i-tooth"/></svg></button>
+              <button aria-pressed="true" aria-label="مکمل"><svg class="i"><use href="#i-pill"/></svg></button>
+              <button aria-pressed="false" aria-label="دوش"><svg class="i"><use href="#i-shower"/></svg></button>
+              <button aria-pressed="false" aria-label="قیچی"><svg class="i"><use href="#i-scissors"/></svg></button>
+              <button aria-pressed="false" aria-label="خوراکی"><svg class="i"><use href="#i-apple"/></svg></button>
+            </div>
+            <div class="pick4" data-pick aria-label="بخش روز">
+              <button aria-pressed="false" aria-label="صبح"><svg class="i"><use href="#i-sunrise"/></svg></button>
+              <button aria-pressed="true" aria-label="ظهر"><svg class="i"><use href="#i-sun"/></svg></button>
+              <button aria-pressed="false" aria-label="عصر"><svg class="i"><use href="#i-sunset"/></svg></button>
+              <button aria-pressed="false" aria-label="شب"><svg class="i"><use href="#i-moon"/></svg></button>
+            </div>
+            <div class="pick4" data-pick aria-label="تکرار">
+              <button aria-pressed="true">هر روز</button>
+              <button aria-pressed="false">روزهای خاص</button>
+              <button aria-pressed="false">هر ۱۴ روز</button>
+              <button aria-pressed="false">یک بار</button>
+            </div>
+            <div class="alarm" id="alarm">
+              <div class="row"><svg class="i sm c2"><use href="#i-bell"/></svg><span class="t-strong grow">زنگ</span><button class="switch" role="switch" aria-checked="true" id="alarm-sw" aria-label="زنگ"></button></div>
+              <div class="when col" style="gap:12px">
+                <div class="row between"><span class="bigtime">۱۴:۰۰</span><span class="t-cap c3">ساعت</span></div>
+                <div class="dcircles" id="alarm-days"></div>
+              </div>
+            </div>
+            <div class="toggles">
+              <button aria-pressed="false" data-k="imp"><svg class="i sm"><use href="#i-flag"/></svg>مهم</button>
+              <button aria-pressed="false" data-k="min"><svg class="i sm"><use href="#i-leaf"/></svg>روز حداقلی</button>
+            </div>
+            <button class="btn pri">ذخیره</button>
+          </div>
+        </div>
+      </div>
+      <figcaption><b>08 · کار جدید / ویرایش</b>Icon, part of day, repeat. «زنگ» sets an alarm time and the days it rings. «مهم» = one extra reminder.</figcaption>
+    </figure>
+
+    <!-- 09 Reminders -->
+    <figure>
+      <div class="phone m-dark" dir="rtl" lang="fa">
+        <div class="status"><span>۲۱:۰۸</span><span>۴۰٪</span></div>
+        <div class="topbar"><button class="icon-btn" aria-label="بازگشت"><svg class="i fwd"><use href="#i-back"/></svg></button><span class="t-title grow">یادآورها</span></div>
+        <div class="body">
+          <div class="statuscard"><svg class="i"><use href="#i-shield"/></svg><span class="t-strong grow">یادآورها سالم‌اند</span><button class="chip acc">آزمایش</button></div>
+          <div class="seg" data-seg role="group" aria-label="نوع روز"><button aria-pressed="true">روزهای عادی</button><button aria-pressed="false">جمعه</button></div>
+          <div class="card list">
+            <div class="li"><svg class="i sm c2"><use href="#i-sunrise"/></svg><span class="t-strong grow">صبح</span><span class="time">۰۷:۰۰</span><button class="switch" role="switch" aria-checked="true" aria-label="صبح"></button></div>
+            <div class="li"><svg class="i sm c2"><use href="#i-sun"/></svg><span class="t-strong grow">ظهر</span><span class="time">۱۳:۳۰</span><button class="switch" role="switch" aria-checked="true" aria-label="ظهر"></button></div>
+            <div class="li"><svg class="i sm c2"><use href="#i-sunset"/></svg><span class="t-strong grow">عصر</span><span class="time">۱۹:۰۰</span><button class="switch" role="switch" aria-checked="true" aria-label="عصر"></button></div>
+            <div class="li"><svg class="i sm c2"><use href="#i-moon"/></svg><span class="t-strong grow">شب</span><span class="time">۲۲:۳۰</span><button class="switch" role="switch" aria-checked="true" aria-label="شب"></button></div>
+          </div>
+          <span class="sec-title">زنگ‌های کارها</span>
+          <div class="card list">
+            <div class="li"><svg class="i sm c2"><use href="#i-pill"/></svg><div class="col grow"><span class="t-strong">ویتامین D</span><span class="t-cap c3">هر روز</span></div><span class="time">۱۴:۰۰</span><button class="switch" role="switch" aria-checked="true" aria-label="ویتامین D"></button></div>
+          </div>
+          <div class="card list">
+            <div class="li"><span class="t-strong grow">یادآور دوباره برای «مهم»</span><span class="meta">۴۵ دقیقه</span></div>
+            <div class="li"><span class="t-strong grow">مرور جمعه</span><span class="time">۱۹:۰۰</span></div>
+          </div>
+        </div>
+      </div>
+      <figcaption><b>09 · یادآورها</b>One time per part of the day (normal days / Friday), plus every task alarm in one list.</figcaption>
+    </figure>
+
+    <!-- 10 Workout plan -->
+    <figure>
+      <div class="phone m-dark" dir="rtl" lang="fa" id="plan">
+        <div class="status"><span>۲۱:۱۰</span><span>۳۹٪</span></div>
+        <div class="topbar"><button class="icon-btn" aria-label="بازگشت"><svg class="i fwd"><use href="#i-back"/></svg></button><span class="t-title grow">برنامه تمرین</span></div>
+        <div class="body">
+          <div class="plan-days" id="plan-days"></div>
+          <input class="name" id="wo-name" value="تمرین A · پایین‌تنه" aria-label="نام تمرین">
+          <div class="card" id="exlist"></div>
+          <button class="btn sec"><svg class="i sm"><use href="#i-plus"/></svg>حرکت جدید</button>
+        </div>
+      </div>
+      <figcaption><b>10 · برنامه تمرین</b>Pick a day, name the workout, add exercises. Each row opens: reps or seconds, sets, range. Drag to reorder.</figcaption>
+    </figure>
+
+    <div class="group-title">Light theme</div>
+    <figure>
+      <div id="today-light"></div>
+      <figcaption><b>11 · امروز (روشن)</b>Same screen, light colors.</figcaption>
+    </figure>
+  </section>
+</main>
+
+<template id="tpl-today">
+  <div class="phone" dir="rtl" lang="fa">
+    <div class="status"><span>۰۷:۰۲</span><span>۸۴٪</span></div>
+    <div class="body">
+      <div class="row">
+        <div class="date grow"><span class="d1">دوشنبه</span><span class="d2">۱۸ آبان · هفته ۵</span></div>
+        <button class="round" data-min aria-pressed="false" aria-label="روز حداقلی"><svg class="i"><use href="#i-leaf"/></svg></button>
+        <button class="round" aria-label="تنظیمات"><svg class="i"><use href="#i-gear"/></svg></button>
+      </div>
+      <div class="hero">
+        <div class="ring">
+          <svg viewBox="0 0 120 120" aria-hidden="true"><circle class="trk" cx="60" cy="60" r="52" fill="none" stroke-width="10"/><circle class="val" cx="60" cy="60" r="52" fill="none" stroke-width="10" stroke-linecap="round" stroke-dasharray="326.7" stroke-dashoffset="326.7"/></svg>
+          <div class="mid"><span class="big" data-done>۳</span><span class="small" data-total>از ۱۲</span></div>
+        </div>
+        <div class="week" aria-label="این هفته"><i class="wd l4"></i><i class="wd l3"></i><i class="wd today l1" data-todaydot></i><i class="wd fu"></i><i class="wd fu"></i><i class="wd fu"></i><i class="wd fu"></i></div>
+      </div>
+      <span class="minlabel">روز حداقلی</span>
+      <div class="times" role="group" aria-label="بخش روز">
+        <button aria-pressed="true" data-t="m" aria-label="صبح"><svg class="i"><use href="#i-sunrise"/></svg></button>
+        <button aria-pressed="false" data-t="d" aria-label="ظهر"><svg class="i"><use href="#i-sun"/></svg></button>
+        <button aria-pressed="false" data-t="e" aria-label="عصر"><svg class="i"><use href="#i-sunset"/></svg></button>
+        <button aria-pressed="false" data-t="n" aria-label="شب"><svg class="i"><use href="#i-moon"/></svg></button>
+      </div>
+      <div class="tiles"></div>
+    </div>
+    <nav class="nav" data-nav="0"></nav>
+  </div>
+</template>
+
+<script>
+(function () {
+  var FA = "۰۱۲۳۴۵۶۷۸۹";
+  function fa(n) { return String(n).replace(/\d/g, function (d) { return FA[d]; }); }
+  function press(group, btn) { group.querySelectorAll("button").forEach(function (b) { b.setAttribute("aria-pressed", b === btn ? "true" : "false"); }); }
+
+  // Icon-only bottom nav, RTL order: Today (right) · Dashboard · Progress · Week
+  var NAV = [["home","امروز"],["grid","داشبورد"],["chart","پیشرفت"],["cal","هفته"]];
+  function fillNav(nav) {
+    var on = +nav.dataset.nav;
+    nav.setAttribute("aria-label", "ناوبری");
+    nav.innerHTML = NAV.map(function (n, i) { return '<button class="' + (i === on ? "on" : "") + '" aria-label="' + n[1] + '"><svg class="i"><use href="#i-' + n[0] + '"/></svg></button>'; }).join("");
+  }
+
+  // Today: [label, icon, done, flags]  flags: i = important, f = in minimum day, d = due (interval), w = workout tile
+  var TASKS = {
+    m: [["پوست","drop",1,"i"],["مسواک","tooth",1,"f"],["کراتین","pill",1,"f"],["پروتئین","egg",0,""]],
+    d: [["ویتامین D","pill",0,""],["پروتئین","egg",0,""]],
+    e: [["تمرین B","dumbbell",0,"w"],["پروتئین","egg",0,""],["ناخن","scissors",0,"d"]],
+    n: [["پوست","drop",0,"i"],["مسواک","tooth",0,"if"],["میان‌وعده","apple",0,""]]
+  };
+  var MIN = [["مسواک","tooth",1,""],["کراتین","pill",1,""],["۱۰ شنا","dumbbell",0,""],["مسواک شب","tooth",0,""]];
+  function has(t, f) { return (t[3] || "").indexOf(f) > -1; }
+  function tileHTML(t, key, idx) {
+    var attrs = ' aria-pressed="' + (t[2] ? "true" : "false") + '" data-k="' + key + '" data-i="' + idx + '"';
+    if (has(t, "w")) return '<button class="tile wide"' + attrs + '><svg class="i lg ic"><use href="#i-' + t[1] + '"/></svg><span class="lb">' + t[0] + '</span><span class="play"><svg class="i fwd"><use href="#i-play"/></svg></span></button>';
+    var cls = "tile" + (has(t, "i") ? " imp" : "") + (has(t, "d") ? " due" : "");
+    var extra = has(t, "d") ? '<span class="chip nt tag">موعدش رسیده</span>' : has(t, "i") ? '<span class="imp-tag">مهم</span>' : "";
+    return '<button class="' + cls + '"' + attrs + '><svg class="i lg ic"><use href="#i-' + t[1] + '"/></svg><span class="lb">' + t[0] + '</span><span class="ok"><svg class="i xs"><use href="#i-check"/></svg></span>' + extra + '</button>';
+  }
+  var tpl = document.getElementById("tpl-today");
+  [["today-dark", "m-dark"], ["today-light", "m-light"]].forEach(function (p) {
+    var ph = tpl.content.firstElementChild.cloneNode(true);
+    ph.classList.add(p[1]);
+    document.getElementById(p[0]).replaceWith(ph);
+    var state = JSON.parse(JSON.stringify(TASKS)), minState = JSON.parse(JSON.stringify(MIN));
+    var cur = "m", tiles = ph.querySelector(".tiles"), ring = ph.querySelector(".val");
+    function render() {
+      var minOn = ph.classList.contains("min-on");
+      tiles.innerHTML = (minOn ? minState : state[cur]).map(function (t, i) { return tileHTML(t, minOn ? "min" : cur, i); }).join("");
+      var done = 0, total = 0;
+      Object.keys(state).forEach(function (k) {
+        var d = state[k].filter(function (t) { return t[2]; }).length; done += d; total += state[k].length;
+        ph.querySelector('[data-t="' + k + '"]').classList.toggle("full", d === state[k].length);
+      });
+      ph.querySelector("[data-done]").textContent = fa(done);
+      ph.querySelector("[data-total]").textContent = "از " + fa(total);
+      ring.style.strokeDashoffset = 326.7 * (1 - done / total);
+      var floor = minState.every(function (t) { return t[2]; });
+      var pct = done / total, lv = pct >= 1 ? 4 : pct >= .8 ? 3 : pct >= .5 ? 2 : (done > 0 || floor) ? 1 : 0;
+      ph.querySelector("[data-todaydot]").className = "wd today l" + lv;
+    }
+    ph.addEventListener("click", function (e) {
+      var t = e.target.closest(".tile");
+      if (t) { var arr = t.dataset.k === "min" ? minState : state[t.dataset.k]; var it = arr[+t.dataset.i]; it[2] = it[2] ? 0 : 1; render(); return; }
+      var tb = e.target.closest("[data-t]");
+      if (tb) { cur = tb.dataset.t; press(tb.parentNode, tb); render(); return; }
+      var mb = e.target.closest("[data-min]");
+      if (mb) { var on = ph.classList.toggle("min-on"); mb.setAttribute("aria-pressed", on); render(); }
+    });
+    render();
+  });
+  document.querySelectorAll("nav[data-nav]").forEach(fillNav);
+
+  // Dashboard
+  var LV = { 1: ["4","3","4","2","4","3","4"], 2: ["3","4","2","0","3","4","3"], 3: ["sp","sp","2","3","4","4","3"], 4: ["4","4","3","4","1","3","4"], 5: ["4","3","today","fu","fu","fu","fu"] };
+  function cls(v) { return v === "sp" ? "sp" : v === "fu" ? "fu" : v === "today" ? "l1 today" : "l" + v; }
+  var j = document.getElementById("journey");
+  for (var w = 1; w <= 23; w++) for (var dd = 0; dd < 7; dd++) { var c = document.createElement("i"); c.className = "cell s " + cls(LV[w] ? LV[w][dd] : "fu"); j.appendChild(c); }
+  var RANGE = { 5: "۱۷ تا ۲۳ آبان", 4: "۱۰ تا ۱۶ آبان", 3: "۳ تا ۹ آبان", 2: "۲۶ مهر تا ۲ آبان", 1: "۱۹ تا ۲۵ مهر" };
+  var SCORE = { 5: ["neu","جاری"], 4: ["acc","۸۸٪"], 3: ["acc","۸۵٪"], 2: ["neu","۷۴٪"], 1: ["acc","۹۱٪"] };
+  var wr = document.getElementById("weekrows");
+  [5,4,3,2,1].forEach(function (wk) {
+    var r = document.createElement("div"); r.className = "wrow" + (wk === 5 ? " cur" : "");
+    r.innerHTML = '<span class="wlab"><span class="t-lbl">هفته ' + fa(wk) + '</span><span class="t-over c3">' + RANGE[wk] + '</span></span><span class="wdays">' + LV[wk].map(function (v) { return '<i class="cell m ' + cls(v) + '"></i>'; }).join("") + '</span><span class="chip ' + SCORE[wk][0] + '">' + SCORE[wk][1] + '</span>';
+    wr.appendChild(r);
+  });
+
+  // Workout: counter + effort seekbar
+  var reps = 10, out = document.getElementById("reps"), curSet = document.getElementById("cur-set");
+  document.getElementById("workout").addEventListener("click", function (e) {
+    var s = e.target.closest("[data-step]");
+    if (s) { reps = Math.max(0, Math.min(40, reps + +s.dataset.step)); out.textContent = fa(reps); curSet.textContent = fa(reps); }
+  });
+  var ef = document.getElementById("effort"), efv = document.getElementById("effort-val");
+  function seek() { efv.textContent = fa(ef.value); ef.style.setProperty("--p", ((ef.value - 1) / 9 * 100) + "%"); }
+  ef.addEventListener("input", seek); seek();
+
+  // Week plan
+  var rw = document.getElementById("ritual-week");
+  ["ش","ی","د","س","چ","پ","ج"].forEach(function (d, i) { var s = document.createElement("span"); s.className = "day"; s.innerHTML = '<i class="cell ' + cls(LV[4][i]) + '"></i>' + d; rw.appendChild(s); });
+  var DAYS = [["ش","۱۷"],["ی","۱۸"],["د","۱۹"],["س","۲۰"],["چ","۲۱"],["پ","۲۲"],["ج","۲۳"]];
+  var dc = document.getElementById("dchips"), note = document.getElementById("cap-note");
+  DAYS.forEach(function (d, i) { var b = document.createElement("button"); b.className = "dchip"; b.setAttribute("aria-pressed", i === 3 ? "true" : "false"); b.innerHTML = d[0] + "<small>" + (i === 3 ? "سفر" : d[1]) + "</small>"; b.dataset.date = d[1]; dc.appendChild(b); });
+  dc.addEventListener("click", function (e) {
+    var b = e.target.closest(".dchip"); if (!b) return;
+    var on = b.getAttribute("aria-pressed") === "true";
+    if (!on && dc.querySelectorAll('[aria-pressed="true"]').length >= 2) { note.textContent = "سقف پر است"; note.className = "t-cap cnt"; return; }
+    b.setAttribute("aria-pressed", on ? "false" : "true"); b.querySelector("small").textContent = on ? b.dataset.date : "ویژه";
+    note.textContent = "حداکثر ۲"; note.className = "t-cap c3";
+  });
+  var SN = [["شنبه","ماست یونانی، یک مشت گردو، کمی عسل."],["یکشنبه","توپ انرژی جو دوسر:\n۱ پیمانه جو دوسر، ۲ قاشق کره بادام‌زمینی، ۱ قاشق عسل، کمی کاکائو. هم بزن، گلوله کن، ۳۰ دقیقه یخچال."],["دوشنبه","توپ انرژی (از یکشنبه)"],["سه‌شنبه",""],["چهارشنبه","۲ تخم‌مرغ آب‌پز و خیار"],["پنج‌شنبه",""],["جمعه","میوه و آجیل برای کوه"]];
+  var sn = document.getElementById("snacks");
+  SN.forEach(function (s, i) {
+    var r = document.createElement("div"); r.className = "acc-row" + (i === 1 ? " open" : "");
+    r.innerHTML = '<button class="acc-head" aria-expanded="' + (i === 1) + '"><span class="dot' + (s[1] ? "" : " empty") + '"></span><span class="t-strong grow">' + s[0] + '</span><svg class="i sm chev"><use href="#i-chev"/></svg></button><div class="acc-body"><textarea class="field" id="snack-' + i + '" rows="' + (s[1].length > 60 ? 4 : 2) + '" aria-label="میان‌وعده‌ی ' + s[0] + '" placeholder="چی آماده کنم؟"></textarea></div>';
+    r.querySelector("textarea").value = s[1]; sn.appendChild(r);
+  });
+  sn.addEventListener("click", function (e) { var h = e.target.closest(".acc-head"); if (!h) return; var o = h.parentNode.classList.toggle("open"); h.setAttribute("aria-expanded", o); });
+  sn.addEventListener("input", function (e) { if (e.target.matches("textarea")) e.target.closest(".acc-row").querySelector(".dot").classList.toggle("empty", !e.target.value.trim()); });
+
+  // Generic segmented groups and switches
+  document.querySelectorAll("[data-seg]").forEach(function (g) { g.addEventListener("click", function (e) { var b = e.target.closest("button"); if (b) press(g, b); }); });
+  document.querySelectorAll(".switch").forEach(function (s) { s.addEventListener("click", function () { s.setAttribute("aria-checked", s.getAttribute("aria-checked") === "true" ? "false" : "true"); }); });
+
+  // Task editor: pickers, toggles, alarm days
+  var ad = document.getElementById("alarm-days");
+  ["ش","ی","د","س","چ","پ","ج"].forEach(function (d) { var b = document.createElement("button"); b.textContent = d; b.setAttribute("aria-pressed", "true"); b.setAttribute("aria-label", "زنگ روز " + d); ad.appendChild(b); });
+  ad.lastChild.setAttribute("aria-pressed", "false");
+  var ed = document.getElementById("editor");
+  ed.addEventListener("click", function (e) {
+    var b = e.target.closest("[data-pick] button"); if (b) { press(b.parentNode, b); return; }
+    var t = e.target.closest(".toggles button, #alarm-days button"); if (t) { t.setAttribute("aria-pressed", t.getAttribute("aria-pressed") === "true" ? "false" : "true"); return; }
+  });
+  var asw = document.getElementById("alarm-sw"), alarm = document.getElementById("alarm");
+  asw.addEventListener("click", function () { alarm.classList.toggle("off", asw.getAttribute("aria-checked") !== "true"); });
+
+  // Workout plan editor
+  var PD = [["ش","A"],["ی",""],["د","B"],["س",""],["چ","C"],["پ",""],["ج","کوه"]];
+  var pd = document.getElementById("plan-days");
+  PD.forEach(function (d, i) { var b = document.createElement("button"); b.className = d[1] ? "train" : ""; b.setAttribute("aria-pressed", i === 0 ? "true" : "false"); b.innerHTML = d[0] + "<small>" + (d[1] || "—") + "</small>"; pd.appendChild(b); });
+  pd.addEventListener("click", function (e) { var b = e.target.closest("button"); if (b) press(pd, b); });
+  var EX = [["اسکوات","reps",3,12,15],["لانج","reps",3,10,12],["پل باسن","reps",3,12,15],["ساق پا","reps",3,15,20],["پلانک","sec",3,45,60]];
+  var el = document.getElementById("exlist");
+  EX.forEach(function (x, i) {
+    var r = document.createElement("div"); r.className = "exrow" + (i === 0 ? " open" : "");
+    var unit = x[1] === "sec" ? "ث" : "";
+    r.innerHTML = '<button class="exhead" aria-expanded="' + (i === 0) + '"><svg class="i sm grip"><use href="#i-grip"/></svg><span class="t-strong grow">' + x[0] + '</span><span class="chip neu">' + fa(x[2]) + ' × ' + fa(x[3]) + '–' + fa(x[4]) + unit + '</span><svg class="i sm chev"><use href="#i-chev"/></svg></button>' +
+      '<div class="exbody"><div class="seg" data-seg><button aria-pressed="' + (x[1] === "reps") + '">تکرار</button><button aria-pressed="' + (x[1] === "sec") + '">ثانیه</button></div>' +
+      '<div class="row between"><span class="t-lbl c2">ست</span><div class="ministep"><button aria-label="بیشتر"><svg class="i sm"><use href="#i-plus"/></svg></button><span>' + fa(x[2]) + '</span><button aria-label="کمتر"><svg class="i sm"><use href="#i-minus"/></svg></button></div></div>' +
+      '<div class="row between"><span class="t-lbl c2">از</span><div class="ministep"><button aria-label="بیشتر"><svg class="i sm"><use href="#i-plus"/></svg></button><span>' + fa(x[3]) + '</span><button aria-label="کمتر"><svg class="i sm"><use href="#i-minus"/></svg></button></div></div>' +
+      '<div class="row between"><span class="t-lbl c2">تا</span><div class="ministep"><button aria-label="بیشتر"><svg class="i sm"><use href="#i-plus"/></svg></button><span>' + fa(x[4]) + '</span><button aria-label="کمتر"><svg class="i sm"><use href="#i-minus"/></svg></button></div></div></div>';
+    el.appendChild(r);
+  });
+  el.addEventListener("click", function (e) {
+    var h = e.target.closest(".exhead"); if (h) { var o = h.parentNode.classList.toggle("open"); h.setAttribute("aria-expanded", o); return; }
+    var sg = e.target.closest("[data-seg] button"); if (sg) { press(sg.parentNode, sg); return; }
+    var ms = e.target.closest(".ministep button");
+    if (ms) { var sp = ms.parentNode.querySelector("span"); var v = +sp.textContent.replace(/[۰-۹]/g, function (c) { return FA.indexOf(c); }); v = Math.max(1, v + (ms === ms.parentNode.firstElementChild ? 1 : -1)); sp.textContent = fa(v); }
+  });
+})();
+</script>

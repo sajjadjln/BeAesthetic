@@ -6,7 +6,8 @@ Figma file: https://www.figma.com/design/1DzXN6iOhAa0PsnLDSjOAg
 - **Screens** page: mockups (01 Today, 02 Wall).
 
 HTML mockups (open in a browser; the controls work):
-- `docs/design/screens-minimal.html`: **minimal concept**. A day ring, icon tiles per part of the day, a big-number workout counter, a photo slider, one bar per week, 3 icon tabs.
+- `docs/design/screens.html`: **the chosen design** (round 3, a combination of the two below).
+- `docs/design/screens-minimal.html`: minimal concept, kept for reference.
 - `docs/design/screens-detailed.html`: detailed concept (round 2), kept for reference.
 
 ## Visual direction: "Quiet strength"
@@ -111,3 +112,20 @@ Persian text needs more line-height than Latin. The values above are tuned for V
 - Much less helper text inside the app.
 - Fixed: tappable rows had lost their side padding, so checks and chips touched the card edge (for example "کوتاه کردن ناخن").
 - New screens: **Settings** (gear on Today), **Tasks & routines** (with one-off tasks), **Task editor** (repeat, own reminder time, non-negotiable, minimum day) and **Reminders & alarms**.
+
+## Round 3: the combined design (current)
+
+| Screen | Based on | Notes |
+|---|---|---|
+| امروز (Today) | Minimal | Day ring, week dots, part-of-day icons, icon tiles. Due task: amber outline and «موعدش رسیده». Important task: gold outline and «مهم». Leaf button = minimum day. |
+| داشبورد (Dashboard) | Detailed | Whole-program grid and week rows. The «میانگین هفته‌ها» stat is removed. |
+| پیشرفت (Progress) | Detailed | Check-ins and photos are **monthly** (7 sets). |
+| تمرین (Workout) | Minimal | Effort is a 1–10 seek bar labelled «درجه سختی». |
+| هفته (Friday plan) | Detailed | Review, special days (max 2), snack drop-down notes. |
+| تنظیمات (Settings) | Minimal | Six tiles. |
+| کارها (Tasks) | Detailed | Grouped list with one-off tasks. |
+| کار جدید (Task editor) | Minimal + alarm | «زنگ»: time plus the days it rings. «مهم» and «روز حداقلی» toggles. |
+| یادآورها (Reminders) | Detailed | Part-of-day times (normal / Friday) and the list of task alarms. |
+| برنامه تمرین (Workout plan) | New | Day picker, workout name, exercises with reps/seconds, sets and range; drag to reorder. |
+
+The bottom navigation shows icons only: Today · Dashboard · Progress · Week. Settings opens from the gear on Today.

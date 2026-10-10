@@ -27,7 +27,7 @@ Items marked **[OPEN]** need your answer. Items marked **[DEFAULT]** are my choi
 | Finish line: final photos | 20 Mar 2027 | 29 Esfand 1405 (last day of the year) | Saturday |
 
 - Weeks run **Saturday → Friday**. There are 23 full weeks (161 days), plus Day 0 and the finish line.
-- **Check-ins** (photos and tape measurements) every 4 weeks, on Friday morning: Day 0, 6 Nov, 4 Dec, 1 Jan, 29 Jan, 26 Feb, plus the finish line. That makes **7 photo sets**.
+- **Check-ins** (photos and tape measurements) **once a month**, on a Friday morning: Day 0 (Mehr), then one per Jalali month (Aban, Azar, Dey, Bahman, Esfand), plus the finish line. That makes **7 photo sets**.
 - The app must accept a **baseline entered after the fact** (weight, measurements, photos and strength tests dated Day 0), because the app won't exist on Day 0.
 
 ### Weekly rhythm
@@ -56,6 +56,7 @@ Items marked **[OPEN]** need your answer. Items marked **[DEFAULT]** are my choi
 | M10 | **Reliability setup** | A setup screen for Xiaomi/MIUI/HyperOS and other aggressive phones (Autostart, battery settings), a test notification, and detection of reminders that fired late or not at all. |
 | M11 | **Backup** | Automatic weekly zip (data and photos) into a folder you choose, synced to your PC with Syncthing. Plus manual export/import and a restore flow that has been tested. |
 | M12 | **Bilingual** | Persian (default, right-to-left) and English. Jalali dates first with Gregorian underneath. Digits follow the language. |
+| M14 | **Workout plan editor** | Settings → برنامه تمرین: pick a weekday, name the workout, add exercises (reps or seconds, sets, range), reorder by dragging. |
 | M13 | **Onboarding** | Language → reminder times → reliability setup → backup folder → baseline entry (with past dates) → program import. |
 
 ### 3.2 Later (after the MVP is in daily use)
@@ -177,7 +178,7 @@ Non-negotiables are chosen per item in the app. The ✔ marks above are only my 
 ### 6.4 Workout progression **[OPEN: confirm option B from round 3]**
 - Each exercise has a set count and a rep range (or a time range for holds).
 - Each set is pre-filled with last session's numbers; no separate "target" is shown. When every set reaches the top of the range, the app suggests "+1 rep per set" or moving to the next (harder) version of the exercise. You confirm or ignore the suggestion; the app never changes your plan silently.
-- Effort is logged once per exercise as Easy / Good / Hard / Max (4 buttons). This is a simpler version of the 1–10 effort scale (RPE).
+- Effort is logged per set on a 1–10 seek bar labelled «درجه سختی» (an RPE scale).
 - A **personal record (PR)** is a new best on reps × sets for an exercise or a strength-test value. PRs show up in the Friday review and on Proof.
 
 ## 7. Reminders and notifications
