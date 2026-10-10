@@ -141,7 +141,7 @@ th { color:var(--page-muted); font-weight:600; font-size:12px; letter-spacing:.0
 <div class="wrap mask-squircle" id="root">
   <header class="intro">
     <h1>پیکر · logo board</h1>
-    <p>Round 2: a fun, cartoonish green sticker person, from your double-biceps reference. Four takes on it, each drawn as a real Android adaptive icon and shown large, at launcher sizes, and as the white silhouette Android uses in the status bar. Pick one with "Show in context" to see it on a home screen, in a notification and on the splash screen.</p>
+    <p><b>Chosen: «کارتونی», the cartoon sticker (D81).</b> The other three stay for reference. Round 2: a fun, cartoonish green sticker person, from your double-biceps reference. Four takes on it, each drawn as a real Android adaptive icon and shown large, at launcher sizes, and as the white silhouette Android uses in the status bar. Pick one with "Show in context" to see it on a home screen, in a notification and on the splash screen.</p>
   </header>
 
   <div class="bar" role="toolbar" aria-label="Board controls">
@@ -290,7 +290,7 @@ th { color:var(--page-muted); font-weight:600; font-size:12px; letter-spacing:.0
   function renderCards() {
     document.getElementById("cards").innerHTML = C.map(function (c) {
       return '<article class="c-card' + (c.id === current ? " sel" : "") + '" data-id="' + c.id + '">' +
-        '<div class="c-head"><b>' + c.fa + "</b><span>" + c.en + (c.rec ? ' · <span class="rec">recommended</span>' : "") + "</span></div>" +
+        '<div class="c-head"><b>' + c.fa + "</b><span>" + c.en + (c.rec ? ' · <span class="rec">chosen</span>' : "") + "</span></div>" +
         '<div class="c-hero">' + icon(c, 168) + "</div>" +
         '<div class="c-sizes">' + icon(c, 64) + icon(c, 48) + icon(c, 36) +
         '<span class="mono" title="Status bar silhouette, 24 and 18 px">' + glyph(c, 24) + glyph(c, 18) + "</span></div>" +

@@ -58,7 +58,7 @@ The program itself started on **2026-10-09 (Day 0)**. Week 1 began 2026-10-10. E
 7. **The workout plan** (exercises, sets, rep ranges for Sat / Mon / Wed). The user said they'll paste it. It seeds the Workout plan editor. With it: the **ladder rungs** for each move (D70). Default seeds: push-up = knee → standard → diamond → archer; pull-up = dead hang → negative → band-assisted → strict.
 8. **Snack list:** 5–10 snacks they can make.
 9. Day-level thresholds and the special-day cap (2/week) are defaults. Revisit after 2 weeks of real use.
-10. ~~Persian app name~~ → **«پیکر»** (D79). English stays "BeAesthetic". **Logo:** pick one of the cartoon sticker variants (D80) on the logo board (`docs/design/logo.html`, https://claude.ai/artifact/2o9iY6KqvcGFTbhYhFF6j9) for a refinement round (D78).
+10. ~~Persian app name~~ → **«پیکر»** (D79). English stays "BeAesthetic". **Logo:** ✅ the cartoon sticker (D81), files in `docs/design/logo/`; board (`docs/design/logo.html`, https://claude.ai/artifact/2o9iY6KqvcGFTbhYhFF6j9) (D78, D80).
 11. **Which Friday is the monthly check-in?** Needed for the check-in schedule. Default: the Friday closest to the 17th of each Jalali month (same spacing as Day 0). The mockup's «جمعه ۱۴ آذر» is sample data: 14 Azar 1405 is a Saturday.
 
 ## Backlog (after MVP, from `SPEC.md` §3.2)
