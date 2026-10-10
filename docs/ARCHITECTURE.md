@@ -1,6 +1,6 @@
 # BeAesthetic: Architecture (v0.1, proposal)
 
-Status: **Proposed** (2026-10-10). Items marked **[ASK]** wait for the user's answer (see `TASKS.md`). Everything else is my recommendation and becomes the plan unless the user objects.
+Status: **Accepted** (2026-10-10). The user approved every recommendation, except the install route: builds happen in Android Studio on the user's laptop (§13).
 For product rules see `SPEC.md`; for screens see `DESIGN.md`; for decision history see `DECISIONS.md` (D30 onward).
 
 ---
@@ -23,7 +23,7 @@ For product rules see `SPEC.md`; for screens see `DESIGN.md`; for decision histo
 | Settings | A single-row `settings` table **in Room**, not DataStore | One file holds everything, so backup and restore have one source. |
 | Dates | `java.time` (native from API 26) + our own Jalali converter | No dependency. See §6. |
 | Background | `AlarmManager` for reminders; WorkManager for the watchdog and backup jobs | Neither needs Google Play Services. WorkManager runs on JobScheduler. |
-| DI | **Manual DI** (one `AppContainer`) **[ASK]** | About 10 objects to wire. No annotation processing, no magic; receivers and workers just read `app.container`. Hilt also works without Google services, but costs build time for little gain here. |
+| DI | **Manual DI** (one `AppContainer`) | About 10 objects to wire. No annotation processing, no magic; receivers and workers just read `app.container`. Hilt also works without Google services, but costs build time for little gain here. |
 | JSON | kotlinx.serialization | Backup format and nav routes. No reflection, R8-friendly. |
 | Images | Coil 3 | Loads the progress photos from private storage. |
 | Charts | Hand-drawn with Compose `Canvas` | We need one line chart, a sparkline and a grid. A chart library would be bigger than that code. |
@@ -72,7 +72,7 @@ app/src/main/kotlin/app/beaesthetic/
   ui/today/ ui/dashboard/ ui/progress/ ui/week/ ui/workout/ ui/settings/ …
 ```
 
-Application ID: `app.beaesthetic` (debug builds: `app.beaesthetic.debug`, so both can be installed side by side). It can never change after the first install, so confirm it before slice 1.
+Application ID: `app.beaesthetic` (debug builds: `app.beaesthetic.debug`, so both can be installed side by side). It can never change after the first install, and it stays the same for a later Cafe Bazaar release (§15).
 
 ## 4. App architecture
 
@@ -142,7 +142,7 @@ AlarmScheduler.reconcile() (:app)
 | Xiaomi battery saver | Treated like an alarm clock; the most robust option | Can be delayed or dropped unless the app is set to "No restrictions" |
 | Visible side effect | An alarm icon in the status bar, and "next alarm" on the lock screen | None |
 
-**Recommendation: `setAlarmClock` for every user-facing reminder** (blocks, follow-ups, task alarms, the ritual). Reliability is a stated product rule, and the icon is a small price. **[ASK]** whether the icon is acceptable.
+**Recommendation: `setAlarmClock` for every user-facing reminder** (blocks, follow-ups, task alarms, the ritual). Reliability is a stated product rule, and the icon is a small price. The user accepted the icon.
 The scheduler has one switch (setting `alarmMode`), so we can move to `setExactAndAllowWhileIdle` later and let the reminder health log show whether it still holds on the phone.
 
 ### 7.3 Permissions
@@ -180,6 +180,8 @@ Blocks (default importance, sound), Follow-ups (high), Ritual & check-in (defaul
 
 ### 7.7 Xiaomi setup screen
 
+**Target phone: Poco X4 5G on HyperOS.** Poco uses the same Xiaomi security and battery apps, so HyperOS intents are tried first and tested on this phone.
+
 Each row opens the right screen through an explicit intent, with fallbacks: MIUI and HyperOS component names differ between versions, so each row tries a list of known intents and ends with the app's system details page.
 
 - Notifications on → app notification settings.
@@ -214,7 +216,7 @@ Physical schema for `SPEC.md` §9, updated for D25–D28. Dates are ISO `LocalDa
 | `reminder_slot` | profile (NORMAL·FRIDAY), part, time, enabled | |
 | `reminder_log` | id, key, kind, scheduledAt, firedAt?, outcome | §7.5 |
 | `backup_record` | id, at, fileName, sizeBytes, photoCount, ok, error? | |
-| `settings` | single row: language, programStartDate, rolloverHour, specialCapPerWeek, followUpMinutes, alarmMode, backupTreeUri, lastOpenedAt, lastBackupAt, onboardingDone | |
+| `settings` | single row: language, programStartDate, rolloverHour, specialCapPerWeek, followUpMinutes, alarmMode, backupTreeUri, lastOpenedAt, lastBackupAt, onboardingDone, programEndDate | |
 
 ### The day snapshot (why some derived numbers are stored)
 
@@ -290,7 +292,7 @@ Android's own cloud backup (`allowBackup`) is **off**: it would send data to Goo
 
 | Level | What | Where it runs |
 |---|---|---|
-| Unit, `:domain` (most tests) | Jalali; program date and the 04:00 rollover; week numbers; due lists for every repeat type; interval due dates and "counts only on the first due day"; day level thresholds; weekly score with special days and the cap; reminder planner (both profiles, follow-ups, task alarm weekdays, absence rule, nothing in the past); reminder health (late, missed, device off); set pre-fill; progression suggestion; PRs; "since Day 0" deltas; check-in schedule; backup JSON round trip and reading older format versions | Any JVM: the cloud container, CI, the laptop |
+| Unit, `:domain` (most tests) | Jalali; program date and the 04:00 rollover; week numbers; due lists for every repeat type; interval due dates and "counts only on the first due day"; day level thresholds; weekly score with special days and the cap; reminder planner (both profiles, follow-ups, task alarm weekdays, absence rule, nothing in the past); reminder health (late, missed, device off); set pre-fill; progression suggestion; PRs; "since Day 0" deltas; check-in schedule; backup JSON round trip and reading older format versions | Any JVM: Android Studio on the laptop, or a cloud session (`:domain` needs no Android SDK) |
 | Unit, `:app` with Robolectric | DAOs on an in-memory database, the day snapshot writer, `AlarmScheduler.reconcile()` against a shadow AlarmManager, notification content | JVM |
 | Instrumented | Room migrations; backup → wipe → restore round trip | An emulator or the phone, before each release |
 | Manual, on the phone | A reminder checklist per release: fires at the right time with the screen off, after a reboot, after an update, with battery saver on | The user's Xiaomi |
@@ -299,15 +301,14 @@ No UI screenshot tests in the MVP. Compose previews with fake state cover visual
 
 ## 13. Build, release and install
 
+- **Builds happen on the user's laptop** in Android Studio, which already has the Android SDK. The app is installed on the phone over USB (Run, or `adb install -r`, which keeps the data).
+- Cloud sessions don't build the app: their container can't download the Android SDK. They can still edit code and run `:domain` tests, which need only a JVM.
 - Gradle Kotlin DSL with a version catalog (`gradle/libs.versions.toml`). JDK 17 or newer.
-- **CI on GitHub Actions** (free for this repo):
-  - Every push: `:domain:test`, `:app:testDebugUnitTest`, lint, the banned-dependency check, and a debug APK as a build artifact.
-  - A tag `v0.3.0`: a signed release APK attached to a GitHub Release.
-- **Signing:** the user creates the release keystore once (`keytool`), keeps it in a password manager and on the PC, and adds it to the repo's GitHub secrets as base64 plus passwords. Losing the key means the next version can't install over the old one; data would then come back through a restore, but let's not test that.
+- **No CI in the MVP.** A GitHub Actions workflow that runs the tests can be added later if it's wanted; it changes nothing in the code.
+- **Signing:** the user creates the release keystore once (`keytool`) and keeps it in a password manager and on a second disk. An update only installs over the app when it's signed with the same key, and that includes the later Bazaar release. Debug builds use the debug key and the `.debug` app ID, so they never clash with the real install.
 - **Versions:** `versionName` = `0.<slice>.<fix>` until the MVP is complete, then `1.0.0`. `versionCode` = major × 10000 + minor × 100 + patch.
-- **Install route [ASK]:** recommended: open the GitHub Release on the phone, download the APK, install over the old one (same key, data kept). Alternative: build in Android Studio and install over USB.
 - R8 minify and resource shrinking on release builds, with keep rules for kotlinx.serialization.
-- **Cloud sessions:** this container can't reach `dl.google.com` (blocked by the environment's network policy), so it can't download the Android SDK. `:domain` builds and tests here; the Android app needs that host allowed (environment settings → Network access → add `dl.google.com`) or relies on CI.
+- A **banned-dependency check** runs as part of `./gradlew check` (no Google Play Services, Firebase or analytics).
 
 ## 14. Build order (Phase 5 slices)
 
@@ -315,7 +316,7 @@ Each slice ends with an installable APK, a short demo note, and a pause for feed
 
 | # | Slice | Done when |
 |---|---|---|
-| 1 | Skeleton: both modules, CI, theme (tokens, Vazirmatn, RTL, both languages), Room with seeded tasks (`SPEC.md` §5), **Today** with ticking, day snapshot, minimum day, week dots | Today works offline on the phone and survives restarts |
+| 1 | Skeleton: both modules, theme (tokens, Vazirmatn, RTL, both languages), Room with seeded tasks (`SPEC.md` §5), **Today** with ticking, day snapshot, minimum day, week dots | Today works offline on the phone and survives restarts |
 | 2 | **Reminders:** planner, scheduler, receivers, channels, follow-up "Done", reminder health + banner, Xiaomi setup screen, Reminders screen | A week of real reminders on the phone with a clean health log |
 | 3 | Tasks list + task editor (repeat rules, task alarms, important, minimum day) | The user edits their own routine without a rebuild |
 | 4 | Workout plan editor + workout session | A real session is logged and the next one is pre-filled |
@@ -325,4 +326,15 @@ Each slice ends with an installable APK, a short demo note, and a pause for feed
 | 8 | Friday review and plan (special days, snack notes, weekly backup) | The first real ritual is done in the app |
 | 9 | Onboarding | A fresh install walks through setup |
 
-Changes from the order in `TASKS.md`: onboarding moves last (the user is the only user and is already set up by the seed data), and slice 1 includes CI so every slice ships an APK the same way.
+Onboarding is last: the user is the only user for now and is already set up by the seed data.
+
+## 15. Later: a public release on Cafe Bazaar
+
+Far away, and **not in the MVP**. The user may publish the app on Cafe Bazaar for others. What we do now so that stays possible:
+
+- **App ID `app.beaesthetic` is final.** Android package names allow only Latin letters, digits and `_`, so every app in Iranian stores has an English ID. Stores match searches against the listing (title, description), not the package name. The ID has no effect on search ranking (Bazaar's own app is `com.farsitel.bazaar`).
+- **Nothing personal is hard-coded.** Program start and end dates live in `settings`; routines, the workout plan and reminder times are seed data the user can edit.
+- **The same release key** signs every build the user installs, so a store version can update the personal install later.
+- **The Persian app name** (launcher label) is a string resource, so it can differ per language.
+
+Left for that release: onboarding that sets your own program dates and routine; the Bazaar listing (a Persian title with the words people search for, description, screenshots); a short privacy note (the app collects nothing); and a check of Bazaar's current rules on target SDK and permissions such as `USE_EXACT_ALARM`.

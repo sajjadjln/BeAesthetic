@@ -20,7 +20,8 @@ If these files disagree, the order of trust is: `DECISIONS.md` (newest entry win
 - A developer with an Android background and a .NET backend background. Reads and reviews code. Explain technical choices with the reasons behind them.
 - Prefers **direct, opinionated recommendations** over a menu of equal options. When asking questions, ask 3–5 at a time, mostly multiple choice, mark the recommended option and give a one-line reason.
 - Lives in **Iran**: Google Play Services, Firebase push and some APIs are unreliable. The app must not depend on them.
-- Phone: **Xiaomi** (MIUI/HyperOS). It must work on any Android phone, but Xiaomi is the reliability target.
+- Phone: **Poco X4 5G on HyperOS** (Xiaomi). It must work on any Android phone, but this phone is the reliability target.
+- May publish the app on **Cafe Bazaar** much later. For now it's only for them. Don't add scope for it; just don't hard-code anything personal.
 - Works in Persian and English. The app is **Persian-first (RTL)** with English as a second language.
 - Their English is informal and sometimes has typos. Read for intent, and confirm when a message is truly ambiguous.
 - Known weak points the app must work against: quits when bored, when change isn't visible fast, or when there's no clear goal; routines slip (skincare, brushing, nails, snack prep).
@@ -54,7 +55,7 @@ If these files disagree, the order of trust is: `DECISIONS.md` (newest entry win
 
 - **`main` is the main branch** (created 2026-10-10 from `claude/trusting-lovelace-e5b7iq`, which has the same history). Start new work from `main`.
 - No app code exists yet. The repo holds only docs and HTML design mockups.
-- The cloud container blocks `dl.google.com` (no Android SDK download). Pure Kotlin (`:domain`) builds and tests here; Maven Central, Google Maven and Gradle are reachable.
+- **The app is built on the user's laptop in Android Studio** (it has the Android SDK) and installed over USB. Cloud sessions can't download the Android SDK (`dl.google.com` is blocked), so don't create or build the Android project there. Pure Kotlin (`:domain`) tests can run in a cloud session.
 - **Figma** file https://www.figma.com/design/1DzXN6iOhAa0PsnLDSjOAg holds the first design-system pass. It is **out of date**. The user's Figma account is on the Starter plan: 3 pages, 1 variable mode per collection, and **20 MCP calls per month**, which were used up on 2026-10-09. Don't plan work that depends on Figma. The HTML mockups are the reference.
 - Published mockups (private claude.ai artifacts): current combined design https://claude.ai/artifact/BwuSiLCGAxV5fGR86MSmjH · minimal concept https://claude.ai/artifact/SuxRScjnPrCJkpGEdogd7z. The detailed concept lives only in the repo (`docs/design/screens-detailed.html`).
 - To preview HTML locally, Chromium and Playwright are available in the cloud container (`/opt/node22/lib/node_modules/playwright`).

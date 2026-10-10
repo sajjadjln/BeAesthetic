@@ -9,17 +9,16 @@ _Last updated: 2026-10-10_
 | 1. Discovery | ✅ Done. Vision agreed. |
 | 2. Spec | ✅ Done (`docs/SPEC.md`). Some items still open, see below. |
 | 3. Design | ✅ **Approved 2026-10-10** (round 3, `docs/design/screens.html`). |
-| 4. Architecture | 🟡 **Proposal written** (`docs/ARCHITECTURE.md`, D31–D42). Waiting for the user's answers to the Phase 4 questions below. |
-| 5. Build | ⏳ Not started. No app code exists yet. |
+| 4. Architecture | ✅ **Approved 2026-10-10** (`docs/ARCHITECTURE.md`, D31–D45). |
+| 5. Build | ⏳ **Next.** No app code exists yet. Done on the user's laptop in Android Studio, not in a cloud session. |
 
 The program itself started on **2026-10-09 (Day 0)**. Week 1 began 2026-10-10. Every week without the app is a week without reminders, so keep moving.
 
 ## Next steps
 
-1. **Get answers to the Phase 4 questions** below, update `ARCHITECTURE.md` and the D31–D42 statuses, then summarize Phase 4 decisions.
-2. **Phase 5: Build** in vertical slices, order in `ARCHITECTURE.md` §14:
-   1. Skeleton (both modules, CI, theme, both languages), Today with seeded tasks, day snapshot, minimum day.
-   2. Reminders: planner, scheduler, receivers, reminder health, Xiaomi setup screen, Reminders screen.
+1. **Phase 5, slice 1**, in a session on the user's laptop (Android Studio and the Android SDK are there): create the project (`:domain` + `:app`, app ID `app.beaesthetic`), theme (tokens, Vazirmatn, RTL, both languages), Room with seeded tasks, Today with ticking, day snapshot, minimum day, week dots. See `ARCHITECTURE.md` §14 for the full slice list:
+   1. Skeleton + Today.
+   2. Reminders: planner, scheduler, receivers, reminder health, Xiaomi/HyperOS setup screen, Reminders screen.
    3. Tasks list + task editor.
    4. Workout plan editor + workout session.
    5. Dashboard (grid, week rows, day detail).
@@ -27,20 +26,8 @@ The program itself started on **2026-10-09 (Day 0)**. Week 1 began 2026-10-10. E
    7. Progress + monthly check-in + baseline entry with past dates + strength tests.
    8. Friday review and plan.
    9. Onboarding.
-3. Screens not designed yet (onboarding, check-in, strength test, backup/restore, day detail, notifications, English layouts) are designed inside the slice that needs them, as a quick HTML mockup first.
-
-## Phase 4 questions (asked 2026-10-10)
-
-1. **DI:** manual `AppContainer` (recommended) / Hilt / Koin.
-2. **Alarm type:** `setAlarmClock` with a status-bar alarm icon (recommended) / `setExactAndAllowWhileIdle`, no icon, less reliable on Xiaomi.
-3. **Install route:** download the APK from a GitHub Release on the phone (recommended) / build in Android Studio and install over USB. Is GitHub reachable from the phone?
-4. **Phone:** exact Xiaomi model and Android / HyperOS version (decides which Xiaomi settings intents to test first).
-5. **Build order:** OK with onboarding last and reminders as slice 2?
-6. **Application ID** `app.beaesthetic`: OK? (It can never change after the first install.)
-
-## Environment
-
-- The cloud container's network policy blocks `dl.google.com`, so the Android SDK can't be downloaded here. `:domain` (pure Kotlin) builds and tests fine. To build the app in cloud sessions, add `dl.google.com` to the environment's allowed domains (environment settings → Network access). Otherwise CI builds the APK.
+2. Screens not designed yet (onboarding, check-in, strength test, backup/restore, day detail, notifications, English layouts) are designed inside the slice that needs them, as a quick HTML mockup first.
+3. Before slice 1: the user creates the release keystore and stores it safely (`ARCHITECTURE.md` §13).
 
 ## Open questions for the user
 
@@ -53,10 +40,13 @@ The program itself started on **2026-10-09 (Day 0)**. Week 1 began 2026-10-10. E
 7. **The workout plan** (exercises, sets, rep ranges for Sat / Mon / Wed). The user said they'll paste it. It seeds the Workout plan editor.
 8. **Snack list:** 5–10 snacks they can make.
 9. Day-level thresholds and the special-day cap (2/week) are defaults. Revisit after 2 weeks of real use.
-10. **Which Friday is the monthly check-in?** Needed for the check-in schedule. Default: the Friday closest to the 17th of each Jalali month (same spacing as Day 0). The mockup's «جمعه ۱۴ آذر» is sample data: 14 Azar 1405 is a Saturday.
+10. **Persian app name** (launcher label). Until decided, the label is «BeAesthetic» in both languages.
+11. **Which Friday is the monthly check-in?** Needed for the check-in schedule. Default: the Friday closest to the 17th of each Jalali month (same spacing as Day 0). The mockup's «جمعه ۱۴ آذر» is sample data: 14 Azar 1405 is a Saturday.
 
 ## Backlog (after MVP, from `SPEC.md` §3.2)
 
+- Public release on Cafe Bazaar (far away; see `ARCHITECTURE.md` §15).
+- Optional GitHub Actions workflow that runs the tests on push.
 - Goals with progress bars inside Progress.
 - Before/after photo comparison slider.
 - In-app camera with a ghost overlay of the previous photo.

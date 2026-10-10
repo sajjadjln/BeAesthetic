@@ -56,22 +56,25 @@ Status: **Final** (agreed by the user) · **Default** (my choice, not yet confir
 | D29 | The GitHub-style grid is no longer required on Today; it lives only on the Dashboard. | User: "you don't need to follow everything I said". | Final |
 | D30 | **Phase 3 closed.** Design round 3 (`docs/design/screens.html`) is approved. Onboarding, check-in, strength test, backup/restore, day detail, notifications and the English layouts get designed during the build slice that needs them. | User: "Design round 3 is approved." | Final |
 
-## Phase 4: Architecture (2026-10-10, proposed in `docs/ARCHITECTURE.md`)
+## Phase 4: Architecture (2026-10-10, `docs/ARCHITECTURE.md`)
 
 | # | Decision | Why | Status |
 |---|---|---|---|
-| D31 | Native Kotlin + Jetpack Compose (M3 as a base, own theme), Room, coroutines/Flow, Navigation Compose, kotlinx.serialization, WorkManager, Coil. `minSdk 26`. No Google/Firebase/analytics dependency; a build check enforces it. | The user's expected stack; nothing in it needs Google Play Services. | Default |
-| D32 | Two modules: `:domain` (pure Kotlin, all rules and planners) and `:app` (Android). | The compiler keeps Android out of the rules; the important tests run on any JVM, including the cloud container. | Default |
-| D33 | Manual DI with one `AppContainer` instead of Hilt or Koin. | About 10 objects to wire; no annotation processing. | Default, asked |
-| D34 | Reminders: a pure planner produces the next ~48 h of alarms; an idempotent `reconcile()` applies them on every trigger (launch, fire, edit, boot, update, time change, 6-hourly watchdog). Content is built at fire time. | One code path, nothing duplicated, nothing stale. | Default |
-| D35 | `setAlarmClock` for every user-facing reminder; `USE_EXACT_ALARM` (sideloaded APK). A setting can switch to `setExactAndAllowWhileIdle`. | Most robust on Xiaomi; the cost is a status-bar alarm icon. | Default, asked |
-| D36 | Own Jalali converter (Kotlin port of `jalaali-js`) with tests. | Must live in the pure module; matches the official leap-year table. | Default |
-| D37 | **Day snapshot:** today's and yesterday's due/done counts are stored in `day` and frozen once the day leaves the edit window. Editing a task never recolors history. Day detail lists only what was done. | Honest history without versioning tasks; fits "no list of misses". | Default |
-| D38 | Settings live in a single-row Room table, not DataStore. "Routine" is renamed **task** in code. A task's alarm is stored on the task (one per task). | One file to back up; names match the UI. | Default |
-| D39 | Backup restores from `data.json` (versioned format); the raw DB copy is only a fallback. Zips are verified, written as `.partial` then renamed; keep 8. Restore makes a backup of current data first. Android auto-backup is off. Syncthing-Fork syncs the folder. | Old backups must restore into newer app versions; a half-written file must never look valid. | Default |
-| D40 | Photos are copied into private storage, downscaled to 2560 px, location EXIF removed. | Gallery deletions can't lose them; backups stay small. | Default |
-| D41 | CI on GitHub Actions builds every push; a version tag publishes a signed APK in a GitHub Release. | Every slice ships the same way; no laptop needed to install. | Default, install route asked |
-| D42 | Build order: skeleton + Today → reminders → tasks editor → workout → dashboard → backup → progress/check-in → Friday ritual → onboarding (moved last). | Reminders are the most urgent value; the user is already set up by seed data. | Default, asked |
+| D31 | Native Kotlin + Jetpack Compose (M3 as a base, own theme), Room, coroutines/Flow, Navigation Compose, kotlinx.serialization, WorkManager, Coil. `minSdk 26`. No Google/Firebase/analytics dependency; a build check enforces it. | The user's expected stack; nothing in it needs Google Play Services. | Final |
+| D32 | Two modules: `:domain` (pure Kotlin, all rules and planners) and `:app` (Android). | The compiler keeps Android out of the rules; the important tests run on any JVM, including the cloud container. | Final |
+| D33 | Manual DI with one `AppContainer` instead of Hilt or Koin. | About 10 objects to wire; no annotation processing. | Final |
+| D34 | Reminders: a pure planner produces the next ~48 h of alarms; an idempotent `reconcile()` applies them on every trigger (launch, fire, edit, boot, update, time change, 6-hourly watchdog). Content is built at fire time. | One code path, nothing duplicated, nothing stale. | Final |
+| D35 | `setAlarmClock` for every user-facing reminder; `USE_EXACT_ALARM` (sideloaded APK). A setting can switch to `setExactAndAllowWhileIdle`. | Most robust on Xiaomi; the cost is a status-bar alarm icon. | Final (user accepted the icon) |
+| D36 | Own Jalali converter (Kotlin port of `jalaali-js`) with tests. | Must live in the pure module; matches the official leap-year table. | Final |
+| D37 | **Day snapshot:** today's and yesterday's due/done counts are stored in `day` and frozen once the day leaves the edit window. Editing a task never recolors history. Day detail lists only what was done. | Honest history without versioning tasks; fits "no list of misses". | Final |
+| D38 | Settings live in a single-row Room table, not DataStore. "Routine" is renamed **task** in code. A task's alarm is stored on the task (one per task). | One file to back up; names match the UI. | Final |
+| D39 | Backup restores from `data.json` (versioned format); the raw DB copy is only a fallback. Zips are verified, written as `.partial` then renamed; keep 8. Restore makes a backup of current data first. Android auto-backup is off. Syncthing-Fork syncs the folder. | Old backups must restore into newer app versions; a half-written file must never look valid. | Final |
+| D40 | Photos are copied into private storage, downscaled to 2560 px, location EXIF removed. | Gallery deletions can't lose them; backups stay small. | Final |
+| D41 | ~~CI publishes signed APKs to GitHub Releases.~~ Superseded by D43. | | Superseded |
+| D42 | Build order: skeleton + Today → reminders → tasks editor → workout → dashboard → backup → progress/check-in → Friday ritual → onboarding (moved last). | Reminders are the most urgent value; the user is already set up by seed data. | Final |
+| D43 | **Builds happen in Android Studio on the user's laptop**, installed over USB. No CI in the MVP. Cloud sessions don't build the app. | User choice; the laptop already has the Android SDK. | Final |
+| D44 | Target phone: **Poco X4 5G on HyperOS**. HyperOS intents for the setup screen are tried and tested first. | User's phone. | Final |
+| D45 | A public release on **Cafe Bazaar** may come much later. App ID `app.beaesthetic` (English) stays; a Persian app name doesn't conflict with it, and the package name doesn't affect store search. Nothing personal is hard-coded (program dates in settings). | User plans it for later; keeps that door open at no cost now. | Final |
 
 ## Superseded
 
@@ -81,3 +84,4 @@ Status: **Final** (agreed by the user) · **Default** (my choice, not yet confir
 - Photos every 4 weeks → monthly in D28.
 - Minimum day as a bottom ghost button, then as a top switch → now a leaf icon button on Today (D27).
 - Thursday planning (first draft) → Friday (D7).
+- CI + GitHub Releases as the install route (D41) → Android Studio builds over USB (D43).
