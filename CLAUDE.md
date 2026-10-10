@@ -1,6 +1,6 @@
 # BeAesthetic
 
-**«آراسته شو»** (English: BeAesthetic) is a personal Android app for one person (the user) that runs a 23-week body-transformation program from **9 Oct 2026 to 20 Mar 2027** (17 Mehr – 29 Esfand 1405). It tells the user what to do each day, logs workouts and body progress, and reminds reliably on a Xiaomi phone without Google services.
+**«پیکر»** (English: BeAesthetic) is a personal Android app for one person (the user) that runs a 23-week body-transformation program from **9 Oct 2026 to 20 Mar 2027** (17 Mehr – 29 Esfand 1405). It tells the user what to do each day, logs workouts and body progress, and reminds reliably on a Xiaomi phone without Google services.
 
 ## Read these first, in order
 

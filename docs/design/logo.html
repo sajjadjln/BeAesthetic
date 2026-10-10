@@ -1,4 +1,4 @@
-<title>آراسته شو Logo</title>
+<title>پیکر Logo</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Estedad:wght@400;500;600;700;800&display=swap">
@@ -140,8 +140,8 @@ th { color:var(--page-muted); font-weight:600; font-size:12px; letter-spacing:.0
 
 <div class="wrap mask-squircle" id="root">
   <header class="intro">
-    <h1>آراسته شو · logo board</h1>
-    <p>Six icon ideas for «آراسته شو» (BeAesthetic in English), each drawn as a real Android adaptive icon: a dark background with the mark in the accent color. Each card shows the icon large, at launcher sizes, and as the white silhouette Android uses in the status bar. Pick one with "Show in context" to see it on a home screen, in a notification and on the splash screen.</p>
+    <h1>پیکر · logo board</h1>
+    <p>Six icon ideas for «پیکر» (BeAesthetic in English), each drawn as a real Android adaptive icon: a dark background with the mark in the accent color. Each card shows the icon large, at launcher sizes, and as the white silhouette Android uses in the status bar. Pick one with "Show in context" to see it on a home screen, in a notification and on the splash screen.</p>
   </header>
 
   <div class="bar" role="toolbar" aria-label="Board controls">
@@ -162,7 +162,7 @@ th { color:var(--page-muted); font-weight:600; font-size:12px; letter-spacing:.0
     <div class="ctx">
       <figure>
         <div class="phone home" id="home-dark"></div>
-        <figcaption><b>Home screen, dark wallpaper</b>The label under the icon is the launcher name: «آراسته شو».</figcaption>
+        <figcaption><b>Home screen, dark wallpaper</b>The label under the icon is the launcher name: «پیکر».</figcaption>
       </figure>
       <figure>
         <div class="phone home light" id="home-light"></div>
@@ -181,7 +181,7 @@ th { color:var(--page-muted); font-weight:600; font-size:12px; letter-spacing:.0
 
   <section class="sec" aria-labelledby="lock-h">
     <h2 id="lock-h">Wordmark and lockups</h2>
-    <p>«آراسته شو» set in Estedad ExtraBold, with «شو» in the accent: "become" is the action. Used on the splash screen, the about screen and, later, the store listing.</p>
+    <p>«پیکر» set in Estedad ExtraBold, next to the icon. Used on the splash screen, the about screen and, later, the store listing.</p>
     <div class="locks" id="locks"></div>
   </section>
 
@@ -194,7 +194,7 @@ th { color:var(--page-muted); font-weight:600; font-size:12px; letter-spacing:.0
         <tr><td>Monochrome layer</td><td>Same 108 dp canvas, one color</td><td>Android 13+ themed icons tint it to match the wallpaper.</td></tr>
         <tr><td>Notification small icon</td><td>24 × 24 dp, white on transparent</td><td>The status bar ignores color, so the silhouette alone must read.</td></tr>
         <tr><td>Splash icon</td><td>The adaptive icon in a 160 dp circle; optional branding image at the bottom</td><td>Background matches the app's dark background.</td></tr>
-        <tr><td>Launcher label</td><td>«آراسته شو» (Persian) · "BeAesthetic" (English)</td><td>String resources, so each language gets its own name.</td></tr>
+        <tr><td>Launcher label</td><td>«پیکر» (Persian) · "BeAesthetic" (English)</td><td>String resources, so each language gets its own name.</td></tr>
         <tr><td>Store icon (later)</td><td>512 × 512 px PNG</td><td>Exported from the same vector for Cafe Bazaar.</td></tr>
       </tbody>
     </table></div>
@@ -212,12 +212,12 @@ th { color:var(--page-muted); font-weight:600; font-size:12px; letter-spacing:.0
   function star(x, y, s) { return "M" + x + " " + (y - s) + "Q" + x + " " + y + " " + (x + s) + " " + y + "Q" + x + " " + y + " " + x + " " + (y + s) + "Q" + x + " " + y + " " + (x - s) + " " + y + "Q" + x + " " + y + " " + x + " " + (y - s) + "Z"; }
   var TORSO = "M35 43.5H73a3.5 3.5 0 0 1 3.3 4.6L66.6 74.6A4 4 0 0 1 62.8 77.5H45.2a4 4 0 0 1-3.8-2.9L31.7 48.1A3.5 3.5 0 0 1 35 43.5Z";
   var C = [
-    { id: "alef", fa: "آ", en: "The letter آ", rec: true,
-      idea: "<b>The first letter of «آراسته», drawn as a body.</b> The alef stands tall like a person; the madda above it is a wave of motion. Very Persian, and nothing else in the store looks like it.",
-      risk: "Reads as a letter first, a figure second.",
-      draw: function (c) { return '<rect x="47.5" y="45" width="13" height="37" rx="6.5" fill="' + c + '"/><path d="M35 36c5.5-7.5 11.5-8.2 17.5-3.2s12 4.5 17.5-3.3" fill="none" stroke="' + c + '" stroke-width="6.5" stroke-linecap="round"/>'; } },
-    { id: "torso", fa: "پیکر", en: "V-taper",
-      idea: "<b>The aesthetic silhouette:</b> broad shoulders, narrow waist, a head above. The most literal answer to \"aesthetic\".",
+    { id: "pe", fa: "پ", en: "The letter پ", rec: true,
+      idea: "<b>The first letter of «پیکر», drawn as a bold bowl with its three dots.</b> The dots also read as three sets, or three steps. Very Persian, and nothing else in the store looks like it.",
+      risk: "Abstract: it reads as a letter, not as a body.",
+      draw: function (c) { return '<path d="M73.5 37v12.5c0 8.5-5.5 13.5-13.5 13.5H46.5c-7 0-11.5-4.3-12-11" fill="none" stroke="' + c + '" stroke-width="7.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="48.5" cy="73" r="4.6" fill="' + c + '"/><circle cx="60" cy="73" r="4.6" fill="' + c + '"/><circle cx="54.2" cy="82" r="4.6" fill="' + c + '"/>'; } },
+    { id: "torso", fa: "اندام", en: "V-taper",
+      idea: "<b>A پیکر, literally:</b> broad shoulders, narrow waist, a head above. The name and the picture say the same thing.",
       risk: "Close to generic fitness icons; can read as a cup or shield.",
       draw: function (c) { return '<circle cx="54" cy="33" r="7" fill="' + c + '"/><path d="' + TORSO + '" fill="' + c + '"/>'; } },
     { id: "bust", fa: "تندیس", en: "Bust on a plinth",
@@ -229,7 +229,7 @@ th { color:var(--page-muted); font-weight:600; font-size:12px; letter-spacing:.0
       risk: "Says progress more than aesthetic.",
       draw: function (c) { return '<rect x="63" y="60" width="12" height="18" rx="3" fill="' + c + '"/><rect x="48.5" y="49" width="12" height="29" rx="3" fill="' + c + '"/><rect x="34" y="38" width="12" height="40" rx="3" fill="' + c + '"/><circle cx="40" cy="30" r="4.5" fill="' + c + '"/>'; } },
     { id: "mirror", fa: "آینه", en: "Mirror",
-      idea: "<b>An oval mirror with the V-taper reflected in it and a glint.</b> «آراسته» is about being put-together, and the mirror is where you check.",
+      idea: "<b>An oval mirror with the V-taper reflected in it and a glint.</b> Looking after yourself starts in the mirror.",
       risk: "Busy at small sizes; mirrors also suggest beauty salons.",
       draw: function (c) { return '<rect x="35.5" y="26.5" width="37" height="55" rx="18.5" fill="none" stroke="' + c + '" stroke-width="5"/><circle cx="54" cy="44" r="4.2" fill="' + c + '"/><path d="M45 51H63a2 2 0 0 1 1.9 2.6L60.6 66.4A2.4 2.4 0 0 1 58.3 68H49.7a2.4 2.4 0 0 1-2.3-1.6L43.1 53.6A2 2 0 0 1 45 51Z" fill="' + c + '"/><path d="' + star(64.5, 35.5, 4.6) + '" fill="' + c + '"/>'; } },
     { id: "ring", fa: "حلقه", en: "Ring and figure",
@@ -237,7 +237,7 @@ th { color:var(--page-muted); font-weight:600; font-size:12px; letter-spacing:.0
       risk: "Rings are common in fitness apps.",
       draw: function (c) { return '<path d="M67.5 30.6A27 27 0 1 1 40.5 30.6" fill="none" stroke="' + c + '" stroke-width="6" stroke-linecap="round"/><circle cx="54" cy="41.5" r="4.4" fill="' + c + '"/><path d="M44 49.5H64a2 2 0 0 1 1.9 2.6L61.3 65.2A2.4 2.4 0 0 1 59 66.8H49a2.4 2.4 0 0 1-2.3-1.6L42.1 52.1A2 2 0 0 1 44 49.5Z" fill="' + c + '"/>'; } }
   ];
-  var current = "alef";
+  var current = "pe";
   function byId(id) { return C.filter(function (x) { return x.id === id; })[0]; }
 
   // Launchers show the middle 72 of the 108 dp canvas; marks are scaled a little to sit well inside the safe circle.
@@ -272,7 +272,7 @@ th { color:var(--page-muted); font-weight:600; font-size:12px; letter-spacing:.0
   }
   function home(el, themed) {
     var c = byId(current);
-    var ours = '<span class="app ours">' + (themed ? icon(c, 52, { bg: "var(--themed-bg)", fg: "var(--themed-fg)" }) : icon(c, 52)) + '<span class="lab">آراسته شو</span></span>';
+    var ours = '<span class="app ours">' + (themed ? icon(c, 52, { bg: "var(--themed-bg)", fg: "var(--themed-fg)" }) : icon(c, 52)) + '<span class="lab">پیکر</span></span>';
     var apps = PH.map(function (p) { return p ? phIcon(p, themed) : ours; }).join("");
     var dock = [["ph-4", "تلفن", "ci"], ["ph-1", "پیام", "ln"], ["ph-2", "مرورگر", "ci"], ["ph-3", "دوربین", "sq"]].map(function (p) { return phIcon(p, themed).replace(/<span class="lab">[^<]*<\/span>/, ""); }).join("");
     el.innerHTML = '<div class="status"><span>۷:۰۲</span><span class="l">' + glyph(c, 14, "currentColor") + "<span>۸۵٪</span></span></div>" +
@@ -281,16 +281,16 @@ th { color:var(--page-muted); font-weight:600; font-size:12px; letter-spacing:.0
   function shade(el) {
     var c = byId(current);
     el.innerHTML = '<div class="sb"><span class="l">۷:۰۰ ' + glyph(c, 16, "#fff") + '</span><span>۸۵٪</span></div><div class="qs"><i></i><i></i><i></i><i></i></div>' +
-      '<div class="notif" dir="rtl"><div class="top">' + glyph(c, 14) + '<span>آراسته شو · الان</span></div><div class="ti">صبح: ۵ کار</div><div class="tx">مسواک · کراتین · اسکین‌کر · بعد از صبحانه</div></div>' +
-      '<div class="notif" dir="rtl"><div class="top">' + glyph(c, 14) + '<span>آراسته شو · ۴۵ دقیقه پیش</span></div><div class="ti">اسکین‌کر صبح</div><div class="tx">مهم</div><div class="acts" style="color:' + acc + '"><span>انجام شد</span></div></div>';
+      '<div class="notif" dir="rtl"><div class="top">' + glyph(c, 14) + '<span>پیکر · الان</span></div><div class="ti">صبح: ۵ کار</div><div class="tx">مسواک · کراتین · اسکین‌کر · بعد از صبحانه</div></div>' +
+      '<div class="notif" dir="rtl"><div class="top">' + glyph(c, 14) + '<span>پیکر · ۴۵ دقیقه پیش</span></div><div class="ti">اسکین‌کر صبح</div><div class="tx">مهم</div><div class="acts" style="color:' + acc + '"><span>انجام شد</span></div></div>';
   }
   function splash(el) {
     var c = byId(current);
-    el.innerHTML = '<span class="disc">' + icon(c, 160).replace('class="ico"', 'class="ico" style="border-radius:50%"') + '</span><div class="brand"><b>آراسته شو</b><span>BeAesthetic</span></div>';
+    el.innerHTML = '<span class="disc">' + icon(c, 160).replace('class="ico"', 'class="ico" style="border-radius:50%"') + '</span><div class="brand"><b>پیکر</b><span>BeAesthetic</span></div>';
   }
   function locks() {
     var c = byId(current);
-    var wm = '<span class="wm"><b>آراسته <em>شو</em></b><span>BeAesthetic</span></span>';
+    var wm = '<span class="wm"><b>پیکر</b><span>BeAesthetic</span></span>';
     document.getElementById("locks").innerHTML =
       '<div class="lock dark" style="--wm-acc:' + acc + '">' + icon(c, 64) + wm + "</div>" +
       '<div class="lock light" style="--wm-acc:' + darker(acc) + '">' + icon(c, 64) + wm + "</div>" +

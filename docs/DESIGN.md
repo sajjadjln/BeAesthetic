@@ -5,7 +5,7 @@ Published copy: https://claude.ai/artifact/BwuSiLCGAxV5fGR86MSmjH
 
 **Fonts and accent colors (the comparison behind D46–D47):** `docs/design/type-and-color.html` (https://claude.ai/artifact/WFBdvYr9iUavDkA1ifyZyE). The six fonts that were compared, Today in all five accents, and the «ظاهر و زبان» screen. Decided in D46–D47: **Estedad**, five accents, **green by default**.
 
-**Name and logo (D77, D78):** the app is «آراسته شو» in Persian, "BeAesthetic" in English. Logo concepts: `docs/design/logo.html` (https://claude.ai/artifact/2o9iY6KqvcGFTbhYhFF6j9). The concept is not picked yet.
+**Name and logo (D77, D78):** the app is «پیکر» in Persian, "BeAesthetic" in English (D79). Logo concepts: `docs/design/logo.html` (https://claude.ai/artifact/2o9iY6KqvcGFTbhYhFF6j9). The concept is not picked yet.
 
 **Motion demo (D76):** `docs/design/motion.html` (https://claude.ai/artifact/SdjkRYt5z13an56aZ99huE). Tap through the Today, Workout, Check-in and Dashboard phones; slow motion and "Remove animations" are in the top bar.
 
