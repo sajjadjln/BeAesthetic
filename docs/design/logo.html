@@ -1,0 +1,339 @@
+<title>آراسته شو Logo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Estedad:wght@400;500;600;700;800&display=swap">
+<style>
+/* Layout: a board of six icon cards, then the chosen icon in real places (home screens, status bar, notification, splash), then lockups and the Android specs.
+   Dark first, like the app. Tokens from docs/DESIGN.md. */
+:root {
+  --page-bg:#0A0C0B; --page-fg:#E6EAE8; --page-muted:#8D9692; --page-line:#222826; --card:#1B201E; --frame:#2A302E;
+  --t3:#6B7571;
+  --wall-a:#1B2A33; --wall-b:#0D1418; --wall-c:#2B2236;
+  --label:#F2F4F3; --ph-1:#3A4A55; --ph-2:#4C3F5E; --ph-3:#5A4B3A; --ph-4:#2F5049; --ph-glyph:#DCE3E7;
+  --themed-bg:#2A3530; --themed-fg:#B7DCC8;
+  --sbar:#000000; --sbar-fg:#FFFFFF; --notif:#1E2422; --notif-fg:#E9EEEB; --notif-sub:#A3ADA8;
+  --splash:#0E1110;
+  --font:"Estedad","Vazirmatn","Noto Sans Arabic",system-ui,sans-serif;
+  color-scheme:dark;
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --page-bg:#E9ECEA; --page-fg:#121614; --page-muted:#5C6662; --page-line:#CFD5D2; --card:#F4F6F5; --frame:#C9D0CC; --t3:#8A948F;
+    --themed-bg:#D6E8DE; --themed-fg:#1F4A35;
+    --notif:#FFFFFF; --notif-fg:#121614; --notif-sub:#5C6662; --splash:#0E1110;
+    color-scheme:light;
+  }
+}
+:root[data-theme="light"] {
+  --page-bg:#E9ECEA; --page-fg:#121614; --page-muted:#5C6662; --page-line:#CFD5D2; --card:#F4F6F5; --frame:#C9D0CC; --t3:#8A948F;
+  --themed-bg:#D6E8DE; --themed-fg:#1F4A35;
+  --notif:#FFFFFF; --notif-fg:#121614; --notif-sub:#5C6662; --splash:#0E1110;
+  color-scheme:light;
+}
+* { box-sizing:border-box; }
+body { background:var(--page-bg); color:var(--page-fg); font-family:var(--font); margin:0; }
+button { font:inherit; color:inherit; background:none; border:0; padding:0; cursor:pointer; }
+button:focus-visible, input:focus-visible { outline:2px solid var(--page-fg); outline-offset:2px; }
+.wrap { max-width:1240px; margin:0 auto; padding-inline:16px; padding-block:32px 72px; }
+.intro { display:grid; gap:10px; margin-bottom:22px; }
+.intro h1 { font-size:30px; font-weight:800; margin:0; text-wrap:balance; }
+.intro p { margin:0; color:var(--page-muted); font-size:15px; line-height:1.75; max-width:70ch; }
+h2 { font-size:20px; font-weight:800; margin:0; }
+.sec { margin-top:52px; display:grid; gap:16px; }
+.sec > p { margin:0; color:var(--page-muted); font-size:14px; line-height:1.7; max-width:72ch; }
+
+.bar { display:flex; flex-wrap:wrap; gap:10px 18px; align-items:center; padding:12px 14px; border:1px solid var(--page-line); border-radius:16px; font-size:13.5px; }
+.bar .grp { display:flex; flex-wrap:wrap; gap:6px; align-items:center; }
+.bar .lbl { color:var(--page-muted); font-size:12px; letter-spacing:.06em; text-transform:uppercase; margin-inline-end:4px; }
+.pill { display:inline-flex; align-items:center; gap:6px; padding:6px 11px; border-radius:999px; border:1px solid var(--page-line); font-size:13px; }
+.pill[aria-pressed="true"] { border-color:var(--page-fg); }
+.pill .sw { width:12px; height:12px; border-radius:50%; }
+.check { display:inline-flex; align-items:center; gap:8px; cursor:pointer; }
+.check input { width:16px; height:16px; margin:0; }
+
+/* icon masks: launchers crop the adaptive icon */
+.ico { display:block; overflow:hidden; flex:none; position:relative; }
+.mask-circle .ico { border-radius:50%; }
+.mask-squircle .ico { border-radius:30%; }
+.mask-rounded .ico { border-radius:22%; }
+.ico svg { display:block; width:100%; height:100%; }
+.ico .safe { position:absolute; inset:4%; border-radius:50%; border:1.5px dashed rgba(255,255,255,.55); pointer-events:none; display:none; }
+.show-safe .ico .safe { display:block; }
+
+/* concept cards */
+.cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(270px,1fr)); gap:18px; margin-top:20px; }
+.c-card { background:var(--card); border:1px solid var(--page-line); border-radius:20px; padding:18px; display:grid; gap:14px; align-content:start; }
+.c-card.sel { border-color:var(--page-fg); }
+.c-head { display:flex; justify-content:space-between; align-items:baseline; gap:8px; }
+.c-head b { font-size:16px; }
+.c-head span { font-size:12.5px; color:var(--page-muted); }
+.c-hero { display:flex; justify-content:center; padding:6px 0; }
+.c-sizes { display:flex; align-items:center; justify-content:center; gap:14px; flex-wrap:wrap; }
+.mono { display:flex; align-items:center; gap:10px; background:var(--sbar); color:var(--sbar-fg); border-radius:10px; padding:6px 10px; }
+.mono svg { display:block; }
+.c-card p { margin:0; font-size:13.5px; line-height:1.65; color:var(--page-muted); }
+.c-card p b { color:var(--page-fg); font-weight:600; }
+.use { justify-self:start; padding:7px 12px; border-radius:10px; border:1px solid var(--page-line); font-size:13px; }
+.c-card.sel .use { background:var(--page-fg); color:var(--page-bg); border-color:var(--page-fg); }
+.rec { font-size:11px; font-weight:700; letter-spacing:.04em; padding:2px 8px; border-radius:999px; border:1px solid var(--page-fg); }
+
+/* contexts */
+.ctx { display:flex; flex-wrap:wrap; gap:28px; justify-content:center; align-items:flex-start; }
+.ctx figure { margin:0; display:grid; gap:10px; width:300px; max-width:100%; }
+.ctx figcaption { font-size:13px; color:var(--page-muted); line-height:1.6; }
+.ctx figcaption b { color:var(--page-fg); display:block; font-size:14px; }
+.phone { width:300px; max-width:100%; height:600px; border-radius:30px; border:1px solid var(--frame); overflow:hidden; position:relative; direction:rtl; }
+.home { background:linear-gradient(160deg,var(--wall-a),var(--wall-b) 60%,var(--wall-c)); padding:44px 18px 0; }
+.home.light { background:linear-gradient(160deg,#DCE6EE,#F3EFE8 55%,#E6DDF0); }
+.clock { color:var(--label); text-align:center; font-weight:700; font-size:44px; line-height:1; margin-bottom:6px; }
+.date { color:var(--label); text-align:center; font-size:13px; opacity:.85; margin-bottom:36px; }
+.home.light .clock, .home.light .date { color:#1B2228; }
+.apps { display:grid; grid-template-columns:repeat(4,1fr); gap:20px 8px; justify-items:center; }
+.app { display:grid; justify-items:center; gap:6px; width:62px; }
+.app .lab { font-size:11px; color:var(--label); text-align:center; white-space:nowrap; text-shadow:0 1px 2px rgba(0,0,0,.45); }
+.home.light .app .lab { color:#1B2228; text-shadow:none; }
+.app.ours .lab { font-weight:600; }
+.ph { width:52px; height:52px; display:grid; place-items:center; }
+.mask-circle .ph { border-radius:50%; } .mask-squircle .ph { border-radius:30%; } .mask-rounded .ph { border-radius:22%; }
+.ph i { display:block; background:var(--ph-glyph); opacity:.85; }
+.dock { position:absolute; bottom:18px; inset-inline:18px; display:grid; grid-template-columns:repeat(4,1fr); justify-items:center; padding:12px 6px; border-radius:24px; background:rgba(255,255,255,.08); }
+.home.light .dock { background:rgba(255,255,255,.55); }
+.status { position:absolute; top:0; inset-inline:0; height:30px; display:flex; align-items:center; justify-content:space-between; padding-inline:18px; font-size:12px; color:var(--label); direction:ltr; }
+.home.light .status { color:#1B2228; }
+.status .l { display:flex; align-items:center; gap:7px; }
+
+.shade { background:#0B0E0D; padding:0 0 14px; }
+.shade .sb { height:34px; background:var(--sbar); color:var(--sbar-fg); display:flex; align-items:center; justify-content:space-between; padding-inline:16px; font-size:12.5px; direction:ltr; }
+.shade .sb .l { display:flex; align-items:center; gap:8px; }
+.shade .qs { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; padding:16px; }
+.shade .qs i { display:block; height:46px; border-radius:16px; background:#1B211F; }
+.notif { margin:6px 12px 0; background:var(--notif); color:var(--notif-fg); border-radius:20px; padding:12px 14px; display:grid; gap:4px; }
+.notif .top { display:flex; align-items:center; gap:7px; font-size:11.5px; color:var(--notif-sub); }
+.notif .top svg { color:var(--notif-sub); }
+.notif .ti { font-size:14px; font-weight:700; }
+.notif .tx { font-size:13px; color:var(--notif-sub); }
+.notif .acts { display:flex; gap:16px; margin-top:6px; font-size:13px; font-weight:700; }
+
+.splash { background:var(--splash); display:grid; place-items:center; }
+.splash .brand { position:absolute; bottom:46px; inset-inline:0; display:grid; justify-items:center; gap:2px; }
+.splash .brand b { color:#EDF0EE; font-size:20px; font-weight:800; }
+.splash .brand span { color:#6B7571; font-size:11.5px; direction:ltr; letter-spacing:.04em; }
+.splash .disc { width:160px; height:160px; border-radius:50%; overflow:hidden; }
+
+/* lockups */
+.locks { display:flex; flex-wrap:wrap; gap:18px; }
+.lock { flex:1 1 320px; min-width:0; border-radius:20px; padding:26px 22px; display:flex; align-items:center; justify-content:center; gap:16px; direction:rtl; }
+.lock.dark { background:#0E1110; color:#EDF0EE; }
+.lock.light { background:#F6F7F6; color:#0E1110; border:1px solid var(--page-line); }
+.lock .wm { display:grid; gap:2px; }
+.lock .wm b { font-size:30px; font-weight:800; line-height:1.15; }
+.lock .wm b em { font-style:normal; color:var(--wm-acc); }
+.lock .wm span { font-size:12px; letter-spacing:.06em; direction:ltr; text-align:right; opacity:.6; }
+.lock.stack { flex-direction:column; text-align:center; }
+.lock.stack .wm span { text-align:center; }
+
+.tbl { overflow-x:auto; }
+table { border-collapse:collapse; font-size:13.5px; min-width:560px; width:100%; }
+th, td { text-align:start; padding:9px 10px; border-bottom:1px solid var(--page-line); vertical-align:top; line-height:1.55; }
+th { color:var(--page-muted); font-weight:600; font-size:12px; letter-spacing:.05em; text-transform:uppercase; }
+</style>
+
+<div class="wrap mask-squircle" id="root">
+  <header class="intro">
+    <h1>آراسته شو · logo board</h1>
+    <p>Six icon ideas for «آراسته شو» (BeAesthetic in English), each drawn as a real Android adaptive icon: a dark background with the mark in the accent color. Each card shows the icon large, at launcher sizes, and as the white silhouette Android uses in the status bar. Pick one with "Show in context" to see it on a home screen, in a notification and on the splash screen.</p>
+  </header>
+
+  <div class="bar" role="toolbar" aria-label="Board controls">
+    <div class="grp"><span class="lbl">Mark color</span><span id="acc-ctl" style="display:contents"></span></div>
+    <div class="grp"><span class="lbl">Icon shape</span>
+      <button class="pill" data-mask="circle">Circle</button>
+      <button class="pill" data-mask="squircle" aria-pressed="true">Squircle</button>
+      <button class="pill" data-mask="rounded">Rounded square</button>
+    </div>
+    <label class="check"><input type="checkbox" id="safe"> Show the safe zone</label>
+  </div>
+
+  <div class="cards" id="cards"></div>
+
+  <section class="sec" aria-labelledby="ctx-h">
+    <h2 id="ctx-h">In context: <span id="ctx-name"></span></h2>
+    <p>The same icon on a dark and a light home screen (with Android 13 themed icons as an option), in the status bar and a reminder notification, and on the splash screen. The other app icons are neutral placeholders.</p>
+    <div class="ctx">
+      <figure>
+        <div class="phone home" id="home-dark"></div>
+        <figcaption><b>Home screen, dark wallpaper</b>The label under the icon is the launcher name: «آراسته شو».</figcaption>
+      </figure>
+      <figure>
+        <div class="phone home light" id="home-light"></div>
+        <figcaption><b>Home screen, light wallpaper</b><label class="check"><input type="checkbox" id="themed"> Themed icons (Android 13+)</label></figcaption>
+      </figure>
+      <figure>
+        <div class="phone shade" id="shade"></div>
+        <figcaption><b>Status bar and a reminder</b>Android shows only a white silhouette of the icon in the status bar and the notification header.</figcaption>
+      </figure>
+      <figure>
+        <div class="phone splash" id="splash"></div>
+        <figcaption><b>Splash screen (Android 12+)</b>The icon sits in a 160 dp circle; the wordmark goes at the bottom.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="sec" aria-labelledby="lock-h">
+    <h2 id="lock-h">Wordmark and lockups</h2>
+    <p>«آراسته شو» set in Estedad ExtraBold, with «شو» in the accent: "become" is the action. Used on the splash screen, the about screen and, later, the store listing.</p>
+    <div class="locks" id="locks"></div>
+  </section>
+
+  <section class="sec" aria-labelledby="spec-h">
+    <h2 id="spec-h">What gets built for Android</h2>
+    <div class="tbl"><table>
+      <thead><tr><th>Asset</th><th>Spec</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td>Adaptive icon</td><td>108 × 108 dp, two layers (background, foreground); content inside the 66 dp safe circle</td><td>Vector drawables from these SVGs. Launchers crop to their own shape, so nothing important may sit near the edge.</td></tr>
+        <tr><td>Monochrome layer</td><td>Same 108 dp canvas, one color</td><td>Android 13+ themed icons tint it to match the wallpaper.</td></tr>
+        <tr><td>Notification small icon</td><td>24 × 24 dp, white on transparent</td><td>The status bar ignores color, so the silhouette alone must read.</td></tr>
+        <tr><td>Splash icon</td><td>The adaptive icon in a 160 dp circle; optional branding image at the bottom</td><td>Background matches the app's dark background.</td></tr>
+        <tr><td>Launcher label</td><td>«آراسته شو» (Persian) · "BeAesthetic" (English)</td><td>String resources, so each language gets its own name.</td></tr>
+        <tr><td>Store icon (later)</td><td>512 × 512 px PNG</td><td>Exported from the same vector for Cafe Bazaar.</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+</div>
+
+<script>
+(function () {
+  "use strict";
+  var root = document.getElementById("root");
+  var BG = "#121715";
+  var ACC = [["green", "سبز", "#34C47A"], ["blue", "آبی", "#4D9BF0"], ["teal", "فیروزه‌ای", "#2CC2B4"], ["violet", "بنفش", "#9B7BEA"], ["orange", "نارنجی", "#F28B3C"]];
+  var acc = ACC[0][2];
+
+  function star(x, y, s) { return "M" + x + " " + (y - s) + "Q" + x + " " + y + " " + (x + s) + " " + y + "Q" + x + " " + y + " " + x + " " + (y + s) + "Q" + x + " " + y + " " + (x - s) + " " + y + "Q" + x + " " + y + " " + x + " " + (y - s) + "Z"; }
+  var TORSO = "M35 43.5H73a3.5 3.5 0 0 1 3.3 4.6L66.6 74.6A4 4 0 0 1 62.8 77.5H45.2a4 4 0 0 1-3.8-2.9L31.7 48.1A3.5 3.5 0 0 1 35 43.5Z";
+  var C = [
+    { id: "alef", fa: "آ", en: "The letter آ", rec: true,
+      idea: "<b>The first letter of «آراسته», drawn as a body.</b> The alef stands tall like a person; the madda above it is a wave of motion. Very Persian, and nothing else in the store looks like it.",
+      risk: "Reads as a letter first, a figure second.",
+      draw: function (c) { return '<rect x="47.5" y="45" width="13" height="37" rx="6.5" fill="' + c + '"/><path d="M35 36c5.5-7.5 11.5-8.2 17.5-3.2s12 4.5 17.5-3.3" fill="none" stroke="' + c + '" stroke-width="6.5" stroke-linecap="round"/>'; } },
+    { id: "torso", fa: "پیکر", en: "V-taper",
+      idea: "<b>The aesthetic silhouette:</b> broad shoulders, narrow waist, a head above. The most literal answer to \"aesthetic\".",
+      risk: "Close to generic fitness icons; can read as a cup or shield.",
+      draw: function (c) { return '<circle cx="54" cy="33" r="7" fill="' + c + '"/><path d="' + TORSO + '" fill="' + c + '"/>'; } },
+    { id: "bust", fa: "تندیس", en: "Bust on a plinth",
+      idea: "<b>A classical bust on a pedestal.</b> The statue is where the aesthetic ideal comes from, and a plinth says \"achievement\".",
+      risk: "Most detail of the six; the plinth gets thin at 24 px.",
+      draw: function (c) { return '<circle cx="54" cy="35" r="9.5" fill="' + c + '"/><path d="M33 66C33 55.5 42.5 49 54 49s21 6.5 21 17Z" fill="' + c + '"/><rect x="41" y="68.5" width="26" height="5" rx="1.5" fill="' + c + '"/><rect x="38" y="75.5" width="32" height="5" rx="2" fill="' + c + '"/>'; } },
+    { id: "steps", fa: "پله", en: "Rising steps",
+      idea: "<b>Three steps rising right → left, with a head on the top step:</b> someone climbing, in the direction time flows in the app. Ties to the exercise ladders.",
+      risk: "Says progress more than aesthetic.",
+      draw: function (c) { return '<rect x="63" y="60" width="12" height="18" rx="3" fill="' + c + '"/><rect x="48.5" y="49" width="12" height="29" rx="3" fill="' + c + '"/><rect x="34" y="38" width="12" height="40" rx="3" fill="' + c + '"/><circle cx="40" cy="30" r="4.5" fill="' + c + '"/>'; } },
+    { id: "mirror", fa: "آینه", en: "Mirror",
+      idea: "<b>An oval mirror with the V-taper reflected in it and a glint.</b> «آراسته» is about being put-together, and the mirror is where you check.",
+      risk: "Busy at small sizes; mirrors also suggest beauty salons.",
+      draw: function (c) { return '<rect x="35.5" y="26.5" width="37" height="55" rx="18.5" fill="none" stroke="' + c + '" stroke-width="5"/><circle cx="54" cy="44" r="4.2" fill="' + c + '"/><path d="M45 51H63a2 2 0 0 1 1.9 2.6L60.6 66.4A2.4 2.4 0 0 1 58.3 68H49.7a2.4 2.4 0 0 1-2.3-1.6L43.1 53.6A2 2 0 0 1 45 51Z" fill="' + c + '"/><path d="' + star(64.5, 35.5, 4.6) + '" fill="' + c + '"/>'; } },
+    { id: "ring", fa: "حلقه", en: "Ring and figure",
+      idea: "<b>The day ring, almost closed, with the figure rising out of its gap.</b> Joins the app's main visual with the aesthetic body.",
+      risk: "Rings are common in fitness apps.",
+      draw: function (c) { return '<path d="M67.5 30.6A27 27 0 1 1 40.5 30.6" fill="none" stroke="' + c + '" stroke-width="6" stroke-linecap="round"/><circle cx="54" cy="41.5" r="4.4" fill="' + c + '"/><path d="M44 49.5H64a2 2 0 0 1 1.9 2.6L61.3 65.2A2.4 2.4 0 0 1 59 66.8H49a2.4 2.4 0 0 1-2.3-1.6L42.1 52.1A2 2 0 0 1 44 49.5Z" fill="' + c + '"/>'; } }
+  ];
+  var current = "alef";
+  function byId(id) { return C.filter(function (x) { return x.id === id; })[0]; }
+
+  // Launchers show the middle 72 of the 108 dp canvas; marks are scaled a little to sit well inside the safe circle.
+  function icon(concept, size, opts) {
+    opts = opts || {};
+    var bg = opts.bg || BG, fg = opts.fg || acc;
+    return '<span class="ico" style="width:' + size + "px;height:" + size + 'px"><svg viewBox="18 18 72 72" aria-hidden="true"><rect x="0" y="0" width="108" height="108" fill="' + bg + '"/><g transform="translate(54 54) scale(.9) translate(-54 -54)">' + concept.draw(fg) + '</g></svg><span class="safe"></span></span>';
+  }
+  function glyph(concept, size, color) {
+    return '<svg viewBox="22 22 64 64" width="' + size + '" height="' + size + '" aria-hidden="true">' + concept.draw(color || "currentColor") + "</svg>";
+  }
+
+  function renderCards() {
+    document.getElementById("cards").innerHTML = C.map(function (c) {
+      return '<article class="c-card' + (c.id === current ? " sel" : "") + '" data-id="' + c.id + '">' +
+        '<div class="c-head"><b>' + c.fa + "</b><span>" + c.en + (c.rec ? ' · <span class="rec">recommended</span>' : "") + "</span></div>" +
+        '<div class="c-hero">' + icon(c, 168) + "</div>" +
+        '<div class="c-sizes">' + icon(c, 64) + icon(c, 48) + icon(c, 36) +
+        '<span class="mono" title="Status bar silhouette, 24 and 18 px">' + glyph(c, 24) + glyph(c, 18) + "</span></div>" +
+        "<p>" + c.idea + "</p><p><b>Risk:</b> " + c.risk + "</p>" +
+        '<button class="use" data-use="' + c.id + '">' + (c.id === current ? "Shown in context" : "Show in context") + "</button></article>";
+    }).join("");
+  }
+
+  var PH = [["ph-1", "تقویم", "sq"], ["ph-2", "یادداشت", "ln"], ["ph-3", "دوربین", "ci"], ["ph-4", "ساعت", "ci"], ["ph-2", "گالری", "sq"], ["ph-1", "پیام‌ها", "ln"], null, ["ph-3", "موسیقی", "ci"], ["ph-4", "نقشه", "sq"], ["ph-1", "فایل‌ها", "ln"], ["ph-3", "ماشین‌حساب", "sq"], ["ph-2", "هواشناسی", "ci"]];
+  function phIcon(p, themed) {
+    var bg = themed ? "var(--themed-bg)" : "var(--" + p[0] + ")";
+    var g = p[2] === "ci" ? '<i style="width:18px;height:18px;border-radius:50%' + (themed ? ";background:var(--themed-fg)" : "") + '"></i>' :
+      p[2] === "sq" ? '<i style="width:18px;height:18px;border-radius:4px' + (themed ? ";background:var(--themed-fg)" : "") + '"></i>' :
+      '<i style="width:22px;height:4px;border-radius:2px;box-shadow:0 7px 0 currentColor,0 -7px 0 currentColor;color:' + (themed ? "var(--themed-fg)" : "var(--ph-glyph)") + (themed ? ";background:var(--themed-fg)" : "") + '"></i>';
+    return '<span class="app"><span class="ph" style="background:' + bg + '">' + g + '</span><span class="lab">' + p[1] + "</span></span>";
+  }
+  function home(el, themed) {
+    var c = byId(current);
+    var ours = '<span class="app ours">' + (themed ? icon(c, 52, { bg: "var(--themed-bg)", fg: "var(--themed-fg)" }) : icon(c, 52)) + '<span class="lab">آراسته شو</span></span>';
+    var apps = PH.map(function (p) { return p ? phIcon(p, themed) : ours; }).join("");
+    var dock = [["ph-4", "تلفن", "ci"], ["ph-1", "پیام", "ln"], ["ph-2", "مرورگر", "ci"], ["ph-3", "دوربین", "sq"]].map(function (p) { return phIcon(p, themed).replace(/<span class="lab">[^<]*<\/span>/, ""); }).join("");
+    el.innerHTML = '<div class="status"><span>۷:۰۲</span><span class="l">' + glyph(c, 14, "currentColor") + "<span>۸۵٪</span></span></div>" +
+      '<div class="clock">۷:۰۲</div><div class="date">شنبه ۱۸ آبان</div><div class="apps">' + apps + '</div><div class="dock">' + dock + "</div>";
+  }
+  function shade(el) {
+    var c = byId(current);
+    el.innerHTML = '<div class="sb"><span class="l">۷:۰۰ ' + glyph(c, 16, "#fff") + '</span><span>۸۵٪</span></div><div class="qs"><i></i><i></i><i></i><i></i></div>' +
+      '<div class="notif" dir="rtl"><div class="top">' + glyph(c, 14) + '<span>آراسته شو · الان</span></div><div class="ti">صبح: ۵ کار</div><div class="tx">مسواک · کراتین · اسکین‌کر · بعد از صبحانه</div></div>' +
+      '<div class="notif" dir="rtl"><div class="top">' + glyph(c, 14) + '<span>آراسته شو · ۴۵ دقیقه پیش</span></div><div class="ti">اسکین‌کر صبح</div><div class="tx">مهم</div><div class="acts" style="color:' + acc + '"><span>انجام شد</span></div></div>';
+  }
+  function splash(el) {
+    var c = byId(current);
+    el.innerHTML = '<span class="disc">' + icon(c, 160).replace('class="ico"', 'class="ico" style="border-radius:50%"') + '</span><div class="brand"><b>آراسته شو</b><span>BeAesthetic</span></div>';
+  }
+  function locks() {
+    var c = byId(current);
+    var wm = '<span class="wm"><b>آراسته <em>شو</em></b><span>BeAesthetic</span></span>';
+    document.getElementById("locks").innerHTML =
+      '<div class="lock dark" style="--wm-acc:' + acc + '">' + icon(c, 64) + wm + "</div>" +
+      '<div class="lock light" style="--wm-acc:' + darker(acc) + '">' + icon(c, 64) + wm + "</div>" +
+      '<div class="lock dark stack" style="--wm-acc:' + acc + '">' + icon(c, 88) + wm + "</div>";
+  }
+  function darker(hex) {
+    var map = { "#34C47A": "#1D8A55", "#4D9BF0": "#1F6BD0", "#2CC2B4": "#0E8379", "#9B7BEA": "#6644C8", "#F28B3C": "#C2570F" };
+    return map[hex] || hex;
+  }
+  function renderAll() {
+    renderCards();
+    document.getElementById("ctx-name").textContent = byId(current).fa + " · " + byId(current).en;
+    home(document.getElementById("home-dark"), false);
+    home(document.getElementById("home-light"), document.getElementById("themed").checked);
+    shade(document.getElementById("shade"));
+    splash(document.getElementById("splash"));
+    locks();
+  }
+
+  document.getElementById("cards").addEventListener("click", function (e) {
+    var b = e.target.closest("[data-use]"); if (!b) return;
+    current = b.dataset.use; renderAll();
+    try { localStorage.setItem("ba-logo", current); } catch (x) {}
+    document.getElementById("ctx-h").scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" });
+  });
+  var ctl = document.getElementById("acc-ctl");
+  ctl.innerHTML = ACC.map(function (a, i) { return '<button class="pill" data-acc="' + a[2] + '" aria-pressed="' + (i === 0) + '"><span class="sw" style="background:' + a[2] + '"></span>' + a[1] + "</button>"; }).join("");
+  ctl.addEventListener("click", function (e) {
+    var b = e.target.closest("[data-acc]"); if (!b) return;
+    acc = b.dataset.acc;
+    ctl.querySelectorAll("[data-acc]").forEach(function (x) { x.setAttribute("aria-pressed", x === b); });
+    renderAll();
+  });
+  document.querySelectorAll("[data-mask]").forEach(function (b) {
+    b.addEventListener("click", function () {
+      root.classList.remove("mask-circle", "mask-squircle", "mask-rounded");
+      root.classList.add("mask-" + b.dataset.mask);
+      document.querySelectorAll("[data-mask]").forEach(function (x) { x.setAttribute("aria-pressed", x === b); });
+    });
+  });
+  document.getElementById("safe").addEventListener("change", function () { root.classList.toggle("show-safe", this.checked); });
+  document.getElementById("themed").addEventListener("change", function () { home(document.getElementById("home-light"), this.checked); });
+  try { var s = localStorage.getItem("ba-logo"); if (byId(s)) current = s; } catch (x) {}
+  renderAll();
+})();
+</script>

@@ -1,6 +1,6 @@
 # BeAesthetic
 
-A personal Android app for one person (the user) that runs a 23-week body-transformation program from **9 Oct 2026 to 20 Mar 2027** (17 Mehr – 29 Esfand 1405). It tells the user what to do each day, logs workouts and body progress, and reminds reliably on a Xiaomi phone without Google services.
+**«آراسته شو»** (English: BeAesthetic) is a personal Android app for one person (the user) that runs a 23-week body-transformation program from **9 Oct 2026 to 20 Mar 2027** (17 Mehr – 29 Esfand 1405). It tells the user what to do each day, logs workouts and body progress, and reminds reliably on a Xiaomi phone without Google services.
 
 ## Read these first, in order
 
@@ -58,5 +58,5 @@ If these files disagree, the order of trust is: `DECISIONS.md` (newest entry win
 - No app code exists yet. The repo holds only docs, HTML design mockups and the research in `research/`.
 - **The app is built on the user's laptop in Android Studio** (it has the Android SDK) and installed over USB. Cloud sessions can't download the Android SDK (`dl.google.com` is blocked), so don't create or build the Android project there. Pure Kotlin (`:domain`) tests can run in a cloud session.
 - **Figma** file https://www.figma.com/design/1DzXN6iOhAa0PsnLDSjOAg holds the first design-system pass. It is **out of date**. The user's Figma account is on the Starter plan: 3 pages, 1 variable mode per collection, and **20 MCP calls per month**, which were used up on 2026-10-09. Don't plan work that depends on Figma. The HTML mockups are the reference.
-- Published mockups (private claude.ai artifacts): current combined design https://claude.ai/artifact/BwuSiLCGAxV5fGR86MSmjH · minimal concept https://claude.ai/artifact/SuxRScjnPrCJkpGEdogd7z · motion demo https://claude.ai/artifact/SdjkRYt5z13an56aZ99huE (`docs/design/motion.html`). The detailed concept lives only in the repo (`docs/design/screens-detailed.html`).
+- Published mockups (private claude.ai artifacts): current combined design https://claude.ai/artifact/BwuSiLCGAxV5fGR86MSmjH · minimal concept https://claude.ai/artifact/SuxRScjnPrCJkpGEdogd7z · motion demo https://claude.ai/artifact/SdjkRYt5z13an56aZ99huE (`docs/design/motion.html`) · logo board https://claude.ai/artifact/2o9iY6KqvcGFTbhYhFF6j9 (`docs/design/logo.html`). The detailed concept lives only in the repo (`docs/design/screens-detailed.html`).
 - To preview HTML locally, Chromium and Playwright are available in the cloud container (`/opt/node22/lib/node_modules/playwright`).

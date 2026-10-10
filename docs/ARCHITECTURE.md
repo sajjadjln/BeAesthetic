@@ -357,6 +357,6 @@ Every slice also runs the accessibility checklist (§11, D68).
 - **App ID `app.beaesthetic` is final.** Android package names allow only Latin letters, digits and `_`, so every app in Iranian stores has an English ID. Stores match searches against the listing (title, description), not the package name. The ID has no effect on search ranking (Bazaar's own app is `com.farsitel.bazaar`).
 - **Nothing personal is hard-coded.** Program start and end dates live in `settings`; routines, the workout plan and reminder times are seed data the user can edit.
 - **The same release key** signs every build the user installs, so a store version can update the personal install later.
-- **The Persian app name** (launcher label) is a string resource, so it can differ per language.
+- **The app name** (launcher label) is a string resource: «آراسته شو» in Persian, "BeAesthetic" in English (D77). The icon is an adaptive vector icon with a monochrome layer and a white notification silhouette (D78).
 
 Left for that release: onboarding that sets your own program dates and routine; the Bazaar listing (a Persian title with the words people search for, description, screenshots); a short privacy note (the app collects nothing and has no internet permission; the usage log never leaves the phone); starter routines for people without their own plan; and a check of Bazaar's current rules on target SDK and permissions such as `USE_EXACT_ALARM`.

@@ -110,7 +110,7 @@ Market, competitor and gamification research is in `research/` (start with `rese
 | D66 | **Experiments** E1–E9 in `research/10-experiment-backlog.md` run as single-person designs (on/off blocks, staggered starts, before/after landmarks), baselined on the user's first 2–3 weeks. Their toggles live in the debug menu. | Only way to tell if a change helps one user. | Final |
 | D67 | **Home-screen widget** for Today: after the MVP, aimed at before week 8 if the build pace allows. | An always-visible cue (research F13; evidence is weak). | Final |
 | D68 | **Accessibility checklist** in every slice: content descriptions on icon-only tabs and tiles, layouts that hold at 130% font size, grid levels also readable as numbers in day detail. | Cheap now; required for a release (research F14). | Final |
-| D69 | The **Persian app name** (open question 10) is picked with the future release in mind: it says what the app does and avoids the "looks/aesthetic" connotation. | Research F15. | Default (name still open) |
+| D69 | ~~The **Persian app name** (open question 10) is picked with the future release in mind: it says what the app does and avoids the "looks/aesthetic" connotation.~~ | Research F15. | Superseded by D77 |
 
 ## Gamification additions (2026-10-10)
 
@@ -131,6 +131,13 @@ Proposed in the follow-up conversation; the user: "add all the top picks". All f
 |---|---|---|---|
 | D76 | **Motion system: calm by default, generous at the moments that matter.** Three tiers: everyday taps under 250 ms; progress moments up to ~1 s; milestones 2–4 s, rare and skippable. Only the accent moves: gray days, misses and the amber «موعدش رسیده» never animate. Things that fill over time fill right → left. Every satisfying moment has a vibration (light / medium / a record pattern). **Compose animation APIs only** (no Lottie), motion tokens in the theme, **no sound**, and the phone's "Remove animations" setting makes everything instant. The full list is in `DESIGN.md` → Motion; the demo is `docs/design/motion.html` (https://claude.ai/artifact/SdjkRYt5z13an56aZ99huE). | User asked for Duolingo-like feel; picked every recommended option: calm + moments, Compose only, sound off, demo first. | Final (supersedes D58) |
 
+## Name and logo (2026-10-10)
+
+| # | Decision | Why | Status |
+|---|---|---|---|
+| D77 | **Persian name: «آراسته شو»** (launcher label and in-app name). **English name stays "BeAesthetic"**: the two mean the same ("become well-groomed / aesthetic"). For a future store listing, the title carries the search words, e.g. «آراسته شو \| برنامه روزانه تناسب اندام، تمرین در خانه و روتین پوست»; people find new apps by what they do, not by name. Check Bazaar for clashes before publishing. | User wanted a name tied to "aesthetic" that people can find later; picked «آراسته شو» over «تندیس», «آراسته» and «تن‌آرا». | Final (resolves open question 10; supersedes D69) |
+| D78 | **Logo process:** hand-built vector concepts, judged at real sizes and in context on a board (`docs/design/logo.html`, https://claude.ai/artifact/2o9iY6KqvcGFTbhYhFF6j9). Six concepts: «آ» monogram (recommended), V-taper, bust on a plinth, rising steps, mirror, ring and figure. Icon: dark background (#121715) with the mark in the accent green; a one-color layer for themed icons; a white silhouette for the status bar. Two rounds: pick 1–2, then refine. | Vector survives 24 px and converts to Android vector drawables; context beats a white page. User picked every recommended option: six concepts, dark background. | Final (the concept itself is still open) |
+
 ## Superseded
 
 - Weekly focus sentence (Phase 2) → removed in D24.
@@ -148,3 +155,4 @@ Proposed in the follow-up conversation; the user: "add all the top picks". All f
 - Backlog "before/after photo comparison slider (~week 8)" → part of the check-in reveal in slice 7 (D75).
 - `exercise.nextExerciseId` (ARCHITECTURE §8) → ladders: `exercise.ladderId` + `rung` (D70).
 - Completion feedback limited to the tick, a finished part of the day and a 100% day (D58) → the full motion system (D76).
+- Persian name that avoids the "aesthetic" connotation (D69) → «آراسته شو», tied to "aesthetic" on purpose (D77).
