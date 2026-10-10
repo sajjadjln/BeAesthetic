@@ -60,5 +60,5 @@ The program itself started on **2026-10-09 (Day 0)**. Week 1 began 2026-10-10. E
 
 ## Housekeeping
 
-- All work is on branch `claude/trusting-lovelace-e5b7iq`; there is no `main` yet. Merge it, or start new sessions from it.
+- `main` holds all work so far (merged 2026-10-10). If GitHub's default branch is still `claude/trusting-lovelace-e5b7iq`, switch it to `main` in the repo settings.
 - The Figma file is out of date; don't update it unless the user upgrades their plan.

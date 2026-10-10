@@ -51,7 +51,7 @@ If these files disagree, the order of trust is: `DECISIONS.md` (newest entry win
 
 ## Repository and environment notes
 
-- As of 2026-10-10, **all work lives on branch `claude/trusting-lovelace-e5b7iq`**. There is no `main` branch yet. A new session must start from this branch, or the user should merge it into a default branch first.
+- **`main` is the main branch** (created 2026-10-10 from `claude/trusting-lovelace-e5b7iq`, which has the same history). Start new work from `main`.
 - No app code exists yet. The repo holds only docs and HTML design mockups.
 - **Figma** file https://www.figma.com/design/1DzXN6iOhAa0PsnLDSjOAg holds the first design-system pass. It is **out of date**. The user's Figma account is on the Starter plan: 3 pages, 1 variable mode per collection, and **20 MCP calls per month**, which were used up on 2026-10-09. Don't plan work that depends on Figma. The HTML mockups are the reference.
 - Published mockups (private claude.ai artifacts): current combined design https://claude.ai/artifact/BwuSiLCGAxV5fGR86MSmjH · minimal concept https://claude.ai/artifact/SuxRScjnPrCJkpGEdogd7z. The detailed concept lives only in the repo (`docs/design/screens-detailed.html`).
