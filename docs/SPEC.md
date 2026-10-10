@@ -59,7 +59,7 @@ The program is split into five **chapters** that follow the Jalali months. A cha
 
 | # | Feature | Notes |
 |---|---|---|
-| M1 | **Today screen** | A day ring, this week's dots, a part-of-day switcher (Morning, Midday, Evening, Night; the current part is selected) and icon tiles. Tap a tile to complete it. The header shows the week and chapter («هفته ۵ از ۲۳ · فصل آبان»). A tick gives a soft haptic and a short accent fill (D58). The first tick after a day at level 0 says «خوش برگشتی» once (D53). |
+| M1 | **Today screen** | A day ring, this week's dots, a part-of-day switcher (Morning, Midday, Evening, Night; the current part is selected) and icon tiles. Tap a tile to complete it. The header shows the week and chapter («هفته ۵ از ۲۳ · فصل آبان»). A tick gives a soft haptic and a short accent fill (D58). The first tick after a day at level 0 says «خوش برگشتی» once (D53). The character «پیکر» sits under the ring with one line that follows the day (D82). |
 | M2 | **Tasks and routines** | Daily items, items on specific weekdays, **"every N days from the last time"** items, and one-off items ("once"). Each item can be marked important (UI: «مهم»; one follow-up reminder) and/or part of the minimum day, and can have its own alarm time on chosen weekdays. An optional anchor «بعد از…» says what the task follows (D55). |
 | M3 | **Minimum day** | A leaf button on Today toggles «روز حداقلی». Minimum shows only the floor items. Doing the floor guarantees the day at least the lightest shade. |
 | M4 | **Workout log** | Your program loaded from the plan you'll paste. Each session shows the last session's numbers, and each set is pre-filled with them. You log reps or seconds plus effort for each set. A set that beats the previous best shows «رکورد» at once (D54). Exercises sit on **ladders** of harder variants; reaching the top of the range offers the next rung (D70). The end of a session notes any round-number total crossed (D71). |
@@ -76,6 +76,7 @@ The program is split into five **chapters** that follow the Jalali months. A cha
 | M15 | **Chapters and recaps** | Five chapters by Jalali month; a halfway recap at Yalda (must ship by 19 Dec 2026) and a finish recap. In the app only (D51, D52, D63). Sealed **letters to your future self** at each chapter start (D72). A **countdown to Nowruz** on Today, in the last chapter only (D74). |
 | M16 | **After the finish line** | The finish recap offers maintenance or a new program (§6.5). Built by ~week 18 (D61). |
 | M17 | **Local usage log** | A private event log for judging experiments; never leaves the phone except inside the user's own backup (§8, D59). |
+| M18 | **The character «پیکر»** | The logo's sticker guy as a gym buddy: small on Today, big at the moments, a new outfit each chapter. Rules in §6.8 (D82–D84). |
 
 ### 3.2 Later (after the MVP is in daily use)
 
@@ -102,7 +103,7 @@ The bottom navigation has 4 **icon-only** tabs (mirrored in right-to-left mode):
 
 1. **Today** (امروز): the home screen.
    - Header: weekday, Jalali date, «هفته N از ۲۳ · فصل …», a minimum-day (leaf) button and a settings gear.
-   - Ring of today's progress, 7 week dots, part-of-day switcher, icon tiles. Due "every N days" items say «موعدش رسیده»; important items say «مهم».
+   - Ring of today's progress, 7 week dots, the «پیکر» row (the character and one line), part-of-day switcher, icon tiles. Due "every N days" items say «موعدش رسیده»; important items say «مهم».
    - Workout tile: opens the **Workout session** screen.
    - On Friday: a "Start weekly ritual" card.
    - On check-in Fridays: a "Check-in: weight, tape, photos" card.
@@ -223,6 +224,12 @@ Non-negotiables are chosen per item in the app. The ✔ marks above are only my 
 - **Letters:** a letter has a written date, an opening date and text. The first (offered once after install) opens on the finish day. A chapter letter opens at the next chapter start; the last chapter's opens on the finish day. A sealed letter can't be read early or edited; it can be deleted. On its day it appears as a card on Today.
 - **Strength-test guess:** optional, pre-filled with the last result. If result > guess: «از حدست بهتر». Otherwise both numbers, neutral. No guess, no comparison.
 - **Countdown:** from the first day of the last chapter, the header shows days until the day after `programEndDate` («N روز تا نوروز» when that day is 1 Farvardin, else «N روز تا خط پایان»). On the finish day: «امروز خط پایان», with «فردا نوروز» in front when it applies.
+### 6.8 The character «پیکر» (D82–D84)
+- **Pose and line** come from the state, in this order: minimum day or special day → tea; comeback (§6.5) → welcome, «خوش برگشتی»; day at 100% → flex; the selected part of the day done → cheer; no tick yet → stretch (morning) or the plain pose; after the night part → sleep; otherwise → thumbs up with the real count. Moments outside Today (record, chapter start, check-in, Friday wins, round numbers, recaps, finish, empty lists, onboarding) each have their own pose.
+- **Lines:** several per moment in string resources; a line shown in the last 7 days is skipped while another is left. Numbers in a line are real data.
+- **Outfit:** from the chapter of the program date (§2): ① none, ② sweatband, ③ beanie and scarf, ④ sunglasses, ⑤ sprout; Yalda and the finish day have their own.
+- **Never:** a line or pose about a missed day, a sad or disappointed pose, a comment on the body or weight, a notification with the character.
+- **Off switch** in Appearance; off hides the Today row and moments use their plain text.
 
 ## 7. Reminders and notifications
 

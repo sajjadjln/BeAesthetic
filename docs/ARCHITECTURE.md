@@ -58,6 +58,7 @@ domain/src/main/kotlin/app/beaesthetic/domain/
   reminders/   ReminderPlanner, ReminderHealth
   workout/     Set pre-fill, progression suggestion (incl. next ladder rung), personal records (incl. in-session record), ladders, lifetime totals + round numbers
   progress/    "Since Day 0" deltas, check-in schedule, milestones, recap content, letter opening dates, strength-test guess outcome
+  buddy/       BuddyPicker: the character's pose, line id and outfit from the day state and moment (D82–D84)
   backup/      Export format (serializable models), format versions
 
 app/src/main/kotlin/app/beaesthetic/
@@ -69,7 +70,7 @@ app/src/main/kotlin/app/beaesthetic/
   photos/         Capture (incl. ghost-overlay camera), import, downscale
   events/         Local usage log writer (D59)
   ui/theme/       Tokens per accent × dark/light, Estedad typography, shapes
-  ui/components/  Tile, Ring, WeekDots, GridSquare, Chip, SeekBar1to10 …
+  ui/components/  Tile, Ring, WeekDots, GridSquare, Chip, SeekBar1to10, Buddy («پیکر»: pose vectors + bubble) …
   ui/today/ ui/dashboard/ ui/progress/ ui/week/ ui/workout/ ui/settings/ …
 ```
 
@@ -300,6 +301,7 @@ Android's own cloud backup (`allowBackup`) is **off**: it would send data to Goo
 - **Strings:** Persian in `values/` (the default), English in `values-en/`. Lint fails the build on a missing translation or a hard-coded string.
 - **First run** sets the app language to Persian, whatever the phone's language.
 - **Motion (D76):** a `BaMotion` object in the theme holds the tokens from `DESIGN.md` → Motion (durations, the standard easing, and `spring()` specs for spring / settle / bouncy) and is provided through a `CompositionLocal`, like `BaColors`. Built only with Compose's animation APIs (`animate*AsState`, `Animatable`, `updateTransition`, `AnimatedContent`, `SharedTransitionLayout` for the workout tile → session), and `Canvas` for the ring, grid, charts and odometer. No Lottie. Compose's duration scale follows the system "Remove animations" setting, so motion becomes instant there; anything driven by hand reads the same scale. Vibration goes through one `Haptics` helper (light = `CONFIRM`, fallback `VIRTUAL_KEY`; medium = `EFFECT_HEAVY_CLICK`; record = a short waveform). No sound.
+- **The character «پیکر» (D82):** one `ImageVector` per pose in `ui/components/buddy/`, built from the same parts as `docs/design/piker.js` (ink outline, white border, shadow, body). The body color is a parameter (the accent); outfits are a separate overlay vector. A pose change is `AnimatedContent` with the bouncy spring; the bubble fades. `:domain`'s `BuddyPicker` decides the pose, line and outfit; the composable only draws. Lines are string arrays; the last-shown date per line is kept in the usage log (D59).
 - **Accessibility (D68):** every icon-only tab and tile has a content description; layouts are checked at 130% font size; day detail states the level as a number, so the grid isn't color-only.
 - **Crash log without an SDK:** an uncaught-exception handler writes the stack trace to a private file. Settings shows "last crash" with a share button. Nothing leaves the phone unless the user shares it.
 
@@ -307,7 +309,7 @@ Android's own cloud backup (`allowBackup`) is **off**: it would send data to Goo
 
 | Level | What | Where it runs |
 |---|---|---|
-| Unit, `:domain` (most tests) | Jalali; program date and the 04:00 rollover; week numbers; chapters and landmarks; "before the app"; comebacks; routine strength and fade/restore rules; milestones; recap content; ladder rung suggestion and "rungs reached"; lifetime totals and round-number crossings; letter opening dates; guess outcome; countdown; due lists for every repeat type; interval due dates and "counts only on the first due day"; day level thresholds; weekly score with special days and the cap; reminder planner (both profiles, follow-ups, task alarm weekdays, absence rule, nothing in the past); reminder health (late, missed, device off); set pre-fill; progression suggestion; PRs and the in-session record; "since Day 0" deltas; check-in schedule; backup JSON round trip and reading older format versions | Any JVM: Android Studio on the laptop, or a cloud session (`:domain` needs no Android SDK) |
+| Unit, `:domain` (most tests) | Jalali; program date and the 04:00 rollover; week numbers; chapters and landmarks; "before the app"; comebacks; routine strength and fade/restore rules; milestones; recap content; ladder rung suggestion and "rungs reached"; lifetime totals and round-number crossings; letter opening dates; guess outcome; countdown; BuddyPicker (pose per state, outfit per chapter, no line repeated within 7 days, no pose outside the moment's set); due lists for every repeat type; interval due dates and "counts only on the first due day"; day level thresholds; weekly score with special days and the cap; reminder planner (both profiles, follow-ups, task alarm weekdays, absence rule, nothing in the past); reminder health (late, missed, device off); set pre-fill; progression suggestion; PRs and the in-session record; "since Day 0" deltas; check-in schedule; backup JSON round trip and reading older format versions | Any JVM: Android Studio on the laptop, or a cloud session (`:domain` needs no Android SDK) |
 | Unit, `:app` with Robolectric | DAOs on an in-memory database, the day snapshot writer, `AlarmScheduler.reconcile()` against a shadow AlarmManager, notification content | JVM |
 | Instrumented | Room migrations; backup → wipe → restore round trip | An emulator or the phone, before each release |
 | Manual, on the phone | A reminder checklist per release: fires at the right time with the screen off, after a reboot, after an update, with battery saver on | The user's Xiaomi |
@@ -333,7 +335,7 @@ Each slice ends with an installable APK, a short demo note, and a pause for feed
 | # | Slice | Done when |
 |---|---|---|
 | 1 | Skeleton: both modules, theme (color and motion tokens, 5 accents, Estedad, RTL, both languages), haptics helper, Room with seeded tasks (`SPEC.md` §5, with default anchors), launcher and notification icons from `docs/design/logo/` (D81), **basic Today** (tiles, ticking, day snapshot), the **reminder core** (planner, `setAlarmClock` scheduler, receivers, channels, block notifications with anchors, reminder log), usage log, `installDate`, manifest check | Real block reminders arrive on the phone and ticks survive restarts (D50) |
-| 2 | **Today complete** (ring, week dots, minimum day, week + chapter line and chapter-start card (with the letter offer; the first letter is offered once after install), the last-chapter countdown, tick feedback, comeback line) and **reminders complete** (follow-up "Done", task alarms, health + banner, absence rule, Xiaomi setup screen, Reminders screen) | A week of real reminders with a clean health log |
+| 2 | **Today complete** (ring, week dots, minimum day, week + chapter line and chapter-start card (with the letter offer; the first letter is offered once after install), the last-chapter countdown, tick feedback, the «پیکر» row with the day poses and the line picker (D82), comeback line) and **reminders complete** (follow-up "Done", task alarms, health + banner, absence rule, Xiaomi setup screen, Reminders screen) | A week of real reminders with a clean health log |
 | 3 | Tasks list + task editor (repeat rules, task alarms, important, minimum day, anchor) | The user edits their own routine without a rebuild |
 | 4 | Workout plan editor + workout session (with the in-session «رکورد», ladders and the next-rung offer, round numbers at the end of a session) | A real session is logged and the next one is pre-filled |
 | 5 | Dashboard (grid with «قبل از اپ» cells, week rows, day detail) | The whole program is visible |

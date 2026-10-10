@@ -42,10 +42,11 @@ The program itself started on **2026-10-09 (Day 0)**. Week 1 began 2026-10-10. E
    9. Onboarding.
    10. Later: widget, reminder fade offer, finish recap + after-the-finish mode.
 2. Screens not designed yet (onboarding, check-in, strength test, backup/restore, day detail, notifications, English layouts, plus the research additions listed in `DESIGN.md`) are designed inside the slice that needs them, as a quick HTML mockup first.
-3. **Motion demo** (D76): try `docs/design/motion.html` on the phone and say what feels too much or too little before slice 1 (https://claude.ai/artifact/SdjkRYt5z13an56aZ99huE).
-4. Before slice 1: the user creates the release keystore and stores it safely (`ARCHITECTURE.md` §13).
-5. **For the user, before ~6 Nov (no app needed):** take the 2nd photo set with the same setup as Day 0: same spot and background, same light (no flash), phone at the same height and distance (timer or stand), same time of day (before breakfast), same clothes, relaxed pose. Write the setup down once.
-6. After the first 2–3 weeks with the app: that's the baseline for the experiments in `research/10-experiment-backlog.md` (D66). The first ones (anchors, notification wording, in-session record) start around week 5–6.
+3. **Character «پیکر»** (D82–D84): look at the board (https://claude.ai/artifact/Jf7hbWjUQTf39HRDcVkExZ) and the Today in `screens.html`, and say which poses, lines or outfits feel off. The Today row and the line picker are built in slice 2; each big moment comes with its slice.
+4. **Motion demo** (D76): try `docs/design/motion.html` on the phone and say what feels too much or too little before slice 1 (https://claude.ai/artifact/SdjkRYt5z13an56aZ99huE).
+5. Before slice 1: the user creates the release keystore and stores it safely (`ARCHITECTURE.md` §13).
+6. **For the user, before ~6 Nov (no app needed):** take the 2nd photo set with the same setup as Day 0: same spot and background, same light (no flash), phone at the same height and distance (timer or stand), same time of day (before breakfast), same clothes, relaxed pose. Write the setup down once.
+7. After the first 2–3 weeks with the app: that's the baseline for the experiments in `research/10-experiment-backlog.md` (D66). The first ones (anchors, notification wording, in-session record) start around week 5–6.
 
 ## Open questions for the user
 
@@ -58,7 +59,7 @@ The program itself started on **2026-10-09 (Day 0)**. Week 1 began 2026-10-10. E
 7. **The workout plan** (exercises, sets, rep ranges for Sat / Mon / Wed). The user said they'll paste it. It seeds the Workout plan editor. With it: the **ladder rungs** for each move (D70). Default seeds: push-up = knee → standard → diamond → archer; pull-up = dead hang → negative → band-assisted → strict.
 8. **Snack list:** 5–10 snacks they can make.
 9. Day-level thresholds and the special-day cap (2/week) are defaults. Revisit after 2 weeks of real use.
-10. ~~Persian app name~~ → **«پیکر»** (D79). English stays "BeAesthetic". **Logo:** ✅ the cartoon sticker (D81), files in `docs/design/logo/`; board (`docs/design/logo.html`, https://claude.ai/artifact/2o9iY6KqvcGFTbhYhFF6j9) (D78, D80).
+10. ~~Persian app name~~ → **«پیکر»** (D79). English stays "BeAesthetic". **Logo:** ✅ the cartoon sticker (D81), files in `docs/design/logo/`; board (`docs/design/logo.html`, https://claude.ai/artifact/2o9iY6KqvcGFTbhYhFF6j9) (D78, D80). **Character:** the sticker guy lives in the app as «پیکر», a hype gym buddy (D82–D84).
 11. **Which Friday is the monthly check-in?** Needed for the check-in schedule. Default: the Friday closest to the 17th of each Jalali month (same spacing as Day 0). The mockup's «جمعه ۱۴ آذر» is sample data: 14 Azar 1405 is a Saturday.
 
 ## Backlog (after MVP, from `SPEC.md` §3.2)

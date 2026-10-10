@@ -7,6 +7,8 @@ Published copy: https://claude.ai/artifact/BwuSiLCGAxV5fGR86MSmjH
 
 **Name and logo (D77, D78):** the app is «پیکر» in Persian, "BeAesthetic" in English (D79). Logo concepts: `docs/design/logo.html` (https://claude.ai/artifact/2o9iY6KqvcGFTbhYhFF6j9). **Chosen: the cartoon sticker** (D81): a chunky green bodybuilder flexing, ink outline, white sticker border, slight tilt, on the dark background. Files in `docs/design/logo/`.
 
+**Character «پیکر» (D82–D84):** `docs/design/character.html` (https://claude.ai/artifact/Jf7hbWjUQTf39HRDcVkExZ). The logo's sticker guy as a person in the app: poses, Today and moment screens, chapter outfits, sample lines and rules. The rig that draws him is `docs/design/piker.js`; `screens.html` uses it too.
+
 **Motion demo (D76):** `docs/design/motion.html` (https://claude.ai/artifact/SdjkRYt5z13an56aZ99huE). Tap through the Today, Workout, Check-in and Dashboard phones; slow motion and "Remove animations" are in the top bar.
 
 Kept for reference only:
@@ -124,7 +126,21 @@ Where motion is used:
 | Milestone | New chapter | Program-line marker moves to the next chapter; the chapter card slides up. |
 | Milestone | Letter opening | The sealed envelope opens; the text unfolds. |
 
-Not used: confetti on ordinary taps, a mascot, idle loops, shake or flash on errors, any motion on missed days, sound.
+Not used: confetti on ordinary taps, idle loops (the character included), shake or flash on errors, any motion on missed days, sound.
+
+«پیکر» (D82) moves only when his pose changes: scale 0.88 → 1 with the bouncy spring (~340 ms), and his bubble fades in (short). On "Remove animations" both are instant. He adds no vibration of his own.
+
+## The character «پیکر» (D82–D84)
+
+Board: `docs/design/character.html`. Rig: `docs/design/piker.js` (17 poses, faces, props, outfits).
+
+- **Who:** the logo's sticker guy as a hype gym buddy. Warm, a bit goofy, proud of you. Same construction as the logo: ink outline, white sticker border, soft shadow, slight tilt. Body = the accent color; ink, paper and props are fixed. The launcher icon stays green.
+- **Voice:** Persian, first person, informal, one short line (about 8 words max). Real numbers only («رکورد! ۸ تا بارفیکس»). Hypes actions, never the body, weight or looks. Never sad or disappointed at you; never names or hints at a missed day. Lines live in string resources, several per moment, and don't repeat within 7 days.
+- **Today:** one row under the ring and week dots: «پیکر» (~64 dp, start side) and a bubble (surface-2, 16 dp radius, a tail pointing at him). The line follows the day: morning (stretch) → after a tick (thumbs up) → a part done (cheer) → 100% (flex) → night (sleep); minimum day and special days (tea); comeback (welcome, «خوش برگشتی»). Tap him: a new line and a flex or a wink.
+- **Big moments** (centered, ~170 dp, bubble under him): 100% day, «رکورد» in the workout, chapter-start card (letter + the new outfit), check-in day (selfie) and reveal (wow), Friday wins (cheer), round numbers (cheer), Yalda (Hafez book), Esfand (sabzeh), finish (flex + goldfish), empty screens (think) and onboarding (wave).
+- **Outfits (D83):** ① none · ② sweatband · Yalda Hafez book · ③ beanie and scarf · ④ sunglasses · ⑤ sprout and sabzeh · finish goldfish. From the calendar only.
+- **Not:** in notifications, a pet, idle-animated, or shown on a screen about a missed day.
+- **Off switch:** «ظاهر و زبان» → «پیکر در صفحه‌ی امروز» (on by default). Off: the Today row hides and moments fall back to their plain text.
 
 ## Navigation
 
@@ -145,7 +161,7 @@ Not used: confetti on ordinary taps, a mascot, idle loops, shake or flash on err
   - Important task: **gold outline** and the word «مهم».
   - Due interval task: **amber outline** and a chip «موعدش رسیده».
   - Workout: a wide tile with a play button that opens the Workout session.
-- **Comeback** (D53): on the first tick after a day at level 0, one line under the ring: «خوش برگشتی». Shown once.
+- **«پیکر» row** (D82): under the ring and week dots, the character and one line that follows the day (see The character). He also says the **comeback** line (D53): on the first tick after a day at level 0, «خوش برگشتی», shown once, with the welcome pose.
 - **Cards** (one at a time, above the tiles): chapter start with the letter offer (D51, D72), a letter on its opening day (D72), a round number crossed (D71), recap at Yalda and 29 Esfand (D52), the one-time offer to silence a routine's reminders (D57), plus the existing ritual, check-in and welcome-back cards.
 - **Minimum day** (leaf on): the part-of-day switcher hides, «روز حداقلی» shows, and only the floor tiles appear.
 
@@ -178,7 +194,7 @@ Not used: confetti on ordinary taps, a mascot, idle loops, shake or flash on err
 
 ### 05 هفته (Friday review and plan)
 - Steps: مرور (done) → برنامه.
-- Review card: the week's 7 squares, score chip, wins (records, best routines, comebacks «۲ بار برگشتی»). Wins only, no misses. The identity sentence sits under the card (D65).
+- Review card: the week's 7 squares, score chip, wins (records, best routines, comebacks «۲ بار برگشتی»). Wins only, no misses. «پیکر» cheers one line about the best win at the bottom of the card (D82). The identity sentence sits under the card (D65).
 - **Short path** (D62): a «شروع هفته ۵» button right under the review; the plan steps below are optional.
 - «روزهای ویژه»: 7 day chips; tap to mark special. The label reads «۲ روز ذخیره» (D65); a third tap is refused.
 - «میان‌وعده‌ها»: one row per day; closed rows show only the day and a dot (filled = has a note). A row opens to a free-text box (can hold a whole recipe).
@@ -194,6 +210,7 @@ Not used: confetti on ordinary taps, a mascot, idle loops, shake or flash on err
 - A preview card: a small ring, a slice of the dashboard, and the chips (رکورد, مهم, روز ویژه) in the chosen color.
 - «حالت»: سیستم / تیره / روشن.
 - «زبان»: فارسی / English.
+- «پیکر در صفحه‌ی امروز»: a switch, on by default (D84).
 - «ذخیره».
 
 ### 07 کارها (Tasks)

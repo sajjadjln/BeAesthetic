@@ -141,6 +141,14 @@ Proposed in the follow-up conversation; the user: "add all the top picks". All f
 | D81 | **Logo chosen: «کارتونی», the cartoon sticker** on the dark background, green by default. Exported to `docs/design/logo/`: `ic_launcher_background.svg`, `ic_launcher_foreground.svg`, `ic_launcher_monochrome.svg` (adaptive icon layers, 108 dp), `ic_notification.svg` (white status-bar silhouette), `icon-full.svg` and `icon-512.png` (store, later). Import them in Android Studio with Vector Asset in slice 1. | User: "go with the cartoon one". | Final |
 | D79 | **Persian name: «پیکر»** ("physique"). English stays "BeAesthetic". Store title later: «پیکر \| برنامه روزانه تناسب اندام، تمرین در خانه و روتین پوست». The V-taper logo concept now matches the name directly. Known risk, accepted: in news language «پیکر» often means the body of someone who has died. | User: "change the name to پیکر". | Final (supersedes D77's Persian name) |
 
+## The character (2026-10-10)
+
+| # | Decision | Why | Status |
+|---|---|---|---|
+| D82 | **The logo's sticker guy becomes a character who lives in the app, named «پیکر» like the app** (as Duo is to Duolingo). A **hype gym buddy**: warm, a bit goofy, proud of you; short first-person Persian lines. **Presence:** small on Today, always, in a row under the ring and week dots (he says the old comeback line «خوش برگشتی» now); big at the moments: 100% day, record, comeback, chapter start, check-in and reveal, Friday wins, round numbers, recaps, finish; plus empty screens and onboarding. 17 poses from one rig (`docs/design/piker.js`), picked from the state of the day. His body takes the user's accent; the launcher icon stays green. Board: `docs/design/character.html` (https://claude.ai/artifact/Jf7hbWjUQTf39HRDcVkExZ). | The user wants the logo character to feel like a person in the app, like Duolingo's Duo. It answers research R7 (the calm design risks feeling cold) with warmth at the moments that matter. | Final |
+| D83 | **A new outfit each chapter**, from the calendar only: ① Mehr–Aban as the logo, ② Azar a sweatband, Yalda a Hafez book, ③ Dey a beanie and scarf, ④ Bahman sunglasses, ⑤ Esfand a sprout on his head and sabzeh, finish day the Nowruz goldfish. Nothing is earned, bought or lost. | Novelty over the months (research: Fabulous journeys, Duolingo events) without an economy; it can never go backwards. | Final |
+| D84 | **Guardrails for «پیکر»:** never sad, angry or disappointed at the user; never names, counts or hints at a missed day; praises actions (ticks, sets, records, showing up), **never the user's body, weight or looks**; not in notifications (no "come back" pushes); not a pet (no needs, health, levels, coins); no idle animation (pose changes only when something happens, a quick bouncy pop; "Remove animations" makes it instant); a tap gives a new line; lines don't repeat within 7 days; he can be turned off in «ظاهر و زبان» (on by default). | Keeps Duo's warmth and drops Duo's guilt (the non-negotiable no-shame rule) and Finch's chores (research `04`). He is not an avatar of the user, so D65's "no avatars" still holds. | Final |
+
 ## Superseded
 
 - Weekly focus sentence (Phase 2) → removed in D24.
@@ -160,3 +168,5 @@ Proposed in the follow-up conversation; the user: "add all the top picks". All f
 - Completion feedback limited to the tick, a finished part of the day and a 100% day (D58) → the full motion system (D76).
 - Persian name that avoids the "aesthetic" connotation (D69) → «آراسته شو», tied to "aesthetic" on purpose (D77).
 - Persian name «آراسته شو» (D77) → «پیکر» (D79).
+- "No mascot" (DESIGN.md → Motion, D76) and "no pet; warm copy instead" (research `04` §6) → the character «پیکر» (D82–D84). Still no pet mechanics.
+- The comeback line «خوش برگشتی» under the ring (D53) → said by «پیکر» in his Today row (D82). The rule itself is unchanged.
