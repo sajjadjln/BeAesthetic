@@ -9,7 +9,9 @@ Published copy: https://claude.ai/artifact/BwuSiLCGAxV5fGR86MSmjH
 
 **Character «پیکر» (D82–D84):** `docs/design/character.html` (https://claude.ai/artifact/Jf7hbWjUQTf39HRDcVkExZ). The logo's sticker guy as a person in the app: poses, Today and moment screens, chapter outfits, sample lines and rules. The rig that draws him is `docs/design/piker.js`; `screens.html` uses it too.
 
-**Flows (D85):** `docs/design/flows.html` (https://claude.ai/artifact/An8XmUuGo4cWrbHHhWMkom): onboarding, notifications, check-in, strength test, day detail, backup, letters, recaps and the finish, offers, Progress additions, English. See Flows below.
+**Flows (D85):** `docs/design/flows.html` (https://claude.ai/artifact/An8XmUuGo4cWrbHHhWMkom): onboarding, notifications, check-in, strength test, day detail, backup, letters, recaps and the finish, offers, Progress additions. See Flows below.
+
+**English (D86):** both `screens.html` and `flows.html` have a «فارسی / English» switch in the top bar. It turns every phone left-to-right with the English strings from `docs/design/en.js`. See English below.
 
 **Motion demo (D76):** `docs/design/motion.html` (https://claude.ai/artifact/SdjkRYt5z13an56aZ99huE). Tap through the Today, Workout, Check-in and Dashboard phones; slow motion and "Remove animations" are in the top bar.
 
@@ -257,11 +259,19 @@ Published: https://claude.ai/artifact/An8XmUuGo4cWrbHHhWMkom. Every screen that 
 - **Chapters and letters (L1–L3):** the chapter-start card replaces the «پیکر» row for the day (new outfit, chapter line, letter offer); the letter sheet with its opening date and the seal rule; on its day an envelope card that opens on tap, with today's real numbers under the letter.
 - **Recaps and the finish (R1–R3, F1–F2):** story cards with a progress bar on top: the grid filling with days shown up, Day 0 → now numbers with lifetime totals and milestones, Day 0 and latest photo with the identity sentence; the finish card with the full program line and the sprout; the after-the-finish choice (ادامه / برنامه تازه).
 - **Offers and Progress (K1, K2, P1):** the one-time silence-reminders offer framed as a win; the milestones list (reached in the accent with the date, open ones with plain progress) and the new-milestone form; Progress additions: program line with chapter ticks, ladders, lifetime totals, sealed letters, milestones.
-- **English (E1–E2):** Today and Dashboard in LTR: everything mirrors, time runs left → right, Gregorian date first, Latin digits.
 
 `screens.html` also got the research changes it was missing: the chapter line on Today, «قبل از اپ» cells on the Dashboard, the ladder line in the Workout, comebacks in the Friday wins, the «بعد از…» anchor in the task editor.
 
+## English (D86)
+
+Every screen exists in English through the switch in the mockups' top bar; the strings live in `docs/design/en.js` (the draft of `values-en/strings.xml`).
+- **Mirroring:** the layout flips (start/end), so «پیکر» sits on the left, the leaf and gear on the right. Time runs left → right: week dots, the dashboard grid (week 1 on the left), charts, the program line, the reveal (Day 0 on the left).
+- **Dates:** Gregorian first, Jalali second («9 Nov · 18 Aban · Week 5 of 23 · Aban»). Jalali month and chapter names are transliterated (Mehr, Aban, Azar, Dey, Bahman, Esfand) because the chapters follow them.
+- **Digits:** Latin. Units short: kg, cm, s, min, MB.
+- **Names:** the app is "BeAesthetic" (with «پیکر» second on the splash and in About); the character is "Peykar".
+- **Voice:** the same buddy in English: short, warm, first person («Day complete! Those arms are yours.», «Light day. It still counts.»). No guilt, same as D84.
+- Steppers mirror with the layout (plus on the start side), as Android does in RTL.
+
 ## Not designed yet
 
-- English versions of the remaining screens. They follow E1–E2: mirror the layout, flip time, Gregorian first, Latin digits.
 - The halfway recap's 4th card («نیمه‌ی دوم») and the finish recap's middle cards reuse R1–R3 with all 23 weeks.

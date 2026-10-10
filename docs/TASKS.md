@@ -41,7 +41,7 @@ The program itself started on **2026-10-09 (Day 0)**. Week 1 began 2026-10-10. E
    8b. Halfway recap, **by 19 Dec**.
    9. Onboarding.
    10. Later: widget, reminder fade offer, finish recap + after-the-finish mode.
-2. All screens are now designed (`screens.html`, `flows.html`, D85). Only the English versions of the remaining screens are left; they follow E1–E2.
+2. All screens are designed (`screens.html`, `flows.html`, D85), in Persian and English (the switch in the top bar, D86; strings in `docs/design/en.js`).
 3. **Flows** (D85): look through https://claude.ai/artifact/An8XmUuGo4cWrbHHhWMkom (onboarding, check-in, strength test, backup, letters, recaps, English) and say what to change.
 4. **Character «پیکر»** (D82–D84): look at the board (https://claude.ai/artifact/Jf7hbWjUQTf39HRDcVkExZ) and the Today in `screens.html`, and say which poses, lines or outfits feel off. The Today row and the line picker are built in slice 2; each big moment comes with its slice.
 5. **Motion demo** (D76): try `docs/design/motion.html` on the phone and say what feels too much or too little before slice 1 (https://claude.ai/artifact/SdjkRYt5z13an56aZ99huE).

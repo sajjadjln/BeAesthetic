@@ -574,10 +574,10 @@ input[type="range"].seek::-moz-range-thumb { width: 22px; height: 22px; border-r
 <main class="wrap">
   <header class="intro">
     <h1 class="brand"><svg class="appicon" aria-hidden="true"><use href="#app-icon"/></svg><span>پیکر</span><small>Flows</small></h1>
-    <p>Every screen that <bdi>screens.html</bdi> didn't have yet: onboarding, phone setup, notifications, the monthly check-in with the ghost camera and the reveal, the strength test, day detail, backup and restore, chapters and letters, the recaps and the finish, the small offers, the new parts of Progress, and English. Same tokens, icons and character as <bdi>screens.html</bdi>; pick an accent and everything follows. Sample data is the user's program (week 5–6, Aban–Azar 1405).</p>
+    <p>Every screen that <bdi>screens.html</bdi> didn't have yet: onboarding, phone setup, notifications, the monthly check-in with the ghost camera and the reveal, the strength test, day detail, backup and restore, chapters and letters, the recaps and the finish, and the small offers and the new parts of Progress. Same tokens, icons and character as <bdi>screens.html</bdi>; pick an accent and everything follows; switch to English and every phone turns left-to-right. Sample data is the user's program (week 5–6, Aban–Azar 1405).</p>
   </header>
 
-  <div class="bar" role="toolbar" aria-label="Accent color"><span>Accent</span><span id="ctl-accent" style="display:contents"></span></div>
+  <div class="bar" role="toolbar" aria-label="Board controls"><span>Accent</span><span id="ctl-accent" style="display:contents"></span><span style="margin-inline-start:12px">Language</span><button class="pill" data-lang="fa" aria-pressed="true">فارسی</button><button class="pill" data-lang="en" aria-pressed="false">English</button></div>
 
   <section class="gallery">
 
@@ -607,9 +607,9 @@ input[type="range"].seek::-moz-range-thumb { width: 22px; height: 22px; border-r
           <div class="ob-dots"><i></i><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
           <div class="col"><span class="t-head">مسیرت</span><span class="t-cap c2">شروع و پایان برنامه</span></div>
           <div class="card pad col" style="gap:14px">
-            <div class="row between"><span class="t-lbl c2">روز صفر</span><span class="col" style="align-items:flex-end"><span class="t-sub">۱۷ مهر ۱۴۰۵</span><span class="t-cap c3">9 Oct 2026</span></span></div>
+            <div class="row between"><span class="t-lbl c2">روز صفر</span><span class="col" style="align-items:flex-end"><span class="t-sub">۱۷ مهر ۱۴۰۵</span><span class="t-cap c3" data-en="17 Mehr 1405">9 Oct 2026</span></span></div>
             <div class="divider"></div>
-            <div class="row between"><span class="t-lbl c2">خط پایان</span><span class="col" style="align-items:flex-end"><span class="t-sub">۲۹ اسفند ۱۴۰۵</span><span class="t-cap c3">20 Mar 2027</span></span></div>
+            <div class="row between"><span class="t-lbl c2">خط پایان</span><span class="col" style="align-items:flex-end"><span class="t-sub">۲۹ اسفند ۱۴۰۵</span><span class="t-cap c3" data-en="29 Esfand 1405">20 Mar 2027</span></span></div>
           </div>
           <div class="card pad col" style="gap:12px">
             <div class="row between"><span class="t-strong">۲۳ هفته · ۵ فصل</span><span class="chip acc">شب نوروز</span></div>
@@ -997,7 +997,7 @@ input[type="range"].seek::-moz-range-thumb { width: 22px; height: 22px; border-r
         <div class="sheet-wrap">
           <div class="sheet">
             <div class="grab"></div>
-            <div class="row between"><div class="col"><span class="t-title">دیروز · دوشنبه ۱۸ آبان</span><span class="t-cap c3">9 Nov 2026 · هفته ۵</span></div><i class="cell m l3"></i></div>
+            <div class="row between"><div class="col"><span class="t-title">دیروز · دوشنبه ۱۸ آبان</span><span class="t-cap c3" data-en="18 Aban 1405 · Week 5">9 Nov 2026 · هفته ۵</span></div><i class="cell m l3"></i></div>
             <div class="row" style="gap:6px"><span class="chip acc">۱۰ از ۱۲ · سطح ۳ از ۴</span><span class="chip neu">تمرین B</span></div>
             <span class="sec-title" style="padding:0">انجام شد</span>
             <div class="done-list">
@@ -1156,7 +1156,7 @@ input[type="range"].seek::-moz-range-thumb { width: 22px; height: 22px; border-r
             <div><span>پلانک</span><b>۴۵ث <i>←</i> ۱:۱۲</b></div>
             <div><span>دور کمر</span><b>۸۸ <i>←</i> ۸۵</b></div>
           </div>
-          <div class="totals"><div><b>۲٬۴۸۰</b><span>شنا تا حالا</span></div><div><b>۳۱</b><span>جلسه تمرین</span></div><div><b>۴</b><span>رکورد</span></div></div>
+          <div class="totals"><div><b>۲٬۴۸۰</b><span>شنا تا حالا</span></div><div><b>۳۱</b><span>جلسه تمرین</span></div><div><b>۴</b><span data-en="records">رکورد</span></div></div>
           <div class="row" style="gap:6px;justify-content:center;flex-wrap:wrap"><span class="chip acc">رسیدی: ۱۰ بارفیکس کامل</span><span class="chip acc">رسیدی: ۱ دقیقه پلانک</span></div>
         </div>
         <span class="story-hint">بزن برای بعدی</span>
@@ -1283,53 +1283,6 @@ input[type="range"].seek::-moz-range-thumb { width: 22px; height: 22px; border-r
       <figcaption><b>P1 · پیشرفت، بخش‌های تازه</b>What sits under the existing Progress screen (03): the program line to Nowruz with chapter ticks, ladders with rungs reached (D70), lifetime totals that only go up (D71), sealed letters and milestones.</figcaption>
     </figure>
 
-    <!-- ================= English ================= -->
-    <h2 class="group-title">English (LTR): the same screens, mirrored</h2>
-
-    <figure>
-      <div class="phone m-dark" dir="ltr" lang="en">
-        <div class="status"><span>07:02</span><span>84%</span></div>
-        <div class="body">
-          <div class="row"><div class="date grow"><span class="d1">Monday</span><span class="d2">9 Nov · 18 Aban · Week 5 of 23 · Aban</span></div><button class="round" aria-label="Minimum day"><svg class="i"><use href="#i-leaf"/></svg></button><button class="round" aria-label="Settings"><svg class="i"><use href="#i-gear"/></svg></button></div>
-          <div class="hero">
-            <div class="ring"><svg viewBox="0 0 120 120" aria-hidden="true"><circle class="trk" cx="60" cy="60" r="52" fill="none" stroke-width="10"/><circle class="val" cx="60" cy="60" r="52" fill="none" stroke-width="10" stroke-linecap="round" stroke-dasharray="326.7" stroke-dashoffset="190"/></svg><div class="mid"><span class="big">5</span><span class="small">of 12</span></div></div>
-            <div class="week" aria-label="This week"><i class="wd l4"></i><i class="wd l3"></i><i class="wd today l1"></i><i class="wd fu"></i><i class="wd fu"></i><i class="wd fu"></i><i class="wd fu"></i></div>
-          </div>
-          <div class="buddy"><span class="fig" data-pk="thumbs"></span><div class="bubble">5 done. Looking good!</div></div>
-          <div class="times" role="group" aria-label="Part of day"><button aria-pressed="true" aria-label="Morning"><svg class="i"><use href="#i-sunrise"/></svg></button><button aria-pressed="false" aria-label="Midday"><svg class="i"><use href="#i-sun"/></svg></button><button aria-pressed="false" aria-label="Evening"><svg class="i"><use href="#i-sunset"/></svg></button><button aria-pressed="false" aria-label="Night"><svg class="i"><use href="#i-moon"/></svg></button></div>
-          <div class="tiles">
-            <div class="tile imp" aria-pressed="true"><svg class="i lg ic"><use href="#i-drop"/></svg><span class="lb">Skin</span><span class="ok"><svg class="i xs"><use href="#i-check"/></svg></span><span class="imp-tag">Important</span></div>
-            <div class="tile" aria-pressed="true"><svg class="i lg ic"><use href="#i-tooth"/></svg><span class="lb">Brush</span><span class="ok"><svg class="i xs"><use href="#i-check"/></svg></span></div>
-            <div class="tile"><svg class="i lg ic"><use href="#i-egg"/></svg><span class="lb">Protein</span><span class="ok"><svg class="i xs"><use href="#i-check"/></svg></span></div>
-            <div class="tile due"><svg class="i lg ic"><use href="#i-scissors"/></svg><span class="lb">Nails</span><span class="ok"><svg class="i xs"><use href="#i-check"/></svg></span><span class="chip nt tag">Due</span></div>
-          </div>
-        </div>
-        <nav class="nav" data-nav="0"></nav>
-      </div>
-      <figcaption><b>E1 · Today (English)</b>Everything mirrors: the leaf and gear move right, «پیکر» sits on the left, week dots run Saturday → Friday left to right. Dates: Gregorian first in English, the Jalali date second. Latin digits.</figcaption>
-    </figure>
-
-    <figure>
-      <div class="phone m-dark" dir="ltr" lang="en">
-        <div class="status"><span>07:03</span><span>84%</span></div>
-        <div class="body">
-          <div class="col"><span class="t-head">Dashboard</span><span class="t-cap c2">9 Oct 2026 – 20 Mar 2027</span></div>
-          <div class="card row" style="padding:16px 24px;justify-content:space-around">
-            <div class="col" style="align-items:center"><span class="t-title cacc">30 of 31</span><span class="t-cap c2">Days shown up</span></div>
-            <div class="col" style="align-items:center"><span class="t-title csp">2</span><span class="t-cap c2">Special days</span></div>
-          </div>
-          <div class="card pad col" style="gap:12px">
-            <div class="row between"><span class="t-sub">The whole program</span><span class="t-cap c3">Day 31 of 162</span></div>
-            <div class="journey" data-journey data-upto="31" data-pre="1"></div>
-            <div class="row between t-over c3"><span>Oct</span><span>Nov</span><span>Dec</span><span>Jan</span><span>Feb</span><span>Mar</span></div>
-          </div>
-          <div class="legend"><span>Less</span><i class="cell s"></i><i class="cell s l1"></i><i class="cell s l2"></i><i class="cell s l3"></i><i class="cell s l4"></i><span>More</span><span class="gap"></span><i class="cell s sp"></i><span>Special</span><span class="gap"></span><i class="cell s pre"></i><span>Before the app</span></div>
-        </div>
-        <nav class="nav" data-nav="1"></nav>
-      </div>
-      <figcaption><b>E2 · Dashboard (English)</b>Time flows left → right in English: week 1 on the left. Month labels follow the Gregorian calendar. Also shows the «قبل از اپ» dotted cells (D56) that the Persian dashboard gets too.</figcaption>
-    </figure>
-
   </section>
 </main>
 
@@ -1416,3 +1369,14 @@ input[type="range"].seek::-moz-range-thumb { width: 22px; height: 22px; border-r
   applyAccent();
 })();
 </script>
+<script src="en.js"></script>
+<script>
+(function () {
+  // فارسی / English switch (en.js): every phone flips direction, text, digits and dates
+  var btns = document.querySelectorAll("[data-lang]");
+  function pick(l) { MockupI18n.set(l); btns.forEach(function (b) { b.setAttribute("aria-pressed", b.dataset.lang === l); }); try { localStorage.setItem("ba-lang", l); } catch (e) {} }
+  btns.forEach(function (b) { b.addEventListener("click", function () { pick(b.dataset.lang); }); });
+  try { if (localStorage.getItem("ba-lang") === "en") pick("en"); } catch (e) {}
+})();
+</script>
+
