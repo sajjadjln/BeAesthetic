@@ -1,7 +1,7 @@
-# BeAesthetic: Product Spec (v0.1, draft for approval)
+# BeAesthetic: Product Spec (v0.2)
 
-Status: **Draft.** Nothing in Phase 3 (design) starts until this is approved.
-Items marked **[OPEN]** need your answer. Items marked **[DEFAULT]** are my choice, and you can override them.
+Status: **Accepted** (2026-10-09), updated with design-phase decisions on 2026-10-10. For screen layouts see `DESIGN.md`; for decision history see `DECISIONS.md`; for open questions see `TASKS.md`.
+Items marked **[OPEN]** need the user's answer. Items marked **[DEFAULT]** are my choice and can be overridden.
 
 ---
 
@@ -44,13 +44,13 @@ Items marked **[OPEN]** need your answer. Items marked **[DEFAULT]** are my choi
 
 | # | Feature | Notes |
 |---|---|---|
-| M1 | **Today screen** | The day split into blocks: Morning, Midday, Evening, Night. The block for the current time is expanded. Tap an item to complete it. |
-| M2 | **Routines** | Daily items, items on specific weekdays, and **"every N days from the last time"** items. Each item can be marked non-negotiable and/or part of the minimum day. |
-| M3 | **Minimum day** | A two-way switch at the top of Today: روز کامل (full day) / روز حداقلی (minimum day). Minimum shows only the floor items. Doing the floor guarantees the day at least the lightest green. |
+| M1 | **Today screen** | A day ring, this week's dots, a part-of-day switcher (Morning, Midday, Evening, Night; the current part is selected) and icon tiles. Tap a tile to complete it. |
+| M2 | **Tasks and routines** | Daily items, items on specific weekdays, **"every N days from the last time"** items, and one-off items ("once"). Each item can be marked important (UI: «مهم»; one follow-up reminder) and/or part of the minimum day, and can have its own alarm time on chosen weekdays. |
+| M3 | **Minimum day** | A leaf button on Today toggles «روز حداقلی». Minimum shows only the floor items. Doing the floor guarantees the day at least the lightest green. |
 | M4 | **Workout log** | Your program loaded from the plan you'll paste. Each session shows the last session's numbers, and each set is pre-filled with them. You log reps or seconds plus effort for each set. |
 | M5 | **Strength tests** | Pull-ups, push-ups, plank, dead hang and one leg-health test. Every 2 weeks **[DEFAULT, confirm]**. |
 | M6 | **Dashboard (داشبورد)** | A GitHub-style grid covering the whole program: green intensity = % of the day done, gray = nothing done, its own color for special days. Tap a square to see that day. |
-| M7 | **Proof** | Weight (weekly), tape measurements and photos (every 4 weeks), strength numbers. Cards showing "since Day 0", plus simple line charts. |
+| M7 | **Progress (پیشرفت)** | Weight (weekly), tape measurements and photos (**monthly**), strength numbers. Cards showing "since Day 0", plus simple line charts. |
 | M8 | **Friday ritual** | Review (this week's row, wins, personal records) and then plan (special days, and a free-text snack note for each day that opens like a drop-down). About 10 minutes. |
 | M9 | **Reminders** | One notification per block at fixed times, with separate Normal and Friday profiles. One follow-up only for non-negotiables. Fully local, no Google services. |
 | M10 | **Reliability setup** | A setup screen for Xiaomi/MIUI/HyperOS and other aggressive phones (Autostart, battery settings), a test notification, and detection of reminders that fired late or not at all. |
@@ -82,12 +82,12 @@ Items marked **[OPEN]** need your answer. Items marked **[DEFAULT]** are my choi
 
 ## 4. Screens and navigation
 
-The bottom navigation has 4 tabs (mirrored in right-to-left mode). Settings is opened from the top bar.
+The bottom navigation has 4 **icon-only** tabs (mirrored in right-to-left mode): Today · Dashboard · Progress · Week. Settings opens from the gear on Today. `DESIGN.md` has the current layout of every screen.
 
 1. **Today** (امروز): the home screen.
-   - Header: Jalali date with Gregorian underneath, the week number ("Week 3 of 23"), a settings gear, and the full/minimum day switch.
-   - Blocks: Morning / Midday / Evening / Night, each with its items. Due "every N days" items show a small "due" label.
-   - Workout item: opens the **Workout session** screen.
+   - Header: weekday, Jalali date and week number, a minimum-day (leaf) button and a settings gear.
+   - Ring of today's progress, 7 week dots, part-of-day switcher, icon tiles. Due "every N days" items say «موعدش رسیده»; important items say «مهم».
+   - Workout tile: opens the **Workout session** screen.
    - On Friday: a "Start weekly ritual" card.
    - On check-in Fridays: a "Check-in: weight, tape, photos" card.
    - After 2 or more days without opening the app: a "Welcome back" card. It never lists what you missed.
@@ -110,7 +110,7 @@ The bottom navigation has 4 tabs (mirrored in right-to-left mode). Settings is o
 ### Key user flows
 
 1. **Morning (target: under 30 seconds).** The 07:00 notification shows "Morning: 5 items". Tap it, Today opens on the Morning block, tick the items, done.
-2. **Training session.** Today → Workout. For each exercise you see last session's numbers and today's target. Enter the reps or seconds for each set (pre-filled with the target, so usually one tap) and a quick effort rating. Finishing the session ticks the workout item.
+2. **Training session.** Today → Workout. For each exercise you see last session's numbers. Each set is pre-filled with last time's number, so logging is usually one tap; set the effort on the 1–10 «درجه سختی» bar. Finishing the session ticks the workout item.
 3. **Night.** The 22:30 **[DEFAULT]** notification shows "Night: skincare, brush, prep tomorrow's snack: *oat balls*".
 4. **Friday ritual.**
    - Review: this week's row, the weekly score, PRs and best routines (in a neutral tone).
@@ -175,7 +175,7 @@ Non-negotiables are chosen per item in the app. The ✔ marks above are only my 
 - If you don't do an item on its due day, it stays visible in Today with an "overdue since …" label until you do it. It only counts in the score on **the first day it was due**, so lateness never piles up.
 - Doing it on any day resets the clock from that day.
 
-### 6.4 Workout progression **[OPEN: confirm option B from round 3]**
+### 6.4 Workout progression
 - Each exercise has a set count and a rep range (or a time range for holds).
 - Each set is pre-filled with last session's numbers; no separate "target" is shown. When every set reaches the top of the range, the app suggests "+1 rep per set" or moving to the next (harder) version of the exercise. You confirm or ignore the suggestion; the app never changes your plan silently.
 - Effort is logged per set on a 1–10 seek bar labelled «درجه سختی» (an RPE scale).
@@ -239,8 +239,9 @@ Dates are stored as Gregorian `LocalDate` (ISO). Jalali exists only in the prese
 
 ```
 Routine           id, title, block, scheduleType(DAILY|WEEKDAYS|INTERVAL|ONCE|MIN_DAY_ONLY),
-                  weekdays?, intervalDays?, onceDate?, ownReminderTime?, startDate,
-                  isNonNegotiable, inMinimumDay, sortOrder, active
+                  weekdays?, intervalDays?, onceDate?, icon, startDate,
+                  isImportant, inMinimumDay, sortOrder, active
+TaskAlarm         routineId, time, weekdays(set), enabled
 Completion        id, routineId, date, completedAt
 DayMeta           date, specialType?(SICK|TRAVEL|OFF), minimumDayMode, note?
 WeekPlan          weekStart(Sat), ritualCompletedAt?, reviewNote?
@@ -250,11 +251,11 @@ Exercise          id, nameFa, nameEn, kind(REPS|SECONDS), progressionNextId?
 Workout           id, name, weekday           -- e.g. A=Sat, B=Mon, C=Wed
 WorkoutExercise   workoutId, exerciseId, order, sets, rangeMin, rangeMax
 Session           id, workoutId, date, startedAt, finishedAt?
-SetLog            sessionId, exerciseId, setIndex, value(reps|seconds), effort(EASY|GOOD|HARD|MAX)
+SetLog            sessionId, exerciseId, setIndex, value(reps|seconds), effort(1..10)
 
 Metric            id, kind(BODY|TAPE|STRENGTH), nameFa, nameEn, unit(kg|cm|reps|s), higherIsBetter
 MetricEntry       id, metricId, date, value, note?
-PhotoSet          id, date, checkInIndex
+PhotoSet          id, date, checkInIndex      -- monthly: 0 = Day 0 ... 6 = finish line
 Photo             photoSetId, pose(FRONT|SIDE|BACK), relativePath
 
 ReminderSlot      profile(NORMAL|FRIDAY), block, time, enabled
@@ -274,12 +275,4 @@ Derived values (day score, grid level, weekly score, next due date, PRs, "since 
 
 ## 11. Open items
 
-1. **Bedtime** on normal days and Fridays. This sets the Night block time (default 22:30).
-2. **Friday:** is the hike Friday's session, or is it a home workout plus the hike?
-3. **Training time of day.** This decides which block the Workout item goes in.
-4. **Workout progression:** option B (last session's numbers plus a suggested target)? You haven't answered this yet.
-5. **Protein:** keep the three "protein with breakfast/lunch/dinner" ticks, or remove them?
-6. **Strength tests every 2 weeks** (Saturday, before the session)? And which leg-health test?
-7. **Beard and haircut intervals** (N days), and the vitamin D schedule.
-8. **Your workout plan:** paste it when ready. It becomes the seed data.
-9. **Your snack list:** 5–10 snacks you know how to make, to start with.
+Open questions are tracked in `docs/TASKS.md` (single source of truth).

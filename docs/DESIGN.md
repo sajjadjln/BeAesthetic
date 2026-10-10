@@ -1,131 +1,136 @@
-# BeAesthetic: Design System (Phase 3, draft for approval)
+# BeAesthetic: Design
 
-Figma file: https://www.figma.com/design/1DzXN6iOhAa0PsnLDSjOAg
+**Current design:** `docs/design/screens.html` (interactive; open it in a browser).
+Published copy: https://claude.ai/artifact/BwuSiLCGAxV5fGR86MSmjH
 
-- **Design System** page: tokens, text styles and components.
-- **Screens** page: mockups (01 Today, 02 Wall).
+Kept for reference only:
+- `docs/design/screens-minimal.html`: minimal concept (https://claude.ai/artifact/SuxRScjnPrCJkpGEdogd7z)
+- `docs/design/screens-detailed.html`: detailed concept (round 2)
+- Figma https://www.figma.com/design/1DzXN6iOhAa0PsnLDSjOAg: first design-system pass. **Out of date** (old names, old Today).
 
-HTML mockups (open in a browser; the controls work):
-- `docs/design/screens.html`: **the chosen design** (round 3, a combination of the two below).
-- `docs/design/screens-minimal.html`: minimal concept, kept for reference.
-- `docs/design/screens-detailed.html`: detailed concept (round 2), kept for reference.
+The history of how we got here is in `docs/DECISIONS.md` (D21–D29).
 
-## Visual direction: "Quiet strength"
+## Visual direction: "quiet strength"
 
-- **Dark first.** You use the app at 06:45 and 22:30, so the dark theme is the main one. The light theme uses the same color names (see Tokens).
-- **Green is the only bright color.** It means "you did it" and is used for the Dashboard grid, completed checks and personal records. Everything else stays neutral graphite, so green always means progress.
-- **No red, anywhere.** Missed = gray. Needs attention = amber (for example "due"). Special days (sick, travel, off) = indigo. This follows the "gaps, not failures" principle.
-- **Calm, dense, one-handed.** Cards on a dark canvas, 48dp-high tap targets, the main action at the bottom of a card, and nothing decorative.
-- **Persian first, right-to-left.**
-  - Layouts are mirrored, so the check, the icon and the title sit on the right.
-  - **Time flows right → left.** On the Dashboard, week 1 is the right-most column. Charts start on the right too.
-  - Saturday is the first day of the week.
+- **Dark first**, with a light theme. The app follows the system theme.
+- **Green is the only accent.** It means done or progress.
+- **No red anywhere.** Gray = a gap. Amber = due or important, always with words («موعدش رسیده», «مهم»). Indigo = special day (sick, travel, off).
+- **Visual over text.** Icons, rings, big numbers. Minimal helper text.
+- **Persian first, RTL.** Mirrored layouts; time flows right → left; the week starts Saturday.
+- One-handed: 44–48dp tap targets, the main action at the bottom.
 
 ## Tokens
 
-**Starter-plan constraint.** Your Figma plan allows only one mode per variable collection. So the semantic colors are two collections with identical names, `Theme · Dark` and `Theme · Light`. Both point to the same `Primitives`. In code this becomes one `ColorScheme` with dark and light values.
-
 | Token | Dark | Light | Used for |
 |---|---|---|---|
-| bg/canvas | graphite/950 `#0E1110` | graphite/50 `#F6F7F6` | Screen background |
-| bg/surface | graphite/900 `#151918` | white | Cards |
-| bg/surface-2 | graphite/850 `#1C211F` | graphite/100 `#EDF0EE` | Secondary button, neutral chip, photo slots |
-| border/default | graphite/800 `#262C2A` | graphite/200 `#DCE1DE` | Dividers, outlines |
-| text/primary | graphite/100 `#EDF0EE` | graphite/950 | Titles, labels |
-| text/secondary | graphite/400 `#909A96` | graphite/500 `#6B7571` | Supporting text, done items |
-| text/tertiary | graphite/500 | graphite/400 | Captions, axis labels |
-| accent/default | green/500 `#34C47A` | green/700 `#1D8A55` | Primary button, completed check |
-| accent/subtle / on-subtle | green/950 / green/400 | green/100 / green/800 | Positive chips, active tab |
-| wall/level-0…4 | graphite/800 → green/900 → green/800 → green/600 → green/400 | graphite/200 → green/200 → green/300 → green/600 → green/800 | Dashboard grid intensity |
-| wall/special | indigo/600 `#5560C9` | indigo/400 | Sick, travel and off days |
-| notice/subtle / on-subtle | amber/900 / amber/400 | amber/100 / amber/700 | "Due" items, reminder-health warnings |
+| bg | `#0E1110` | `#F6F7F6` | Screen background |
+| surface | `#151918` | `#FFFFFF` | Cards, tiles |
+| surface-2 | `#1C211F` | `#EDF0EE` | Inputs, secondary controls |
+| border | `#262C2A` | `#DCE1DE` | Dividers, outlines |
+| text-1 / text-2 / text-3 | `#EDF0EE` / `#909A96` / `#6B7571` | `#0E1110` / `#5F6965` / `#8A948F` | Text levels |
+| accent | `#34C47A` | `#1D8A55` | Primary buttons, done state, ring |
+| accent-subtle / on-subtle | `#0F2E1F` / `#5BD994` | `#E4F7EC` / `#176B43` | Done tiles, positive chips |
+| grid level 0…4 | `#262C2A` `#114029` `#176B43` `#22A565` `#5BD994` | `#DCE1DE` `#C4F0D6` `#93E6B6` `#22A565` `#176B43` | Dashboard day squares, week dots |
+| special / subtle / on-subtle | `#5560C9` / `#1F2448` / `#8C95EA` | `#8C95EA` / `#D3D7F8` / `#3E479E` | Special days, minimum day |
+| amber / subtle | `#E8B04B` / `#36280D` | `#B07610` / `#FBEFD6` | Due and important |
 
 - **Spacing:** 4 · 8 · 12 · 16 · 24 · 32.
-- **Corner radius:** cell 6 · sm 8 · md 12 · lg 16 · xl 24 · full.
+- **Radius:** 6 (grid cells) · 12 (controls) · 16 (cards) · 20 (tiles) · 28 (sheets) · full.
+- **Font:** Vazirmatn (SIL OFL), bundled in the APK. Persian digits in Persian UI.
 
-## Typography
-
-**Vazirmatn** (open source, SIL OFL) is the only typeface:
-
-- It covers both Persian and Latin, so mixed text like "Mon 9 Nov 2026 · هفته ۵" stays consistent.
-- It works with system Persian digits.
-- It ships inside the APK, so nothing is fetched from Google Fonts at runtime.
-
-| Style | Size / weight / line-height |
+| Style | Size / weight |
 |---|---|
-| Display | 40 / ExtraBold / 130% |
-| Headline | 24 / Bold / 150% |
-| Title | 18 / Bold / 150% |
-| Subtitle | 16 / SemiBold / 160% |
-| Body | 15 / Regular / 170% |
-| Body Strong | 15 / Medium / 170% |
-| Label | 13 / Medium / 160% |
-| Caption | 12 / Regular / 160% |
-| Overline | 11 / SemiBold / 150% |
-| Number | 28 / Bold / 120% |
+| Display number | 52–96 / ExtraBold (ring center, workout counter) |
+| Headline | 24–26 / ExtraBold |
+| Title | 18 / Bold |
+| Subtitle | 16 / SemiBold |
+| Body | 15 / Regular–Medium |
+| Label | 13 / Medium |
+| Caption | 12 / Regular |
 
-Persian text needs more line-height than Latin. The values above are tuned for Vazirmatn.
+## Navigation
 
-## Components (in Figma, bound to tokens)
+- Bottom bar with **icons only**, 4 tabs, RTL order from the right: **Today** (check-circle) · **Dashboard** (grid) · **Progress** (trend line) · **Week** (calendar). The active tab has a small green dot.
+- **Settings** opens from the gear on Today.
+- Full-screen flows: Workout session, Check-in, Friday ritual, Onboarding, Reliability setup, Backup/restore.
 
-| Component | Variants / properties | Notes |
-|---|---|---|
-| Icon/* (23) | stroke icon, 24px | Today, Wall, Proof, Week, dumbbell, shield, sunrise/sun/sunset/moon, trophy, camera, … |
-| Check | State = Todo / Done | Round. Done = accent fill + check mark |
-| Chip | Tone = Accent / Special / Notice / Neutral; Label | Status labels; never red |
-| WallCell | Level = 0…4 / Special / Future / Today × Size = Large / Small | One day on the Dashboard grid |
-| ChecklistItem | State = Todo / Done / Due; Label, Sub, Show sub, Non-negotiable | The whole row is the tap target. Done items stay readable (no strike-through) |
-| BlockHeader | State = Current / Upcoming / Complete; Title, Time, Progress, Icon | Morning, Midday, Evening, Night |
-| Button | Style = Primary / Secondary / Ghost; Label | 48dp tall |
-| NavItem, BottomNav | Active; Label, Icon | 4 tabs in right-to-left order: Today · Dashboard · Proof · Week |
-| StatCard | Label, Value, From (plus a delta chip) | "Since Day 0" proof |
-| Banner | Text, Action | Gentle messages (welcome back, reminder health, backup age) |
+## Screens (current)
 
-## Screens
+### 01 امروز (Today)
+- Header: weekday (large), "۱۸ آبان · هفته ۵", a **leaf** button (minimum day) and a **gear** (settings).
+- **Ring**: tasks done today / total (e.g. ۳ از ۱۲). Under it, **7 week dots** (Saturday on the right), colored by the day level; today is outlined.
+- **Part-of-day switcher**: 4 icons (sunrise · sun · sunset · moon). A tiny green dot under an icon means that part is complete.
+- **Tiles** (2 columns): an icon + one or two words. Tap toggles done (green fill + check).
+  - Important task: **gold outline** and the word «مهم».
+  - Due interval task: **amber outline** and a chip «موعدش رسیده».
+  - Workout: a wide tile with a play button that opens the Workout session.
+- **Minimum day** (leaf on): the part-of-day switcher hides, «روز حداقلی» shows, and only the floor tiles appear.
 
-| # | Screen | Status |
-|---|---|---|
-| 01 | Today (dark) | ✅ In Figma |
-| 02 | Wall (dark) | ✅ In Figma (week labels clipped there) and in HTML |
-| 03 | Proof (dark) | ✅ HTML |
-| 04 | Workout session (dark) | ✅ HTML |
-| 05 | Friday ritual (review → plan) | ✅ HTML |
-| 06 | Today (light) | ✅ HTML |
-| 07 | Today (English, left-to-right) | ✅ HTML |
+### 02 داشبورد (Dashboard)
+- Title and the program range.
+- Summary: «روز حضور» (e.g. ۳۰ از ۳۱) and «روز ویژه». **No weekly average.**
+- «کل مسیر»: a 23-column × 7-row grid of small squares (week 1 on the right, Saturday on top); Jalali month labels below.
+- Legend: less → more, and special.
+- «هفته به هفته»: one row per week (newest on top): label + date range, 7 squares, and a score chip («جاری» for the current week).
 
-## Design decisions to confirm
+### 03 پیشرفت (Progress)
+- Monthly check-in card: «چک‌این ماهانه: جمعه ۱۴ آذر · وزن، متر، ۳ عکس» and the days left.
+- 2×2 stat cards since Day 0: pull-ups, push-ups, plank, waist (value, delta chip, starting value).
+- Pull-up chart (time right → left; dashed segment = the next test) with a «رکورد» chip.
+- Weight card with a sparkline.
+- «عکس‌های ماهانه»: one row per month (front / side / back), "2 of 7".
 
-1. Dark theme by default, with light available, following the system setting.
-2. Green as the only accent color. No red, amber for "due", indigo for special days.
-3. Time flows right → left on the Dashboard and in charts (consistent with right-to-left reading).
-4. Vazirmatn as the only font, shipped inside the APK.
-5. The Workout item gets its own card on Today, with last session's numbers and today's target shown before you start.
-6. The minimum day is a low-key ghost button at the bottom of Today ("Hard day? Minimum day"), never a pop-up.
+### 04 تمرین (Workout session)
+- Close button, exercise-progress dashes (e.g. 2 of 6).
+- Exercise name; set circles (done sets show reps; the current set follows the counter).
+- **Huge number** with − / +, pre-filled from last time. Under it: «قبلی ۱۲ · ۱۲ · ۱۰».
+- **Seek bar 1–10** with the label «درجه سختی» and the value.
+- A big round ✓ button logs the set (ثبت).
 
-## Round 2 changes (after review)
+### 05 هفته (Friday review and plan)
+- Steps: مرور (done) → برنامه.
+- Review card: the week's 7 squares, score chip, wins (records, best routines). Wins only, no misses.
+- «روزهای ویژه»: 7 day chips; tap to mark special (max 2; a third tap is refused).
+- «میان‌وعده‌ها»: one row per day; closed rows show only the day and a dot (filled = has a note). A row opens to a free-text box (can hold a whole recipe).
+- Button «شروع هفته ۵». Finishing runs the weekly backup.
 
-- "Wall" (دیوار) is renamed **Dashboard (داشبورد)**.
-- No weekly focus anywhere.
-- The minimum day is a two-way switch at the top of Today: **روز کامل / روز حداقلی**.
-- Workout: only the last session's numbers are shown ("دفعه قبل شنا: ۱۲، ۱۲، ۱۰"), with no "today's target"; each set is pre-filled with last time's number. The log button just says **ثبت**.
-- Snacks are called **میان‌وعده**. In the Friday plan each day is a drop-down row that opens a free-text note (it can hold a whole recipe). The food is not shown on the closed row.
-- Much less helper text inside the app.
-- Fixed: tappable rows had lost their side padding, so checks and chips touched the card edge (for example "کوتاه کردن ناخن").
-- New screens: **Settings** (gear on Today), **Tasks & routines** (with one-off tasks), **Task editor** (repeat, own reminder time, non-negotiable, minimum day) and **Reminders & alarms**.
+### 06 تنظیمات (Settings)
+- «یادآورها سالم‌اند» health banner.
+- Six tiles: کارها · یادآورها · برنامه تمرین · پشتیبان · زبان · گوشی (Xiaomi battery/autostart setup).
 
-## Round 3: the combined design (current)
+### 07 کارها (Tasks)
+- Filter: همه / صبح / ظهر / عصر / شب.
+- Sections: one-off tasks, then each part of the day. Rows show the name and the repeat rule; markers: «مهم» chip, leaf (in minimum day), bell (own alarm), repeat icon (every N days).
+- Floating «کار جدید» button.
 
-| Screen | Based on | Notes |
-|---|---|---|
-| امروز (Today) | Minimal | Day ring, week dots, part-of-day icons, icon tiles. Due task: amber outline and «موعدش رسیده». Important task: gold outline and «مهم». Leaf button = minimum day. |
-| داشبورد (Dashboard) | Detailed | Whole-program grid and week rows. The «میانگین هفته‌ها» stat is removed. |
-| پیشرفت (Progress) | Detailed | Check-ins and photos are **monthly** (7 sets). |
-| تمرین (Workout) | Minimal | Effort is a 1–10 seek bar labelled «درجه سختی». |
-| هفته (Friday plan) | Detailed | Review, special days (max 2), snack drop-down notes. |
-| تنظیمات (Settings) | Minimal | Six tiles. |
-| کارها (Tasks) | Detailed | Grouped list with one-off tasks. |
-| کار جدید (Task editor) | Minimal + alarm | «زنگ»: time plus the days it rings. «مهم» and «روز حداقلی» toggles. |
-| یادآورها (Reminders) | Detailed | Part-of-day times (normal / Friday) and the list of task alarms. |
-| برنامه تمرین (Workout plan) | New | Day picker, workout name, exercises with reps/seconds, sets and range; drag to reorder. |
+### 08 کار جدید / ویرایش (Task editor, bottom sheet)
+- Name, icon picker (6 icons), part of day (4 icons), repeat (هر روز / روزهای خاص / هر N روز / یک بار).
+- **«زنگ»** card with a switch: the time (large) and **7 day circles** to choose which weekdays the alarm rings.
+- Toggles: «مهم» (one extra reminder), «روز حداقلی» (part of the floor).
+- «ذخیره».
 
-The bottom navigation shows icons only: Today · Dashboard · Progress · Week. Settings opens from the gear on Today.
+### 09 یادآورها (Reminders)
+- Health card with an «آزمایش» (test) button.
+- Profile switch: روزهای عادی / جمعه.
+- One time + switch per part of the day.
+- «زنگ‌های کارها»: every task alarm (name, repeat, time, switch).
+- Follow-up delay for important tasks (45 min) and the Friday review time.
+
+### 10 برنامه تمرین (Workout plan editor)
+- Day picker: 7 days; training days show their workout letter (A, B, C) and Friday shows «کوه».
+- Workout name field (e.g. «تمرین A · پایین‌تنه»).
+- Exercise list: drag handle, name, a chip like «۳ × ۱۲–۱۵». A row opens to: تکرار / ثانیه, sets (− / +), range from–to.
+- «حرکت جدید» adds an exercise.
+
+### 11 Today (light)
+Same as 01 with light tokens.
+
+## Not designed yet (needed before or during build)
+
+- Onboarding (language → reminder times → phone setup → backup folder → baseline entry with past dates → program import).
+- Check-in flow (weight → 5 tape numbers → 3 photos).
+- Strength test flow.
+- Backup / restore screen.
+- Day detail (tap a square on the Dashboard).
+- Notification layouts (block reminder, important follow-up with a "Done" action).
+- English (LTR) version of the final screens. Only an older Today exists in `screens-detailed.html`.
