@@ -5,6 +5,8 @@ Published copy: https://claude.ai/artifact/BwuSiLCGAxV5fGR86MSmjH
 
 **Fonts and accent colors (the comparison behind D46–D47):** `docs/design/type-and-color.html` (https://claude.ai/artifact/WFBdvYr9iUavDkA1ifyZyE). The six fonts that were compared, Today in all five accents, and the «ظاهر و زبان» screen. Decided in D46–D47: **Estedad**, five accents, **green by default**.
 
+**Motion demo (D76):** `docs/design/motion.html` (https://claude.ai/artifact/SdjkRYt5z13an56aZ99huE). Tap through the Today, Workout, Check-in and Dashboard phones; slow motion and "Remove animations" are in the top bar.
+
 Kept for reference only:
 - `docs/design/screens-minimal.html`: minimal concept (https://claude.ai/artifact/SuxRScjnPrCJkpGEdogd7z)
 - `docs/design/screens-detailed.html`: detailed concept (round 2)
@@ -62,6 +64,65 @@ Contrast was checked: text on accent buttons ≥ 4.3:1 (bold 16 px), accent chip
 | Body | 15 / Regular–Medium |
 | Label | 13 / Medium |
 | Caption | 12 / Regular |
+
+## Motion (D76)
+
+**Calm by default, generous at the moments that matter.** Motion only confirms something the user did or shows progress. Demo: `docs/design/motion.html` (https://claude.ai/artifact/SdjkRYt5z13an56aZ99huE).
+
+Rules:
+- Motion follows action: no idle loops, nothing pulses for attention.
+- Only the accent moves. Gray days, misses and «موعدش رسیده» never animate.
+- Things that fill over time (grid, charts, program line) fill right → left in Persian, mirrored in English.
+- Every satisfying moment has a vibration. No sound.
+- "Remove animations" on the phone → every duration is zero; the end state appears at once.
+
+| Token | Value | Used for |
+|---|---|---|
+| tap | 100 ms | Press feedback, control colors |
+| short | 200 ms | Tile fill, check mark, chips, fades |
+| medium | 350 ms | Ring, part-of-day indicator, tiles settling, sheets |
+| long | 600 ms | Odometer, reveal wipe, chapter line, 100% shimmer |
+| story | 2–4 s, skippable | Halfway and finish recaps only |
+| standard easing | `cubic-bezier(.2, 0, 0, 1)` | Most motion |
+| spring | damping ≈ 0.7 | Ring arc, press release, sheets |
+| settle | damping ≈ 0.85 | Layout changes: indicator, tiles moving, chapter marker |
+| bouncy | damping ≈ 0.5 | Only «رکورد», round numbers, part-of-day dots |
+
+| Vibration | When |
+|---|---|
+| light (`CONFIRM`, fallback `VIRTUAL_KEY`) | Tick, set logged, part of the day finished, chapter start |
+| medium (`EFFECT_HEAVY_CLICK`) | 100% day, round number crossed |
+| record (waveform 0, 30, 60, 30 ms) | «رکورد» only |
+| none | Untick, navigation, anything about a missed day |
+
+Where motion is used:
+
+| Tier | Where | What |
+|---|---|---|
+| Everyday | Tile tick | Accent fill spreads from the touch point, check draws itself, tile dips to 96% and springs back, light vibration. Untick drains back, no vibration. |
+| Everyday | Day ring | Arc springs to its new value; the center number rolls. |
+| Everyday | Part-of-day switcher | Indicator slides; tiles of a later part enter from the left (time flows right → left). |
+| Everyday | Part of the day finished | Its dot pops; the ring glows once. |
+| Everyday | Minimum day | Leaf turns; non-floor tiles fade and fold; the rest settle into place. |
+| Everyday | Week dots | Today's dot fills to its new level. |
+| Everyday | Workout tile → session | The tile expands into the session screen (shared element). |
+| Everyday | Sheets, tabs | Standard spring sheets, fade-through between tabs. |
+| Moment | 100% day | Ring closes, a shimmer runs around it once, number grows, «امروز کامل شد» fades in, medium vibration. Once a day. |
+| Moment | Set logged | The number flies into its set circle; the next set comes into focus. |
+| Moment | «رکورد» | Burst on the set circle, the chip springs in, record vibration. |
+| Moment | Next rung | The next ladder step lights up and lifts. |
+| Moment | Round number | Odometer rolls past it, a halo once, medium vibration. |
+| Moment | Comeback | «خوش برگشتی» fades in and stays still. |
+| Moment | Strength-test guess | Guess and result bars grow; «از حدست بهتر» when beaten. |
+| Moment | Dashboard, first open of the day | Squares appear week by week, right → left, ~0.4 s; today glows once. |
+| Moment | Charts | The line draws in the direction of time; the record point last. |
+| Milestone | Halfway recap (Yalda) | Story cards: the grid fills to today, numbers roll, Day 0 vs now photos. |
+| Milestone | Finish (29 Esfand) | Whole grid fills, program line reaches «نوروز ۱۴۰۶», a sprout grows in the accent. No confetti. |
+| Milestone | Check-in reveal | Day 0 appears, then a wipe reveals today's photo on the left; the slider stays. |
+| Milestone | New chapter | Program-line marker moves to the next chapter; the chapter card slides up. |
+| Milestone | Letter opening | The sealed envelope opens; the text unfolds. |
+
+Not used: confetti on ordinary taps, a mascot, idle loops, shake or flash on errors, any motion on missed days, sound.
 
 ## Navigation
 

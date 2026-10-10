@@ -99,7 +99,7 @@ Market, competitor and gamification research is in `research/` (start with `rese
 | D55 | **Anchor cue:** a task has an optional «بعد از…» text (e.g. «بعد از صبحانه»). It shows in the block notification and the task's detail. Tiles stay 1–2 words. Seed tasks get default anchors. | When-then plans and event cues build automaticity; reminders alone don't (research R4). | Final |
 | D56 | **Days before the app aren't gaps.** `installDate` is stored. Days from Day 0 to the day before install show in a dotted "before the app" style, not gray. Baseline entry offers a one-time backfill of **workouts and strength tests** since Day 0 (an exception to the edit window). | The first Dashboard view must not be weeks of gray (research R5). | Final |
 | D57 | **Routine strength** (internal): Loop Habit Tracker's score (`0.5^(sqrt(freq)/13)` decay, a ~13-day half-life for daily tasks). It picks the Friday review's "best routines". From week ~8 the app **offers** to silence the reminders of a routine that has stayed strong for 4+ weeks. Silenced tasks stay in Today and in the score; if the task drops under 80% for 7 days, the app offers to turn its reminders back on. Never shown as a number on Today. | Forgiving consistency measure; less dependency on reminders (research R6). | Final |
-| D58 | **Completion feedback:** a soft haptic and a short accent fill on tick; a slightly bigger moment when a part of the day completes and when the day reaches 100%. Nothing more. | The calm design risks feeling cold (research R7). | Final |
+| D58 | ~~**Completion feedback:** a soft haptic and a short accent fill on tick; a slightly bigger moment when a part of the day completes and when the day reaches 100%. Nothing more.~~ | The calm design risks feeling cold (research R7). | Superseded by D76 |
 | D59 | **Local usage log:** an `event` table (app opened, screen viewed, notification shown/tapped, minutes from a block notification to the first tick). It never leaves the phone except inside the user's own backup, shows in the debug menu, and rows older than 180 days are deleted. This is not analytics in the product-rule sense: no SDK, no network. | Needed to judge the experiments in `research/10`. User: "local log ok". | Final |
 | D60 | **No `INTERNET` permission.** The build fails if `android.permission.INTERNET` shows up in the merged manifest. | Makes "nothing leaves the phone" literal; a trust signal for a later release (research F12). | Final |
 | D61 | **After the finish line:** the finish recap offers **maintenance** (routines continue, workouts optional, no chapters) or **a new program** (new dates, same tasks and plan). Built by ~week 18 (late February 2027). | Habits that depend on reminders stop when the reminders stop (research F3). | Final |
@@ -125,6 +125,12 @@ Proposed in the follow-up conversation; the user: "add all the top picks". All f
 | D74 | **Countdown in the last chapter only.** From 1 Esfand, Today's header line becomes «۲۹ روز تا نوروز» (days to 1 Farvardin; on 29 Esfand: «فردا نوروز · امروز خط پایان»). For a program that doesn't end on 29 Esfand the label is «… تا خط پایان». Never shown before the last chapter. | The goal-gradient effect works near the end; an early countdown makes the end feel far. | Final |
 | D75 | **Check-in reveal.** After the 3rd photo of a check-in, a reveal screen shows the new photos next to **Day 0** (last month via a toggle) with a compare slider. The ghost overlay still uses last month's photo, faint, only for framing. This pulls the backlog's before/after slider into slice 7. | A monthly moment of visible proof. | Final |
 
+## Motion (2026-10-10)
+
+| # | Decision | Why | Status |
+|---|---|---|---|
+| D76 | **Motion system: calm by default, generous at the moments that matter.** Three tiers: everyday taps under 250 ms; progress moments up to ~1 s; milestones 2–4 s, rare and skippable. Only the accent moves: gray days, misses and the amber «موعدش رسیده» never animate. Things that fill over time fill right → left. Every satisfying moment has a vibration (light / medium / a record pattern). **Compose animation APIs only** (no Lottie), motion tokens in the theme, **no sound**, and the phone's "Remove animations" setting makes everything instant. The full list is in `DESIGN.md` → Motion; the demo is `docs/design/motion.html` (https://claude.ai/artifact/SdjkRYt5z13an56aZ99huE). | User asked for Duolingo-like feel; picked every recommended option: calm + moments, Compose only, sound off, demo first. | Final (supersedes D58) |
+
 ## Superseded
 
 - Weekly focus sentence (Phase 2) → removed in D24.
@@ -141,3 +147,4 @@ Proposed in the follow-up conversation; the user: "add all the top picks". All f
 - Ghost-overlay camera "later, ~week 4" → slice 7, before the Azar check-in (D64).
 - Backlog "before/after photo comparison slider (~week 8)" → part of the check-in reveal in slice 7 (D75).
 - `exercise.nextExerciseId` (ARCHITECTURE §8) → ladders: `exercise.ladderId` + `rung` (D70).
+- Completion feedback limited to the tick, a finished part of the day and a 100% day (D58) → the full motion system (D76).

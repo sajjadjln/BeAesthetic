@@ -42,9 +42,10 @@ The program itself started on **2026-10-09 (Day 0)**. Week 1 began 2026-10-10. E
    9. Onboarding.
    10. Later: widget, reminder fade offer, finish recap + after-the-finish mode.
 2. Screens not designed yet (onboarding, check-in, strength test, backup/restore, day detail, notifications, English layouts, plus the research additions listed in `DESIGN.md`) are designed inside the slice that needs them, as a quick HTML mockup first.
-3. Before slice 1: the user creates the release keystore and stores it safely (`ARCHITECTURE.md` §13).
-4. **For the user, before ~6 Nov (no app needed):** take the 2nd photo set with the same setup as Day 0: same spot and background, same light (no flash), phone at the same height and distance (timer or stand), same time of day (before breakfast), same clothes, relaxed pose. Write the setup down once.
-5. After the first 2–3 weeks with the app: that's the baseline for the experiments in `research/10-experiment-backlog.md` (D66). The first ones (anchors, notification wording, in-session record) start around week 5–6.
+3. **Motion demo** (D76): try `docs/design/motion.html` on the phone and say what feels too much or too little before slice 1 (https://claude.ai/artifact/SdjkRYt5z13an56aZ99huE).
+4. Before slice 1: the user creates the release keystore and stores it safely (`ARCHITECTURE.md` §13).
+5. **For the user, before ~6 Nov (no app needed):** take the 2nd photo set with the same setup as Day 0: same spot and background, same light (no flash), phone at the same height and distance (timer or stand), same time of day (before breakfast), same clothes, relaxed pose. Write the setup down once.
+6. After the first 2–3 weeks with the app: that's the baseline for the experiments in `research/10-experiment-backlog.md` (D66). The first ones (anchors, notification wording, in-session record) start around week 5–6.
 
 ## Open questions for the user
 
