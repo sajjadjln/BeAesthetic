@@ -151,6 +151,7 @@ Non-negotiables are chosen per item in the app. The ✔ marks above are only my 
 ### 6.1 Which day an action counts for
 - The day **rolls over at 04:00**, not at midnight **[DEFAULT]**. Brushing your teeth at 00:30 counts for the evening it belongs to.
 - **Edit window:** you can tick or untick items for today and yesterday only. Older days are read-only, so the dashboard stays honest without becoming a source of guilt.
+- **Frozen history [DEFAULT]:** a day's score is saved when it changes and frozen once the day leaves the edit window. Editing a task later never recolors past days (D37).
 
 ### 6.2 Day score and wall colors
 - **Due items** for a day are:
@@ -206,7 +207,7 @@ All times are **[DEFAULT]**, based on waking at 06:45. Bedtime is **[OPEN]**.
 - **Notification channels:** Blocks, Follow-ups, Ritual and Check-in, and System (backup and reliability warnings). Each one can be tuned in Android settings.
 
 ### 7.3 Reliability (Xiaomi first, any phone)
-- Reminders use **exact alarms**. Because the app is installed as an APK, the Play Store rules that would block the most reliable alarm permission don't apply. The exact technique (`setAlarmClock` vs `setExactAndAllowWhileIdle`) is a Phase 4 decision.
+- Reminders use **exact alarms**. Because the app is installed as an APK, the Play Store rules that would block the most reliable alarm permission don't apply. The technique is in `ARCHITECTURE.md` §7 (proposed: `setAlarmClock`).
 - Alarms are **rescheduled** after:
   - a reboot
   - an app update
@@ -236,6 +237,7 @@ All times are **[DEFAULT]**, based on waking at 06:45. Bedtime is **[OPEN]**.
 ## 9. Data model (conceptual)
 
 Dates are stored as Gregorian `LocalDate` (ISO). Jalali exists only in the presentation layer.
+This is the conceptual model from Phase 2. The physical Room schema, updated for D25–D28 and D37–D38, is in `ARCHITECTURE.md` §8 and wins where they differ.
 
 ```
 Routine           id, title, block, scheduleType(DAILY|WEEKDAYS|INTERVAL|ONCE|MIN_DAY_ONLY),
@@ -265,7 +267,7 @@ Settings          (key-value) language, digits, primaryCalendar, dayRolloverHour
                   specialDayCapPerWeek, followUpMinutes, backupFolderUri, programStartDate
 ```
 
-Derived values (day score, grid level, weekly score, next due date, PRs, "since Day 0" changes) are **computed, not stored**. They are pure functions, and they are where unit tests focus.
+Derived values (day score, grid level, weekly score, next due date, PRs, "since Day 0" changes) are **computed, not stored**, except the frozen day snapshot (D37). They are pure functions, and they are where unit tests focus.
 
 ## 10. Localization
 - Persian is the default and runs right-to-left; English is available. Every string comes from resource files and nothing is hard-coded.

@@ -10,9 +10,10 @@ A personal Android app for one person (the user) that runs a 23-week body-transf
 | `docs/DECISIONS.md` | Every decision so far, with the reason, including reversals | A decision is made or changed |
 | `docs/SPEC.md` | Product spec: vision, scope, rules (scoring, intervals, reminders, backup), data model | Product behavior changes |
 | `docs/DESIGN.md` | Design system and the screen-by-screen design that is current | Visual or screen design changes |
+| `docs/ARCHITECTURE.md` | Stack, modules, reminders, Room schema, backup, testing, build order | Technical design changes |
 | `docs/design/screens.html` | **The current design**, an interactive HTML mockup of every screen | Screens change |
 
-If these files disagree, the order of trust is: `DECISIONS.md` (newest entry wins) → `DESIGN.md` → `SPEC.md`. Then fix the file that is wrong.
+If these files disagree, the order of trust is: `DECISIONS.md` (newest entry wins) → `ARCHITECTURE.md` (technical) / `DESIGN.md` (visual) → `SPEC.md`. Then fix the file that is wrong.
 
 ## About the user
 
@@ -53,6 +54,7 @@ If these files disagree, the order of trust is: `DECISIONS.md` (newest entry win
 
 - **`main` is the main branch** (created 2026-10-10 from `claude/trusting-lovelace-e5b7iq`, which has the same history). Start new work from `main`.
 - No app code exists yet. The repo holds only docs and HTML design mockups.
+- The cloud container blocks `dl.google.com` (no Android SDK download). Pure Kotlin (`:domain`) builds and tests here; Maven Central, Google Maven and Gradle are reachable.
 - **Figma** file https://www.figma.com/design/1DzXN6iOhAa0PsnLDSjOAg holds the first design-system pass. It is **out of date**. The user's Figma account is on the Starter plan: 3 pages, 1 variable mode per collection, and **20 MCP calls per month**, which were used up on 2026-10-09. Don't plan work that depends on Figma. The HTML mockups are the reference.
 - Published mockups (private claude.ai artifacts): current combined design https://claude.ai/artifact/BwuSiLCGAxV5fGR86MSmjH · minimal concept https://claude.ai/artifact/SuxRScjnPrCJkpGEdogd7z. The detailed concept lives only in the repo (`docs/design/screens-detailed.html`).
 - To preview HTML locally, Chromium and Playwright are available in the cloud container (`/opt/node22/lib/node_modules/playwright`).

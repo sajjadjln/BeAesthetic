@@ -43,7 +43,7 @@ Status: **Final** (agreed by the user) · **Default** (my choice, not yet confir
 | D24 | Round 2 changes: "Wall" (دیوار) renamed **Dashboard (داشبورد)**; weekly focus (تمرکز هفته) removed; snacks are called **میان‌وعده** and stored as a free-text note per day that opens like a drop-down; less helper text everywhere. | User feedback. | Final |
 | D25 | **Where tasks/reminders are set:** a Settings screen (gear on Today) → Tasks, Reminders, Workout plan, Backup, Language, Phone setup. One-off tasks are back in scope as "repeat once". Tasks can have their own alarm time. | User asked where alarms and tasks are configured. | Final |
 | D26 | Workout: no "today's target". Each set is pre-filled with last session's number; only "last time: 12, 12, 10" is shown. The log button just says «ثبت». | User feedback. | Final (supersedes the "target" idea in D-spec §6.4) |
-| D27 | Round 3, the **combined design** (current): | User picked per screen. | Final pending one last look |
+| D27 | Round 3, the **combined design** (current): | User picked per screen. | Final (approved 2026-10-10) |
 |  | · Today = minimal: day ring, 7 week dots, part-of-day icon switcher, big icon tiles. Due task → amber outline + «موعدش رسیده». Important task → gold outline + «مهم». Leaf button = minimum day. | | |
 |  | · Bottom nav = **icons only**, 4 tabs: Today · Dashboard · Progress · Week. | | |
 |  | · Dashboard = detailed grid + week rows. «میانگین هفته‌ها» removed. | | |
@@ -54,6 +54,24 @@ Status: **Final** (agreed by the user) · **Default** (my choice, not yet confir
 |  | · New screen: **Workout plan editor** (برنامه تمرین). | | |
 | D28 | Photo and tape-measure check-ins are **monthly** (7 sets: Day 0, then one per Jalali month, plus the finish line), not every 4 weeks. | User request. | Final |
 | D29 | The GitHub-style grid is no longer required on Today; it lives only on the Dashboard. | User: "you don't need to follow everything I said". | Final |
+| D30 | **Phase 3 closed.** Design round 3 (`docs/design/screens.html`) is approved. Onboarding, check-in, strength test, backup/restore, day detail, notifications and the English layouts get designed during the build slice that needs them. | User: "Design round 3 is approved." | Final |
+
+## Phase 4: Architecture (2026-10-10, proposed in `docs/ARCHITECTURE.md`)
+
+| # | Decision | Why | Status |
+|---|---|---|---|
+| D31 | Native Kotlin + Jetpack Compose (M3 as a base, own theme), Room, coroutines/Flow, Navigation Compose, kotlinx.serialization, WorkManager, Coil. `minSdk 26`. No Google/Firebase/analytics dependency; a build check enforces it. | The user's expected stack; nothing in it needs Google Play Services. | Default |
+| D32 | Two modules: `:domain` (pure Kotlin, all rules and planners) and `:app` (Android). | The compiler keeps Android out of the rules; the important tests run on any JVM, including the cloud container. | Default |
+| D33 | Manual DI with one `AppContainer` instead of Hilt or Koin. | About 10 objects to wire; no annotation processing. | Default, asked |
+| D34 | Reminders: a pure planner produces the next ~48 h of alarms; an idempotent `reconcile()` applies them on every trigger (launch, fire, edit, boot, update, time change, 6-hourly watchdog). Content is built at fire time. | One code path, nothing duplicated, nothing stale. | Default |
+| D35 | `setAlarmClock` for every user-facing reminder; `USE_EXACT_ALARM` (sideloaded APK). A setting can switch to `setExactAndAllowWhileIdle`. | Most robust on Xiaomi; the cost is a status-bar alarm icon. | Default, asked |
+| D36 | Own Jalali converter (Kotlin port of `jalaali-js`) with tests. | Must live in the pure module; matches the official leap-year table. | Default |
+| D37 | **Day snapshot:** today's and yesterday's due/done counts are stored in `day` and frozen once the day leaves the edit window. Editing a task never recolors history. Day detail lists only what was done. | Honest history without versioning tasks; fits "no list of misses". | Default |
+| D38 | Settings live in a single-row Room table, not DataStore. "Routine" is renamed **task** in code. A task's alarm is stored on the task (one per task). | One file to back up; names match the UI. | Default |
+| D39 | Backup restores from `data.json` (versioned format); the raw DB copy is only a fallback. Zips are verified, written as `.partial` then renamed; keep 8. Restore makes a backup of current data first. Android auto-backup is off. Syncthing-Fork syncs the folder. | Old backups must restore into newer app versions; a half-written file must never look valid. | Default |
+| D40 | Photos are copied into private storage, downscaled to 2560 px, location EXIF removed. | Gallery deletions can't lose them; backups stay small. | Default |
+| D41 | CI on GitHub Actions builds every push; a version tag publishes a signed APK in a GitHub Release. | Every slice ships the same way; no laptop needed to install. | Default, install route asked |
+| D42 | Build order: skeleton + Today → reminders → tasks editor → workout → dashboard → backup → progress/check-in → Friday ritual → onboarding (moved last). | Reminders are the most urgent value; the user is already set up by seed data. | Default, asked |
 
 ## Superseded
 
