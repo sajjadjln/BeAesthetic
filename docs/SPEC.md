@@ -46,10 +46,10 @@ Items marked **[OPEN]** need the user's answer. Items marked **[DEFAULT]** are m
 |---|---|---|
 | M1 | **Today screen** | A day ring, this week's dots, a part-of-day switcher (Morning, Midday, Evening, Night; the current part is selected) and icon tiles. Tap a tile to complete it. |
 | M2 | **Tasks and routines** | Daily items, items on specific weekdays, **"every N days from the last time"** items, and one-off items ("once"). Each item can be marked important (UI: «مهم»; one follow-up reminder) and/or part of the minimum day, and can have its own alarm time on chosen weekdays. |
-| M3 | **Minimum day** | A leaf button on Today toggles «روز حداقلی». Minimum shows only the floor items. Doing the floor guarantees the day at least the lightest green. |
+| M3 | **Minimum day** | A leaf button on Today toggles «روز حداقلی». Minimum shows only the floor items. Doing the floor guarantees the day at least the lightest shade. |
 | M4 | **Workout log** | Your program loaded from the plan you'll paste. Each session shows the last session's numbers, and each set is pre-filled with them. You log reps or seconds plus effort for each set. |
 | M5 | **Strength tests** | Pull-ups, push-ups, plank, dead hang and one leg-health test. Every 2 weeks **[DEFAULT, confirm]**. |
-| M6 | **Dashboard (داشبورد)** | A GitHub-style grid covering the whole program: green intensity = % of the day done, gray = nothing done, its own color for special days. Tap a square to see that day. |
+| M6 | **Dashboard (داشبورد)** | A GitHub-style grid covering the whole program: accent intensity (green by default) = % of the day done, gray = nothing done, its own color for special days. Tap a square to see that day. |
 | M7 | **Progress (پیشرفت)** | Weight (weekly), tape measurements and photos (**monthly**), strength numbers. Cards showing "since Day 0", plus simple line charts. |
 | M8 | **Friday ritual** | Review (this week's row, wins, personal records) and then plan (special days, and a free-text snack note for each day that opens like a drop-down). About 10 minutes. |
 | M9 | **Reminders** | One notification per block at fixed times, with separate Normal and Friday profiles. One follow-up only for non-negotiables. Fully local, no Google services. |
@@ -94,7 +94,7 @@ The bottom navigation has 4 **icon-only** tabs (mirrored in right-to-left mode):
 2. **Dashboard** (داشبورد): the full program grid, a weekly score for each row, a legend. Tap a day to see its items.
 3. **Proof** (پیشرفت): "since Day 0" cards (weight Δ, waist Δ, best pull-ups, plank time…), the strength chart, weight and measurement charts, photo sets in a timeline.
 4. **Week** (هفته): this week's plan (special days, the snack note for each day), plus the Friday ritual flow.
-5. **Settings** (تنظیمات, gear on Today): reminder health, Tasks & routines, Reminders & alarms, Workout program, Backup, Language & calendar, Xiaomi setup.
+5. **Settings** (تنظیمات, gear on Today): reminder health, Tasks & routines, Reminders & alarms, Workout program, Backup, Appearance & language (accent color, dark/light, language), Xiaomi setup.
    - **Tasks & routines**: every routine and one-off task, grouped by part of the day. Add/edit in a bottom sheet: name, part of day, repeat (every day / chosen weekdays / every N days / once), optional own reminder time, non-negotiable, in minimum day.
    - **Reminders & alarms**: block times for normal days and Friday, separate alarms for tasks with their own time, follow-up delay, Friday ritual time, a test button.
 
@@ -117,7 +117,7 @@ The bottom navigation has 4 **icon-only** tabs (mirrored in right-to-left mode):
    - Plan: mark special days in advance (for example travel) and write each day's snack note (any length, e.g. a full recipe).
    - The weekly backup runs when you finish.
 5. **Check-in Friday.** In the morning: weigh-in, then tape (5 numbers), then 3 photos (front, side, back) with the same instructions every time.
-6. **Bad day.** Open Today and switch to "روز حداقلی". Only the 3–4 floor items show. Do them and the square turns light green.
+6. **Bad day.** Open Today and switch to "روز حداقلی". Only the 3–4 floor items show. Do them and the square turns the lightest shade.
 7. **Coming back after an absence.** The "Welcome back" card offers to "Start with a minimum day". Days you missed are just gray. There's no list of misses and no catch-up notifications.
 
 ## 5. Default routine set (editable in the app)

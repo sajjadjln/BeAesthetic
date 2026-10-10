@@ -67,7 +67,7 @@ app/src/main/kotlin/app/beaesthetic/
   reminders/      AlarmScheduler, receivers, notifications, Xiaomi intents
   backup/         Zip writer/reader, SAF folder, restore
   photos/         Capture, import, downscale
-  ui/theme/       Tokens, Vazirmatn typography, shapes
+  ui/theme/       Tokens per accent × dark/light, Estedad typography, shapes
   ui/components/  Tile, Ring, WeekDots, GridSquare, Chip, SeekBar1to10 …
   ui/today/ ui/dashboard/ ui/progress/ ui/week/ ui/workout/ ui/settings/ …
 ```
@@ -216,7 +216,7 @@ Physical schema for `SPEC.md` §9, updated for D25–D28. Dates are ISO `LocalDa
 | `reminder_slot` | profile (NORMAL·FRIDAY), part, time, enabled | |
 | `reminder_log` | id, key, kind, scheduledAt, firedAt?, outcome | §7.5 |
 | `backup_record` | id, at, fileName, sizeBytes, photoCount, ok, error? | |
-| `settings` | single row: language, programStartDate, rolloverHour, specialCapPerWeek, followUpMinutes, alarmMode, backupTreeUri, lastOpenedAt, lastBackupAt, onboardingDone, programEndDate | |
+| `settings` | single row: language, programStartDate, rolloverHour, specialCapPerWeek, followUpMinutes, alarmMode, accentColor (GREEN·BLUE·TURQUOISE·VIOLET·ORANGE), themeMode (SYSTEM·DARK·LIGHT), backupTreeUri, lastOpenedAt, lastBackupAt, onboardingDone, programEndDate | |
 
 ### The day snapshot (why some derived numbers are stored)
 
@@ -281,8 +281,9 @@ Android's own cloud backup (`allowBackup`) is **off**: it would send data to Goo
 
 ## 11. UI foundation
 
-- **Theme:** the tokens in `DESIGN.md` become a `BaColors` class for dark and light, provided through a `CompositionLocal`. M3's `colorScheme` is mapped from them so built-in components match. No dynamic (wallpaper) color.
-- **Font:** Vazirmatn static TTFs (400, 500, 600, 700, 800) in `res/font`, about 0.5 MB. The type scale from `DESIGN.md` becomes `BaType`.
+- **Theme:** the tokens in `DESIGN.md` become a `BaColors` class, built from the neutral set for dark or light plus the chosen accent palette (5 accents × 2 modes, including the accent's overrides for special and amber). It's provided through a `CompositionLocal`, and M3's `colorScheme` is mapped from it so built-in components match. The accent and the mode (system/dark/light) are columns in `settings`; changing them recomposes the app at once. No dynamic (wallpaper) color.
+- **Accent is a token, never a literal.** No code says "green"; every done/progress color reads `colors.accent*` or `colors.grid*`. A unit test checks contrast for every accent × mode.
+- **Font:** Estedad static TTFs (400, 500, 600, 700, 800) in `res/font`, with the OFL license in the app's about screen. The type scale from `DESIGN.md` becomes `BaType`.
 - **RTL:** `supportsRtl="true"`; layouts use start/end only. Charts and the dashboard grid read the layout direction, so time runs right → left in Persian.
 - **Strings:** Persian in `values/` (the default), English in `values-en/`. Lint fails the build on a missing translation or a hard-coded string.
 - **First run** sets the app language to Persian, whatever the phone's language.
@@ -316,7 +317,7 @@ Each slice ends with an installable APK, a short demo note, and a pause for feed
 
 | # | Slice | Done when |
 |---|---|---|
-| 1 | Skeleton: both modules, theme (tokens, Vazirmatn, RTL, both languages), Room with seeded tasks (`SPEC.md` §5), **Today** with ticking, day snapshot, minimum day, week dots | Today works offline on the phone and survives restarts |
+| 1 | Skeleton: both modules, theme (tokens, 5 accents, Estedad, RTL, both languages), Room with seeded tasks (`SPEC.md` §5), **Today** with ticking, day snapshot, minimum day, week dots | Today works offline on the phone and survives restarts |
 | 2 | **Reminders:** planner, scheduler, receivers, channels, follow-up "Done", reminder health + banner, Xiaomi setup screen, Reminders screen | A week of real reminders on the phone with a clean health log |
 | 3 | Tasks list + task editor (repeat rules, task alarms, important, minimum day) | The user edits their own routine without a rebuild |
 | 4 | Workout plan editor + workout session | A real session is logged and the next one is pre-filled |

@@ -3,20 +3,20 @@
 **Current design:** `docs/design/screens.html` (interactive; open it in a browser).
 Published copy: https://claude.ai/artifact/BwuSiLCGAxV5fGR86MSmjH
 
-**Open exploration: fonts and accent color** (2026-10-10): `docs/design/type-and-color.html`, published at https://claude.ai/artifact/WFBdvYr9iUavDkA1ifyZyE. Today in six Persian fonts and four accent colors, plus the «ظاهر و زبان» screen where the user picks the color. Nothing changes in the tokens below until the user picks (D46).
+**Fonts and accent colors:** `docs/design/type-and-color.html` (https://claude.ai/artifact/WFBdvYr9iUavDkA1ifyZyE). The six fonts that were compared, Today in all five accents, and the «ظاهر و زبان» screen. Decided in D46–D47: **Estedad**, five accents, **green by default**.
 
 Kept for reference only:
 - `docs/design/screens-minimal.html`: minimal concept (https://claude.ai/artifact/SuxRScjnPrCJkpGEdogd7z)
 - `docs/design/screens-detailed.html`: detailed concept (round 2)
 - Figma https://www.figma.com/design/1DzXN6iOhAa0PsnLDSjOAg: first design-system pass. **Out of date** (old names, old Today).
 
-The history of how we got here is in `docs/DECISIONS.md` (D21–D29).
+The history of how we got here is in `docs/DECISIONS.md` (D21–D29, D46–D47).
 
 ## Visual direction: "quiet strength"
 
 - **Dark first**, with a light theme. The app follows the system theme.
-- **Green is the only accent.** It means done or progress.
-- **No red anywhere.** Gray = a gap. Amber = due or important, always with words («موعدش رسیده», «مهم»). Indigo = special day (sick, travel, off).
+- **One accent, chosen by the user**: green (default), blue, turquoise, violet or orange. The accent always means done or progress, and nothing else uses it.
+- **No red anywhere.** Gray = a gap. Amber = due or important, always with words («موعدش رسیده», «مهم»); with the orange accent it becomes yellow. Indigo = special day (sick, travel, off); with blue it becomes violet, with violet it becomes cyan.
 - **Visual over text.** Icons, rings, big numbers. Minimal helper text.
 - **Persian first, RTL.** Mirrored layouts; time flows right → left; the week starts Saturday.
 - One-handed: 44–48dp tap targets, the main action at the bottom.
@@ -30,15 +30,28 @@ The history of how we got here is in `docs/DECISIONS.md` (D21–D29).
 | surface-2 | `#1C211F` | `#EDF0EE` | Inputs, secondary controls |
 | border | `#262C2A` | `#DCE1DE` | Dividers, outlines |
 | text-1 / text-2 / text-3 | `#EDF0EE` / `#909A96` / `#6B7571` | `#0E1110` / `#5F6965` / `#8A948F` | Text levels |
-| accent | `#34C47A` | `#1D8A55` | Primary buttons, done state, ring |
-| accent-subtle / on-subtle | `#0F2E1F` / `#5BD994` | `#E4F7EC` / `#176B43` | Done tiles, positive chips |
-| grid level 0…4 | `#262C2A` `#114029` `#176B43` `#22A565` `#5BD994` | `#DCE1DE` `#C4F0D6` `#93E6B6` `#22A565` `#176B43` | Dashboard day squares, week dots |
-| special / subtle / on-subtle | `#5560C9` / `#1F2448` / `#8C95EA` | `#8C95EA` / `#D3D7F8` / `#3E479E` | Special days, minimum day |
-| amber / subtle | `#E8B04B` / `#36280D` | `#B07610` / `#FBEFD6` | Due and important |
+| accent, accent-subtle, on-subtle, grid level 1…4 | see **Accent palettes** | | Primary buttons, done state, ring, done tiles, positive chips, dashboard squares, week dots |
+| grid level 0 | `#262C2A` | `#DCE1DE` | Gap (same in every accent) |
+| special / subtle / on-subtle | `#5560C9` / `#1F2448` / `#8C95EA` | `#8C95EA` / `#D3D7F8` / `#3E479E` | Special days, minimum day (blue and violet accents override it) |
+| amber / subtle | `#E8B04B` / `#36280D` | `#B07610` / `#FBEFD6` | Due and important (the orange accent overrides it) |
+
+### Accent palettes
+
+Each cell: accent · accent-subtle · on-subtle · grid levels 1–4. Overrides are listed where they apply.
+
+| Accent | Dark | Light |
+|---|---|---|
+| **سبز Green** (default) | `#34C47A` · `#0F2E1F` · `#5BD994` · `#114029` `#176B43` `#22A565` `#5BD994` | `#1D8A55` · `#E4F7EC` · `#176B43` · `#C4F0D6` `#93E6B6` `#22A565` `#176B43` |
+| **آبی Blue** | `#4D9BF0` · `#0F2440` · `#82BBFA` · `#112E52` `#1A4D8A` `#2F7AD6` `#82BBFA`; special `#9A66D4` / `#2B1C42` / `#C6A2F0` | `#1F6BD0` · `#E2EDFC` · `#1A56A8` · `#CDE0FA` `#98C1F3` `#3C86E0` `#1A56A8`; special `#B08BE6` / `#EADCFA` / `#6A3DAE` |
+| **فیروزه‌ای Turquoise** | `#2CC2B4` · `#0C2E2B` · `#62DCCF` · `#0E3C38` `#13675F` `#1EA195` `#62DCCF` | `#0E8379` · `#DDF4F1` · `#0A665E` · `#C0ECE7` `#8BDCD3` `#1FA195` `#0A665E` |
+| **بنفش Violet** | `#9B7BEA` · `#241B3E` · `#C2AAFA` · `#2B2150` `#46358A` `#7458D0` `#C2AAFA`; special `#3A9FC2` / `#0E2A33` / `#7CCBE4` | `#6644C8` · `#EDE7FC` · `#5233AA` · `#DCD1FA` `#B8A4F2` `#8466DE` `#5233AA`; special `#6CC0DC` / `#D4EEF6` / `#1D6A84` |
+| **نارنجی Orange** | `#F28B3C` · `#3A220F` · `#FFB27A` · `#3D2410` `#6E3D16` `#C2661F` `#FFB27A`; due/important `#E3D04E` / `#302C0B` | `#C2570F` · `#FCEADB` · `#9A440C` · `#FBD9BE` `#F6B485` `#E07B2E` `#9A440C`; due/important `#776804` / `#F6F0C6` |
+
+Contrast was checked: text on accent buttons ≥ 4.3:1 (bold 16 px), accent chip text ≥ 4.8:1, in every accent and mode.
 
 - **Spacing:** 4 · 8 · 12 · 16 · 24 · 32.
 - **Radius:** 6 (grid cells) · 12 (controls) · 16 (cards) · 20 (tiles) · 28 (sheets) · full.
-- **Font:** Vazirmatn (SIL OFL), bundled in the APK. Persian digits in Persian UI.
+- **Font:** **Estedad** (Amin Abedi, SIL OFL), bundled in the APK; also used for the English UI. Persian digits in Persian UI. (Vazirmatn was the font until D46.)
 
 | Style | Size / weight |
 |---|---|
@@ -61,8 +74,8 @@ The history of how we got here is in `docs/DECISIONS.md` (D21–D29).
 ### 01 امروز (Today)
 - Header: weekday (large), "۱۸ آبان · هفته ۵", a **leaf** button (minimum day) and a **gear** (settings).
 - **Ring**: tasks done today / total (e.g. ۳ از ۱۲). Under it, **7 week dots** (Saturday on the right), colored by the day level; today is outlined.
-- **Part-of-day switcher**: 4 icons (sunrise · sun · sunset · moon). A tiny green dot under an icon means that part is complete.
-- **Tiles** (2 columns): an icon + one or two words. Tap toggles done (green fill + check).
+- **Part-of-day switcher**: 4 icons (sunrise · sun · sunset · moon). A tiny accent dot under an icon means that part is complete.
+- **Tiles** (2 columns): an icon + one or two words. Tap toggles done (accent fill + check).
   - Important task: **gold outline** and the word «مهم».
   - Due interval task: **amber outline** and a chip «موعدش رسیده».
   - Workout: a wide tile with a play button that opens the Workout session.
@@ -98,7 +111,15 @@ The history of how we got here is in `docs/DECISIONS.md` (D21–D29).
 
 ### 06 تنظیمات (Settings)
 - «یادآورها سالم‌اند» health banner.
-- Six tiles: کارها · یادآورها · برنامه تمرین · پشتیبان · زبان · گوشی (Xiaomi battery/autostart setup).
+- Six tiles: کارها · یادآورها · برنامه تمرین · پشتیبان · ظاهر و زبان · گوشی (Xiaomi battery/autostart setup).
+
+### 06b ظاهر و زبان (Appearance and language)
+Designed in `type-and-color.html`.
+- «رنگ»: five named color circles (سبز · آبی · فیروزه‌ای · بنفش · نارنجی); the chosen one has a ring and a check.
+- A preview card: a small ring, a slice of the dashboard, and the chips (رکورد, مهم, روز ویژه) in the chosen color.
+- «حالت»: سیستم / تیره / روشن.
+- «زبان»: فارسی / English.
+- «ذخیره».
 
 ### 07 کارها (Tasks)
 - Filter: همه / صبح / ظهر / عصر / شب.

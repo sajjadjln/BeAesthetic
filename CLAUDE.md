@@ -47,8 +47,8 @@ If these files disagree, the order of trust is: `DECISIONS.md` (newest entry win
 - **Language:** Persian is the default, RTL; English is available. All UI strings live in resources and are never hard-coded. Digits follow the language (Persian digits in Persian).
 - **Dates:** stored as Gregorian `LocalDate`. Jalali is presentation only, shown first with Gregorian second. The week starts **Saturday**. The day rolls over at **04:00**.
 - **Time direction:** in RTL, time flows right → left (dashboard grid and charts).
-- **Colors:** green = done/progress; amber = due or important (written as «موعدش رسیده» / «مهم»); indigo = special day (sick, travel, off); gray = gap.
-- **Font:** Vazirmatn only, bundled in the APK.
+- **Colors:** the accent = done/progress. The user picks it (green by default, or blue, turquoise, violet, orange). Amber = due or important (written as «موعدش رسیده» / «مهم»), yellow with the orange accent; indigo = special day (sick, travel, off), shifted for blue/violet; gray = gap. Palettes in `DESIGN.md`.
+- **Font:** Estedad only, bundled in the APK.
 - **Docs:** written in plain English, short sentences. UI copy is in Persian.
 
 ## Repository and environment notes

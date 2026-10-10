@@ -12,7 +12,7 @@
 /* Base styles copied from screens.html (round 3, approved). */
 :root {
   --page-bg: #0A0C0B; --page-fg: #E6EAE8; --page-muted: #8D9692; --page-line: #222826; --page-acc: #5BD994;
-  --font-ui: "Vazirmatn", "Noto Sans Arabic", system-ui, sans-serif;
+  --font-ui: "Estedad", "Vazirmatn", "Noto Sans Arabic", system-ui, sans-serif;
   color-scheme: dark;
 }
 @media (prefers-color-scheme: light) {
@@ -160,12 +160,15 @@ figcaption b { color: var(--page-fg); display: block; font-size: 15px; }
 .f-rubik   { --font-ui: "Rubik", system-ui, sans-serif; }
 
 /* Accent palettes. Neutrals and amber stay the same in every accent.
-   The special-day color moves away from the accent when they would look alike (blue, violet). */
+   The special-day color moves away from the accent when they would look alike (blue, violet).
+   Orange is too close to amber, so with orange the due/important color becomes yellow. */
 .m-dark.a-blue   { --acc:#4D9BF0; --acc-sub:#0F2440; --acc-on:#82BBFA; --w1:#112E52; --w2:#1A4D8A; --w3:#2F7AD6; --w4:#82BBFA; --sp:#9A66D4; --sp-sub:#2B1C42; --sp-on:#C6A2F0; }
 .m-dark.a-teal   { --acc:#2CC2B4; --acc-sub:#0C2E2B; --acc-on:#62DCCF; --w1:#0E3C38; --w2:#13675F; --w3:#1EA195; --w4:#62DCCF; }
 .m-dark.a-violet { --acc:#9B7BEA; --acc-sub:#241B3E; --acc-on:#C2AAFA; --w1:#2B2150; --w2:#46358A; --w3:#7458D0; --w4:#C2AAFA; --sp:#3A9FC2; --sp-sub:#0E2A33; --sp-on:#7CCBE4; }
+.m-dark.a-orange { --acc:#F28B3C; --acc-sub:#3A220F; --acc-on:#FFB27A; --w1:#3D2410; --w2:#6E3D16; --w3:#C2661F; --w4:#FFB27A; --nt:#E3D04E; --nt-sub:#302C0B; }
 .m-light.a-blue   { --acc:#1F6BD0; --acc-sub:#E2EDFC; --acc-on:#1A56A8; --w1:#CDE0FA; --w2:#98C1F3; --w3:#3C86E0; --w4:#1A56A8; --sp:#B08BE6; --sp-sub:#EADCFA; --sp-on:#6A3DAE; }
 .m-light.a-teal   { --acc:#0E8379; --acc-sub:#DDF4F1; --acc-on:#0A665E; --w1:#C0ECE7; --w2:#8BDCD3; --w3:#1FA195; --w4:#0A665E; }
+.m-light.a-orange { --acc:#C2570F; --acc-sub:#FCEADB; --acc-on:#9A440C; --w1:#FBD9BE; --w2:#F6B485; --w3:#E07B2E; --w4:#9A440C; --nt:#776804; --nt-sub:#F6F0C6; }
 .m-light.a-violet { --acc:#6644C8; --acc-sub:#EDE7FC; --acc-on:#5233AA; --w1:#DCD1FA; --w2:#B8A4F2; --w3:#8466DE; --w4:#5233AA; --sp:#6CC0DC; --sp-sub:#D4EEF6; --sp-on:#1D6A84; }
 
 /* Page chrome */
@@ -204,10 +207,10 @@ figcaption b { color: var(--page-fg); display: block; font-size: 15px; }
 .legend .amb { background: var(--nt); }
 
 /* Appearance screen («ظاهر») */
-.swatches { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.swatches { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; }
 .swatches button { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 12px 0 10px; border-radius: 16px; text-align: center; }
 .swatches button[aria-pressed="true"] { background: var(--sf2); }
-.swatches .dot { width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; position: relative; }
+.swatches .dot { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; position: relative; }
 .swatches .dot .i { color: #fff; opacity: 0; }
 .swatches button[aria-pressed="true"] .dot { box-shadow: 0 0 0 3px var(--sf), 0 0 0 5px currentColor; }
 .swatches button[aria-pressed="true"] .dot .i { opacity: 1; }
@@ -271,7 +274,7 @@ figcaption b { color: var(--page-fg); display: block; font-size: 15px; }
 <main class="wrap">
   <header class="intro">
     <h1>Type and color</h1>
-    <p>The approved Today screen in six Persian fonts, then in four accent colors. Everything you can tap works: tiles tick, the part-of-day icons switch, the leaf turns on the minimum day. <b>Use the bar to switch the accent, dark/light, and the font of the color section.</b></p>
+    <p><b>Chosen: Estedad, and five accent colors with green as the default.</b> The Today screen in the six fonts that were compared, then in each accent, then the screen where you pick the color. Everything you can tap works. Use the bar to switch the accent, dark/light, and the font of the color section.</p>
   </header>
 
   <div class="bar" role="toolbar" aria-label="Preview controls">
@@ -285,24 +288,20 @@ figcaption b { color: var(--page-fg); display: block; font-size: 15px; }
 
   <section class="gallery" id="fonts">
     <div class="sec-head">
-      <h2>1 · Fonts</h2>
+      <h2>1 · Fonts (Estedad chosen)</h2>
       <p>Same screen and colors, six fonts. All six are free (SIL Open Font License), so any of them can be bundled in the APK. Each was checked for the Persian letters پ چ ژ گ and Persian digits ۰–۹.</p>
     </div>
   </section>
 
-  <section class="gallery" id="colors" style="margin-top:56px; max-width:800px; margin-inline:auto">
+  <section class="gallery" id="colors" style="margin-top:56px">
     <div class="sec-head">
-      <h2>2 · Accent color</h2>
-      <p>The accent is the color of «done» and progress: the ring, ticked tiles, the dashboard squares, buttons. Amber («مهم», «موعدش رسیده») never changes. The special-day color shifts when it would look too close to the accent. Gray gaps stay gray.</p>
+      <h2>2 · Accent color (green by default)</h2>
+      <p>The accent is the color of «done» and progress: the ring, ticked tiles, the dashboard squares, buttons. Amber («مهم», «موعدش رسیده») stays, except with orange, where it turns yellow so the two never look alike. The special-day color shifts when it would look too close to the accent. Gray gaps stay gray.</p>
     </div>
   </section>
 
-  <section class="gallery" id="appearance" style="margin-top:56px">
-    <div class="sec-head">
-      <h2>3 · Where you pick it</h2>
-      <p>Settings → «ظاهر و زبان» (the «زبان» tile, renamed). Tap a color and the whole app follows, this page included.</p>
-    </div>
-    <figure>
+  <div hidden>
+    <figure id="appearance-fig">
       <div class="phone" dir="rtl" lang="fa" id="appearance-phone">
         <div class="status"><span>۲۱:۱۰</span><span>۴۰٪</span></div>
         <div class="topbar"><button class="icon-btn" aria-label="بازگشت"><svg class="i fwd"><use href="#i-back"/></svg></button><span class="t-title">ظاهر و زبان</span></div>
@@ -326,9 +325,9 @@ figcaption b { color: var(--page-fg); display: block; font-size: 15px; }
           <button class="btn pri" style="margin-top:auto">ذخیره</button>
         </div>
       </div>
-      <figcaption><b>«ظاهر و زبان»</b>Four colors, each with a name. The preview card shows the ring, a slice of the dashboard and the chips in the chosen color, so you see the effect before leaving the screen.</figcaption>
+      <figcaption><b>Where you pick it: «ظاهر و زبان»</b>Settings → the «زبان» tile, renamed. Five colors, each with a name; tapping one re-colors this whole page. The preview card shows the ring, a slice of the dashboard and the chips in the chosen color, so you see the effect before leaving the screen.</figcaption>
     </figure>
-  </section>
+  </div>
 </main>
 
 <template id="tpl-today">
@@ -367,7 +366,7 @@ figcaption b { color: var(--page-fg); display: block; font-size: 15px; }
   function press(group, btn) { group.querySelectorAll("button").forEach(function (b) { b.setAttribute("aria-pressed", b === btn ? "true" : "false"); }); }
 
   var FONTS = [
-    { id: "vazir", name: "Vazirmatn", by: "Saber Rastikerdar · Google Fonts · weights 100–900", verdict: "current", notes: [
+    { id: "vazir", name: "Vazirmatn", by: "Saber Rastikerdar · Google Fonts · weights 100–900", verdict: "previous", notes: [
       ["+", "Made for Persian screens. Even and very readable at 12–15 px."],
       ["+", "Clean digits; the ring number reads well."],
       ["−", "The most common font in Iranian apps, so it feels familiar rather than distinctive."] ] },
@@ -395,11 +394,12 @@ figcaption b { color: var(--page-fg); display: block; font-size: 15px; }
     { id: "green",  fa: "سبز",       en: "Green",     dark: "#34C47A", light: "#1D8A55" },
     { id: "blue",   fa: "آبی",       en: "Blue",      dark: "#4D9BF0", light: "#1F6BD0" },
     { id: "teal",   fa: "فیروزه‌ای", en: "Turquoise", dark: "#2CC2B4", light: "#0E8379" },
-    { id: "violet", fa: "بنفش",      en: "Violet",    dark: "#9B7BEA", light: "#6644C8" }
+    { id: "violet", fa: "بنفش",      en: "Violet",    dark: "#9B7BEA", light: "#6644C8" },
+    { id: "orange", fa: "نارنجی",    en: "Orange",    dark: "#F28B3C", light: "#C2570F" }
   ];
-  var state = { accent: "green", mode: "m-dark", font: "vazir" };
-  try { var saved = JSON.parse(localStorage.getItem("ba-type-color") || "{}"); Object.keys(saved).forEach(function (k) { if (k in state) state[k] = saved[k]; }); } catch (e) {}
-  function save() { try { localStorage.setItem("ba-type-color", JSON.stringify(state)); } catch (e) {} }
+  var state = { accent: "green", mode: "m-dark", font: "estedad" };
+  try { var saved = JSON.parse(localStorage.getItem("ba-type-color-2") || "{}"); Object.keys(saved).forEach(function (k) { if (k in state) state[k] = saved[k]; }); } catch (e) {}
+  function save() { try { localStorage.setItem("ba-type-color-2", JSON.stringify(state)); } catch (e) {} }
 
   // Icon-only bottom nav, RTL order: Today (right) · Dashboard · Progress · Week
   var NAV = [["home","امروز"],["grid","داشبورد"],["chart","پیشرفت"],["cal","هفته"]];
@@ -466,7 +466,7 @@ figcaption b { color: var(--page-fg); display: block; font-size: 15px; }
     fig.appendChild(makeToday(f.id, null));
     var cap = document.createElement("figcaption");
     cap.style.display = "grid"; cap.style.gap = "12px";
-    var v = f.verdict === "rec" ? '<span class="verdict rec">my pick</span>' : f.verdict === "current" ? '<span class="verdict">current</span>' : "";
+    var v = f.verdict === "rec" ? '<span class="verdict rec">chosen</span>' : f.verdict === "previous" ? '<span class="verdict">previous</span>' : "";
     cap.innerHTML = '<b>' + f.name + v + '</b>' +
       '<div class="spec f-' + f.id + '" style="font-family:var(--font-ui)">' +
         '<span class="fa">۰۱۲۳۴۵۶۷۸۹</span>' +
@@ -496,6 +496,7 @@ figcaption b { color: var(--page-fg); display: block; font-size: 15px; }
   });
 
   // 3 · Appearance screen
+  colorsSec.appendChild(document.getElementById("appearance-fig"));
   var appPhone = document.getElementById("appearance-phone");
   phones.push({ el: appPhone, fixedAccent: null, fixedFont: null });
   var sws = document.getElementById("app-swatches");

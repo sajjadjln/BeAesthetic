@@ -80,7 +80,8 @@ Status: **Final** (agreed by the user) · **Default** (my choice, not yet confir
 
 | # | Decision | Why | Status |
 |---|---|---|---|
-| D46 | Explore other fonts and a user-chosen accent color (`docs/design/type-and-color.html`). Fonts compared: Vazirmatn (current), Estedad, Sahel, IBM Plex Sans Arabic, Noto Kufi Arabic, Rubik; all OFL. Readex Pro and Tajawal were dropped: no Persian letters (پ چ ژ گ) or Persian digits. Accents: green, blue, turquoise, violet, picked in Settings → «ظاهر و زبان» (the «زبان» tile renamed). The accent replaces green as the color of done/progress; amber never changes; the special-day color moves away from the accent for blue (→ violet) and violet (→ cyan). **My recommendation:** Estedad as the only font; green as the default with all four accents selectable. | User request. | Open: waiting for the user's pick |
+| D46 | Explore other fonts and a user-chosen accent color (`docs/design/type-and-color.html`). Fonts compared: Vazirmatn (current), Estedad, Sahel, IBM Plex Sans Arabic, Noto Kufi Arabic, Rubik; all OFL. Readex Pro and Tajawal were dropped: no Persian letters (پ چ ژ گ) or Persian digits. Accents: green, blue, turquoise, violet, picked in Settings → «ظاهر و زبان» (the «زبان» tile renamed). The accent replaces green as the color of done/progress; amber never changes; the special-day color moves away from the accent for blue (→ violet) and violet (→ cyan). **My recommendation:** Estedad as the only font; green as the default with all four accents selectable. | User request. | Superseded by D47 |
+| D47 | **Estedad** is the only font. **Five accent colors**: green (default), blue, turquoise, violet, orange, picked in Settings → «ظاهر و زبان». The accent means done/progress. With orange, due/important turns **yellow** (amber is only 13° of hue from orange); with blue, special days turn violet; with violet, cyan. Palettes in `DESIGN.md`. `screens.html` now uses Estedad. | User choice ("estedad, all four colors, green default, also add orange"). Orange needed the yellow swap so «مهم» never looks like «done». | Final |
 
 ## Superseded
 
@@ -90,4 +91,6 @@ Status: **Final** (agreed by the user) · **Default** (my choice, not yet confir
 - Photos every 4 weeks → monthly in D28.
 - Minimum day as a bottom ghost button, then as a top switch → now a leaf icon button on Today (D27).
 - Thursday planning (first draft) → Friday (D7).
+- Vazirmatn as the only font (D21) → Estedad (D47).
+- Green as the only accent (D21) → five user-chosen accents, green by default (D47).
 - CI + GitHub Releases as the install route (D41) → Android Studio builds over USB (D43).
