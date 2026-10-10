@@ -1,4 +1,4 @@
-<title>BeAesthetic Screens</title>
+<title>پیکر Screens</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Estedad:wght@400;500;600;700;800&display=swap">
@@ -319,6 +319,21 @@ input[type="range"].seek::-moz-range-thumb { width: 22px; height: 22px; border-r
 .mini-grid .cell { width: 100%; height: auto; aspect-ratio: 1; border-radius: 5px; }
 .preview .chips { display: flex; gap: 6px; flex-wrap: wrap; }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+
+/* Name and logo (D79, D81). The launcher icon stays green whatever the accent. */
+.brand { display:flex; align-items:center; gap:14px; }
+.brand small { font-size:15px; font-weight:600; color:var(--page-muted); letter-spacing:.04em; }
+.appicon { display:block; width:52px; height:52px; border-radius:30%; flex:none; }
+.splash { justify-content:center; align-items:center; background:#0E1110; }
+.splash .disc { width:160px; height:160px; border-radius:50%; overflow:hidden; }
+.splash .disc svg { width:100%; height:100%; display:block; }
+.splash .brandline { position:absolute; bottom:44px; inset-inline:0; display:grid; justify-items:center; gap:2px; }
+.splash .brandline b { font-size:22px; font-weight:800; color:#EDF0EE; }
+.splash .brandline span { font-size:12px; color:#6B7571; letter-spacing:.05em; direction:ltr; }
+.about { display:flex; align-items:center; gap:12px; margin-top:auto; padding:12px 4px 2px; border-top:1px solid var(--bd); }
+.about .appicon { width:40px; height:40px; }
+.about b { display:block; font-size:15px; }
+.about span { font-size:12.5px; color:var(--t2); }
 </style>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -361,17 +376,28 @@ input[type="range"].seek::-moz-range-thumb { width: 22px; height: 22px; border-r
   <symbol id="i-repeat" viewBox="0 0 24 24"><path d="m17 2 4 4-4 4M3 11v-1a4 4 0 0 1 4-4h14M7 22l-4-4 4-4M21 13v1a4 4 0 0 1-4 4H3"/></symbol>
   <symbol id="i-grip" viewBox="0 0 24 24"><circle cx="9" cy="6" r="1"/><circle cx="15" cy="6" r="1"/><circle cx="9" cy="12" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="9" cy="18" r="1"/><circle cx="15" cy="18" r="1"/></symbol>
   <symbol id="i-mountain" viewBox="0 0 24 24"><path d="m8 3 4 8 5-5 5 15H2L8 3z"/></symbol>
+  <symbol id="app-icon" viewBox="18 18 72 72"><rect width="108" height="108" fill="#121715"/><g transform="translate(54 54) scale(0.7) translate(-54 -54)"><g transform="rotate(-8 54 54)"><g transform="translate(1.6 2.4)" opacity=".42"><path d="M46 44h16l5 6.5H41z" fill="#000" stroke="#000" stroke-width="11.6" stroke-linejoin="round"></path><path d="M35 51C35 45.5 73 45.5 73 51C76 57 72 66 66 73C63.5 77 62 81 61 84L47 84C46 81 44.5 77 42 73C36 66 32 57 35 51Z" fill="#000" stroke="#000" stroke-width="11.6" stroke-linejoin="round"></path><circle cx="38" cy="51" r="7.5" fill="#000" stroke="#000" stroke-width="11.6" stroke-linejoin="round"></circle><circle cx="70" cy="51" r="7.5" fill="#000" stroke="#000" stroke-width="11.6" stroke-linejoin="round"></circle><path d="M37 52L25.5 52.5" stroke="#000" stroke-width="21.6" stroke-linecap="round" fill="none"></path><path d="M71 52L82.5 52.5" stroke="#000" stroke-width="21.6" stroke-linecap="round" fill="none"></path><circle cx="30.5" cy="45.5" r="8.2" fill="#000" stroke="#000" stroke-width="11.6" stroke-linejoin="round"></circle><circle cx="77.5" cy="45.5" r="8.2" fill="#000" stroke="#000" stroke-width="11.6" stroke-linejoin="round"></circle><path d="M25.5 52.5L28.5 36" stroke="#000" stroke-width="20.6" stroke-linecap="round" fill="none"></path><path d="M82.5 52.5L79.5 36" stroke="#000" stroke-width="20.6" stroke-linecap="round" fill="none"></path><circle cx="29" cy="32" r="6.6" fill="#000" stroke="#000" stroke-width="11.6" stroke-linejoin="round"></circle><circle cx="79" cy="32" r="6.6" fill="#000" stroke="#000" stroke-width="11.6" stroke-linejoin="round"></circle><circle cx="54" cy="34" r="10.5" fill="#000" stroke="#000" stroke-width="11.6" stroke-linejoin="round"></circle></g><path d="M46 44h16l5 6.5H41z" fill="#F7F8F7" stroke="#F7F8F7" stroke-width="11.6" stroke-linejoin="round"></path><path d="M35 51C35 45.5 73 45.5 73 51C76 57 72 66 66 73C63.5 77 62 81 61 84L47 84C46 81 44.5 77 42 73C36 66 32 57 35 51Z" fill="#F7F8F7" stroke="#F7F8F7" stroke-width="11.6" stroke-linejoin="round"></path><circle cx="38" cy="51" r="7.5" fill="#F7F8F7" stroke="#F7F8F7" stroke-width="11.6" stroke-linejoin="round"></circle><circle cx="70" cy="51" r="7.5" fill="#F7F8F7" stroke="#F7F8F7" stroke-width="11.6" stroke-linejoin="round"></circle><path d="M37 52L25.5 52.5" stroke="#F7F8F7" stroke-width="21.6" stroke-linecap="round" fill="none"></path><path d="M71 52L82.5 52.5" stroke="#F7F8F7" stroke-width="21.6" stroke-linecap="round" fill="none"></path><circle cx="30.5" cy="45.5" r="8.2" fill="#F7F8F7" stroke="#F7F8F7" stroke-width="11.6" stroke-linejoin="round"></circle><circle cx="77.5" cy="45.5" r="8.2" fill="#F7F8F7" stroke="#F7F8F7" stroke-width="11.6" stroke-linejoin="round"></circle><path d="M25.5 52.5L28.5 36" stroke="#F7F8F7" stroke-width="20.6" stroke-linecap="round" fill="none"></path><path d="M82.5 52.5L79.5 36" stroke="#F7F8F7" stroke-width="20.6" stroke-linecap="round" fill="none"></path><circle cx="29" cy="32" r="6.6" fill="#F7F8F7" stroke="#F7F8F7" stroke-width="11.6" stroke-linejoin="round"></circle><circle cx="79" cy="32" r="6.6" fill="#F7F8F7" stroke="#F7F8F7" stroke-width="11.6" stroke-linejoin="round"></circle><circle cx="54" cy="34" r="10.5" fill="#F7F8F7" stroke="#F7F8F7" stroke-width="11.6" stroke-linejoin="round"></circle><path d="M46 44h16l5 6.5H41z" fill="#0E1110" stroke="#0E1110" stroke-width="4.4" stroke-linejoin="round"></path><path d="M35 51C35 45.5 73 45.5 73 51C76 57 72 66 66 73C63.5 77 62 81 61 84L47 84C46 81 44.5 77 42 73C36 66 32 57 35 51Z" fill="#0E1110" stroke="#0E1110" stroke-width="4.4" stroke-linejoin="round"></path><circle cx="38" cy="51" r="7.5" fill="#0E1110" stroke="#0E1110" stroke-width="4.4" stroke-linejoin="round"></circle><circle cx="70" cy="51" r="7.5" fill="#0E1110" stroke="#0E1110" stroke-width="4.4" stroke-linejoin="round"></circle><path d="M37 52L25.5 52.5" stroke="#0E1110" stroke-width="14.4" stroke-linecap="round" fill="none"></path><path d="M71 52L82.5 52.5" stroke="#0E1110" stroke-width="14.4" stroke-linecap="round" fill="none"></path><circle cx="30.5" cy="45.5" r="8.2" fill="#0E1110" stroke="#0E1110" stroke-width="4.4" stroke-linejoin="round"></circle><circle cx="77.5" cy="45.5" r="8.2" fill="#0E1110" stroke="#0E1110" stroke-width="4.4" stroke-linejoin="round"></circle><path d="M25.5 52.5L28.5 36" stroke="#0E1110" stroke-width="13.4" stroke-linecap="round" fill="none"></path><path d="M82.5 52.5L79.5 36" stroke="#0E1110" stroke-width="13.4" stroke-linecap="round" fill="none"></path><circle cx="29" cy="32" r="6.6" fill="#0E1110" stroke="#0E1110" stroke-width="4.4" stroke-linejoin="round"></circle><circle cx="79" cy="32" r="6.6" fill="#0E1110" stroke="#0E1110" stroke-width="4.4" stroke-linejoin="round"></circle><circle cx="54" cy="34" r="10.5" fill="#0E1110" stroke="#0E1110" stroke-width="4.4" stroke-linejoin="round"></circle><path d="M46 44h16l5 6.5H41z" fill="#34C47A"></path><path d="M35 51C35 45.5 73 45.5 73 51C76 57 72 66 66 73C63.5 77 62 81 61 84L47 84C46 81 44.5 77 42 73C36 66 32 57 35 51Z" fill="#34C47A"></path><circle cx="38" cy="51" r="7.5" fill="#34C47A"></circle><circle cx="70" cy="51" r="7.5" fill="#34C47A"></circle><path d="M37 52L25.5 52.5" stroke="#34C47A" stroke-width="10" stroke-linecap="round" fill="none"></path><path d="M71 52L82.5 52.5" stroke="#34C47A" stroke-width="10" stroke-linecap="round" fill="none"></path><circle cx="30.5" cy="45.5" r="8.2" fill="#34C47A"></circle><circle cx="77.5" cy="45.5" r="8.2" fill="#34C47A"></circle><path d="M25.5 52.5L28.5 36" stroke="#34C47A" stroke-width="9" stroke-linecap="round" fill="none"></path><path d="M82.5 52.5L79.5 36" stroke="#34C47A" stroke-width="9" stroke-linecap="round" fill="none"></path><circle cx="29" cy="32" r="6.6" fill="#34C47A"></circle><circle cx="79" cy="32" r="6.6" fill="#34C47A"></circle><circle cx="54" cy="34" r="10.5" fill="#34C47A"></circle><g fill="#FFFFFF" opacity=".38"><ellipse cx="49.5" cy="28.5" rx="3.6" ry="2.1" transform="rotate(-25 49.5 28.5)"></ellipse><ellipse cx="27.6" cy="42.2" rx="2.7" ry="1.6" transform="rotate(-30 27.6 42.2)"></ellipse><ellipse cx="75" cy="42.2" rx="2.7" ry="1.6" transform="rotate(-30 75 42.2)"></ellipse><ellipse cx="44" cy="55" rx="3" ry="1.6" transform="rotate(-20 44 55)"></ellipse></g><g fill="none" stroke="#0E1110" stroke-opacity=".5" stroke-width="1.7" stroke-linecap="round"><path d="M45.5 58.5Q54 63.5 62.5 58.5"></path><path d="M54 64.5v8"></path><path d="M49.5 67q2 1.2 3 0M55.5 67q1 1.2 3 0"></path></g><g fill="#0E1110"><ellipse cx="50.2" cy="34" rx="1.5" ry="1.9"></ellipse><ellipse cx="57.8" cy="34" rx="1.5" ry="1.9"></ellipse></g><g fill="none" stroke="#0E1110" stroke-width="1.7" stroke-linecap="round"><path d="M47.6 30.3l4.2 1.2M60.4 30.3l-4.2 1.2"></path><path d="M49.6 38.2Q54 42.4 58.4 38.2"></path></g><path d="M41 17.6Q41 21 44.4 21Q41 21 41 24.4Q41 21 37.6 21Q41 21 41 17.6Z" fill="#FFFFFF"></path><path d="M68.5 16.9Q68.5 19.5 71.1 19.5Q68.5 19.5 68.5 22.1Q68.5 19.5 65.9 19.5Q68.5 19.5 68.5 16.9Z" fill="#FFFFFF"></path></g></g></symbol>
 </svg>
 
 <main class="wrap">
   <header class="intro">
-    <h1>BeAesthetic</h1>
-    <p>The combined design: the minimal Today, Workout, Settings and task editor, plus the detailed Dashboard, Progress, Week plan, Tasks, Reminders, Workout plan and Appearance screens. Everything you can tap works. Font: Estedad. Pick an accent below (or in «ظاهر و زبان») and every screen follows.</p>
+    <h1 class="brand"><svg class="appicon" aria-hidden="true"><use href="#app-icon"/></svg><span>پیکر</span><small>BeAesthetic</small></h1>
+    <p><bdi>«پیکر»</bdi> (BeAesthetic in English). The combined design: the minimal Today, Workout, Settings and task editor, plus the detailed Dashboard, Progress, Week plan, Tasks, Reminders, Workout plan and Appearance screens. Everything you can tap works. Font: Estedad. Pick an accent below (or in <bdi>«ظاهر و زبان»</bdi>) and every screen follows.</p>
   </header>
 
   <div class="bar" role="toolbar" aria-label="Accent color"><span>Accent</span><span id="ctl-accent" style="display:contents"></span></div>
 
   <section class="gallery">
+
+    <!-- 00 Splash -->
+    <figure>
+      <div class="phone m-dark splash" dir="rtl" lang="fa" style="display:flex">
+        <div class="status" style="position:absolute;top:0;inset-inline:0"><span>۷:۰۰</span><span>۸۵٪</span></div>
+        <span class="disc"><svg aria-hidden="true"><use href="#app-icon"/></svg></span>
+        <div class="brandline"><b>پیکر</b><span>BeAesthetic</span></div>
+      </div>
+      <figcaption><b>00 · شروع</b>The splash screen while the app opens: the cartoon sticker icon in Android's 160 dp circle, the name «پیکر» at the bottom. The icon stays green whatever the accent; it is the launcher icon.</figcaption>
+    </figure>
 
     <!-- 01 Today -->
     <figure>
@@ -528,9 +554,10 @@ input[type="range"].seek::-moz-range-thumb { width: 22px; height: 22px; border-r
             <button><svg class="i lg ic"><use href="#i-globe"/></svg><span class="lb">ظاهر و زبان</span></button>
             <button><svg class="i lg ic"><use href="#i-phone"/></svg><span class="lb">گوشی</span></button>
           </div>
+          <div class="about"><svg class="appicon" aria-hidden="true"><use href="#app-icon"/></svg><div><b>پیکر</b><span>نسخه ۰.۱ · BeAesthetic</span></div></div>
         </div>
       </div>
-      <figcaption><b>06 · تنظیمات</b>Six tiles. «ظاهر و زبان» = accent color (5 choices), dark/light, language. «گوشی» = Xiaomi battery and autostart setup.</figcaption>
+      <figcaption><b>06 · تنظیمات</b>Six tiles, and the app name and version at the bottom. «ظاهر و زبان» = accent color (5 choices), dark/light, language. «گوشی» = Xiaomi battery and autostart setup.</figcaption>
     </figure>
 
     <!-- 06b Appearance and language -->

@@ -134,6 +134,9 @@ Not used: confetti on ordinary taps, a mascot, idle loops, shake or flash on err
 
 ## Screens (current)
 
+### 00 شروع (Splash)
+- Dark background; the app icon (cartoon sticker, D81) in Android's 160 dp circle; «پیکر» with "BeAesthetic" under it at the bottom. The icon stays green whatever the accent: it is the launcher icon.
+
 ### 01 امروز (Today)
 - Header: weekday (large), "۱۸ آبان · هفته ۵ از ۲۳ · فصل آبان" (D51); in the last chapter the chapter part becomes «۲۹ روز تا نوروز» (D74); a **leaf** button (minimum day) and a **gear** (settings).
 - **Ring**: tasks done today / total (e.g. ۳ از ۱۲). Under it, **7 week dots** (Saturday on the right), colored by the day level; today is outlined.
@@ -184,6 +187,7 @@ Not used: confetti on ordinary taps, a mascot, idle loops, shake or flash on err
 ### 06 تنظیمات (Settings)
 - «یادآورها سالم‌اند» health banner.
 - Six tiles: کارها · یادآورها · برنامه تمرین · پشتیبان · ظاهر و زبان · گوشی (Xiaomi battery/autostart setup).
+- At the bottom: the app icon, «پیکر» and «نسخه ۰.۱ · BeAesthetic».
 
 ### 06b ظاهر و زبان (Appearance and language)
 - «رنگ»: five named color circles (سبز · آبی · فیروزه‌ای · بنفش · نارنجی); the chosen one has a ring and a check.
