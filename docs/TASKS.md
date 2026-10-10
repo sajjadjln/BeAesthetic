@@ -31,12 +31,12 @@ The program itself started on **2026-10-09 (Day 0)**. Week 1 began 2026-10-10. E
 
 1. **Phase 5, slice 1**, in a session on the user's laptop (Android Studio and the Android SDK are there). Slice 1 now includes the **reminder core** (D50). Full list in `ARCHITECTURE.md` §14:
    1. Skeleton + basic Today + reminder core (planner, scheduler, block notifications with anchors, reminder log) + usage log + `installDate` + no-`INTERNET` check.
-   2. Today complete (ring, dots, minimum day, chapter line + chapter-start card, tick feedback, comeback) + reminders complete (follow-ups, task alarms, health, Xiaomi setup, Reminders screen).
+   2. Today complete (ring, dots, minimum day, chapter line + chapter-start card with the letter offer, last-chapter countdown, tick feedback, comeback) + reminders complete (follow-ups, task alarms, health, Xiaomi setup, Reminders screen).
    3. Tasks list + task editor (with the «بعد از…» anchor).
-   4. Workout plan editor + workout session (with the in-session «رکورد»).
+   4. Workout plan editor + workout session (in-session «رکورد», ladders + next-rung offer, round numbers).
    5. Dashboard (with «قبل از اپ» cells).
    6. Backup/restore (before any photos are stored for real).
-   7. Progress + check-in with the ghost camera + baseline with workout backfill + strength tests + program line + milestones.
+   7. Progress (ladders, lifetime totals) + check-in with the ghost camera and the reveal + baseline with workout backfill + strength tests with the guess + program line + milestones.
    8. Friday review and plan (short path, comebacks, best routines, «روز ذخیره», identity sentence).
    8b. Halfway recap, **by 19 Dec**.
    9. Onboarding.
@@ -54,7 +54,7 @@ The program itself started on **2026-10-09 (Day 0)**. Week 1 began 2026-10-10. E
 4. Keep the three **protein** ticks (breakfast / lunch / dinner)? (Default: yes)
 5. **Strength tests** every 2 weeks? Which **leg-health** test?
 6. **Beard and haircut** intervals (days); **vitamin D** dose and schedule.
-7. **The workout plan** (exercises, sets, rep ranges for Sat / Mon / Wed). The user said they'll paste it. It seeds the Workout plan editor.
+7. **The workout plan** (exercises, sets, rep ranges for Sat / Mon / Wed). The user said they'll paste it. It seeds the Workout plan editor. With it: the **ladder rungs** for each move (D70). Default seeds: push-up = knee → standard → diamond → archer; pull-up = dead hang → negative → band-assisted → strict.
 8. **Snack list:** 5–10 snacks they can make.
 9. Day-level thresholds and the special-day cap (2/week) are defaults. Revisit after 2 weeks of real use.
 10. **Persian app name** (launcher label). Until decided, the label is «BeAesthetic» in both languages. Pick it with the future Bazaar release in mind: say what the app does, avoid the "looks/aesthetic" connotation (D69).
@@ -65,11 +65,10 @@ The program itself started on **2026-10-09 (Day 0)**. Week 1 began 2026-10-10. E
 - Public release on Cafe Bazaar: a **future goal, after the program** (D49; `ARCHITECTURE.md` §15, `research/07`).
 - Optional GitHub Actions workflow that runs the tests on push.
 - Goals with progress bars inside Progress (milestones, D65, are the simple version in the MVP).
-- Before/after photo comparison slider.
 - Meal and snack planner with recipes.
 - Optional sync to the user's own .NET backend.
 
-Moved into the build by the research: the ghost-overlay camera (slice 7), "5-week phases" (now chapters, D51), the widget (slice 10, D67).
+Moved into the build by the research: the ghost-overlay camera (slice 7), "5-week phases" (now chapters, D51), the widget (slice 10, D67). The before/after slider is now part of the check-in reveal (slice 7, D75).
 
 ## Housekeeping
 

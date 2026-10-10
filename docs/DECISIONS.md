@@ -112,6 +112,19 @@ Market, competitor and gamification research is in `research/` (start with `rese
 | D68 | **Accessibility checklist** in every slice: content descriptions on icon-only tabs and tiles, layouts that hold at 130% font size, grid levels also readable as numbers in day detail. | Cheap now; required for a release (research F14). | Final |
 | D69 | The **Persian app name** (open question 10) is picked with the future release in mind: it says what the app does and avoids the "looks/aesthetic" connotation. | Research F15. | Default (name still open) |
 
+## Gamification additions (2026-10-10)
+
+Proposed in the follow-up conversation; the user: "add all the top picks". All follow the rules: nothing goes down because of a miss, nothing leaves the phone, no points.
+
+| # | Decision | Why | Status |
+|---|---|---|---|
+| D70 | **Exercise ladders.** Each exercise can sit on a ladder of harder variants (e.g. knee push-up → push-up → diamond → archer; dead hang → negative → band-assisted → strict pull-up). When every set reaches the top of its range, the existing suggestion (SPEC §6.4) offers the next rung; the user confirms. Progress shows each ladder: rungs reached in the accent, the current rung outlined, the next ones in text-3. Stepping back down is allowed and never hides a rung already reached. Seeded with a push-up and a pull-up ladder; editable in the workout plan editor. | Visible mastery that doesn't depend on the mirror and can't go backwards. | Final |
+| D71 | **Lifetime totals.** Counters that only go up: total reps per ladder (all variants count), total hold time for timed moves, total workouts, total days shown up. Crossing a round number (reps 100 · 500 · 1,000 · 2,500 · 5,000 · 10,000; workouts 10 · 25 · 50 · 75; days shown up 30 · 60 · 100 · 150) is a quiet moment at the end of the session or on Today, a Friday win, and part of the recaps. | Safe "number goes up": a missed day never lowers it, unlike a streak. | Final |
+| D72 | **Letters to your future self.** Optional, never nagged. The first letter is offered once after install and opens on the finish day (29 Esfand). At each chapter start the chapter card offers a new letter that opens at the next chapter start (the Esfand letter opens on the finish day). A letter is sealed: it can't be read before its day; it can be deleted. | Gives the program a story; makes chapter starts feel like moments. | Final |
+| D73 | **Guess before a strength test.** Before each test an optional «حدس بزن» field, pre-filled with the last result. After logging, the result shows next to the guess («حدس: ۸ · واقعی: ۱۰»); beating it adds «از حدست بهتر». A lower result shows both numbers in neutral colors, nothing else. | Turns a chore into a small game; early on you'll usually beat yourself. | Final |
+| D74 | **Countdown in the last chapter only.** From 1 Esfand, Today's header line becomes «۲۹ روز تا نوروز» (days to 1 Farvardin; on 29 Esfand: «فردا نوروز · امروز خط پایان»). For a program that doesn't end on 29 Esfand the label is «… تا خط پایان». Never shown before the last chapter. | The goal-gradient effect works near the end; an early countdown makes the end feel far. | Final |
+| D75 | **Check-in reveal.** After the 3rd photo of a check-in, a reveal screen shows the new photos next to **Day 0** (last month via a toggle) with a compare slider. The ghost overlay still uses last month's photo, faint, only for framing. This pulls the backlog's before/after slider into slice 7. | A monthly moment of visible proof. | Final |
+
 ## Superseded
 
 - Weekly focus sentence (Phase 2) → removed in D24.
@@ -126,3 +139,5 @@ Market, competitor and gamification research is in `research/` (start with `rese
 - Slice 1 = skeleton + Today, slice 2 = reminders (D42) → the first build already has the reminder core (D50).
 - Backlog "5-week phases with new milestones" → chapters by Jalali month (D51) and real-world milestones (D65).
 - Ghost-overlay camera "later, ~week 4" → slice 7, before the Azar check-in (D64).
+- Backlog "before/after photo comparison slider (~week 8)" → part of the check-in reveal in slice 7 (D75).
+- `exercise.nextExerciseId` (ARCHITECTURE §8) → ladders: `exercise.ladderId` + `rung` (D70).

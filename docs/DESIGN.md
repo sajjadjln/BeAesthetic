@@ -72,7 +72,7 @@ Contrast was checked: text on accent buttons ≥ 4.3:1 (bold 16 px), accent chip
 ## Screens (current)
 
 ### 01 امروز (Today)
-- Header: weekday (large), "۱۸ آبان · هفته ۵ از ۲۳ · فصل آبان" (D51), a **leaf** button (minimum day) and a **gear** (settings).
+- Header: weekday (large), "۱۸ آبان · هفته ۵ از ۲۳ · فصل آبان" (D51); in the last chapter the chapter part becomes «۲۹ روز تا نوروز» (D74); a **leaf** button (minimum day) and a **gear** (settings).
 - **Ring**: tasks done today / total (e.g. ۳ از ۱۲). Under it, **7 week dots** (Saturday on the right), colored by the day level; today is outlined.
 - **Part-of-day switcher**: 4 icons (sunrise · sun · sunset · moon). A tiny accent dot under an icon means that part is complete.
 - **Tiles** (2 columns): an icon + one or two words. Tap toggles done (accent fill + check), with a soft haptic and a ~200 ms fill (D58). A finished part of the day and a 100% day get a slightly bigger moment.
@@ -80,7 +80,7 @@ Contrast was checked: text on accent buttons ≥ 4.3:1 (bold 16 px), accent chip
   - Due interval task: **amber outline** and a chip «موعدش رسیده».
   - Workout: a wide tile with a play button that opens the Workout session.
 - **Comeback** (D53): on the first tick after a day at level 0, one line under the ring: «خوش برگشتی». Shown once.
-- **Cards** (one at a time, above the tiles): chapter start (D51), recap at Yalda and 29 Esfand (D52), the one-time offer to silence a routine's reminders (D57), plus the existing ritual, check-in and welcome-back cards.
+- **Cards** (one at a time, above the tiles): chapter start with the letter offer (D51, D72), a letter on its opening day (D72), a round number crossed (D71), recap at Yalda and 29 Esfand (D52), the one-time offer to silence a routine's reminders (D57), plus the existing ritual, check-in and welcome-back cards.
 - **Minimum day** (leaf on): the part-of-day switcher hides, «روز حداقلی» shows, and only the floor tiles appear.
 
 ### 02 داشبورد (Dashboard)
@@ -96,6 +96,8 @@ Contrast was checked: text on accent buttons ≥ 4.3:1 (bold 16 px), accent chip
 - Pull-up chart (time right → left; dashed segment = the next test) with a «رکورد» chip.
 - Weight card with a sparkline.
 - «عکس‌های ماهانه»: one row per month (front / side / back), "2 of 7".
+- «نردبان‌ها» (D70): one row per ladder, the rungs as small steps (reached = accent, current = outlined, next = text-3), the current variant's name.
+- «از روز صفر» totals (D71): big numbers that only go up (e.g. «۳٬۲۴۰ شنا», «۲۷ تمرین», «۴۱ روز حضور»).
 - Program line (D51): a thin line from Day 0 to «نوروز ۱۴۰۶» with the five chapters marked and today's position.
 - Milestones (D65): 5–8 rows; reached ones in the accent with the date, others in text-3. No badges.
 
@@ -105,6 +107,7 @@ Contrast was checked: text on accent buttons ≥ 4.3:1 (bold 16 px), accent chip
 - **Huge number** with − / +, pre-filled from last time. Under it: «قبلی ۱۲ · ۱۲ · ۱۰».
 - **Seek bar 1–10** with the label «درجه سختی» and the value.
 - A big round ✓ button logs the set (ثبت).
+- **End of session:** a short summary; a round number crossed shows here («۱٬۰۰۰ شنا از روز صفر») (D71). When every set hit the top of its range: «پله بعد: شنای الماسی؟» with «بله» / «بعداً» (D70).
 - **Record** (D54): when a logged set beats that exercise's best, its circle fills with the accent and shows «رکورد» for a moment.
 
 ### 05 هفته (Friday review and plan)
@@ -163,4 +166,7 @@ Same as 01 with light tokens.
 - Day detail (tap a square on the Dashboard).
 - Notification layouts (block reminder, important follow-up with a "Done" action).
 - English (LTR) version of the final screens. Only an older Today exists in `screens-detailed.html`.
+- Strength test: an optional «حدس بزن» number before the test; afterwards «حدس: ۸ · واقعی: ۱۰», plus «از حدست بهتر» when beaten, neutral otherwise (D73).
+- Check-in reveal (D75): after the 3rd photo, the new photos next to Day 0 with a compare slider; a toggle for last month.
+- Letters (D72): a plain text sheet to write; a sealed-envelope card until its day.
 - Added by the research decisions (D51–D65), designed in the slice that needs them: chapter card, halfway and finish recaps, the after-the-finish choice (ادامه / برنامه تازه), the ghost-overlay camera, the silence-reminders offer, milestones setup, identity sentence. The changes above to Today, Dashboard, Progress, Workout, Week and the task editor are not in `screens.html` yet.

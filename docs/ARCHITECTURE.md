@@ -1,6 +1,6 @@
 # BeAesthetic: Architecture (v0.2)
 
-Status: **Accepted** (2026-10-10). The user approved every recommendation, except the install route: builds happen in Android Studio on the user's laptop (§13). Updated the same day for the research decisions D48–D69 (chapters, recaps, comebacks, anchors, routine strength, usage log, no `INTERNET`, new slice order).
+Status: **Accepted** (2026-10-10). The user approved every recommendation, except the install route: builds happen in Android Studio on the user's laptop (§13). Updated the same day for the research decisions D48–D69 (chapters, recaps, comebacks, anchors, routine strength, usage log, no `INTERNET`, new slice order) and the gamification additions D70–D75 (ladders, totals, letters, guesses, countdown, check-in reveal).
 For product rules see `SPEC.md`; for screens see `DESIGN.md`; for decision history see `DECISIONS.md` (D30 onward).
 
 ---
@@ -52,12 +52,12 @@ Why not more: feature modules buy build speed and team boundaries. We have neith
 
 ```
 domain/src/main/kotlin/app/beaesthetic/domain/
-  time/        ProgramCalendar (04:00 rollover, week number, part of day, chapter, landmarks), Jalali, Weekday set
+  time/        ProgramCalendar (04:00 rollover, week number, part of day, chapter, landmarks, countdown), Jalali, Weekday set
   tasks/       Task model, due-list rules, interval due dates, RoutineStrength (Loop score), fade rules
   score/       Day level, weekly score, special-day cap, comebacks, "before the app"
   reminders/   ReminderPlanner, ReminderHealth
-  workout/     Set pre-fill, progression suggestion, personal records (incl. in-session record)
-  progress/    "Since Day 0" deltas, check-in schedule, milestones, recap content
+  workout/     Set pre-fill, progression suggestion (incl. next ladder rung), personal records (incl. in-session record), ladders, lifetime totals + round numbers
+  progress/    "Since Day 0" deltas, check-in schedule, milestones, recap content, letter opening dates, strength-test guess outcome
   backup/      Export format (serializable models), format versions
 
 app/src/main/kotlin/app/beaesthetic/
@@ -102,6 +102,7 @@ All in `:domain/time`, all pure:
 - `chapter(date)`: the Jalali month of the program date; Mehr and Aban are chapter 1, then Azar, Dey, Bahman, Esfand (`SPEC.md` §2, D51). Computed from the program dates in settings, never hard-coded, so a new program gets its own chapters.
 - `landmark(date)`: chapter start, halfway (`halfwayDate` from settings, else the program's midpoint; the seed sets Yalda, 30 Azar = 21 Dec 2026) and finish (`programEndDate`).
 - `isBeforeApp(date) = date < installDate` (D56).
+- `countdown(date)`: `null` before the last chapter; otherwise days until `programEndDate + 1` and whether that day is 1 Farvardin (label «تا نوروز» vs «تا خط پایان») (D74).
 - Time zone: the phone's zone. Iran dropped daylight saving time in 2022, but the code still handles zone and clock changes (see §7.4).
 
 ## 6. Jalali dates
@@ -209,13 +210,14 @@ Physical schema for `SPEC.md` §9, updated for D25–D28. Dates are ISO `LocalDa
 | `day` | date, special (SICK·TRAVEL·OFF)?, minimumMode, dueCount, doneCount, floorDone | Replaces DayMeta. Holds the **day snapshot**, see below. A future row can hold only a planned special day. |
 | `snack_note` | date, text, updatedAt | |
 | `week` | weekStart (Saturday), ritualDoneAt?, reviewNote? | |
-| `exercise` | id, name, kind (REPS·SECONDS), nextExerciseId?, archivedAt? | One `name`, typed in whichever language the user uses. |
+| `ladder` | id, name, sortOrder | D70. A move family, e.g. «شنا», «بارفیکس». Seeded: push-up and pull-up. |
+| `exercise` | id, name, kind (REPS·SECONDS), ladderId?, rung?, archivedAt? | One `name`, typed in whichever language the user uses. The next harder variant = same ladder, `rung + 1` (replaces `nextExerciseId`, D70). |
 | `workout` | id, weekday (unique), name | A = Sat, B = Mon, C = Wed. |
 | `workout_exercise` | workoutId, position, exerciseId, sets, rangeMin, rangeMax | Key (workoutId, position). Drag-to-reorder rewrites positions. |
 | `session` | id, workoutId, date, startedAt, finishedAt? | |
 | `set_log` | sessionId, exerciseId, setIndex, value, effort (1–10) | D27: effort is per set, 1–10. |
 | `metric` | id, kind (BODY·TAPE·STRENGTH), key, name, unit (kg·cm·reps·s), higherIsBetter, sortOrder | Seeded: weight, 5 tape sites, the strength tests. |
-| `metric_entry` | id, metricId, date, value, note? | Baseline entries simply carry the Day 0 date. |
+| `metric_entry` | id, metricId, date, value, guess?, note? | Baseline entries simply carry the Day 0 date. `guess` = the strength-test guess (D73). |
 | `check_in` | idx (0–6), date, doneAt? | D28: 7 monthly check-ins. |
 | `photo` | checkInIdx, pose (FRONT·SIDE·BACK), fileName, takenAt | Key (checkInIdx, pose). |
 | `reminder_slot` | profile (NORMAL·FRIDAY), part, time, enabled | |
@@ -224,6 +226,8 @@ Physical schema for `SPEC.md` §9, updated for D25–D28. Dates are ISO `LocalDa
 | `milestone` | id, title, metricId?, target?, reachedAt?, sortOrder | D65. Linked to a metric when it has one (e.g. pull-ups ≥ 10); otherwise ticked by hand. |
 | `event` | id, at, type (APP_OPEN·SCREEN·NOTIF_SHOWN·NOTIF_TAP·FIRST_TICK), ref?, valueMinutes? | D59. Local usage log. `ref` = screen name or reminder key. Rows older than 180 days are deleted. Included in backups. |
 | `recap` | key (HALFWAY·FINISH), seenAt? | D52. The content is computed; only "seen" is stored. |
+| `letter` | id, writtenAt, opensOn, text, openedAt? | D72. The UI refuses to show `text` before `opensOn`. Included in backups. |
+| `round_number` | key (e.g. `reps:ladder:3:1000`, `workouts:50`, `days:100`), reachedOn, seenAt? | D71. Written when a total first crosses a round number, so it's noted once even if a log is later edited. Totals themselves are computed. |
 | `settings` | single row: language, programStartDate, rolloverHour, specialCapPerWeek, followUpMinutes, alarmMode, accentColor (GREEN·BLUE·TURQUOISE·VIOLET·ORANGE), themeMode (SYSTEM·DARK·LIGHT), backupTreeUri, lastOpenedAt, lastBackupAt, onboardingDone, programEndDate, installDate, halfwayDate?, identitySentence?, afterFinishMode (NONE·MAINTENANCE·NEW_PROGRAM), experimentFlags (bits, debug) | `installDate` drives the «قبل از اپ» cells (D56). |
 
 ### The day snapshot (why some derived numbers are stored)
@@ -303,7 +307,7 @@ Android's own cloud backup (`allowBackup`) is **off**: it would send data to Goo
 
 | Level | What | Where it runs |
 |---|---|---|
-| Unit, `:domain` (most tests) | Jalali; program date and the 04:00 rollover; week numbers; chapters and landmarks; "before the app"; comebacks; routine strength and fade/restore rules; milestones; recap content; due lists for every repeat type; interval due dates and "counts only on the first due day"; day level thresholds; weekly score with special days and the cap; reminder planner (both profiles, follow-ups, task alarm weekdays, absence rule, nothing in the past); reminder health (late, missed, device off); set pre-fill; progression suggestion; PRs and the in-session record; "since Day 0" deltas; check-in schedule; backup JSON round trip and reading older format versions | Any JVM: Android Studio on the laptop, or a cloud session (`:domain` needs no Android SDK) |
+| Unit, `:domain` (most tests) | Jalali; program date and the 04:00 rollover; week numbers; chapters and landmarks; "before the app"; comebacks; routine strength and fade/restore rules; milestones; recap content; ladder rung suggestion and "rungs reached"; lifetime totals and round-number crossings; letter opening dates; guess outcome; countdown; due lists for every repeat type; interval due dates and "counts only on the first due day"; day level thresholds; weekly score with special days and the cap; reminder planner (both profiles, follow-ups, task alarm weekdays, absence rule, nothing in the past); reminder health (late, missed, device off); set pre-fill; progression suggestion; PRs and the in-session record; "since Day 0" deltas; check-in schedule; backup JSON round trip and reading older format versions | Any JVM: Android Studio on the laptop, or a cloud session (`:domain` needs no Android SDK) |
 | Unit, `:app` with Robolectric | DAOs on an in-memory database, the day snapshot writer, `AlarmScheduler.reconcile()` against a shadow AlarmManager, notification content | JVM |
 | Instrumented | Room migrations; backup → wipe → restore round trip | An emulator or the phone, before each release |
 | Manual, on the phone | A reminder checklist per release: fires at the right time with the screen off, after a reboot, after an update, with battery saver on | The user's Xiaomi |
@@ -329,12 +333,12 @@ Each slice ends with an installable APK, a short demo note, and a pause for feed
 | # | Slice | Done when |
 |---|---|---|
 | 1 | Skeleton: both modules, theme (tokens, 5 accents, Estedad, RTL, both languages), Room with seeded tasks (`SPEC.md` §5, with default anchors), **basic Today** (tiles, ticking, day snapshot), the **reminder core** (planner, `setAlarmClock` scheduler, receivers, channels, block notifications with anchors, reminder log), usage log, `installDate`, manifest check | Real block reminders arrive on the phone and ticks survive restarts (D50) |
-| 2 | **Today complete** (ring, week dots, minimum day, week + chapter line and chapter-start card, tick feedback, comeback line) and **reminders complete** (follow-up "Done", task alarms, health + banner, absence rule, Xiaomi setup screen, Reminders screen) | A week of real reminders with a clean health log |
+| 2 | **Today complete** (ring, week dots, minimum day, week + chapter line and chapter-start card (with the letter offer; the first letter is offered once after install), the last-chapter countdown, tick feedback, comeback line) and **reminders complete** (follow-up "Done", task alarms, health + banner, absence rule, Xiaomi setup screen, Reminders screen) | A week of real reminders with a clean health log |
 | 3 | Tasks list + task editor (repeat rules, task alarms, important, minimum day, anchor) | The user edits their own routine without a rebuild |
-| 4 | Workout plan editor + workout session (with the in-session «رکورد») | A real session is logged and the next one is pre-filled |
+| 4 | Workout plan editor + workout session (with the in-session «رکورد», ladders and the next-rung offer, round numbers at the end of a session) | A real session is logged and the next one is pre-filled |
 | 5 | Dashboard (grid with «قبل از اپ» cells, week rows, day detail) | The whole program is visible |
 | 6 | Backup and restore | The round-trip test passes on the phone, and Syncthing picks up the zip |
-| 7 | Progress, monthly check-in with the **ghost-overlay camera** (before ~11 Dec), baseline entry with past dates + workout backfill, strength tests, program line, milestones | Day 0 data is entered and the first deltas show |
+| 7 | Progress (ladders, lifetime totals), monthly check-in with the **ghost-overlay camera** and the **reveal** with a compare slider (before ~11 Dec), strength tests with the guess, baseline entry with past dates + workout backfill, program line, milestones | Day 0 data is entered and the first deltas show |
 | 8 | Friday review and plan (short path, comebacks, best routines, reserves wording, identity sentence, special days, snack notes, weekly backup) | The first real ritual is done in the app |
 | 8b | **Halfway recap**. **Deadline: 19 Dec 2026** (numbers-only version if time is short) | The recap opens on Yalda |
 | 9 | Onboarding | A fresh install walks through setup |
