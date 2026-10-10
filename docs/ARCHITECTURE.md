@@ -217,7 +217,7 @@ Physical schema for `SPEC.md` §9, updated for D25–D28. Dates are ISO `LocalDa
 | `workout_exercise` | workoutId, position, exerciseId, sets, rangeMin, rangeMax | Key (workoutId, position). Drag-to-reorder rewrites positions. |
 | `session` | id, workoutId, date, startedAt, finishedAt? | |
 | `set_log` | sessionId, exerciseId, setIndex, value, effort (1–10) | D27: effort is per set, 1–10. |
-| `metric` | id, kind (BODY·TAPE·STRENGTH), key, name, unit (kg·cm·reps·s), higherIsBetter, sortOrder | Seeded: weight, 5 tape sites, the strength tests. |
+| `metric` | id, kind (BODY·TAPE·STRENGTH), key, name, unit (kg·cm·reps·s), higherIsBetter, sortOrder | Seeded: weight, 5 tape sites (waist, chest, arm, thigh, shoulders; D85), the strength tests. |
 | `metric_entry` | id, metricId, date, value, guess?, note? | Baseline entries simply carry the Day 0 date. `guess` = the strength-test guess (D73). |
 | `check_in` | idx (0–6), date, doneAt? | D28: 7 monthly check-ins. |
 | `photo` | checkInIdx, pose (FRONT·SIDE·BACK), fileName, takenAt | Key (checkInIdx, pose). |

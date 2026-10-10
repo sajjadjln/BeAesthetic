@@ -42,7 +42,7 @@ The program itself started on **2026-10-09 (Day 0)**. Week 1 began 2026-10-10. E
    9. Onboarding.
    10. Later: widget, reminder fade offer, finish recap + after-the-finish mode.
 2. All screens are now designed (`screens.html`, `flows.html`, D85). Only the English versions of the remaining screens are left; they follow E1–E2.
-3. **Flows** (D85): look through https://claude.ai/artifact/An8XmUuGo4cWrbHHhWMkom (onboarding, check-in, strength test, backup, letters, recaps, English) and say what to change. Confirm the 5 tape sites (open question 12).
+3. **Flows** (D85): look through https://claude.ai/artifact/An8XmUuGo4cWrbHHhWMkom (onboarding, check-in, strength test, backup, letters, recaps, English) and say what to change.
 4. **Character «پیکر»** (D82–D84): look at the board (https://claude.ai/artifact/Jf7hbWjUQTf39HRDcVkExZ) and the Today in `screens.html`, and say which poses, lines or outfits feel off. The Today row and the line picker are built in slice 2; each big moment comes with its slice.
 5. **Motion demo** (D76): try `docs/design/motion.html` on the phone and say what feels too much or too little before slice 1 (https://claude.ai/artifact/SdjkRYt5z13an56aZ99huE).
 6. Before slice 1: the user creates the release keystore and stores it safely (`ARCHITECTURE.md` §13).
@@ -63,7 +63,7 @@ The program itself started on **2026-10-09 (Day 0)**. Week 1 began 2026-10-10. E
 10. ~~Persian app name~~ → **«پیکر»** (D79). English stays "BeAesthetic". **Logo:** ✅ the cartoon sticker (D81), files in `docs/design/logo/`; board (`docs/design/logo.html`, https://claude.ai/artifact/2o9iY6KqvcGFTbhYhFF6j9) (D78, D80). **Character:** the sticker guy lives in the app as «پیکر», a hype gym buddy (D82–D84).
 11. **Which Friday is the monthly check-in?** Needed for the check-in schedule. Default: the Friday closest to the 17th of each Jalali month (same spacing as Day 0). The mockups use that default: «جمعه ۲۰ آذر» (11 Dec).
 
-12. **Tape sites** for the check-in: waist, chest, arm (right, flexed), thigh (right), shoulders? (Default: yes, D85)
+12. ~~Tape sites~~ → waist, chest, arm (right, flexed), thigh (right), shoulders (D85, confirmed).
 
 ## Backlog (after MVP, from `SPEC.md` §3.2)
 
