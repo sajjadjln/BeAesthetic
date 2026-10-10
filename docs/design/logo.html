@@ -61,7 +61,7 @@ h2 { font-size:20px; font-weight:800; margin:0; }
 .show-safe .ico .safe { display:block; }
 
 /* concept cards */
-.cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(270px,1fr)); gap:18px; margin-top:20px; }
+.cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:18px; margin-top:20px; }
 .c-card { background:var(--card); border:1px solid var(--page-line); border-radius:20px; padding:18px; display:grid; gap:14px; align-content:start; }
 .c-card.sel { border-color:var(--page-fg); }
 .c-head { display:flex; justify-content:space-between; align-items:baseline; gap:8px; }
@@ -141,7 +141,7 @@ th { color:var(--page-muted); font-weight:600; font-size:12px; letter-spacing:.0
 <div class="wrap mask-squircle" id="root">
   <header class="intro">
     <h1>پیکر · logo board</h1>
-    <p>Six icon ideas for «پیکر» (BeAesthetic in English), each drawn as a real Android adaptive icon: a dark background with the mark in the accent color. Each card shows the icon large, at launcher sizes, and as the white silhouette Android uses in the status bar. Pick one with "Show in context" to see it on a home screen, in a notification and on the splash screen.</p>
+    <p>Round 2: a fun, cartoonish green sticker person, from your double-biceps reference. Four takes on it, each drawn as a real Android adaptive icon and shown large, at launcher sizes, and as the white silhouette Android uses in the status bar. Pick one with "Show in context" to see it on a home screen, in a notification and on the splash screen.</p>
   </header>
 
   <div class="bar" role="toolbar" aria-label="Board controls">
@@ -211,43 +211,80 @@ th { color:var(--page-muted); font-weight:600; font-size:12px; letter-spacing:.0
 
   function star(x, y, s) { return "M" + x + " " + (y - s) + "Q" + x + " " + y + " " + (x + s) + " " + y + "Q" + x + " " + y + " " + x + " " + (y + s) + "Q" + x + " " + y + " " + (x - s) + " " + y + "Q" + x + " " + y + " " + x + " " + (y - s) + "Z"; }
   var TORSO = "M35 43.5H73a3.5 3.5 0 0 1 3.3 4.6L66.6 74.6A4 4 0 0 1 62.8 77.5H45.2a4 4 0 0 1-3.8-2.9L31.7 48.1A3.5 3.5 0 0 1 35 43.5Z";
+  // Double-biceps figure built from simple shapes; the same shapes, stroked wider, make the sticker border.
+  function figure(fill, b) {
+    b = b || 0;
+    var st = b ? ' stroke="' + fill + '" stroke-width="' + (2 * b) + '" stroke-linejoin="round"' : "";
+    function circ(x, y, r) { return '<circle cx="' + x + '" cy="' + y + '" r="' + r + '" fill="' + fill + '"' + st + "/>"; }
+    function seg(x1, y1, x2, y2, w) { return '<path d="M' + x1 + " " + y1 + "L" + x2 + " " + y2 + '" stroke="' + fill + '" stroke-width="' + (w + 2 * b) + '" stroke-linecap="round" fill="none"/>'; }
+    return '<ellipse cx="54" cy="33" rx="7.5" ry="8.6" fill="' + fill + '"' + st + "/>" +
+      '<path d="M48 39h12l4 9h-20z" fill="' + fill + '"' + st + "/>" +
+      '<path d="M37 46L71 46C77 48 78.5 55 76 61C73 69 67 75 65 86L43 86C41 75 35 69 32 61C29.5 55 31 48 37 46Z" fill="' + fill + '"' + st + "/>" +
+      circ(37, 50, 7.5) + circ(71, 50, 7.5) +
+      seg(36, 50, 23, 47, 10) + seg(72, 50, 85, 47, 10) +
+      circ(29, 44, 6.5) + circ(79, 44, 6.5) +
+      seg(23, 47, 29.5, 32, 8.5) + seg(85, 47, 78.5, 32, 8.5) +
+      circ(31, 29.5, 5.5) + circ(77, 29.5, 5.5);
+  }
+  // Cartoon bodybuilder: chunky shapes, dark ink outline, white die-cut border, shine, face, sparkles.
+  var INK = "#0E1110";
+  function toonShapes(col, b) {
+    b = b || 0;
+    var st = b ? ' stroke="' + col + '" stroke-width="' + (2 * b) + '" stroke-linejoin="round"' : "";
+    function circ(x, y, r) { return '<circle cx="' + x + '" cy="' + y + '" r="' + r + '" fill="' + col + '"' + st + "/>"; }
+    function seg(x1, y1, x2, y2, w) { return '<path d="M' + x1 + " " + y1 + "L" + x2 + " " + y2 + '" stroke="' + col + '" stroke-width="' + (w + 2 * b) + '" stroke-linecap="round" fill="none"/>'; }
+    return '<path d="M46 44h16l5 6.5H41z" fill="' + col + '"' + st + "/>" +
+      '<path d="M35 51C35 45.5 73 45.5 73 51C76 57 72 66 66 73C63.5 77 62 81 61 84L47 84C46 81 44.5 77 42 73C36 66 32 57 35 51Z" fill="' + col + '"' + st + "/>" +
+      circ(38, 51, 7.5) + circ(70, 51, 7.5) +
+      seg(37, 52, 25.5, 52.5, 10) + seg(71, 52, 82.5, 52.5, 10) +
+      circ(30.5, 45.5, 8.2) + circ(77.5, 45.5, 8.2) +
+      seg(25.5, 52.5, 28.5, 36, 9) + seg(82.5, 52.5, 79.5, 36, 9) +
+      circ(29, 32, 6.6) + circ(79, 32, 6.6) +
+      circ(54, 34, 10.5);
+  }
+  function toon(c, opts) {
+    opts = opts || {};
+    var face = opts.face !== false;
+    var shine = '<g fill="#FFFFFF" opacity=".38"><ellipse cx="49.5" cy="28.5" rx="3.6" ry="2.1" transform="rotate(-25 49.5 28.5)"/><ellipse cx="27.6" cy="42.2" rx="2.7" ry="1.6" transform="rotate(-30 27.6 42.2)"/><ellipse cx="75" cy="42.2" rx="2.7" ry="1.6" transform="rotate(-30 75 42.2)"/><ellipse cx="44" cy="55" rx="3" ry="1.6" transform="rotate(-20 44 55)"/></g>';
+    var lines = '<g fill="none" stroke="' + INK + '" stroke-opacity=".5" stroke-width="1.7" stroke-linecap="round"><path d="M45.5 58.5Q54 63.5 62.5 58.5"/><path d="M54 64.5v8"/><path d="M49.5 67q2 1.2 3 0M55.5 67q1 1.2 3 0"/></g>';
+    var faceSvg = face ? '<g fill="' + INK + '"><ellipse cx="50.2" cy="34" rx="1.5" ry="1.9"/><ellipse cx="57.8" cy="34" rx="1.5" ry="1.9"/></g><g fill="none" stroke="' + INK + '" stroke-width="1.7" stroke-linecap="round"><path d="M47.6 30.3l4.2 1.2M60.4 30.3l-4.2 1.2"/><path d="M49.6 38.2Q54 42.4 58.4 38.2"/></g>' : "";
+    function star(x, y, r) { return '<path d="M' + x + " " + (y - r) + "Q" + x + " " + y + " " + (x + r) + " " + y + "Q" + x + " " + y + " " + x + " " + (y + r) + "Q" + x + " " + y + " " + (x - r) + " " + y + "Q" + x + " " + y + " " + x + " " + (y - r) + 'Z" fill="#FFFFFF"/>'; }
+    var sparks = opts.sparks === false ? "" : star(41, 21, 3.4) + star(68.5, 19.5, 2.6);
+    return '<g transform="rotate(-8 54 54)">' +
+      '<g transform="translate(1.6 2.4)" opacity=".42">' + toonShapes("#000", 5.8) + "</g>" +
+      toonShapes("#F7F8F7", 5.8) + toonShapes(INK, 2.2) + toonShapes(c, 0) +
+      shine + lines + faceSvg + sparks + "</g>";
+  }
   var C = [
-    { id: "pe", fa: "پ", en: "The letter پ", rec: true,
-      idea: "<b>The first letter of «پیکر», drawn as a bold bowl with its three dots.</b> The dots also read as three sets, or three steps. Very Persian, and nothing else in the store looks like it.",
-      risk: "Abstract: it reads as a letter, not as a body.",
-      draw: function (c) { return '<path d="M73.5 37v12.5c0 8.5-5.5 13.5-13.5 13.5H46.5c-7 0-11.5-4.3-12-11" fill="none" stroke="' + c + '" stroke-width="7.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="48.5" cy="73" r="4.6" fill="' + c + '"/><circle cx="60" cy="73" r="4.6" fill="' + c + '"/><circle cx="54.2" cy="82" r="4.6" fill="' + c + '"/>'; } },
-    { id: "torso", fa: "اندام", en: "V-taper",
-      idea: "<b>A پیکر, literally:</b> broad shoulders, narrow waist, a head above. The name and the picture say the same thing.",
-      risk: "Close to generic fitness icons; can read as a cup or shield.",
-      draw: function (c) { return '<circle cx="54" cy="33" r="7" fill="' + c + '"/><path d="' + TORSO + '" fill="' + c + '"/>'; } },
-    { id: "bust", fa: "تندیس", en: "Bust on a plinth",
-      idea: "<b>A classical bust on a pedestal.</b> The statue is where the aesthetic ideal comes from, and a plinth says \"achievement\".",
-      risk: "Most detail of the six; the plinth gets thin at 24 px.",
-      draw: function (c) { return '<circle cx="54" cy="35" r="9.5" fill="' + c + '"/><path d="M33 66C33 55.5 42.5 49 54 49s21 6.5 21 17Z" fill="' + c + '"/><rect x="41" y="68.5" width="26" height="5" rx="1.5" fill="' + c + '"/><rect x="38" y="75.5" width="32" height="5" rx="2" fill="' + c + '"/>'; } },
-    { id: "steps", fa: "پله", en: "Rising steps",
-      idea: "<b>Three steps rising right → left, with a head on the top step:</b> someone climbing, in the direction time flows in the app. Ties to the exercise ladders.",
-      risk: "Says progress more than aesthetic.",
-      draw: function (c) { return '<rect x="63" y="60" width="12" height="18" rx="3" fill="' + c + '"/><rect x="48.5" y="49" width="12" height="29" rx="3" fill="' + c + '"/><rect x="34" y="38" width="12" height="40" rx="3" fill="' + c + '"/><circle cx="40" cy="30" r="4.5" fill="' + c + '"/>'; } },
-    { id: "mirror", fa: "آینه", en: "Mirror",
-      idea: "<b>An oval mirror with the V-taper reflected in it and a glint.</b> Looking after yourself starts in the mirror.",
-      risk: "Busy at small sizes; mirrors also suggest beauty salons.",
-      draw: function (c) { return '<rect x="35.5" y="26.5" width="37" height="55" rx="18.5" fill="none" stroke="' + c + '" stroke-width="5"/><circle cx="54" cy="44" r="4.2" fill="' + c + '"/><path d="M45 51H63a2 2 0 0 1 1.9 2.6L60.6 66.4A2.4 2.4 0 0 1 58.3 68H49.7a2.4 2.4 0 0 1-2.3-1.6L43.1 53.6A2 2 0 0 1 45 51Z" fill="' + c + '"/><path d="' + star(64.5, 35.5, 4.6) + '" fill="' + c + '"/>'; } },
-    { id: "ring", fa: "حلقه", en: "Ring and figure",
-      idea: "<b>The day ring, almost closed, with the figure rising out of its gap.</b> Joins the app's main visual with the aesthetic body.",
-      risk: "Rings are common in fitness apps.",
-      draw: function (c) { return '<path d="M67.5 30.6A27 27 0 1 1 40.5 30.6" fill="none" stroke="' + c + '" stroke-width="6" stroke-linecap="round"/><circle cx="54" cy="41.5" r="4.4" fill="' + c + '"/><path d="M44 49.5H64a2 2 0 0 1 1.9 2.6L61.3 65.2A2.4 2.4 0 0 1 59 66.8H49a2.4 2.4 0 0 1-2.3-1.6L42.1 52.1A2 2 0 0 1 44 49.5Z" fill="' + c + '"/>'; } }
+    { id: "toon", fa: "کارتونی", en: "Cartoon sticker", rec: true, scale: .7,
+      idea: "<b>A chunky cartoon bodybuilder flexing:</b> big head with a determined grin, huge biceps, tiny waist, ink outline, white die-cut border, tilted like a sticker someone slapped on. Fun, and still dark like the app.",
+      risk: "The face and outline are detail that shrinks away below about 36 px; the status-bar silhouette carries it there.",
+      draw: function (c) { return toon(c); }, mono: function (c) { return '<g transform="rotate(-8 54 54)">' + toonShapes(c, 0) + "</g>"; } },
+    { id: "toon-green", fa: "کارتونی روی سبز", en: "Cartoon on green", scale: .7, bg: "accent",
+      idea: "<b>The same sticker on a green tile.</b> The white border lifts it off the green; the loudest on a home screen.",
+      risk: "Green on green relies on the border and outline to separate.",
+      draw: function (c) { return toon(c); }, mono: function (c) { return '<g transform="rotate(-8 54 54)">' + toonShapes(c, 0) + "</g>"; } },
+    { id: "toon-noface", fa: "کارتونی بی‌صورت", en: "Cartoon, no face", scale: .7,
+      idea: "<b>Cartoon body, no face or sparkles.</b> Keeps the chunky fun shape for anyone who finds faces too childish.",
+      risk: "Less personality than the first one.",
+      draw: function (c) { return toon(c, { face: false, sparks: false }); }, mono: function (c) { return '<g transform="rotate(-8 54 54)">' + toonShapes(c, 0) + "</g>"; } },
+    { id: "badge", fa: "نشان", en: "Green badge",
+      idea: "<b>The serious option, closest to your reference:</b> a green disc with a realistic dark figure, cut at the waist by the circle.",
+      risk: "Looks like a gym sign; no fun.",
+      draw: function (c) { return '<defs><clipPath id="cl-' + c.replace(/[^a-z0-9]/gi, "") + '"><circle cx="54" cy="54" r="31"/></clipPath></defs><circle cx="54" cy="54" r="31" fill="' + c + '"/><g clip-path="url(#cl-' + c.replace(/[^a-z0-9]/gi, "") + ')"><g transform="translate(54 58) scale(.8) translate(-54 -54)">' + figure("#121715", 0) + "</g></g>"; },
+      mono: function (c) { return figure(c, 0); } }
   ];
-  var current = "pe";
+  var current = "toon";
   function byId(id) { return C.filter(function (x) { return x.id === id; })[0]; }
 
   // Launchers show the middle 72 of the 108 dp canvas; marks are scaled a little to sit well inside the safe circle.
   function icon(concept, size, opts) {
     opts = opts || {};
-    var bg = opts.bg || BG, fg = opts.fg || acc;
-    return '<span class="ico" style="width:' + size + "px;height:" + size + 'px"><svg viewBox="18 18 72 72" aria-hidden="true"><rect x="0" y="0" width="108" height="108" fill="' + bg + '"/><g transform="translate(54 54) scale(.9) translate(-54 -54)">' + concept.draw(fg) + '</g></svg><span class="safe"></span></span>';
+    var bg = opts.bg || (concept.bg === "accent" ? acc : BG), fg = opts.fg || acc;
+    return '<span class="ico" style="width:' + size + "px;height:" + size + 'px"><svg viewBox="18 18 72 72" aria-hidden="true"><rect x="0" y="0" width="108" height="108" fill="' + bg + '"/><g transform="translate(54 54) scale(' + (concept.scale || .9) + ') translate(-54 -54)">' + concept.draw(fg) + '</g></svg><span class="safe"></span></span>';
   }
   function glyph(concept, size, color) {
-    return '<svg viewBox="22 22 64 64" width="' + size + '" height="' + size + '" aria-hidden="true">' + concept.draw(color || "currentColor") + "</svg>";
+    return '<svg viewBox="15 15 78 78" width="' + size + '" height="' + size + '" aria-hidden="true">' + (concept.mono || concept.draw)(color || "currentColor") + "</svg>";
   }
 
   function renderCards() {
