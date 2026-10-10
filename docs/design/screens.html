@@ -135,6 +135,7 @@ figcaption b { color: var(--page-fg); display: block; font-size: 15px; }
 .cell.l1 { background: var(--w1); } .cell.l2 { background: var(--w2); } .cell.l3 { background: var(--w3); } .cell.l4 { background: var(--w4); }
 .cell.sp { background: var(--sp); }
 .cell.fu { background: transparent; box-shadow: inset 0 0 0 1px var(--bd); }
+.cell.pre { background: transparent; outline: 1px dotted var(--t3); outline-offset: -1px; }
 .cell.today { outline: 2px solid var(--acc); outline-offset: 2px; }
 .cell.s { width: 10px; height: 10px; border-radius: 2px; }
 .cell.s.today { outline-width: 1px; outline-offset: 1px; }
@@ -335,6 +336,9 @@ input[type="range"].seek::-moz-range-thumb { width: 22px; height: 22px; border-r
 .about b { display:block; font-size:15px; }
 .about span { font-size:12.5px; color:var(--t2); }
 
+.anchor-row { display:flex; align-items:center; gap:10px; background:var(--sf2); border-radius:16px; padding:12px 14px; }
+.ladder-line { text-align:center; font-size:13px; color:var(--t3); margin-top:-12px; }
+
 /* «پیکر», the character (D82): one row on Today, a few words at the Friday review. Rig: piker.js */
 .buddy { display:flex; align-items:center; gap:4px; }
 .buddy .fig { width:92px; flex:none; aspect-ratio:124/102; margin-inline:-6px -2px; }
@@ -392,7 +396,7 @@ input[type="range"].seek::-moz-range-thumb { width: 22px; height: 22px; border-r
 <main class="wrap">
   <header class="intro">
     <h1 class="brand"><svg class="appicon" aria-hidden="true"><use href="#app-icon"/></svg><span>پیکر</span><small>BeAesthetic</small></h1>
-    <p><bdi>«پیکر»</bdi> (BeAesthetic in English). The combined design: the minimal Today, Workout, Settings and task editor, plus the detailed Dashboard, Progress, Week plan, Tasks, Reminders, Workout plan and Appearance screens. Everything you can tap works. Font: Estedad. Pick an accent below (or in <bdi>«ظاهر و زبان»</bdi>) and every screen follows. The character «پیکر» (D82) sits under the ring on Today and reacts as you tick; tap him. All his poses: <code>character.html</code>.</p>
+    <p><bdi>«پیکر»</bdi> (BeAesthetic in English). The combined design: the minimal Today, Workout, Settings and task editor, plus the detailed Dashboard, Progress, Week plan, Tasks, Reminders, Workout plan and Appearance screens. Everything you can tap works. Font: Estedad. Pick an accent below (or in <bdi>«ظاهر و زبان»</bdi>) and every screen follows. The character «پیکر» (D82) sits under the ring on Today and reacts as you tick; tap him. All his poses: <code>character.html</code>. Onboarding, check-in, tests, backup, letters, recaps and the other flows: <code>flows.html</code>.</p>
   </header>
 
   <div class="bar" role="toolbar" aria-label="Accent color"><span>Accent</span><span id="ctl-accent" style="display:contents"></span></div>
@@ -422,7 +426,7 @@ input[type="range"].seek::-moz-range-thumb { width: 22px; height: 22px; border-r
         <div class="body">
           <div class="col"><span class="t-head">داشبورد</span><span class="t-cap c2">۱۸ مهر تا ۲۹ اسفند ۱۴۰۵</span></div>
           <div class="card row" style="padding:16px 24px;justify-content:space-around">
-            <div class="col" style="align-items:center"><span class="t-title cacc">۳۰ از ۳۱</span><span class="t-cap c2">روز حضور</span></div>
+            <div class="col" style="align-items:center"><span class="t-title cacc">۲۷ از ۲۸</span><span class="t-cap c2">روز حضور</span></div>
             <div class="col" style="align-items:center"><span class="t-title csp">۲</span><span class="t-cap c2">روز ویژه</span></div>
           </div>
           <div class="card pad col" style="gap:12px">
@@ -434,6 +438,7 @@ input[type="range"].seek::-moz-range-thumb { width: 22px; height: 22px; border-r
           <div class="legend">
             <span>کمتر</span><i class="cell s"></i><i class="cell s l1"></i><i class="cell s l2"></i><i class="cell s l3"></i><i class="cell s l4"></i><span>بیشتر</span>
             <span class="gap"></span><i class="cell s sp"></i><span>ویژه</span>
+            <span class="gap"></span><i class="cell s pre"></i><span>قبل از اپ</span>
           </div>
           <div class="col" style="gap:4px">
             <span class="t-sub" style="margin-bottom:4px">هفته به هفته</span>
@@ -442,7 +447,7 @@ input[type="range"].seek::-moz-range-thumb { width: 22px; height: 22px; border-r
         </div>
         <nav class="nav" data-nav="1"></nav>
       </div>
-      <figcaption><b>02 · داشبورد</b>All 23 weeks, week 1 on the right. Gray = gap, indigo = special day.</figcaption>
+      <figcaption><b>02 · داشبورد</b>All 23 weeks, week 1 on the right. Gray = gap, indigo = special day, dotted = «قبل از اپ», days before install (D56). Day detail: <bdi>flows.html</bdi> D1.</figcaption>
     </figure>
 
     <!-- 03 Progress -->
@@ -501,6 +506,7 @@ input[type="range"].seek::-moz-range-thumb { width: 22px; height: 22px; border-r
         <div class="wtop"><button class="round" aria-label="بستن"><svg class="i"><use href="#i-x"/></svg></button><div class="dots" aria-label="حرکت ۲ از ۶"><i class="on"></i><i class="on"></i><i></i><i></i><i></i><i></i></div><span style="width:44px"></span></div>
         <div class="body">
           <div class="ex">شنا سوئدی</div>
+          <div class="ladder-line">پله‌ی ۲ از ۴ · بعدی: الماسی</div>
           <div class="sets"><span class="done">۱۲</span><span class="done">۱۲</span><span class="cur" id="cur-set">۱۰</span></div>
           <div class="counter">
             <button data-step="1" aria-label="یکی بیشتر"><svg class="i"><use href="#i-plus"/></svg></button>
@@ -515,7 +521,7 @@ input[type="range"].seek::-moz-range-thumb { width: 22px; height: 22px; border-r
           <button class="go" aria-label="ثبت"><svg class="i"><use href="#i-check"/></svg></button>
         </div>
       </div>
-      <figcaption><b>04 · تمرین</b>Big number pre-filled from last time. Slider for how hard (1–10). Check = log the set.</figcaption>
+      <figcaption><b>04 · تمرین</b>Big number pre-filled from last time. Slider for how hard (1–10). Check = log the set. The line under the name is the ladder rung (D70); a set that beats the best fills and says «رکورد» (D54).</figcaption>
     </figure>
 
     <!-- 05 Week plan -->
@@ -531,6 +537,7 @@ input[type="range"].seek::-moz-range-thumb { width: 22px; height: 22px; border-r
             <div class="divider"></div>
             <div class="win"><svg class="i sm"><use href="#i-trophy"/></svg><span>بارفیکس ۷ (قبلی ۵)</span></div>
             <div class="win"><svg class="i sm"><use href="#i-check"/></svg><span>پوست شب ۷ از ۷</span></div>
+            <div class="win"><svg class="i sm"><use href="#i-repeat"/></svg><span>۲ بار برگشتی</span></div>
             <div class="buddy"><span class="fig" data-buddy-static="cheer"></span><div class="bubble">بارفیکس ۷ تا! هفته‌ی خوبی بود.</div></div>
           </div>
           <div class="col" style="gap:8px">
@@ -545,7 +552,7 @@ input[type="range"].seek::-moz-range-thumb { width: 22px; height: 22px; border-r
         </div>
         <nav class="nav" data-nav="3"></nav>
       </div>
-      <figcaption><b>05 · هفته (جمعه)</b>Review, special days (max 2), and each day's snack as a drop-down note.</figcaption>
+      <figcaption><b>05 · هفته (جمعه)</b>Review, special days (max 2), and each day's snack as a drop-down note. Wins include comebacks (D53) and «پیکر» cheers the best one.</figcaption>
     </figure>
 
     <div class="group-title">Settings and everything under it (gear on امروز)</div>
@@ -659,6 +666,7 @@ input[type="range"].seek::-moz-range-thumb { width: 22px; height: 22px; border-r
               <button aria-pressed="false">هر ۱۴ روز</button>
               <button aria-pressed="false">یک بار</button>
             </div>
+            <button class="anchor-row"><svg class="i sm c2"><use href="#i-repeat"/></svg><span class="t-strong grow">بعد از…</span><span class="chip neu">ناهار</span></button>
             <div class="alarm" id="alarm">
               <div class="row"><svg class="i sm c2"><use href="#i-bell"/></svg><span class="t-strong grow">زنگ</span><button class="switch" role="switch" aria-checked="true" id="alarm-sw" aria-label="زنگ"></button></div>
               <div class="when col" style="gap:12px">
@@ -674,7 +682,7 @@ input[type="range"].seek::-moz-range-thumb { width: 22px; height: 22px; border-r
           </div>
         </div>
       </div>
-      <figcaption><b>08 · کار جدید / ویرایش</b>Icon, part of day, repeat. «زنگ» sets an alarm time and the days it rings. «مهم» = one extra reminder.</figcaption>
+      <figcaption><b>08 · کار جدید / ویرایش</b>Icon, part of day, repeat. «زنگ» sets an alarm time and the days it rings. «مهم» = one extra reminder. «بعد از…» is the anchor shown in notifications (D55).</figcaption>
     </figure>
 
     <!-- 09 Reminders -->
@@ -732,7 +740,7 @@ input[type="range"].seek::-moz-range-thumb { width: 22px; height: 22px; border-r
     <div class="status"><span>۰۷:۰۲</span><span>۸۴٪</span></div>
     <div class="body">
       <div class="row">
-        <div class="date grow"><span class="d1">دوشنبه</span><span class="d2">۱۸ آبان · هفته ۵</span></div>
+        <div class="date grow"><span class="d1">دوشنبه</span><span class="d2">۱۸ آبان · هفته ۵ از ۲۳ · فصل آبان</span></div>
         <button class="round" data-min aria-pressed="false" aria-label="روز حداقلی"><svg class="i"><use href="#i-leaf"/></svg></button>
         <button class="round" aria-label="تنظیمات"><svg class="i"><use href="#i-gear"/></svg></button>
       </div>
@@ -847,8 +855,8 @@ input[type="range"].seek::-moz-range-thumb { width: 22px; height: 22px; border-r
   document.querySelectorAll("nav[data-nav]").forEach(fillNav);
 
   // Dashboard
-  var LV = { 1: ["4","3","4","2","4","3","4"], 2: ["3","4","2","0","3","4","3"], 3: ["sp","sp","2","3","4","4","3"], 4: ["4","4","3","4","1","3","4"], 5: ["4","3","today","fu","fu","fu","fu"] };
-  function cls(v) { return v === "sp" ? "sp" : v === "fu" ? "fu" : v === "today" ? "l1 today" : "l" + v; }
+  var LV = { 1: ["pre","pre","pre","2","4","3","4"], 2: ["3","4","2","0","3","4","3"], 3: ["sp","sp","2","3","4","4","3"], 4: ["4","4","3","4","1","3","4"], 5: ["4","3","today","fu","fu","fu","fu"] };
+  function cls(v) { return v === "pre" ? "pre" : v === "sp" ? "sp" : v === "fu" ? "fu" : v === "today" ? "l1 today" : "l" + v; }
   var j = document.getElementById("journey");
   for (var w = 1; w <= 23; w++) for (var dd = 0; dd < 7; dd++) { var c = document.createElement("i"); c.className = "cell s " + cls(LV[w] ? LV[w][dd] : "fu"); j.appendChild(c); }
   var RANGE = { 5: "۱۷ تا ۲۳ آبان", 4: "۱۰ تا ۱۶ آبان", 3: "۳ تا ۹ آبان", 2: "۲۶ مهر تا ۲ آبان", 1: "۱۹ تا ۲۵ مهر" };

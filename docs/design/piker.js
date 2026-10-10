@@ -145,25 +145,27 @@
   };
 
   /* ---------- poses ---------- */
-  var HIP_L = { e: [24.5, 62], h: [39.5, 71.5], hand: "fist", bi: .15 };
+  // The free arm hangs flared out, a bodybuilder's relaxed lat stance: joined at the shoulder, with a clear gap
+  // from the torso (a hand on the hip merged into the body and read as a blob).
+  var SIDE_L = { e: [21.5, 62], h: [15.5, 75.5], hand: "fist", bi: .4 };
   var FLEX_L = { e: [25.5, 52.5], h: [29, 32], hand: "fist", bi: 1 };
   var FLEX_R = { e: [82.5, 52.5], h: [79, 32], hand: "fist", bi: 1 };
   var POSES = {
     flex:    { L: FLEX_L, R: FLEX_R, face: { eyes: "open", brows: "det", mouth: "grin" }, sparks: true },
-    wave:    { L: HIP_L, R: { e: [85, 44], h: [87, 23.5], hand: "open", bi: .5 }, face: { eyes: "happy", brows: "up", mouth: "open" }, rot: -4 },
+    wave:    { L: SIDE_L, R: { e: [85, 44], h: [87, 23.5], hand: "open", bi: .5 }, face: { eyes: "happy", brows: "up", mouth: "open" }, rot: -4 },
     cheer:   { L: { e: [26, 37], h: [21, 18.5], hand: "fist", bi: .55 }, R: { e: [82, 37], h: [87, 18.5], hand: "fist", bi: .55 }, face: { eyes: "happy", brows: "up", mouth: "open" }, sparks: true, rot: 0, hy: -1 },
-    thumbs:  { L: HIP_L, R: { e: [86, 60], h: [82, 44], hand: "thumb", bi: .7 }, face: { eyes: "wink", brows: "quirk", mouth: "grin" }, rot: -6 },
-    point:   { L: HIP_L, R: { e: [84, 61], h: [94, 71], hand: "point", bi: .35 }, face: { eyes: "open", brows: "up", mouth: "grin" }, rot: -6, hx: 1 },
+    thumbs:  { L: SIDE_L, R: { e: [86, 60], h: [82, 44], hand: "thumb", bi: .7 }, face: { eyes: "wink", brows: "quirk", mouth: "grin" }, rot: -6 },
+    point:   { L: SIDE_L, R: { e: [84, 61], h: [94, 71], hand: "point", bi: .35 }, face: { eyes: "open", brows: "up", mouth: "grin" }, rot: -6, hx: 1 },
     stretch: { L: { e: [27.5, 32], h: [46, 16.5], hand: "fist", bi: .5 }, R: { e: [80.5, 32], h: [62, 16.5], hand: "fist", bi: .5 }, face: { eyes: "closed", brows: "soft", mouth: "yawn" }, rot: 3, hy: 1 },
     tea:     { L: { e: [31, 73], h: [46, 70], hand: "fist", bi: .2, front: true }, R: { e: [77, 73], h: [62, 70], hand: "fist", bi: .2, front: true }, prop: "mug", face: { eyes: "happy", brows: "soft", mouth: "smile" }, rot: -3 },
     sleep:   { L: { e: [30, 67], h: [57, 67.5], hand: "fist", bi: .2, front: true }, R: { e: [78, 64], h: [51, 62.5], hand: "fist", bi: .2, front: true }, face: { eyes: "closed", brows: "soft", mouth: "smile" }, rot: 6, hx: 1.5, hy: 1, zzz: true },
-    think:   { L: HIP_L, R: { e: [80, 67], h: [59.5, 49], hand: "fist", bi: .35, front: true }, face: { eyes: "up", brows: "quirk", mouth: "hmm" }, rot: -5, hx: -2, hy: -1.5 },
+    think:   { L: SIDE_L, R: { e: [80, 67], h: [59.5, 49], hand: "fist", bi: .35, front: true }, face: { eyes: "up", brows: "quirk", mouth: "hmm" }, rot: -5, hx: -2, hy: -1.5 },
     selfie:  { L: FLEX_L, R: { e: [87, 52], h: [87, 36], hand: "fist", bi: .55, front: true }, prop: "phone", face: { eyes: "wink", brows: "det", mouth: "grin" }, rot: -6 },
     hug:     { L: { e: [22, 58], h: [12, 45], hand: "open", bi: .45 }, R: { e: [86, 58], h: [96, 45], hand: "open", bi: .45 }, face: { eyes: "happy", brows: "up", mouth: "open" }, rot: 0 },
     letter:  { L: { e: [29, 66], h: [42.5, 64.5], hand: "fist", bi: .2, front: true }, R: { e: [79, 66], h: [65.5, 64.5], hand: "fist", bi: .2, front: true }, prop: "letter", face: { eyes: "wide", brows: "up", mouth: "open" }, rot: -4 },
     read:    { L: { e: [29, 68], h: [41, 67], hand: "fist", bi: .2, front: true }, R: { e: [79, 68], h: [67, 67], hand: "fist", bi: .2, front: true }, prop: "book", face: { eyes: "closed", brows: "up", mouth: "smile" }, rot: -3, hy: 1 },
     wow:     { L: { e: [26, 64], h: [38.5, 44], hand: "open", bi: .4, front: true }, R: { e: [82, 64], h: [69.5, 44], hand: "open", bi: .4, front: true }, face: { eyes: "wide", brows: "up", mouth: "o" }, sparks: true, rot: 0 },
-    curl:    { L: HIP_L, R: { e: [82.5, 52.5], h: [79, 32], hand: "fist", bi: 1 }, prop: "dumbbell", face: { eyes: "open", brows: "det", mouth: "grin" }, rot: -6 },
+    curl:    { L: SIDE_L, R: { e: [82.5, 52.5], h: [79, 32], hand: "fist", bi: 1 }, prop: "dumbbell", face: { eyes: "open", brows: "det", mouth: "grin" }, rot: -6 },
     sabzeh:  { L: { e: [29, 68], h: [45, 69], hand: "fist", bi: .2, front: true }, R: { e: [79, 68], h: [63, 69], hand: "fist", bi: .2, front: true }, prop: "sabzeh", face: { eyes: "happy", brows: "up", mouth: "open" }, rot: -4 },
     finish:  { L: FLEX_L, R: FLEX_R, prop: "bowl", face: { eyes: "happy", brows: "up", mouth: "open" }, sparks: true, rot: -6 }
   };

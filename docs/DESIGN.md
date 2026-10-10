@@ -9,6 +9,8 @@ Published copy: https://claude.ai/artifact/BwuSiLCGAxV5fGR86MSmjH
 
 **Character «پیکر» (D82–D84):** `docs/design/character.html` (https://claude.ai/artifact/Jf7hbWjUQTf39HRDcVkExZ). The logo's sticker guy as a person in the app: poses, Today and moment screens, chapter outfits, sample lines and rules. The rig that draws him is `docs/design/piker.js`; `screens.html` uses it too.
 
+**Flows (D85):** `docs/design/flows.html` (https://claude.ai/artifact/An8XmUuGo4cWrbHHhWMkom): onboarding, notifications, check-in, strength test, day detail, backup, letters, recaps and the finish, offers, Progress additions, English. See Flows below.
+
 **Motion demo (D76):** `docs/design/motion.html` (https://claude.ai/artifact/SdjkRYt5z13an56aZ99huE). Tap through the Today, Workout, Check-in and Dashboard phones; slow motion and "Remove animations" are in the top bar.
 
 Kept for reference only:
@@ -134,7 +136,7 @@ Not used: confetti on ordinary taps, idle loops (the character included), shake 
 
 Board: `docs/design/character.html`. Rig: `docs/design/piker.js` (17 poses, faces, props, outfits).
 
-- **Who:** the logo's sticker guy as a hype gym buddy. Warm, a bit goofy, proud of you. Same construction as the logo: ink outline, white sticker border, soft shadow, slight tilt. Body = the accent color; ink, paper and props are fixed. The launcher icon stays green.
+- **Who:** the logo's sticker guy as a hype gym buddy. Warm, a bit goofy, proud of you. Same construction as the logo: ink outline, white sticker border, soft shadow, slight tilt. In one-arm poses the free arm hangs flared out from the shoulder (a bodybuilder's relaxed lat stance), with a gap from the torso. Body = the accent color; ink, paper and props are fixed. The launcher icon stays green.
 - **Voice:** Persian, first person, informal, one short line (about 8 words max). Real numbers only («رکورد! ۸ تا بارفیکس»). Hypes actions, never the body, weight or looks. Never sad or disappointed at you; never names or hints at a missed day. Lines live in string resources, several per moment, and don't repeat within 7 days.
 - **Today:** one row under the ring and week dots: «پیکر» (~64 dp, start side) and a bubble (surface-2, 16 dp radius, a tail pointing at him). The line follows the day: morning (stretch) → after a tick (thumbs up) → a part done (cheer) → 100% (flex) → night (sleep); minimum day and special days (tea); comeback (welcome, «خوش برگشتی»). Tap him: a new line and a flex or a wink.
 - **Big moments** (centered, ~170 dp, bubble under him): 100% day, «رکورد» in the workout, chapter-start card (letter + the new outfit), check-in day (selfie) and reveal (wow), Friday wins (cheer), round numbers (cheer), Yalda (Hafez book), Esfand (sabzeh), finish (flex + goldfish), empty screens (think) and onboarding (wave).
@@ -241,16 +243,25 @@ Board: `docs/design/character.html`. Rig: `docs/design/piker.js` (17 poses, face
 ### 11 Today (light)
 Same as 01 with light tokens.
 
-## Not designed yet (needed before or during build)
+## Flows (`docs/design/flows.html`, D85)
 
-- Onboarding (language → reminder times → phone setup → backup folder → baseline entry with past dates → program import).
-- Check-in flow (weight → 5 tape numbers → 3 photos).
-- Strength test flow.
-- Backup / restore screen.
-- Day detail (tap a square on the Dashboard).
-- Notification layouts (block reminder, important follow-up with a "Done" action).
-- English (LTR) version of the final screens. Only an older Today exists in `screens-detailed.html`.
-- Strength test: an optional «حدس بزن» number before the test; afterwards «حدس: ۸ · واقعی: ۱۰», plus «از حدست بهتر» when beaten, neutral otherwise (D73).
-- Check-in reveal (D75): after the 3rd photo, the new photos next to Day 0 with a compare slider; a toggle for last month.
-- Letters (D72): a plain text sheet to write; a sealed-envelope card until its day.
-- Added by the research decisions (D51–D65), designed in the slice that needs them: chapter card, halfway and finish recaps, the after-the-finish choice (ادامه / برنامه تازه), the ghost-overlay camera, the silence-reminders offer, milestones setup, identity sentence. The changes above to Today, Dashboard, Progress, Workout, Week and the task editor are not in `screens.html` yet.
+Published: https://claude.ai/artifact/An8XmUuGo4cWrbHHhWMkom. Every screen that wasn't in `screens.html`, same tokens and character.
+
+- **Onboarding (O1–O8):** سلام (language) → مسیر (Day 0 and finish dates, the 5 chapters) → یادآورها (block times, normal/Friday, bedtime) → گوشی (5 reliability rows + test notification) → پشتیبان (folder, auto backup) → روز صفر (weight, 5 tape sites, strength tests, 3 photos from the gallery, optional workout backfill) → برنامه (paste the plan, preview what was understood) → جمله و هدف‌ها (identity sentence, 5–8 milestone chips). A dot row shows the step.
+- **Notifications (N1):** block reminder (count, first names, anchors), the important follow-up with «انجام شد», a task's own alarm, the check-in morning. Neutral words; the white sticker silhouette as the icon; no character.
+- **گوشی in Settings (N2):** this week's reminder health (one bar per reminder; late ones shorter and neutral), the same 5-row checklist, the test button, and the quiet «یه یادآور دیر رسید · درستش کن» banner Today shows.
+- **Check-in (C1–C5):** the indigo check-in card on Today with «پیکر» (selfie) → weight stepper (±0.1, pre-filled) → 5 tape sites with where to measure, pre-filled → camera with last month's ghost outline, a 10 s timer and the consistency checklist → reveal with a drag divider (Day 0 / last month, front / side / back), deltas in the accent, weight neutral.
+- **Strength test (S1–S4):** the session list (5 tests, current one highlighted) → optional guess (pre-filled) → a big timer for timed tests where one lap of the ring = the last result → guess vs result bars; beating the guess adds «از حدست بهتر» and «پیکر» goes wow, a lower result is just two neutral numbers.
+- **Day detail (D1):** a bottom sheet over the dashboard: date (Jalali, Gregorian), the level as words and a number, done items only as accent chips, «روز ویژه بود؟» and «ویرایش تیک‌های دیروز» for today and yesterday; older days read-only.
+- **Backup (B1–B2):** status card first, «همین الان پشتیبان بگیر», folder and auto switch, the last 8 backups, «بازگردانی از فایل». Restore is a preview sheet (date, version, counts) with the real safety behavior in words; amber only when the last backup is over 10 days old.
+- **Chapters and letters (L1–L3):** the chapter-start card replaces the «پیکر» row for the day (new outfit, chapter line, letter offer); the letter sheet with its opening date and the seal rule; on its day an envelope card that opens on tap, with today's real numbers under the letter.
+- **Recaps and the finish (R1–R3, F1–F2):** story cards with a progress bar on top: the grid filling with days shown up, Day 0 → now numbers with lifetime totals and milestones, Day 0 and latest photo with the identity sentence; the finish card with the full program line and the sprout; the after-the-finish choice (ادامه / برنامه تازه).
+- **Offers and Progress (K1, K2, P1):** the one-time silence-reminders offer framed as a win; the milestones list (reached in the accent with the date, open ones with plain progress) and the new-milestone form; Progress additions: program line with chapter ticks, ladders, lifetime totals, sealed letters, milestones.
+- **English (E1–E2):** Today and Dashboard in LTR: everything mirrors, time runs left → right, Gregorian date first, Latin digits.
+
+`screens.html` also got the research changes it was missing: the chapter line on Today, «قبل از اپ» cells on the Dashboard, the ladder line in the Workout, comebacks in the Friday wins, the «بعد از…» anchor in the task editor.
+
+## Not designed yet
+
+- English versions of the remaining screens. They follow E1–E2: mirror the layout, flip time, Gregorian first, Latin digits.
+- The halfway recap's 4th card («نیمه‌ی دوم») and the finish recap's middle cards reuse R1–R3 with all 23 weeks.
