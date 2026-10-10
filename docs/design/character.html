@@ -229,7 +229,7 @@ code { font-size:12.5px; background:var(--card); border:1px solid var(--page-lin
   <!-- Lines -->
   <section class="sec">
     <h2>What he says</h2>
-    <p>Sample lines, a few per moment. In the app they live in string resources (Persian and English), several per moment, and the same line doesn't come back within 7 days. Numbers in a line are real («۸ تا بارفیکس»), never invented praise.</p>
+    <p>Sample lines, a few per moment. In the app they live in string resources, several per moment, and the same line doesn't come back within 7 days. Numbers in a line are real («۸ تا بارفیکس»), never invented praise.</p>
     <div class="tbl"><table>
       <thead><tr><th style="width:80px">Pose</th><th style="width:190px">Moment</th><th>Lines</th></tr></thead>
       <tbody id="lines"></tbody>
@@ -246,7 +246,7 @@ code { font-size:12.5px; background:var(--card); border:1px solid var(--page-lin
       <div class="rule"><b>Not a pet</b><p>No hunger, health, levels, coins or shop. He can't get sick, sad or leave. Outfits come with the calendar. Nothing to maintain, so he can't become a chore.</p></div>
       <div class="rule"><b>Motion follows action</b><p>No idle loops: he doesn't bounce, breathe or blink while you read. He changes pose when something happens: a quick pop (scale 0.88 → 1, bouncy spring, ~340 ms) and the bubble fades in (200 ms). "Remove animations" makes it instant. No sound.</p></div>
       <div class="rule"><b>One tap of play</b><p>Tapping him on Today gives a new line and a flex or a wink. It's the only thing he does on his own. It never logs anything.</p></div>
-      <div class="rule"><b>Can be hidden</b><p>«ظاهر و زبان» → «پیکر در صفحه‌ی امروز», on by default. Off: the Today row goes away and the moments fall back to their plain text. If he gets old, he goes, and the app still works.</p></div>
+      <div class="rule"><b>Can be hidden</b><p>«ظاهر» → «پیکر در صفحه‌ی امروز», on by default. Off: the Today row goes away and the moments fall back to their plain text. If he gets old, he goes, and the app still works.</p></div>
     </div>
   </section>
 
@@ -258,7 +258,7 @@ code { font-size:12.5px; background:var(--card); border:1px solid var(--page-lin
       <tbody>
         <tr><td>Drawing</td><td>One Compose <code>ImageVector</code> per pose, built from the same parts as this board (<code>docs/design/piker.js</code> is the reference rig). Body color = the accent; ink, paper and props are fixed. Outfits are a separate overlay layer. No Lottie, no bitmaps (D76).</td></tr>
         <tr><td>Choosing pose and line</td><td>Pure Kotlin in <code>:domain</code>: <code>BuddyPicker(dayState, moment, history) → (pose, lineId)</code>. Unit-tested: no line comes back within 7 days, and each moment only gets its own poses. The line pool has no guilt lines to pick from.</td></tr>
-        <tr><td>Lines</td><td>String arrays per moment in <code>strings.xml</code> (fa and en). Placeholders for real numbers. The last-shown dates live in the usage log (D59).</td></tr>
+        <tr><td>Lines</td><td>String arrays per moment in <code>strings.xml</code>. Placeholders for real numbers. The last-shown dates live in the usage log (D59).</td></tr>
         <tr><td>Motion</td><td><code>AnimatedContent</code> with the bouncy spring for the pose; fade for the bubble; motion tokens from the theme. Light vibration only where the moment already has one.</td></tr>
         <tr><td>When</td><td>Slice 2 (Today complete): the Today row, the day poses and the line picker. Each big moment arrives with its own slice (record in slice 4, check-in in 7, recaps in 8b and 10).</td></tr>
       </tbody>

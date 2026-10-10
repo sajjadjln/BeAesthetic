@@ -300,7 +300,7 @@ input[type="range"].seek::-moz-range-thumb { width: 22px; height: 22px; border-r
 .pill:focus-visible { outline: 2px solid var(--page-acc); outline-offset: 2px; }
 .pill .sw { width: 14px; height: 14px; border-radius: 50%; }
 
-/* ---------- Appearance and language (ظاهر و زبان) ---------- */
+/* ---------- Appearance (ظاهر) ---------- */
 .swatches { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; }
 .swatches button { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 12px 0 10px; border-radius: 16px; text-align: center; }
 .swatches button[aria-pressed="true"] { background: var(--sf2); }
@@ -319,7 +319,6 @@ input[type="range"].seek::-moz-range-thumb { width: 22px; height: 22px; border-r
 .mini-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; flex: 1; }
 .mini-grid .cell { width: 100%; height: auto; aspect-ratio: 1; border-radius: 5px; }
 .preview .chips { display: flex; gap: 6px; flex-wrap: wrap; }
-[dir="ltr"] input[type="range"].seek::-webkit-slider-runnable-track { background: linear-gradient(to right, var(--acc) var(--p, 60%), var(--sf2) var(--p, 60%)); }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 
 /* Name and logo (D79, D81). The launcher icon stays green whatever the accent. */
@@ -381,6 +380,7 @@ input[type="range"].seek::-moz-range-thumb { width: 22px; height: 22px; border-r
   <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10.3 21a1.94 1.94 0 0 0 3.4 0"/></symbol>
   <symbol id="i-list" viewBox="0 0 24 24"><path d="M9 6h11M9 12h11M9 18h11"/><path d="m3 6 1.5 1.5L7 5M3 12l1.5 1.5L7 11M3 18l1.5 1.5L7 17"/></symbol>
   <symbol id="i-cloud" viewBox="0 0 24 24"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></symbol>
+  <symbol id="i-palette" viewBox="0 0 24 24"><circle cx="13.5" cy="6.5" r="1.5"/><circle cx="17.5" cy="10.5" r="1.5"/><circle cx="8.5" cy="7.5" r="1.5"/><circle cx="6.5" cy="12.5" r="1.5"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.9 0 1.7-.8 1.7-1.7 0-.4-.2-.8-.4-1.1-.3-.3-.4-.7-.4-1.1 0-.9.8-1.7 1.7-1.7h2c3 0 5.5-2.5 5.5-5.5C22 6 17.5 2 12 2z"/></symbol>
   <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></symbol>
   <symbol id="i-phone" viewBox="0 0 24 24"><rect x="6" y="2" width="12" height="20" rx="2"/><path d="M11 18h2"/></symbol>
   <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></symbol>
@@ -397,10 +397,10 @@ input[type="range"].seek::-moz-range-thumb { width: 22px; height: 22px; border-r
 <main class="wrap">
   <header class="intro">
     <h1 class="brand"><svg class="appicon" aria-hidden="true"><use href="#app-icon"/></svg><span>پیکر</span><small>BeAesthetic</small></h1>
-    <p><bdi>«پیکر»</bdi> (BeAesthetic in English). The combined design: the minimal Today, Workout, Settings and task editor, plus the detailed Dashboard, Progress, Week plan, Tasks, Reminders, Workout plan and Appearance screens. Everything you can tap works. Font: Estedad. Pick an accent below (or in <bdi>«ظاهر و زبان»</bdi>) and every screen follows. The character «پیکر» (D82) sits under the ring on Today and reacts as you tick; tap him. All his poses: <code>character.html</code>. Onboarding, check-in, tests, backup, letters, recaps and the other flows: <code>flows.html</code>. <b>Language</b> in the bar switches every phone to English, left-to-right (strings in <code>en.js</code>).</p>
+    <p><bdi>«پیکر»</bdi> (BeAesthetic in English). The combined design: the minimal Today, Workout, Settings and task editor, plus the detailed Dashboard, Progress, Week plan, Tasks, Reminders, Workout plan and Appearance screens. Everything you can tap works. Font: Estedad. Pick an accent below (or in <bdi>«ظاهر»</bdi>) and every screen follows. The character «پیکر» (D82) sits under the ring on Today and reacts as you tick; tap him. All his poses: <code>character.html</code>. Onboarding, check-in, tests, backup, letters, recaps and the other flows: <code>flows.html</code>.</p>
   </header>
 
-  <div class="bar" role="toolbar" aria-label="Board controls"><span>Accent</span><span id="ctl-accent" style="display:contents"></span><span style="margin-inline-start:12px">Language</span><button class="pill" data-lang="fa" aria-pressed="true">فارسی</button><button class="pill" data-lang="en" aria-pressed="false">English</button></div>
+  <div class="bar" role="toolbar" aria-label="Board controls"><span>Accent</span><span id="ctl-accent" style="display:contents"></span></div>
 
   <section class="gallery">
 
@@ -409,7 +409,7 @@ input[type="range"].seek::-moz-range-thumb { width: 22px; height: 22px; border-r
       <div class="phone m-dark splash" dir="rtl" lang="fa" style="display:flex">
         <div class="status" style="position:absolute;top:0;inset-inline:0"><span>۷:۰۰</span><span>۸۵٪</span></div>
         <span class="disc"><svg aria-hidden="true"><use href="#app-icon"/></svg></span>
-        <div class="brandline"><b data-en="BeAesthetic">پیکر</b><span data-en="پیکر">BeAesthetic</span></div>
+        <div class="brandline"><b>پیکر</b><span>BeAesthetic</span></div>
       </div>
       <figcaption><b>00 · شروع</b>The splash screen while the app opens: the cartoon sticker icon in Android's 160 dp circle, the name «پیکر» at the bottom. The icon stays green whatever the accent; it is the launcher icon.</figcaption>
     </figure>
@@ -433,7 +433,7 @@ input[type="range"].seek::-moz-range-thumb { width: 22px; height: 22px; border-r
           <div class="card pad col" style="gap:12px">
             <div class="row between"><span class="t-sub">کل مسیر</span><span class="t-cap c3">روز ۳۱ از ۱۶۲</span></div>
             <div class="journey-scroll"><div class="journey" id="journey"></div>
-              <div class="months"><span style="right:0" data-en="">مهر</span><span style="right:26px">آبان</span><span style="right:78px">آذر</span><span style="right:130px">دی</span><span style="right:182px">بهمن</span><span style="right:247px">اسفند</span></div>
+              <div class="months"><span style="right:0">مهر</span><span style="right:26px">آبان</span><span style="right:78px">آذر</span><span style="right:130px">دی</span><span style="right:182px">بهمن</span><span style="right:247px">اسفند</span></div>
             </div>
           </div>
           <div class="legend">
@@ -470,7 +470,7 @@ input[type="range"].seek::-moz-range-thumb { width: 22px; height: 22px; border-r
           </div>
           <div class="card pad col chart" style="gap:10px">
             <div class="row between"><span class="t-strong">بارفیکس</span><span class="chip acc"><svg class="i xs"><use href="#i-trophy"/></svg>رکورد</span></div>
-            <svg viewBox="0 0 296 150" data-mirror role="img" aria-label="بارفیکس: روز صفر ۴، هفته ۲ ۵، هفته ۴ ۷">
+            <svg viewBox="0 0 296 150" role="img" aria-label="بارفیکس: روز صفر ۴، هفته ۲ ۵، هفته ۴ ۷">
               <line class="gl" x1="0" x2="296" y1="104" y2="104"/><line class="gl" x1="0" x2="296" y1="80" y2="80"/><line class="gl" x1="0" x2="296" y1="56" y2="56"/><line class="gl" x1="0" x2="296" y1="32" y2="32"/>
               <path class="ft" d="M92 32 L20 32"/>
               <path class="ln" d="M268 104 L180 80 L92 32"/>
@@ -481,7 +481,7 @@ input[type="range"].seek::-moz-range-thumb { width: 22px; height: 22px; border-r
           </div>
           <div class="card pad row" style="gap:12px">
             <div class="col grow"><span class="t-lbl c2">وزن</span><span class="row" style="gap:8px"><span class="t-title">۷۷٫۱ کیلو</span><span class="chip neu">−۱٫۳</span></span></div>
-            <svg viewBox="0 0 120 40" data-mirror width="120" height="40" aria-label="روند وزن پنج هفته" role="img"><path d="M112 10 L88 14 L64 17 L40 23 L12 30" fill="none" stroke="var(--t2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="30" r="3.5" fill="var(--t1)"/></svg>
+            <svg viewBox="0 0 120 40" width="120" height="40" aria-label="روند وزن پنج هفته" role="img"><path d="M112 10 L88 14 L64 17 L40 23 L12 30" fill="none" stroke="var(--t2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="30" r="3.5" fill="var(--t1)"/></svg>
           </div>
           <div class="card pad col" style="gap:12px">
             <div class="row between"><span class="t-sub">عکس‌های ماهانه</span><span class="t-cap c3">۲ از ۷</span></div>
@@ -570,20 +570,20 @@ input[type="range"].seek::-moz-range-thumb { width: 22px; height: 22px; border-r
             <button><svg class="i lg ic"><use href="#i-bell"/></svg><span class="lb">یادآورها</span></button>
             <button><svg class="i lg ic"><use href="#i-dumbbell"/></svg><span class="lb">برنامه تمرین</span></button>
             <button><svg class="i lg ic"><use href="#i-cloud"/></svg><span class="lb">پشتیبان</span></button>
-            <button><svg class="i lg ic"><use href="#i-globe"/></svg><span class="lb">ظاهر و زبان</span></button>
+            <button><svg class="i lg ic"><use href="#i-palette"/></svg><span class="lb">ظاهر</span></button>
             <button><svg class="i lg ic"><use href="#i-phone"/></svg><span class="lb">گوشی</span></button>
           </div>
-          <div class="about"><svg class="appicon" aria-hidden="true"><use href="#app-icon"/></svg><div><b data-en="BeAesthetic">پیکر</b><span>نسخه ۰.۱ · BeAesthetic</span></div></div>
+          <div class="about"><svg class="appicon" aria-hidden="true"><use href="#app-icon"/></svg><div><b>پیکر</b><span>نسخه ۰.۱ · BeAesthetic</span></div></div>
         </div>
       </div>
-      <figcaption><b>06 · تنظیمات</b>Six tiles, and the app name and version at the bottom. «ظاهر و زبان» = accent color (5 choices), dark/light, language. «گوشی» = Xiaomi battery and autostart setup.</figcaption>
+      <figcaption><b>06 · تنظیمات</b>Six tiles, and the app name and version at the bottom. «ظاهر» = accent color (5 choices), dark/light, «پیکر» on Today. «گوشی» = Xiaomi battery and autostart setup.</figcaption>
     </figure>
 
     <!-- 06b Appearance and language -->
     <figure>
       <div class="phone m-dark" dir="rtl" lang="fa" id="appearance">
         <div class="status"><span>۲۱:۰۶</span><span>۴۰٪</span></div>
-        <div class="topbar"><button class="icon-btn" aria-label="بازگشت"><svg class="i fwd"><use href="#i-back"/></svg></button><span class="t-title">ظاهر و زبان</span></div>
+        <div class="topbar"><button class="icon-btn" aria-label="بازگشت"><svg class="i fwd"><use href="#i-back"/></svg></button><span class="t-title">ظاهر</span></div>
         <div class="body">
           <span class="sec-title">رنگ</span>
           <div class="swatches" id="app-swatches"></div>
@@ -599,12 +599,10 @@ input[type="range"].seek::-moz-range-thumb { width: 22px; height: 22px; border-r
           </div>
           <span class="sec-title">حالت</span>
           <div class="seg" data-seg role="group" aria-label="حالت"><button aria-pressed="true">سیستم</button><button aria-pressed="false">تیره</button><button aria-pressed="false">روشن</button></div>
-          <span class="sec-title">زبان</span>
-          <div class="seg" data-seg role="group" aria-label="زبان"><button aria-pressed="true">فارسی</button><button aria-pressed="false">English</button></div>
           <button class="btn pri" style="margin-top:auto">ذخیره</button>
         </div>
       </div>
-      <figcaption><b>06b · ظاهر و زبان</b>Five accent colors (green is the default), dark/light, language. The preview card shows the ring, a slice of the dashboard and the chips in the chosen color. Tap a color: every screen on this page follows.</figcaption>
+      <figcaption><b>06b · ظاهر</b>Five accent colors (green is the default), dark/light. The app is Persian only (D87). The preview card shows the ring, a slice of the dashboard and the chips in the chosen color. Tap a color: every screen on this page follows.</figcaption>
     </figure>
 
     <!-- 07 Tasks -->
@@ -882,9 +880,9 @@ input[type="range"].seek::-moz-range-thumb { width: 22px; height: 22px; border-r
   // Week plan
   var rw = document.getElementById("ritual-week");
   ["ش","ی","د","س","چ","پ","ج"].forEach(function (d, i) { var s = document.createElement("span"); s.className = "day"; s.innerHTML = '<i class="cell ' + cls(LV[4][i]) + '"></i>' + d; rw.appendChild(s); });
-  var DAYS = [["ش","۱۶",7],["ی","۱۷",8],["د","۱۸",9],["س","۱۹",10],["چ","۲۰",11],["پ","۲۱",12],["ج","۲۲",13]]; // Jalali day, and the Gregorian day (Nov) for English
+  var DAYS = [["ش","۱۶"],["ی","۱۷"],["د","۱۸"],["س","۱۹"],["چ","۲۰"],["پ","۲۱"],["ج","۲۲"]];
   var dc = document.getElementById("dchips"), note = document.getElementById("cap-note");
-  DAYS.forEach(function (d, i) { var b = document.createElement("button"); b.className = "dchip"; b.setAttribute("aria-pressed", i === 3 ? "true" : "false"); b.innerHTML = d[0] + '<small data-g="' + d[2] + '">' + (i === 3 ? "سفر" : d[1]) + "</small>"; b.dataset.date = d[1]; dc.appendChild(b); });
+  DAYS.forEach(function (d, i) { var b = document.createElement("button"); b.className = "dchip"; b.setAttribute("aria-pressed", i === 3 ? "true" : "false"); b.innerHTML = d[0] + "<small>" + (i === 3 ? "سفر" : d[1]) + "</small>"; b.dataset.date = d[1]; dc.appendChild(b); });
   dc.addEventListener("click", function (e) {
     var b = e.target.closest(".dchip"); if (!b) return;
     var on = b.getAttribute("aria-pressed") === "true";
@@ -941,7 +939,7 @@ input[type="range"].seek::-moz-range-thumb { width: 22px; height: 22px; border-r
     var ms = e.target.closest(".ministep button");
     if (ms) { var sp = ms.parentNode.querySelector("span"); var v = +sp.textContent.replace(/[۰-۹]/g, function (c) { return FA.indexOf(c); }); v = Math.max(1, v + (ms === ms.parentNode.firstElementChild ? 1 : -1)); sp.textContent = fa(v); }
   });
-  // Accent colors (D47): the bar and «ظاهر و زبان» set one accent for every phone
+  // Accent colors (D47): the bar and «ظاهر» set one accent for every phone
   var ACCENTS = [["green","سبز","Green","#34C47A"],["blue","آبی","Blue","#4D9BF0"],["teal","فیروزه‌ای","Turquoise","#2CC2B4"],["violet","بنفش","Violet","#9B7BEA"],["orange","نارنجی","Orange","#F28B3C"]];
   var accent = "green";
   try { var sv = localStorage.getItem("ba-accent"); if (ACCENTS.some(function (a) { return a[0] === sv; })) accent = sv; } catch (e) {}
@@ -961,16 +959,6 @@ input[type="range"].seek::-moz-range-thumb { width: 22px; height: 22px; border-r
   }
   [ctl, sws].forEach(function (g) { g.addEventListener("click", function (e) { var b = e.target.closest("[data-accent]"); if (b) { accent = b.dataset.accent; applyAccent(); } }); });
   applyAccent();
-})();
-</script>
-<script src="en.js"></script>
-<script>
-(function () {
-  // فارسی / English switch (en.js): every phone flips direction, text, digits and dates
-  var btns = document.querySelectorAll("[data-lang]");
-  function pick(l) { MockupI18n.set(l); btns.forEach(function (b) { b.setAttribute("aria-pressed", b.dataset.lang === l); }); try { localStorage.setItem("ba-lang", l); } catch (e) {} }
-  btns.forEach(function (b) { b.addEventListener("click", function () { pick(b.dataset.lang); }); });
-  try { if (localStorage.getItem("ba-lang") === "en") pick("en"); } catch (e) {}
 })();
 </script>
 

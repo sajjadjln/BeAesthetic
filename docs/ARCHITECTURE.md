@@ -27,7 +27,7 @@ For product rules see `SPEC.md`; for screens see `DESIGN.md`; for decision histo
 | JSON | kotlinx.serialization | Backup format and nav routes. No reflection, R8-friendly. |
 | Images | Coil 3 | Loads the progress photos from private storage. |
 | Charts | Hand-drawn with Compose `Canvas` | We need one line chart, a sparkline and a grid. A chart library would be bigger than that code. |
-| Language switch | AndroidX AppCompat per-app locales | Works back to API 26 and stores the choice itself. |
+| Locale | Fixed to `fa` (Persian) on start-up | Persian only (D87): RTL and Persian digits even on a phone set to English. No language switch. |
 
 **SDK levels:** `minSdk 26` (Android 8: native `java.time`, notification channels). `targetSdk` and `compileSdk` = the latest stable SDK at slice 1.
 
@@ -171,7 +171,7 @@ The scheduler has one switch (setting `alarmMode`), so we can move to `setExactA
 
 Receivers use `goAsync()` and finish their database work within a few seconds.
 
-**Language in notifications:** before Android 13, per-app language only applies to activities. Receivers build notification text from a `Context` created with the saved language, so a Persian user never gets an English notification.
+**Locale in notifications:** receivers build notification text from a `Context` created with the `fa` locale, so notifications are Persian with Persian digits even when the phone is set to English.
 
 ### 7.5 Reminder health
 
@@ -229,7 +229,7 @@ Physical schema for `SPEC.md` §9, updated for D25–D28. Dates are ISO `LocalDa
 | `recap` | key (HALFWAY·FINISH), seenAt? | D52. The content is computed; only "seen" is stored. |
 | `letter` | id, writtenAt, opensOn, text, openedAt? | D72. The UI refuses to show `text` before `opensOn`. Included in backups. |
 | `round_number` | key (e.g. `reps:ladder:3:1000`, `workouts:50`, `days:100`), reachedOn, seenAt? | D71. Written when a total first crosses a round number, so it's noted once even if a log is later edited. Totals themselves are computed. |
-| `settings` | single row: language, programStartDate, rolloverHour, specialCapPerWeek, followUpMinutes, alarmMode, accentColor (GREEN·BLUE·TURQUOISE·VIOLET·ORANGE), themeMode (SYSTEM·DARK·LIGHT), backupTreeUri, lastOpenedAt, lastBackupAt, onboardingDone, programEndDate, installDate, halfwayDate?, identitySentence?, afterFinishMode (NONE·MAINTENANCE·NEW_PROGRAM), experimentFlags (bits, debug) | `installDate` drives the «قبل از اپ» cells (D56). |
+| `settings` | single row: programStartDate, rolloverHour, specialCapPerWeek, followUpMinutes, alarmMode, accentColor (GREEN·BLUE·TURQUOISE·VIOLET·ORANGE), themeMode (SYSTEM·DARK·LIGHT), backupTreeUri, lastOpenedAt, lastBackupAt, onboardingDone, programEndDate, installDate, halfwayDate?, identitySentence?, afterFinishMode (NONE·MAINTENANCE·NEW_PROGRAM), experimentFlags (bits, debug) | `installDate` drives the «قبل از اپ» cells (D56). |
 
 ### The day snapshot (why some derived numbers are stored)
 
@@ -298,8 +298,8 @@ Android's own cloud backup (`allowBackup`) is **off**: it would send data to Goo
 - **Accent is a token, never a literal.** No code says "green"; every done/progress color reads `colors.accent*` or `colors.grid*`. A unit test checks contrast for every accent × mode.
 - **Font:** Estedad static TTFs (400, 500, 600, 700, 800) in `res/font`, with the OFL license in the app's about screen. The type scale from `DESIGN.md` becomes `BaType`.
 - **RTL:** `supportsRtl="true"`; layouts use start/end only. Charts and the dashboard grid read the layout direction, so time runs right → left in Persian.
-- **Strings:** Persian in `values/` (the default), English in `values-en/`; the English draft is `docs/design/en.js` (D86). Lint fails the build on a missing translation or a hard-coded string.
-- **First run** sets the app language to Persian, whatever the phone's language.
+- **Strings:** Persian only, in `values/` (D87). Lint fails the build on a hard-coded string, so a separate English build stays possible.
+- **Locale:** the app always runs in `fa` (layout RTL, Persian digits, Persian number formatting), whatever the phone's language.
 - **Motion (D76):** a `BaMotion` object in the theme holds the tokens from `DESIGN.md` → Motion (durations, the standard easing, and `spring()` specs for spring / settle / bouncy) and is provided through a `CompositionLocal`, like `BaColors`. Built only with Compose's animation APIs (`animate*AsState`, `Animatable`, `updateTransition`, `AnimatedContent`, `SharedTransitionLayout` for the workout tile → session), and `Canvas` for the ring, grid, charts and odometer. No Lottie. Compose's duration scale follows the system "Remove animations" setting, so motion becomes instant there; anything driven by hand reads the same scale. Vibration goes through one `Haptics` helper (light = `CONFIRM`, fallback `VIRTUAL_KEY`; medium = `EFFECT_HEAVY_CLICK`; record = a short waveform). No sound.
 - **The character «پیکر» (D82):** one `ImageVector` per pose in `ui/components/buddy/`, built from the same parts as `docs/design/piker.js` (ink outline, white border, shadow, body). The body color is a parameter (the accent); outfits are a separate overlay vector. A pose change is `AnimatedContent` with the bouncy spring; the bubble fades. `:domain`'s `BuddyPicker` decides the pose, line and outfit; the composable only draws. Lines are string arrays; the last-shown date per line is kept in the usage log (D59).
 - **Accessibility (D68):** every icon-only tab and tile has a content description; layouts are checked at 130% font size; day detail states the level as a number, so the grid isn't color-only.
@@ -334,7 +334,7 @@ Each slice ends with an installable APK, a short demo note, and a pause for feed
 
 | # | Slice | Done when |
 |---|---|---|
-| 1 | Skeleton: both modules, theme (color and motion tokens, 5 accents, Estedad, RTL, both languages), haptics helper, Room with seeded tasks (`SPEC.md` §5, with default anchors), launcher and notification icons from `docs/design/logo/` (D81), **basic Today** (tiles, ticking, day snapshot), the **reminder core** (planner, `setAlarmClock` scheduler, receivers, channels, block notifications with anchors, reminder log), usage log, `installDate`, manifest check | Real block reminders arrive on the phone and ticks survive restarts (D50) |
+| 1 | Skeleton: both modules, theme (color and motion tokens, 5 accents, Estedad, RTL, the fixed `fa` locale), haptics helper, Room with seeded tasks (`SPEC.md` §5, with default anchors), launcher and notification icons from `docs/design/logo/` (D81), **basic Today** (tiles, ticking, day snapshot), the **reminder core** (planner, `setAlarmClock` scheduler, receivers, channels, block notifications with anchors, reminder log), usage log, `installDate`, manifest check | Real block reminders arrive on the phone and ticks survive restarts (D50) |
 | 2 | **Today complete** (ring, week dots, minimum day, week + chapter line and chapter-start card (with the letter offer; the first letter is offered once after install), the last-chapter countdown, tick feedback, the «پیکر» row with the day poses and the line picker (D82), comeback line) and **reminders complete** (follow-up "Done", task alarms, health + banner, absence rule, Xiaomi setup screen, Reminders screen) | A week of real reminders with a clean health log |
 | 3 | Tasks list + task editor (repeat rules, task alarms, important, minimum day, anchor) | The user edits their own routine without a rebuild |
 | 4 | Workout plan editor + workout session (with the in-session «رکورد», ladders and the next-rung offer, round numbers at the end of a session) | A real session is logged and the next one is pre-filled |
@@ -359,6 +359,7 @@ Every slice also runs the accessibility checklist (§11, D68).
 - **App ID `app.beaesthetic` is final.** Android package names allow only Latin letters, digits and `_`, so every app in Iranian stores has an English ID. Stores match searches against the listing (title, description), not the package name. The ID has no effect on search ranking (Bazaar's own app is `com.farsitel.bazaar`).
 - **Nothing personal is hard-coded.** Program start and end dates live in `settings`; routines, the workout plan and reminder times are seed data the user can edit.
 - **The same release key** signs every build the user installs, so a store version can update the personal install later.
-- **The app name** (launcher label) is a string resource: «پیکر» in Persian, "BeAesthetic" in English (D79). The icon is an adaptive vector icon with a monochrome layer and a white notification silhouette (D78).
+- **An English version** (D87) would be a separate build: a Gradle product flavor `en` with its own `strings.xml`, LTR, Latin digits, the name "BeAesthetic" and its own app ID (e.g. `app.beaesthetic.en`) and listing. The Persian app never contains English.
+- **The app name** (launcher label) is a string resource: «پیکر» (D79). "BeAesthetic" is the Latin name (app ID, an English build). The icon is an adaptive vector icon with a monochrome layer and a white notification silhouette (D78).
 
 Left for that release: onboarding that sets your own program dates and routine; the Bazaar listing (a Persian title with the words people search for, description, screenshots); a short privacy note (the app collects nothing and has no internet permission; the usage log never leaves the phone); starter routines for people without their own plan; and a check of Bazaar's current rules on target SDK and permissions such as `USE_EXACT_ALARM`.

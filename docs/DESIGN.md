@@ -11,8 +11,6 @@ Published copy: https://claude.ai/artifact/BwuSiLCGAxV5fGR86MSmjH
 
 **Flows (D85):** `docs/design/flows.html` (https://claude.ai/artifact/An8XmUuGo4cWrbHHhWMkom): onboarding, notifications, check-in, strength test, day detail, backup, letters, recaps and the finish, offers, Progress additions. See Flows below.
 
-**English (D86):** both `screens.html` and `flows.html` have a «فارسی / English» switch in the top bar. It turns every phone left-to-right with the English strings from `docs/design/en.js`. See English below.
-
 **Motion demo (D76):** `docs/design/motion.html` (https://claude.ai/artifact/SdjkRYt5z13an56aZ99huE). Tap through the Today, Workout, Check-in and Dashboard phones; slow motion and "Remove animations" are in the top bar.
 
 Kept for reference only:
@@ -61,7 +59,7 @@ Contrast was checked: text on accent buttons ≥ 4.3:1 (bold 16 px), accent chip
 
 - **Spacing:** 4 · 8 · 12 · 16 · 24 · 32.
 - **Radius:** 6 (grid cells) · 12 (controls) · 16 (cards) · 20 (tiles) · 28 (sheets) · full.
-- **Font:** **Estedad** (Amin Abedi, SIL OFL), bundled in the APK; also used for the English UI. Persian digits in Persian UI. (Vazirmatn was the font until D46.)
+- **Font:** **Estedad** (Amin Abedi, SIL OFL), bundled in the APK. Persian digits everywhere (D87). (Vazirmatn was the font until D46.)
 
 | Style | Size / weight |
 |---|---|
@@ -80,7 +78,7 @@ Contrast was checked: text on accent buttons ≥ 4.3:1 (bold 16 px), accent chip
 Rules:
 - Motion follows action: no idle loops, nothing pulses for attention.
 - Only the accent moves. Gray days, misses and «موعدش رسیده» never animate.
-- Things that fill over time (grid, charts, program line) fill right → left in Persian, mirrored in English.
+- Things that fill over time (grid, charts, program line) fill right → left.
 - Every satisfying moment has a vibration. No sound.
 - "Remove animations" on the phone → every duration is zero; the end state appears at once.
 
@@ -144,7 +142,7 @@ Board: `docs/design/character.html`. Rig: `docs/design/piker.js` (17 poses, face
 - **Big moments** (centered, ~170 dp, bubble under him): 100% day, «رکورد» in the workout, chapter-start card (letter + the new outfit), check-in day (selfie) and reveal (wow), Friday wins (cheer), round numbers (cheer), Yalda (Hafez book), Esfand (sabzeh), finish (flex + goldfish), empty screens (think) and onboarding (wave).
 - **Outfits (D83):** ① none · ② sweatband · Yalda Hafez book · ③ beanie and scarf · ④ sunglasses · ⑤ sprout and sabzeh · finish goldfish. From the calendar only.
 - **Not:** in notifications, a pet, idle-animated, or shown on a screen about a missed day.
-- **Off switch:** «ظاهر و زبان» → «پیکر در صفحه‌ی امروز» (on by default). Off: the Today row hides and moments fall back to their plain text.
+- **Off switch:** «ظاهر» → «پیکر در صفحه‌ی امروز» (on by default). Off: the Today row hides and moments fall back to their plain text.
 
 ## Navigation
 
@@ -206,14 +204,13 @@ Board: `docs/design/character.html`. Rig: `docs/design/piker.js` (17 poses, face
 
 ### 06 تنظیمات (Settings)
 - «یادآورها سالم‌اند» health banner.
-- Six tiles: کارها · یادآورها · برنامه تمرین · پشتیبان · ظاهر و زبان · گوشی (Xiaomi battery/autostart setup).
+- Six tiles: کارها · یادآورها · برنامه تمرین · پشتیبان · ظاهر · گوشی (Xiaomi battery/autostart setup).
 - At the bottom: the app icon, «پیکر» and «نسخه ۰.۱ · BeAesthetic».
 
-### 06b ظاهر و زبان (Appearance and language)
+### 06b ظاهر (Appearance)
 - «رنگ»: five named color circles (سبز · آبی · فیروزه‌ای · بنفش · نارنجی); the chosen one has a ring and a check.
 - A preview card: a small ring, a slice of the dashboard, and the chips (رکورد, مهم, روز ویژه) in the chosen color.
 - «حالت»: سیستم / تیره / روشن.
-- «زبان»: فارسی / English.
 - «پیکر در صفحه‌ی امروز»: a switch, on by default (D84).
 - «ذخیره».
 
@@ -249,7 +246,7 @@ Same as 01 with light tokens.
 
 Published: https://claude.ai/artifact/An8XmUuGo4cWrbHHhWMkom. Every screen that wasn't in `screens.html`, same tokens and character.
 
-- **Onboarding (O1–O8):** سلام (language) → مسیر (Day 0 and finish dates, the 5 chapters) → یادآورها (block times, normal/Friday, bedtime) → گوشی (5 reliability rows + test notification) → پشتیبان (folder, auto backup) → روز صفر (weight, 5 tape sites, strength tests, 3 photos from the gallery, optional workout backfill) → برنامه (paste the plan, preview what was understood) → جمله و هدف‌ها (identity sentence, 5–8 milestone chips). A dot row shows the step.
+- **Onboarding (O1–O8):** سلام → مسیر (Day 0 and finish dates, the 5 chapters) → یادآورها (block times, normal/Friday, bedtime) → گوشی (5 reliability rows + test notification) → پشتیبان (folder, auto backup) → روز صفر (weight, 5 tape sites, strength tests, 3 photos from the gallery, optional workout backfill) → برنامه (paste the plan, preview what was understood) → جمله و هدف‌ها (identity sentence, 5–8 milestone chips). A dot row shows the step.
 - **Notifications (N1):** block reminder (count, first names, anchors), the important follow-up with «انجام شد», a task's own alarm, the check-in morning. Neutral words; the white sticker silhouette as the icon; no character.
 - **گوشی in Settings (N2):** this week's reminder health (one bar per reminder; late ones shorter and neutral), the same 5-row checklist, the test button, and the quiet «یه یادآور دیر رسید · درستش کن» banner Today shows.
 - **Check-in (C1–C5):** the indigo check-in card on Today with «پیکر» (selfie) → weight stepper (±0.1, pre-filled) → 5 tape sites with where to measure, pre-filled → camera with last month's ghost outline, a 10 s timer and the consistency checklist → reveal with a drag divider (Day 0 / last month, front / side / back), deltas in the accent, weight neutral.
@@ -262,15 +259,9 @@ Published: https://claude.ai/artifact/An8XmUuGo4cWrbHHhWMkom. Every screen that 
 
 `screens.html` also got the research changes it was missing: the chapter line on Today, «قبل از اپ» cells on the Dashboard, the ladder line in the Workout, comebacks in the Friday wins, the «بعد از…» anchor in the task editor.
 
-## English (D86)
+## Language (D87)
 
-Every screen exists in English through the switch in the mockups' top bar; the strings live in `docs/design/en.js` (the draft of `values-en/strings.xml`).
-- **Mirroring:** the layout flips (start/end), so «پیکر» sits on the left, the leaf and gear on the right. Time runs left → right: week dots, the dashboard grid (week 1 on the left), charts, the program line, the reveal (Day 0 on the left).
-- **Dates:** Gregorian first, Jalali second («9 Nov · 18 Aban · Week 5 of 23 · Aban»). Jalali month and chapter names are transliterated (Mehr, Aban, Azar, Dey, Bahman, Esfand) because the chapters follow them.
-- **Digits:** Latin. Units short: kg, cm, s, min, MB.
-- **Names:** the app is "BeAesthetic" (with «پیکر» second on the splash and in About); the character is "Peykar".
-- **Voice:** the same buddy in English: short, warm, first person («Day complete! Those arms are yours.», «Light day. It still counts.»). No guilt, same as D84.
-- Steppers mirror with the layout (plus on the start side), as Android does in RTL.
+Persian only, RTL, Persian digits. There is no English UI and no language setting. An English version, if it ever comes, is a separate build with its own strings and an LTR layout.
 
 ## Not designed yet
 

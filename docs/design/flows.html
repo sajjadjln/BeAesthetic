@@ -299,7 +299,7 @@ input[type="range"].seek::-moz-range-thumb { width: 22px; height: 22px; border-r
 .pill:focus-visible { outline: 2px solid var(--page-acc); outline-offset: 2px; }
 .pill .sw { width: 14px; height: 14px; border-radius: 50%; }
 
-/* ---------- Appearance and language (ظاهر و زبان) ---------- */
+/* ---------- Appearance (ظاهر) ---------- */
 .swatches { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; }
 .swatches button { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 12px 0 10px; border-radius: 16px; text-align: center; }
 .swatches button[aria-pressed="true"] { background: var(--sf2); }
@@ -483,7 +483,6 @@ input[type="range"].seek::-moz-range-thumb { width: 22px; height: 22px; border-r
 .deltas span { color:var(--t2); font-size:14px; }
 .deltas b { font-size:22px; font-weight:800; color:var(--acc-on); font-variant-numeric:tabular-nums; }
 .deltas b i { font-style:normal; color:var(--t3); font-weight:500; font-size:16px; margin-inline:4px; }
-[dir="ltr"] .deltas b i { display:inline-block; transform:scaleX(-1); }
 .totals { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
 .totals div { background:var(--sf); border-radius:14px; padding:12px 6px; display:grid; justify-items:center; gap:2px; }
 .totals b { font-size:22px; font-weight:800; font-variant-numeric:tabular-nums; }
@@ -574,10 +573,10 @@ input[type="range"].seek::-moz-range-thumb { width: 22px; height: 22px; border-r
 <main class="wrap">
   <header class="intro">
     <h1 class="brand"><svg class="appicon" aria-hidden="true"><use href="#app-icon"/></svg><span>پیکر</span><small>Flows</small></h1>
-    <p>Every screen that <bdi>screens.html</bdi> didn't have yet: onboarding, phone setup, notifications, the monthly check-in with the ghost camera and the reveal, the strength test, day detail, backup and restore, chapters and letters, the recaps and the finish, and the small offers and the new parts of Progress. Same tokens, icons and character as <bdi>screens.html</bdi>; pick an accent and everything follows; switch to English and every phone turns left-to-right. Sample data is the user's program (week 5–6, Aban–Azar 1405).</p>
+    <p>Every screen that <bdi>screens.html</bdi> didn't have yet: onboarding, phone setup, notifications, the monthly check-in with the ghost camera and the reveal, the strength test, day detail, backup and restore, chapters and letters, the recaps and the finish, and the small offers and the new parts of Progress. Same tokens, icons and character as <bdi>screens.html</bdi>; pick an accent and everything follows. Sample data is the user's program (week 5–6, Aban–Azar 1405).</p>
   </header>
 
-  <div class="bar" role="toolbar" aria-label="Board controls"><span>Accent</span><span id="ctl-accent" style="display:contents"></span><span style="margin-inline-start:12px">Language</span><button class="pill" data-lang="fa" aria-pressed="true">فارسی</button><button class="pill" data-lang="en" aria-pressed="false">English</button></div>
+  <div class="bar" role="toolbar" aria-label="Board controls"><span>Accent</span><span id="ctl-accent" style="display:contents"></span></div>
 
   <section class="gallery">
 
@@ -593,11 +592,10 @@ input[type="range"].seek::-moz-range-thumb { width: 22px; height: 22px; border-r
           <div class="bubble up big">سلام! من پیکرم.</div>
           <span class="t-head">۲۳ هفته، با هم</span>
           <p class="c2" style="margin:0;max-width:280px">هر روز می‌گم چی کار کنی، به‌موقع یادت می‌ندازم، و همه‌چی رو روی گوشی خودت نگه می‌دارم.</p>
-          <div class="seg" data-seg style="width:100%;margin-top:auto"><button aria-pressed="true">فارسی</button><button aria-pressed="false">English</button></div>
-          <button class="btn pri">بزن بریم</button>
+          <button class="btn pri" style="margin-top:auto">بزن بریم</button>
         </div>
       </div>
-      <figcaption><b>O1 · سلام</b>«پیکر» waves and introduces himself. The only choice here is the language; the whole app switches at once.</figcaption>
+      <figcaption><b>O1 · سلام</b>«پیکر» waves and introduces himself. No choices here; the app is Persian only (D87).</figcaption>
     </figure>
 
     <figure>
@@ -607,9 +605,9 @@ input[type="range"].seek::-moz-range-thumb { width: 22px; height: 22px; border-r
           <div class="ob-dots"><i></i><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
           <div class="col"><span class="t-head">مسیرت</span><span class="t-cap c2">شروع و پایان برنامه</span></div>
           <div class="card pad col" style="gap:14px">
-            <div class="row between"><span class="t-lbl c2">روز صفر</span><span class="col" style="align-items:flex-end"><span class="t-sub">۱۷ مهر ۱۴۰۵</span><span class="t-cap c3" data-en="17 Mehr 1405">9 Oct 2026</span></span></div>
+            <div class="row between"><span class="t-lbl c2">روز صفر</span><span class="col" style="align-items:flex-end"><span class="t-sub">۱۷ مهر ۱۴۰۵</span><span class="t-cap c3">9 Oct 2026</span></span></div>
             <div class="divider"></div>
-            <div class="row between"><span class="t-lbl c2">خط پایان</span><span class="col" style="align-items:flex-end"><span class="t-sub">۲۹ اسفند ۱۴۰۵</span><span class="t-cap c3" data-en="29 Esfand 1405">20 Mar 2027</span></span></div>
+            <div class="row between"><span class="t-lbl c2">خط پایان</span><span class="col" style="align-items:flex-end"><span class="t-sub">۲۹ اسفند ۱۴۰۵</span><span class="t-cap c3">20 Mar 2027</span></span></div>
           </div>
           <div class="card pad col" style="gap:12px">
             <div class="row between"><span class="t-strong">۲۳ هفته · ۵ فصل</span><span class="chip acc">شب نوروز</span></div>
@@ -997,7 +995,7 @@ input[type="range"].seek::-moz-range-thumb { width: 22px; height: 22px; border-r
         <div class="sheet-wrap">
           <div class="sheet">
             <div class="grab"></div>
-            <div class="row between"><div class="col"><span class="t-title">دیروز · دوشنبه ۱۸ آبان</span><span class="t-cap c3" data-en="18 Aban 1405 · Week 5">9 Nov 2026 · هفته ۵</span></div><i class="cell m l3"></i></div>
+            <div class="row between"><div class="col"><span class="t-title">دیروز · دوشنبه ۱۸ آبان</span><span class="t-cap c3">9 Nov 2026 · هفته ۵</span></div><i class="cell m l3"></i></div>
             <div class="row" style="gap:6px"><span class="chip acc">۱۰ از ۱۲ · سطح ۳ از ۴</span><span class="chip neu">تمرین B</span></div>
             <span class="sec-title" style="padding:0">انجام شد</span>
             <div class="done-list">
@@ -1156,7 +1154,7 @@ input[type="range"].seek::-moz-range-thumb { width: 22px; height: 22px; border-r
             <div><span>پلانک</span><b>۴۵ث <i>←</i> ۱:۱۲</b></div>
             <div><span>دور کمر</span><b>۸۸ <i>←</i> ۸۵</b></div>
           </div>
-          <div class="totals"><div><b>۲٬۴۸۰</b><span>شنا تا حالا</span></div><div><b>۳۱</b><span>جلسه تمرین</span></div><div><b>۴</b><span data-en="records">رکورد</span></div></div>
+          <div class="totals"><div><b>۲٬۴۸۰</b><span>شنا تا حالا</span></div><div><b>۳۱</b><span>جلسه تمرین</span></div><div><b>۴</b><span>رکورد</span></div></div>
           <div class="row" style="gap:6px;justify-content:center;flex-wrap:wrap"><span class="chip acc">رسیدی: ۱۰ بارفیکس کامل</span><span class="chip acc">رسیدی: ۱ دقیقه پلانک</span></div>
         </div>
         <span class="story-hint">بزن برای بعدی</span>
@@ -1367,16 +1365,6 @@ input[type="range"].seek::-moz-range-thumb { width: 22px; height: 22px; border-r
   }
   ctl.addEventListener("click", function (e) { var b = e.target.closest("[data-accent]"); if (b) { accent = b.dataset.accent; applyAccent(); } });
   applyAccent();
-})();
-</script>
-<script src="en.js"></script>
-<script>
-(function () {
-  // فارسی / English switch (en.js): every phone flips direction, text, digits and dates
-  var btns = document.querySelectorAll("[data-lang]");
-  function pick(l) { MockupI18n.set(l); btns.forEach(function (b) { b.setAttribute("aria-pressed", b.dataset.lang === l); }); try { localStorage.setItem("ba-lang", l); } catch (e) {} }
-  btns.forEach(function (b) { b.addEventListener("click", function () { pick(b.dataset.lang); }); });
-  try { if (localStorage.getItem("ba-lang") === "en") pick("en"); } catch (e) {}
 })();
 </script>
 

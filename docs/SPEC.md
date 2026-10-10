@@ -7,7 +7,7 @@ Items marked **[OPEN]** need the user's answer. Items marked **[DEFAULT]** are m
 
 ## 1. Vision
 
-> BeAesthetic is my personal Android coach for a 23-week transformation (17 Mehr 1405 to 29 Esfand 1405 / 9 Oct 2026 to 20 Mar 2027). Each day it tells me exactly what to do, from morning to night, and reminds me reliably, even on a Xiaomi and without Google services. Everything I do fills a GitHub-style dashboard grid: effort shows as green and bad days show as gaps, never red. A "minimum day" keeps me on the dashboard when life gets hard. Every Friday I close the week with a short review and plan the next one. Strength numbers prove progress in the first weeks; measurements and photos prove it over months. It works in Persian and English, with Jalali and Gregorian dates, and it backs itself up automatically so nothing is ever lost.
+> BeAesthetic is my personal Android coach for a 23-week transformation (17 Mehr 1405 to 29 Esfand 1405 / 9 Oct 2026 to 20 Mar 2027). Each day it tells me exactly what to do, from morning to night, and reminds me reliably, even on a Xiaomi and without Google services. Everything I do fills a GitHub-style dashboard grid: effort shows as green and bad days show as gaps, never red. A "minimum day" keeps me on the dashboard when life gets hard. Every Friday I close the week with a short review and plan the next one. Strength numbers prove progress in the first weeks; measurements and photos prove it over months. It is in Persian, with Jalali and Gregorian dates, and it backs itself up automatically so nothing is ever lost.
 
 ### Design principles (used to settle arguments)
 1. **Today first.** The app's main job is to answer "what do I do now?" Everything else is secondary.
@@ -70,9 +70,9 @@ The program is split into five **chapters** that follow the Jalali months. A cha
 | M9 | **Reminders** | One notification per block at fixed times, with separate Normal and Friday profiles. One follow-up only for non-negotiables. Fully local, no Google services. Notifications show each task's anchor. From week ~8 the app offers to silence reminders for routines that have stuck (D57). |
 | M10 | **Reliability setup** | A setup screen for Xiaomi/MIUI/HyperOS and other aggressive phones (Autostart, battery settings), a test notification, and detection of reminders that fired late or not at all. |
 | M11 | **Backup** | Automatic weekly zip (data and photos) into a folder you choose, synced to your PC with Syncthing. Plus manual export/import and a restore flow that has been tested. |
-| M12 | **Bilingual** | Persian (default, right-to-left) and English. Jalali dates first with Gregorian underneath. Digits follow the language. |
+| M12 | **Persian** | Persian only, right-to-left, Persian digits. Jalali dates first with Gregorian underneath. An English version would be a separate build (D87). |
 | M14 | **Workout plan editor** | Settings → برنامه تمرین: pick a weekday, name the workout, add exercises (reps or seconds, sets, range), reorder by dragging. |
-| M13 | **Onboarding** | Language → reminder times → reliability setup → backup folder → baseline entry (with past dates, plus the workout backfill) → program import → identity sentence and milestones. |
+| M13 | **Onboarding** | Welcome → program dates → reminder times → reliability setup → backup folder → baseline entry (with past dates, plus the workout backfill) → program import → identity sentence and milestones. |
 | M15 | **Chapters and recaps** | Five chapters by Jalali month; a halfway recap at Yalda (must ship by 19 Dec 2026) and a finish recap. In the app only (D51, D52, D63). Sealed **letters to your future self** at each chapter start (D72). A **countdown to Nowruz** on Today, in the last chapter only (D74). |
 | M16 | **After the finish line** | The finish recap offers maintenance or a new program (§6.5). Built by ~week 18 (D61). |
 | M17 | **Local usage log** | A private event log for judging experiments; never leaves the phone except inside the user's own backup (§8, D59). |
@@ -113,7 +113,7 @@ The bottom navigation has 4 **icon-only** tabs (mirrored in right-to-left mode):
 2. **Dashboard** (داشبورد): the full program grid, a weekly score for each row, a legend (including «قبل از اپ»). Tap a day to see its items.
 3. **Proof** (پیشرفت): "since Day 0" cards (weight Δ, waist Δ, best pull-ups, plank time…), the program line toward Nowruz, milestones, the strength chart, weight and measurement charts, photo sets in a timeline.
 4. **Week** (هفته): this week's plan (special days, the snack note for each day), plus the Friday ritual flow.
-5. **Settings** (تنظیمات, gear on Today): reminder health, Tasks & routines, Reminders & alarms, Workout program, Backup, Appearance & language (accent color, dark/light, language), Xiaomi setup.
+5. **Settings** (تنظیمات, gear on Today): reminder health, Tasks & routines, Reminders & alarms, Workout program, Backup, Appearance (accent color, dark/light, «پیکر» on Today), Xiaomi setup.
    - **Tasks & routines**: every routine and one-off task, grouped by part of the day. Add/edit in a bottom sheet: name, part of day, repeat (every day / chosen weekdays / every N days / once), optional own reminder time, optional anchor («بعد از…»), non-negotiable, in minimum day.
    - **Reminders & alarms**: block times for normal days and Friday, separate alarms for tasks with their own time, follow-up delay, Friday ritual time, a test button.
 
@@ -314,16 +314,16 @@ Photo             photoSetId, pose(FRONT|SIDE|BACK), relativePath
 ReminderSlot      profile(NORMAL|FRIDAY), block, time, enabled
 ReminderLog       slotKey, scheduledAt, firedAt?
 BackupRecord      at, fileName, sizeBytes, photoCount, ok
-Settings          (key-value) language, digits, primaryCalendar, dayRolloverHour,
+Settings          (key-value) dayRolloverHour,
                   specialDayCapPerWeek, followUpMinutes, backupFolderUri, programStartDate
 ```
 
 Derived values (day score, grid level, weekly score, next due date, PRs, "since Day 0" changes) are **computed, not stored**, except the frozen day snapshot (D37). They are pure functions, and they are where unit tests focus.
 
 ## 10. Localization
-- Persian is the default and runs right-to-left; English is available. Every string comes from resource files and nothing is hard-coded.
+- **Persian only**, right-to-left (D87). Every string still comes from resource files and nothing is hard-coded, so a separate English build stays possible.
 - **Dates:** Jalali is the primary date with Gregorian underneath (for example "۱۸ مهر ۱۴۰۵ · 10 Oct 2026"). Week starts on Saturday.
-- **Digits:** Persian digits in the Persian UI and Latin digits in the English UI. Number input accepts both.
+- **Digits:** Persian digits everywhere. Number input accepts Persian and Latin digits.
 - **Units:** kg and cm only.
 
 ## 11. Open items
