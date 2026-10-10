@@ -16,6 +16,7 @@ The program itself started on **2026-10-09 (Day 0)**. Week 1 began 2026-10-10. E
 
 ## Next steps
 
+0. **Pick a font and the accent colors** from `docs/design/type-and-color.html` (https://claude.ai/artifact/WFBdvYr9iUavDkA1ifyZyE), D46. If accents are adopted: `settings` gets an `accentColor` column, the theme becomes one token set per accent × dark/light, and DESIGN.md/CLAUDE.md change "green = done" to "accent = done". Needed before slice 1 builds the theme.
 1. **Phase 5, slice 1**, in a session on the user's laptop (Android Studio and the Android SDK are there): create the project (`:domain` + `:app`, app ID `app.beaesthetic`), theme (tokens, Vazirmatn, RTL, both languages), Room with seeded tasks, Today with ticking, day snapshot, minimum day, week dots. See `ARCHITECTURE.md` §14 for the full slice list:
    1. Skeleton + Today.
    2. Reminders: planner, scheduler, receivers, reminder health, Xiaomi/HyperOS setup screen, Reminders screen.

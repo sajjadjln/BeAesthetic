@@ -76,6 +76,12 @@ Status: **Final** (agreed by the user) · **Default** (my choice, not yet confir
 | D44 | Target phone: **Poco X4 5G on HyperOS**. HyperOS intents for the setup screen are tried and tested first. | User's phone. | Final |
 | D45 | A public release on **Cafe Bazaar** may come much later. App ID `app.beaesthetic` (English) stays; a Persian app name doesn't conflict with it, and the package name doesn't affect store search. Nothing personal is hard-coded (program dates in settings). | User plans it for later; keeps that door open at no cost now. | Final |
 
+## Phase 3 follow-up: type and color exploration (2026-10-10)
+
+| # | Decision | Why | Status |
+|---|---|---|---|
+| D46 | Explore other fonts and a user-chosen accent color (`docs/design/type-and-color.html`). Fonts compared: Vazirmatn (current), Estedad, Sahel, IBM Plex Sans Arabic, Noto Kufi Arabic, Rubik; all OFL. Readex Pro and Tajawal were dropped: no Persian letters (پ چ ژ گ) or Persian digits. Accents: green, blue, turquoise, violet, picked in Settings → «ظاهر و زبان» (the «زبان» tile renamed). The accent replaces green as the color of done/progress; amber never changes; the special-day color moves away from the accent for blue (→ violet) and violet (→ cyan). **My recommendation:** Estedad as the only font; green as the default with all four accents selectable. | User request. | Open: waiting for the user's pick |
+
 ## Superseded
 
 - Weekly focus sentence (Phase 2) → removed in D24.

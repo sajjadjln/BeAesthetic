@@ -3,6 +3,8 @@
 **Current design:** `docs/design/screens.html` (interactive; open it in a browser).
 Published copy: https://claude.ai/artifact/BwuSiLCGAxV5fGR86MSmjH
 
+**Open exploration: fonts and accent color** (2026-10-10): `docs/design/type-and-color.html`, published at https://claude.ai/artifact/WFBdvYr9iUavDkA1ifyZyE. Today in six Persian fonts and four accent colors, plus the «ظاهر و زبان» screen where the user picks the color. Nothing changes in the tokens below until the user picks (D46).
+
 Kept for reference only:
 - `docs/design/screens-minimal.html`: minimal concept (https://claude.ai/artifact/SuxRScjnPrCJkpGEdogd7z)
 - `docs/design/screens-detailed.html`: detailed concept (round 2)
