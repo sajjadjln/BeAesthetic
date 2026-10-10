@@ -68,7 +68,7 @@ So this file answers one question: **if the user decides to publish on Cafe Baza
 | Repeat triggers | Block reminders; widget (backlog) |
 | Habit formation | Anchor cues (R4 in `06`) |
 | Lifecycle communication | In-app only (no push servers): welcome back, chapter starts, recaps |
-| Referral | A shareable recap image (finish line) is the only natural viral moment |
+| Referral | None: the user ruled out sharing (D63). Word of mouth and the listing carry it |
 | Churn prevention | Minimum day; comeback; reduced reminders after absence |
 
 ## 7. What matters now (cheap choices during the build)
@@ -76,7 +76,7 @@ So this file answers one question: **if the user decides to publish on Cafe Baza
 1. **Keep personal data out of code** (already a rule; D45).
 2. **Pick the Persian name with a release in mind**: say what it does, avoid "aesthetic" connotations. (Open question 10.)
 3. **Design every screen so it can be screenshotted** for a listing: no personal names in seed data.
-4. **Ship the recap images (R8)**: they'd become the first screenshots and the only viral loop.
+4. **Ship the recaps (R8)**: in the app only (D63), but a recap screen makes a strong listing screenshot.
 5. **Keep the backup format documented**: it's a trust signal later.
 
 ## 8. Testable campaign ideas (for after a release decision)

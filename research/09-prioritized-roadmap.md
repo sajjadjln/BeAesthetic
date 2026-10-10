@@ -42,7 +42,7 @@ Each idea gets 1–5 on four factors, and effort on a 1–3 scale:
 | 21 | F15 Persian app name chosen with a release in mind | 2 | 2 | 4 | 1 | **16** | **high** | Long-term |
 | 22 | F13 Today widget (after MVP, before week 8) | 3 | 2 | 4 | 2 | **12** | med | Improvement |
 | 23 | R9 Real-world milestones | 3 | 2 | 4 | 2 | **12** | med | Gamification experiment |
-| 24 | Weekly share image to one friend (conflicts with SPEC §3.3) | 2 | 3 | 2 | 1 | **12** | med | Gamification experiment |
+| 24 | ~~Weekly share image to one friend~~ — **rejected** (D63: no sharing) | 2 | 3 | 2 | 1 | 12 | med | — |
 
 ## Grouped
 
@@ -53,7 +53,7 @@ F1 · R3 · R2 · R5 · R1 · R4 · F12 · R7 · F11 · F10a · R6 (score only)
 R8 Yalda recap · F3 decide-then-build "after the finish line" · R6 reminder fade · F10b ghost camera
 
 ### Gamification experiments
-R10 reserves copy · identity sentence · R9 milestones · weekly share image (only if the user wants a social element)
+R10 reserves copy · identity sentence · R9 milestones
 
 ### Marketing experiments (only after a release decision; see `07` §8)
 "Before Nowruz" launch · Xiaomi reminder guide · 3-creator pilot · listing headline test

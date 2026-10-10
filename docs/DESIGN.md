@@ -72,20 +72,22 @@ Contrast was checked: text on accent buttons ≥ 4.3:1 (bold 16 px), accent chip
 ## Screens (current)
 
 ### 01 امروز (Today)
-- Header: weekday (large), "۱۸ آبان · هفته ۵", a **leaf** button (minimum day) and a **gear** (settings).
+- Header: weekday (large), "۱۸ آبان · هفته ۵ از ۲۳ · فصل آبان" (D51), a **leaf** button (minimum day) and a **gear** (settings).
 - **Ring**: tasks done today / total (e.g. ۳ از ۱۲). Under it, **7 week dots** (Saturday on the right), colored by the day level; today is outlined.
 - **Part-of-day switcher**: 4 icons (sunrise · sun · sunset · moon). A tiny accent dot under an icon means that part is complete.
-- **Tiles** (2 columns): an icon + one or two words. Tap toggles done (accent fill + check).
+- **Tiles** (2 columns): an icon + one or two words. Tap toggles done (accent fill + check), with a soft haptic and a ~200 ms fill (D58). A finished part of the day and a 100% day get a slightly bigger moment.
   - Important task: **gold outline** and the word «مهم».
   - Due interval task: **amber outline** and a chip «موعدش رسیده».
   - Workout: a wide tile with a play button that opens the Workout session.
+- **Comeback** (D53): on the first tick after a day at level 0, one line under the ring: «خوش برگشتی». Shown once.
+- **Cards** (one at a time, above the tiles): chapter start (D51), recap at Yalda and 29 Esfand (D52), the one-time offer to silence a routine's reminders (D57), plus the existing ritual, check-in and welcome-back cards.
 - **Minimum day** (leaf on): the part-of-day switcher hides, «روز حداقلی» shows, and only the floor tiles appear.
 
 ### 02 داشبورد (Dashboard)
 - Title and the program range.
 - Summary: «روز حضور» (e.g. ۳۰ از ۳۱) and «روز ویژه». **No weekly average.**
 - «کل مسیر»: a 23-column × 7-row grid of small squares (week 1 on the right, Saturday on top); Jalali month labels below.
-- Legend: less → more, and special.
+- Legend: less → more, special, and «قبل از اپ» (D56): a dotted outline with no fill, for days before the app was installed.
 - «هفته به هفته»: one row per week (newest on top): label + date range, 7 squares, and a score chip («جاری» for the current week).
 
 ### 03 پیشرفت (Progress)
@@ -94,6 +96,8 @@ Contrast was checked: text on accent buttons ≥ 4.3:1 (bold 16 px), accent chip
 - Pull-up chart (time right → left; dashed segment = the next test) with a «رکورد» chip.
 - Weight card with a sparkline.
 - «عکس‌های ماهانه»: one row per month (front / side / back), "2 of 7".
+- Program line (D51): a thin line from Day 0 to «نوروز ۱۴۰۶» with the five chapters marked and today's position.
+- Milestones (D65): 5–8 rows; reached ones in the accent with the date, others in text-3. No badges.
 
 ### 04 تمرین (Workout session)
 - Close button, exercise-progress dashes (e.g. 2 of 6).
@@ -101,11 +105,13 @@ Contrast was checked: text on accent buttons ≥ 4.3:1 (bold 16 px), accent chip
 - **Huge number** with − / +, pre-filled from last time. Under it: «قبلی ۱۲ · ۱۲ · ۱۰».
 - **Seek bar 1–10** with the label «درجه سختی» and the value.
 - A big round ✓ button logs the set (ثبت).
+- **Record** (D54): when a logged set beats that exercise's best, its circle fills with the accent and shows «رکورد» for a moment.
 
 ### 05 هفته (Friday review and plan)
 - Steps: مرور (done) → برنامه.
-- Review card: the week's 7 squares, score chip, wins (records, best routines). Wins only, no misses.
-- «روزهای ویژه»: 7 day chips; tap to mark special (max 2; a third tap is refused).
+- Review card: the week's 7 squares, score chip, wins (records, best routines, comebacks «۲ بار برگشتی»). Wins only, no misses. The identity sentence sits under the card (D65).
+- **Short path** (D62): a «شروع هفته ۵» button right under the review; the plan steps below are optional.
+- «روزهای ویژه»: 7 day chips; tap to mark special. The label reads «۲ روز ذخیره» (D65); a third tap is refused.
 - «میان‌وعده‌ها»: one row per day; closed rows show only the day and a dot (filled = has a note). A row opens to a free-text box (can hold a whole recipe).
 - Button «شروع هفته ۵». Finishing runs the weekly backup.
 
@@ -127,6 +133,7 @@ Contrast was checked: text on accent buttons ≥ 4.3:1 (bold 16 px), accent chip
 
 ### 08 کار جدید / ویرایش (Task editor, bottom sheet)
 - Name, icon picker (6 icons), part of day (4 icons), repeat (هر روز / روزهای خاص / هر N روز / یک بار).
+- «بعد از…» (D55): an optional one-line anchor, e.g. «بعد از صبحانه».
 - **«زنگ»** card with a switch: the time (large) and **7 day circles** to choose which weekdays the alarm rings.
 - Toggles: «مهم» (one extra reminder), «روز حداقلی» (part of the floor).
 - «ذخیره».
@@ -156,3 +163,4 @@ Same as 01 with light tokens.
 - Day detail (tap a square on the Dashboard).
 - Notification layouts (block reminder, important follow-up with a "Done" action).
 - English (LTR) version of the final screens. Only an older Today exists in `screens-detailed.html`.
+- Added by the research decisions (D51–D65), designed in the slice that needs them: chapter card, halfway and finish recaps, the after-the-finish choice (ادامه / برنامه تازه), the ghost-overlay camera, the silence-reminders offer, milestones setup, identity sentence. The changes above to Today, Dashboard, Progress, Workout, Week and the task editor are not in `screens.html` yet.

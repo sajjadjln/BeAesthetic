@@ -131,7 +131,9 @@ Life events (exams, illness, travel, Nowruz shopping) will swamp small effects. 
 | **Dependencies** | R10 (copy only) |
 | **Decide** | Keep whichever wording the user prefers; the evidence is too thin to override preference. |
 
-## E10. Weekly share image to one friend (only if the user wants it)
+## E10. Weekly share image to one friend — **dropped** (D63: no sharing)
+
+Kept for the record only.
 | | |
 |---|---|
 | **Hypothesis** | Sending the week's wins to one friend raises show-up days. (Harkin 2016: public reporting strengthens monitoring; STEP UP support arm) |
@@ -154,4 +156,4 @@ E1 and E4 can run at the same time as E5 (different features, different metrics)
 | 8+ | E6 (fading), ongoing |
 | 9–17 | E3 (chapters, at each boundary), E7 (ritual) |
 | 10–14 | E8 (Yalda) |
-| 12–23 | E2 (comebacks), E9 or E10 if chosen |
+| 12–23 | E2 (comebacks), E9 |

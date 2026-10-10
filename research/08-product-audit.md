@@ -33,7 +33,7 @@ Below: 16 findings. Top 8 are worth doing; the rest are smaller or conditional.
 2. **Evidence:** motivation is lowest around halfway (Bonezzi 2011); fresh starts at temporal landmarks raise goal behavior (Dai 2014); in a 61k-person megastudy only 8% of programs still worked after they ended (Milkman 2021); prompt effects fade to ~0 by day 28 (HeartSteps).
 3. **Reference:** Fabulous journeys; Duolingo path; Strava's Year in Sport.
 4. **Why for this user:** "quits when bored" and "no clear goal" are the stated weak points. Chapters give 5 near-term goals instead of one far one.
-5. **Adapted:** chapters = Jalali months, ending at the monthly check-in (already designed, D28); Yalda (21 Dec, week 11) = halfway recap; 29 Esfand = finish recap, the eve of Nowruz. See `06` R1, R8.
+5. **Adapted:** chapters = Jalali months, with the monthly check-in (D28) as each chapter's proof point; Yalda (21 Dec, week 11) = halfway recap; 29 Esfand = finish recap, the eve of Nowruz. See `06` R1, R8.
 6. **Complexity:** S for chapters; M for the recap.
 7. **Risks:** the recap must ship **before 19 Dec** or it misses its moment. Make a numbers-only version the fallback.
 8. **Measure:** show-up days in the 2–3 weeks after each landmark vs before.

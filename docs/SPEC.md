@@ -1,6 +1,6 @@
-# BeAesthetic: Product Spec (v0.2)
+# BeAesthetic: Product Spec (v0.3)
 
-Status: **Accepted** (2026-10-09), updated with design-phase decisions on 2026-10-10. For screen layouts see `DESIGN.md`; for decision history see `DECISIONS.md`; for open questions see `TASKS.md`.
+Status: **Accepted** (2026-10-09), updated with design-phase decisions and the research decisions (D48–D69, `research/`) on 2026-10-10. For screen layouts see `DESIGN.md`; for decision history see `DECISIONS.md`; for open questions see `TASKS.md`.
 Items marked **[OPEN]** need the user's answer. Items marked **[DEFAULT]** are my choice and can be overridden.
 
 ---
@@ -28,7 +28,22 @@ Items marked **[OPEN]** need the user's answer. Items marked **[DEFAULT]** are m
 
 - Weeks run **Saturday → Friday**. There are 23 full weeks (161 days), plus Day 0 and the finish line.
 - **Check-ins** (photos and tape measurements) **once a month**, on a Friday morning: Day 0 (Mehr), then one per Jalali month (Aban, Azar, Dey, Bahman, Esfand), plus the finish line. That makes **7 photo sets**.
-- The app must accept a **baseline entered after the fact** (weight, measurements, photos and strength tests dated Day 0), because the app won't exist on Day 0.
+- The app must accept a **baseline entered after the fact** (weight, measurements, photos and strength tests dated Day 0), because the app won't exist on Day 0. It also offers a one-time **backfill of workouts and strength tests** done since Day 0 (D56).
+
+### Chapters and landmarks (D51, D52)
+
+The program is split into five **chapters** that follow the Jalali months. A chapter start is a fresh start; it never resets any count. The monthly check-in falls inside each chapter as its proof point.
+
+| Chapter | Jalali | Gregorian | Weeks |
+|---|---|---|---|
+| ① Mehr–Aban | 18 Mehr – 30 Aban | 10 Oct – 21 Nov 2026 | 1–7 |
+| ② Azar | 1 – 30 Azar | 22 Nov – 21 Dec 2026 | 7–11 |
+| ③ Dey | 1 – 30 Dey | 22 Dec 2026 – 20 Jan 2027 | 11–15 |
+| ④ Bahman | 1 – 30 Bahman | 21 Jan – 19 Feb 2027 | 15–19 |
+| ⑤ Esfand | 1 – 29 Esfand | 20 Feb – 20 Mar 2027 | 20–23 + finish |
+
+- **Halfway: Yalda**, 30 Azar (21 Dec 2026), in week 11. The halfway recap opens the Dey chapter.
+- **Finish: 29 Esfand**, the eve of Nowruz 1406. The finish recap, then the choice of what comes next (§6.5).
 
 ### Weekly rhythm
 
@@ -44,38 +59,40 @@ Items marked **[OPEN]** need the user's answer. Items marked **[DEFAULT]** are m
 
 | # | Feature | Notes |
 |---|---|---|
-| M1 | **Today screen** | A day ring, this week's dots, a part-of-day switcher (Morning, Midday, Evening, Night; the current part is selected) and icon tiles. Tap a tile to complete it. |
-| M2 | **Tasks and routines** | Daily items, items on specific weekdays, **"every N days from the last time"** items, and one-off items ("once"). Each item can be marked important (UI: «مهم»; one follow-up reminder) and/or part of the minimum day, and can have its own alarm time on chosen weekdays. |
+| M1 | **Today screen** | A day ring, this week's dots, a part-of-day switcher (Morning, Midday, Evening, Night; the current part is selected) and icon tiles. Tap a tile to complete it. The header shows the week and chapter («هفته ۵ از ۲۳ · فصل آبان»). A tick gives a soft haptic and a short accent fill (D58). The first tick after a day at level 0 says «خوش برگشتی» once (D53). |
+| M2 | **Tasks and routines** | Daily items, items on specific weekdays, **"every N days from the last time"** items, and one-off items ("once"). Each item can be marked important (UI: «مهم»; one follow-up reminder) and/or part of the minimum day, and can have its own alarm time on chosen weekdays. An optional anchor «بعد از…» says what the task follows (D55). |
 | M3 | **Minimum day** | A leaf button on Today toggles «روز حداقلی». Minimum shows only the floor items. Doing the floor guarantees the day at least the lightest shade. |
-| M4 | **Workout log** | Your program loaded from the plan you'll paste. Each session shows the last session's numbers, and each set is pre-filled with them. You log reps or seconds plus effort for each set. |
+| M4 | **Workout log** | Your program loaded from the plan you'll paste. Each session shows the last session's numbers, and each set is pre-filled with them. You log reps or seconds plus effort for each set. A set that beats the previous best shows «رکورد» at once (D54). |
 | M5 | **Strength tests** | Pull-ups, push-ups, plank, dead hang and one leg-health test. Every 2 weeks **[DEFAULT, confirm]**. |
-| M6 | **Dashboard (داشبورد)** | A GitHub-style grid covering the whole program: accent intensity (green by default) = % of the day done, gray = nothing done, its own color for special days. Tap a square to see that day. |
-| M7 | **Progress (پیشرفت)** | Weight (weekly), tape measurements and photos (**monthly**), strength numbers. Cards showing "since Day 0", plus simple line charts. |
-| M8 | **Friday ritual** | Review (this week's row, wins, personal records) and then plan (special days, and a free-text snack note for each day that opens like a drop-down). About 10 minutes. |
-| M9 | **Reminders** | One notification per block at fixed times, with separate Normal and Friday profiles. One follow-up only for non-negotiables. Fully local, no Google services. |
+| M6 | **Dashboard (داشبورد)** | A GitHub-style grid covering the whole program: accent intensity (green by default) = % of the day done, gray = nothing done, its own color for special days. Days before the app was installed show as «قبل از اپ» (dotted), not gray (D56). Tap a square to see that day. |
+| M7 | **Progress (پیشرفت)** | Weight (weekly), tape measurements and photos (**monthly**), strength numbers. Cards showing "since Day 0", plus simple line charts. A program line toward «نوروز ۱۴۰۶». 5–8 real-world milestones the user picks (D65). A ghost-overlay camera for the photos (D64). |
+| M8 | **Friday ritual** | Review (this week's row, wins, personal records) and then plan (special days, and a free-text snack note for each day that opens like a drop-down). About 10 minutes, or about a minute on the **short path**: review → start the week, with the plan steps optional (D62). Wins include comebacks and best routines (D53, D57). The identity sentence is shown (D65). |
+| M9 | **Reminders** | One notification per block at fixed times, with separate Normal and Friday profiles. One follow-up only for non-negotiables. Fully local, no Google services. Notifications show each task's anchor. From week ~8 the app offers to silence reminders for routines that have stuck (D57). |
 | M10 | **Reliability setup** | A setup screen for Xiaomi/MIUI/HyperOS and other aggressive phones (Autostart, battery settings), a test notification, and detection of reminders that fired late or not at all. |
 | M11 | **Backup** | Automatic weekly zip (data and photos) into a folder you choose, synced to your PC with Syncthing. Plus manual export/import and a restore flow that has been tested. |
 | M12 | **Bilingual** | Persian (default, right-to-left) and English. Jalali dates first with Gregorian underneath. Digits follow the language. |
 | M14 | **Workout plan editor** | Settings → برنامه تمرین: pick a weekday, name the workout, add exercises (reps or seconds, sets, range), reorder by dragging. |
-| M13 | **Onboarding** | Language → reminder times → reliability setup → backup folder → baseline entry (with past dates) → program import. |
+| M13 | **Onboarding** | Language → reminder times → reliability setup → backup folder → baseline entry (with past dates, plus the workout backfill) → program import → identity sentence and milestones. |
+| M15 | **Chapters and recaps** | Five chapters by Jalali month; a halfway recap at Yalda (must ship by 19 Dec 2026) and a finish recap. In the app only (D51, D52, D63). |
+| M16 | **After the finish line** | The finish recap offers maintenance or a new program (§6.5). Built by ~week 18 (D61). |
+| M17 | **Local usage log** | A private event log for judging experiments; never leaves the phone except inside the user's own backup (§8, D59). |
 
 ### 3.2 Later (after the MVP is in daily use)
 
 | Feature | Earliest | Why it waits |
 |---|---|---|
-| Goals: target values on metrics, with progress bars inside Proof | ~week 4 | Cheap, but you need a baseline and a few data points first |
+| Goals: target values on metrics, with progress bars inside Proof | ~week 4 | Cheap, but you need a baseline and a few data points first. The simple version, real-world milestones, is in the MVP (D65) |
 | Before/after photo comparison slider | ~week 8 | Needs at least 2–3 photo sets to be worth anything |
-| In-app camera with a "ghost" overlay of the previous photo (same pose and framing) | ~week 4, before the 2nd photo set | Makes photos comparable. In the MVP the photos are taken with the system camera |
 | Weekly meal and snack planner with recipes | ~week 6 | A big feature. The MVP has a plain snack list |
-| 5-week phases with new milestones | ~week 5 | Fights boredom in the middle of the program |
-| Home-screen widget for Today | after MVP | A strong daily trigger, but it's polish |
+| Home-screen widget for Today | after MVP; aimed at before week 8 if the pace allows (D67) | A strong daily trigger, but it's polish |
 | Sync to your own .NET backend | optional | Only if Syncthing backup isn't enough |
+| Public release on Cafe Bazaar | after the program (D49) | Needs onboarding with your own dates and starter routines, a listing and a privacy note (`ARCHITECTURE.md` §15, `research/07`) |
 
 ### 3.3 Deliberately out of scope
 - Calorie and protein tracking. (Protein stays only as three checklist items, see §5.)
 - A general calendar and a full task manager (projects, priorities). Simple one-off tasks are in scope (repeat = once).
 - Accounts, cloud login, Firebase, Google Play Services, analytics and crash-reporting SDKs.
-- Social features, sharing and leaderboards.
+- Social features, sharing and leaderboards. Confirmed after the research: no share images either, recaps included (D63).
 - Health Connect, Google Fit and wearables.
 - An AI coach or generated workout plans.
 - Play Store distribution. The app is installed as an APK.
@@ -85,24 +102,27 @@ Items marked **[OPEN]** need the user's answer. Items marked **[DEFAULT]** are m
 The bottom navigation has 4 **icon-only** tabs (mirrored in right-to-left mode): Today · Dashboard · Progress · Week. Settings opens from the gear on Today. `DESIGN.md` has the current layout of every screen.
 
 1. **Today** (امروز): the home screen.
-   - Header: weekday, Jalali date and week number, a minimum-day (leaf) button and a settings gear.
+   - Header: weekday, Jalali date, «هفته N از ۲۳ · فصل …», a minimum-day (leaf) button and a settings gear.
    - Ring of today's progress, 7 week dots, part-of-day switcher, icon tiles. Due "every N days" items say «موعدش رسیده»; important items say «مهم».
    - Workout tile: opens the **Workout session** screen.
    - On Friday: a "Start weekly ritual" card.
    - On check-in Fridays: a "Check-in: weight, tape, photos" card.
    - After 2 or more days without opening the app: a "Welcome back" card. It never lists what you missed.
-2. **Dashboard** (داشبورد): the full program grid, a weekly score for each row, a legend. Tap a day to see its items.
-3. **Proof** (پیشرفت): "since Day 0" cards (weight Δ, waist Δ, best pull-ups, plank time…), the strength chart, weight and measurement charts, photo sets in a timeline.
+   - On the first day of a chapter: a quiet chapter card. At Yalda and on 29 Esfand: the recap card.
+   - From week ~8, when a routine has stuck: a one-time offer to silence its reminders.
+2. **Dashboard** (داشبورد): the full program grid, a weekly score for each row, a legend (including «قبل از اپ»). Tap a day to see its items.
+3. **Proof** (پیشرفت): "since Day 0" cards (weight Δ, waist Δ, best pull-ups, plank time…), the program line toward Nowruz, milestones, the strength chart, weight and measurement charts, photo sets in a timeline.
 4. **Week** (هفته): this week's plan (special days, the snack note for each day), plus the Friday ritual flow.
 5. **Settings** (تنظیمات, gear on Today): reminder health, Tasks & routines, Reminders & alarms, Workout program, Backup, Appearance & language (accent color, dark/light, language), Xiaomi setup.
-   - **Tasks & routines**: every routine and one-off task, grouped by part of the day. Add/edit in a bottom sheet: name, part of day, repeat (every day / chosen weekdays / every N days / once), optional own reminder time, non-negotiable, in minimum day.
+   - **Tasks & routines**: every routine and one-off task, grouped by part of the day. Add/edit in a bottom sheet: name, part of day, repeat (every day / chosen weekdays / every N days / once), optional own reminder time, optional anchor («بعد از…»), non-negotiable, in minimum day.
    - **Reminders & alarms**: block times for normal days and Friday, separate alarms for tasks with their own time, follow-up delay, Friday ritual time, a test button.
 
 **Full-screen flows:**
 - Workout session
 - Strength test
 - Check-in (weight → tape → 3 photos)
-- Friday ritual (Review → Plan)
+- Friday ritual (Review → Plan, or the short path)
+- Recap (halfway and finish)
 - Onboarding
 - Reliability setup
 - Backup and restore
@@ -115,10 +135,13 @@ The bottom navigation has 4 **icon-only** tabs (mirrored in right-to-left mode):
 4. **Friday ritual.**
    - Review: this week's row, the weekly score, PRs and best routines (in a neutral tone).
    - Plan: mark special days in advance (for example travel) and write each day's snack note (any length, e.g. a full recipe).
+   - **Short path:** review → «شروع هفته» in about a minute; the plan steps are optional.
    - The weekly backup runs when you finish.
-5. **Check-in Friday.** In the morning: weigh-in, then tape (5 numbers), then 3 photos (front, side, back) with the same instructions every time.
+5. **Check-in Friday.** In the morning: weigh-in, then tape (5 numbers), then 3 photos (front, side, back) with the ghost overlay of last month's photo and the same checklist every time: same spot and background, same light (window or lamp, no flash), phone at the same height and distance (timer or a fixed stand), same time of day (before breakfast), same clothes, relaxed pose.
 6. **Bad day.** Open Today and switch to "روز حداقلی". Only the 3–4 floor items show. Do them and the square turns the lightest shade.
 7. **Coming back after an absence.** The "Welcome back" card offers to "Start with a minimum day". Days you missed are just gray. There's no list of misses and no catch-up notifications.
+8. **Coming back after one missed day.** The first tick says «خوش برگشتی». That's all. On Friday the review lists it as a comeback.
+9. **Finish line.** On 29 Esfand: final photos, the finish recap, then «ادامه» (maintenance) or «برنامه تازه» (new dates).
 
 ## 5. Default routine set (editable in the app)
 
@@ -150,7 +173,8 @@ Non-negotiables are chosen per item in the app. The ✔ marks above are only my 
 
 ### 6.1 Which day an action counts for
 - The day **rolls over at 04:00**, not at midnight **[DEFAULT]**. Brushing your teeth at 00:30 counts for the evening it belongs to.
-- **Edit window:** you can tick or untick items for today and yesterday only. Older days are read-only, so the dashboard stays honest without becoming a source of guilt.
+- **Edit window:** you can tick or untick items for today and yesterday only. Older days are read-only, so the dashboard stays honest without becoming a source of guilt. One exception: the one-time **backfill** at baseline entry, for workouts and strength tests only (D56).
+- **Before the app:** days from Day 0 to the day before `installDate` have no due items and show as «قبل از اپ», never as gaps. They don't count in any score or in "showed up X of Y".
 - **Frozen history [DEFAULT]:** a day's score is saved when it changes and frozen once the day leaves the edit window. Editing a task later never recolors past days (D37).
 
 ### 6.2 Day score and wall colors
@@ -181,6 +205,18 @@ Non-negotiables are chosen per item in the app. The ✔ marks above are only my 
 - Each set is pre-filled with last session's numbers; no separate "target" is shown. When every set reaches the top of the range, the app suggests "+1 rep per set" or moving to the next (harder) version of the exercise. You confirm or ignore the suggestion; the app never changes your plan silently.
 - Effort is logged per set on a 1–10 seek bar labelled «درجه سختی» (an RPE scale).
 - A **personal record (PR)** is a new best on reps × sets for an exercise or a strength-test value. PRs show up in the Friday review and on Proof.
+- **In the moment:** when a single logged set beats that exercise's best single set (or a strength test beats its best), the set circle shows «رکورد» right away (D54).
+
+### 6.5 Chapters, recaps, comebacks and the finish (D51–D53, D61)
+- **Chapter** = the Jalali month of the program date (§2); Mehr and Aban form chapter ①. Today's header line and the chapter card come from it.
+- **Comeback** = a day at level ≥ 1 that follows a day at level 0 (special days and days «قبل از اپ» are not level 0). The «خوش برگشتی» line shows once, on that day's first tick.
+- **Halfway recap** (Yalda) and **finish recap** (29 Esfand) show: days shown up so far, PRs, strength deltas since Day 0, milestones reached, the Day 0 photo next to the latest one, and the identity sentence. They lead with positives and never list misses.
+- **After the finish:** «ادامه» keeps routines and reminders running with workouts optional and no chapters; «برنامه تازه» asks for new start and end dates and keeps tasks and the workout plan. History stays.
+
+### 6.6 Routine strength and quieter reminders (D57)
+- Each task has a **strength** in `:domain`: Loop Habit Tracker's formula, `multiplier = 0.5^(sqrt(frequency)/13)`, `strength = previous × multiplier + doneToday × (1 − multiplier)`, updated once per due day. For a daily task that's a ~13-day half-life.
+- It picks the Friday review's "best routines". It is **never shown as a number** on Today.
+- From week ~8: when a task's strength has stayed at or above **0.8** for 4 weeks, the app offers once to silence its reminders. A silenced task stays in Today and in every score but is left out of notifications. If it falls under 80% of due days over 7 days, the app offers to turn its reminders back on. Thresholds are **[DEFAULT]**.
 
 ## 7. Reminders and notifications
 
@@ -198,7 +234,8 @@ All times are **[DEFAULT]**, based on waking at 06:45. Bedtime is **[OPEN]**.
 | Non-negotiable follow-up | +45 min after its block, **once** | same |
 
 ### 7.2 Behavior
-- **One notification per block**, not one per item. It shows the pending count and the first few item names. Tapping it opens Today on that block.
+- **One notification per block**, not one per item. It shows the pending count and the first few item names, each with its anchor when it has one (e.g. «اسکین‌کر · بعد از مسواک»). Tapping it opens Today on that block.
+- Tasks whose reminders were silenced (§6.6) are left out of the count and the names.
 - If a block has nothing pending, there's **no notification**.
 - **Follow-ups:** only for items marked non-negotiable, only once, and only if the item is still not done. The follow-up has a "Done" action, so you can tick it from the notification without opening the app.
 - **No catch-up.** A later block never repeats items from an earlier block. They stay visible in Today, but not in notifications.
@@ -233,6 +270,7 @@ All times are **[DEFAULT]**, based on waking at 06:45. Bedtime is **[OPEN]**.
 - **Backup health:** Settings and Proof show "Last backup: 3 days ago". If the last backup is more than 10 days old, a gentle banner appears.
 - **Restore:** import a zip, preview what it contains (dates, number of records, number of photos), then replace the current data. This is tested end to end before any photos are stored for real.
 - **Manual export** at any time from Settings.
+- **Usage log (D59):** the app records a few events locally (app opened, screen viewed, notification shown or tapped, minutes from a block notification to the first tick) so experiments can be judged. It never leaves the phone except inside the user's own backup, it's visible in the debug menu, and events older than 180 days are deleted. The app has **no internet permission** at all (D60).
 
 ## 9. Data model (conceptual)
 

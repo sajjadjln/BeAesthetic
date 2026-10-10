@@ -1,6 +1,6 @@
-# BeAesthetic: Architecture (v0.1, proposal)
+# BeAesthetic: Architecture (v0.2)
 
-Status: **Accepted** (2026-10-10). The user approved every recommendation, except the install route: builds happen in Android Studio on the user's laptop (§13).
+Status: **Accepted** (2026-10-10). The user approved every recommendation, except the install route: builds happen in Android Studio on the user's laptop (§13). Updated the same day for the research decisions D48–D69 (chapters, recaps, comebacks, anchors, routine strength, usage log, no `INTERNET`, new slice order).
 For product rules see `SPEC.md`; for screens see `DESIGN.md`; for decision history see `DECISIONS.md` (D30 onward).
 
 ---
@@ -52,12 +52,12 @@ Why not more: feature modules buy build speed and team boundaries. We have neith
 
 ```
 domain/src/main/kotlin/app/beaesthetic/domain/
-  time/        ProgramCalendar (04:00 rollover, week number, part of day), Jalali, Weekday set
-  tasks/       Task model, due-list rules, interval due dates
-  score/       Day level, weekly score, special-day cap
+  time/        ProgramCalendar (04:00 rollover, week number, part of day, chapter, landmarks), Jalali, Weekday set
+  tasks/       Task model, due-list rules, interval due dates, RoutineStrength (Loop score), fade rules
+  score/       Day level, weekly score, special-day cap, comebacks, "before the app"
   reminders/   ReminderPlanner, ReminderHealth
-  workout/     Set pre-fill, progression suggestion, personal records
-  progress/    "Since Day 0" deltas, check-in schedule
+  workout/     Set pre-fill, progression suggestion, personal records (incl. in-session record)
+  progress/    "Since Day 0" deltas, check-in schedule, milestones, recap content
   backup/      Export format (serializable models), format versions
 
 app/src/main/kotlin/app/beaesthetic/
@@ -66,7 +66,8 @@ app/src/main/kotlin/app/beaesthetic/
   data/repo/      Repositories: map entities ↔ domain models, write the day snapshot
   reminders/      AlarmScheduler, receivers, notifications, Xiaomi intents
   backup/         Zip writer/reader, SAF folder, restore
-  photos/         Capture, import, downscale
+  photos/         Capture (incl. ghost-overlay camera), import, downscale
+  events/         Local usage log writer (D59)
   ui/theme/       Tokens per accent × dark/light, Estedad typography, shapes
   ui/components/  Tile, Ring, WeekDots, GridSquare, Chip, SeekBar1to10 …
   ui/today/ ui/dashboard/ ui/progress/ ui/week/ ui/workout/ ui/settings/ …
@@ -88,7 +89,7 @@ Room (Flow) ──► Repository ──► ViewModel ──► UiState (StateFlo
 - **No use-case class per action.** A ViewModel calls repositories and pure domain functions directly. Use-case classes would be one-line wrappers.
 - **One `UiState` data class per screen.** Screens are stateless composables that take the state and a few lambdas, so every screen has a Compose preview with fake data.
 - **One `ProgramClock`** wraps `java.time.Clock` and exposes "now", "program date" and a Flow that ticks at the next boundary (04:00 rollover and part-of-day changes). Tests and the debug menu replace it with a fake clock.
-- **Debug menu** (debug builds only): set a fake "now", fire any reminder at once, run a backup, show the reminder log. This is how reminder logic gets checked on the real phone without waiting for 22:30.
+- **Debug menu** (debug builds only): set a fake "now", fire any reminder at once, run a backup, show the reminder log, show the usage log (D59), and switch the experiment toggles from `research/10-experiment-backlog.md` (D66). This is how reminder logic gets checked on the real phone without waiting for 22:30.
 
 ## 5. Time and day rules
 
@@ -98,6 +99,9 @@ All in `:domain/time`, all pure:
 - `weekNumber(date)`: Week 1 starts Saturday 2026-10-10. Day 0 (2026-10-09) is week 0.
 - **Current part of the day** comes from the reminder times of today's profile: Morning until the Midday time, Midday until Evening, Evening until Night, Night until the 04:00 rollover. On Friday (no Evening slot) Midday runs until Night.
 - Weekdays are a 7-bit set with **Saturday = bit 0**, matching the UI order.
+- `chapter(date)`: the Jalali month of the program date; Mehr and Aban are chapter 1, then Azar, Dey, Bahman, Esfand (`SPEC.md` §2, D51). Computed from the program dates in settings, never hard-coded, so a new program gets its own chapters.
+- `landmark(date)`: chapter start, halfway (`halfwayDate` from settings, else the program's midpoint; the seed sets Yalda, 30 Azar = 21 Dec 2026) and finish (`programEndDate`).
+- `isBeforeApp(date) = date < installDate` (D56).
 - Time zone: the phone's zone. Iran dropped daylight saving time in 2022, but the code still handles zone and clock changes (see §7.4).
 
 ## 6. Jalali dates
@@ -129,6 +133,7 @@ AlarmScheduler.reconcile() (:app)
 - `reconcile()` is **idempotent**. It runs on: app start, every alarm fire, any task/reminder/settings edit, boot, app update, time or time-zone change, exact-alarm permission change, and a WorkManager watchdog every 6 hours.
 - **Keys are stable**, e.g. `block:2026-10-10:MORNING`, `follow:2026-10-10:MORNING`, `task:42:2026-10-10`, `ritual:2026-10-16`. The key maps to the PendingIntent request code, so re-planning never duplicates alarms.
 - **The notification content is built when the alarm fires, not when it's scheduled.** At fire time the receiver reads the database: pending items for that part of the day. Nothing pending → no notification (logged as "skipped, nothing pending").
+- **Block content** lists each pending task with its anchor (D55) and leaves out tasks whose reminders are silenced (D57). A block with only silenced tasks pending shows nothing.
 - **Follow-ups** are always planned at block + 45 min for blocks that contain important tasks. At fire time they show only important items that are still not done, with a "Done" action. Never more than one per block.
 - **Task alarms** ring at the task's own time on its chosen weekdays, and are skipped at fire time if the task is already done.
 - **Absence rule:** if `lastOpenedAt` is more than 3 days ago, the planner plans only Morning blocks. Opening the app re-plans everything.
@@ -199,7 +204,7 @@ Physical schema for `SPEC.md` §9, updated for D25–D28. Dates are ISO `LocalDa
 
 | Table | Columns | Notes |
 |---|---|---|
-| `task` | id, title, icon, part (MORNING·MIDDAY·EVENING·NIGHT), repeat (DAILY·WEEKDAYS·EVERY_N_DAYS·ONCE·MIN_DAY_ONLY), weekdays (bits), everyNDays?, onceDate?, startDate, isImportant, inMinimumDay, action (NONE·WORKOUT·HIKE·WEIGH_IN·SNACK_NOTE), alarmTime?, alarmWeekdays (bits), alarmEnabled, sortOrder, createdAt, archivedAt? | "Routine" is renamed **task** to match the UI («کارها»). The task alarm (D25) is folded in: one alarm per task. Deleting a task archives it so history keeps its name. |
+| `task` | id, title, icon, part (MORNING·MIDDAY·EVENING·NIGHT), repeat (DAILY·WEEKDAYS·EVERY_N_DAYS·ONCE·MIN_DAY_ONLY), weekdays (bits), everyNDays?, onceDate?, startDate, isImportant, inMinimumDay, action (NONE·WORKOUT·HIKE·WEIGH_IN·SNACK_NOTE), alarmTime?, alarmWeekdays (bits), alarmEnabled, anchor?, remindersSilencedAt?, fadeOfferedAt?, sortOrder, createdAt, archivedAt? | "Routine" is renamed **task** to match the UI («کارها»). The task alarm (D25) is folded in: one alarm per task. Deleting a task archives it so history keeps its name. `anchor` = the «بعد از…» text (D55). `remindersSilencedAt` set = left out of notifications (D57). Strength is computed, not stored. |
 | `completion` | taskId, date, completedAt | Key (taskId, date). |
 | `day` | date, special (SICK·TRAVEL·OFF)?, minimumMode, dueCount, doneCount, floorDone | Replaces DayMeta. Holds the **day snapshot**, see below. A future row can hold only a planned special day. |
 | `snack_note` | date, text, updatedAt | |
@@ -216,7 +221,10 @@ Physical schema for `SPEC.md` §9, updated for D25–D28. Dates are ISO `LocalDa
 | `reminder_slot` | profile (NORMAL·FRIDAY), part, time, enabled | |
 | `reminder_log` | id, key, kind, scheduledAt, firedAt?, outcome | §7.5 |
 | `backup_record` | id, at, fileName, sizeBytes, photoCount, ok, error? | |
-| `settings` | single row: language, programStartDate, rolloverHour, specialCapPerWeek, followUpMinutes, alarmMode, accentColor (GREEN·BLUE·TURQUOISE·VIOLET·ORANGE), themeMode (SYSTEM·DARK·LIGHT), backupTreeUri, lastOpenedAt, lastBackupAt, onboardingDone, programEndDate | |
+| `milestone` | id, title, metricId?, target?, reachedAt?, sortOrder | D65. Linked to a metric when it has one (e.g. pull-ups ≥ 10); otherwise ticked by hand. |
+| `event` | id, at, type (APP_OPEN·SCREEN·NOTIF_SHOWN·NOTIF_TAP·FIRST_TICK), ref?, valueMinutes? | D59. Local usage log. `ref` = screen name or reminder key. Rows older than 180 days are deleted. Included in backups. |
+| `recap` | key (HALFWAY·FINISH), seenAt? | D52. The content is computed; only "seen" is stored. |
+| `settings` | single row: language, programStartDate, rolloverHour, specialCapPerWeek, followUpMinutes, alarmMode, accentColor (GREEN·BLUE·TURQUOISE·VIOLET·ORANGE), themeMode (SYSTEM·DARK·LIGHT), backupTreeUri, lastOpenedAt, lastBackupAt, onboardingDone, programEndDate, installDate, halfwayDate?, identitySentence?, afterFinishMode (NONE·MAINTENANCE·NEW_PROGRAM), experimentFlags (bits, debug) | `installDate` drives the «قبل از اپ» cells (D56). |
 
 ### The day snapshot (why some derived numbers are stored)
 
@@ -224,7 +232,7 @@ Physical schema for `SPEC.md` §9, updated for D25–D28. Dates are ISO `LocalDa
 
 So: whenever a completion, the minimum-day switch, a special day or the task list changes, the app recomputes **today's and yesterday's** `dueCount`, `doneCount` and `floorDone` with the pure scoring function and stores them in `day`. Once a day leaves the edit window (D17), its row is never rewritten. The level and colors are still computed from those counts at display time, so tuning the thresholds (D18) recolors history consistently.
 
-A day the app never saw has no row, which is a gray gap, which is exactly right.
+A day the app never saw has no row, which is a gray gap, which is exactly right. The exception is a day before `installDate`: it renders as «قبل از اپ» (D56). The one-time baseline backfill writes `session`/`set_log` and `metric_entry` rows for those days, never `day` rows.
 
 **Day detail** (tap a square) lists only what was done that day, read from `completion`. It never lists what wasn't done.
 
@@ -287,13 +295,15 @@ Android's own cloud backup (`allowBackup`) is **off**: it would send data to Goo
 - **RTL:** `supportsRtl="true"`; layouts use start/end only. Charts and the dashboard grid read the layout direction, so time runs right → left in Persian.
 - **Strings:** Persian in `values/` (the default), English in `values-en/`. Lint fails the build on a missing translation or a hard-coded string.
 - **First run** sets the app language to Persian, whatever the phone's language.
+- **Feedback (D58):** a tick uses `HapticFeedbackConstants.CONFIRM` (fallback `VIRTUAL_KEY`) and a ~200 ms accent fill; a finished part of the day and a 100% day get a slightly longer animation. Nothing else animates on its own.
+- **Accessibility (D68):** every icon-only tab and tile has a content description; layouts are checked at 130% font size; day detail states the level as a number, so the grid isn't color-only.
 - **Crash log without an SDK:** an uncaught-exception handler writes the stack trace to a private file. Settings shows "last crash" with a share button. Nothing leaves the phone unless the user shares it.
 
 ## 12. Testing
 
 | Level | What | Where it runs |
 |---|---|---|
-| Unit, `:domain` (most tests) | Jalali; program date and the 04:00 rollover; week numbers; due lists for every repeat type; interval due dates and "counts only on the first due day"; day level thresholds; weekly score with special days and the cap; reminder planner (both profiles, follow-ups, task alarm weekdays, absence rule, nothing in the past); reminder health (late, missed, device off); set pre-fill; progression suggestion; PRs; "since Day 0" deltas; check-in schedule; backup JSON round trip and reading older format versions | Any JVM: Android Studio on the laptop, or a cloud session (`:domain` needs no Android SDK) |
+| Unit, `:domain` (most tests) | Jalali; program date and the 04:00 rollover; week numbers; chapters and landmarks; "before the app"; comebacks; routine strength and fade/restore rules; milestones; recap content; due lists for every repeat type; interval due dates and "counts only on the first due day"; day level thresholds; weekly score with special days and the cap; reminder planner (both profiles, follow-ups, task alarm weekdays, absence rule, nothing in the past); reminder health (late, missed, device off); set pre-fill; progression suggestion; PRs and the in-session record; "since Day 0" deltas; check-in schedule; backup JSON round trip and reading older format versions | Any JVM: Android Studio on the laptop, or a cloud session (`:domain` needs no Android SDK) |
 | Unit, `:app` with Robolectric | DAOs on an in-memory database, the day snapshot writer, `AlarmScheduler.reconcile()` against a shadow AlarmManager, notification content | JVM |
 | Instrumented | Room migrations; backup → wipe → restore round trip | An emulator or the phone, before each release |
 | Manual, on the phone | A reminder checklist per release: fires at the right time with the screen off, after a reboot, after an update, with battery saver on | The user's Xiaomi |
@@ -310,6 +320,7 @@ No UI screenshot tests in the MVP. Compose previews with fake state cover visual
 - **Versions:** `versionName` = `0.<slice>.<fix>` until the MVP is complete, then `1.0.0`. `versionCode` = major × 10000 + minor × 100 + patch.
 - R8 minify and resource shrinking on release builds, with keep rules for kotlinx.serialization.
 - A **banned-dependency check** runs as part of `./gradlew check` (no Google Play Services, Firebase or analytics).
+- A **manifest check** fails the build if `android.permission.INTERNET` appears in the merged manifest (D60). Coil is used without its network module.
 
 ## 14. Build order (Phase 5 slices)
 
@@ -317,25 +328,31 @@ Each slice ends with an installable APK, a short demo note, and a pause for feed
 
 | # | Slice | Done when |
 |---|---|---|
-| 1 | Skeleton: both modules, theme (tokens, 5 accents, Estedad, RTL, both languages), Room with seeded tasks (`SPEC.md` §5), **Today** with ticking, day snapshot, minimum day, week dots | Today works offline on the phone and survives restarts |
-| 2 | **Reminders:** planner, scheduler, receivers, channels, follow-up "Done", reminder health + banner, Xiaomi setup screen, Reminders screen | A week of real reminders on the phone with a clean health log |
-| 3 | Tasks list + task editor (repeat rules, task alarms, important, minimum day) | The user edits their own routine without a rebuild |
-| 4 | Workout plan editor + workout session | A real session is logged and the next one is pre-filled |
-| 5 | Dashboard (grid, week rows, day detail) | The whole program is visible |
+| 1 | Skeleton: both modules, theme (tokens, 5 accents, Estedad, RTL, both languages), Room with seeded tasks (`SPEC.md` §5, with default anchors), **basic Today** (tiles, ticking, day snapshot), the **reminder core** (planner, `setAlarmClock` scheduler, receivers, channels, block notifications with anchors, reminder log), usage log, `installDate`, manifest check | Real block reminders arrive on the phone and ticks survive restarts (D50) |
+| 2 | **Today complete** (ring, week dots, minimum day, week + chapter line and chapter-start card, tick feedback, comeback line) and **reminders complete** (follow-up "Done", task alarms, health + banner, absence rule, Xiaomi setup screen, Reminders screen) | A week of real reminders with a clean health log |
+| 3 | Tasks list + task editor (repeat rules, task alarms, important, minimum day, anchor) | The user edits their own routine without a rebuild |
+| 4 | Workout plan editor + workout session (with the in-session «رکورد») | A real session is logged and the next one is pre-filled |
+| 5 | Dashboard (grid with «قبل از اپ» cells, week rows, day detail) | The whole program is visible |
 | 6 | Backup and restore | The round-trip test passes on the phone, and Syncthing picks up the zip |
-| 7 | Progress, monthly check-in, baseline entry with past dates, strength tests | Day 0 data is entered and the first deltas show |
-| 8 | Friday review and plan (special days, snack notes, weekly backup) | The first real ritual is done in the app |
+| 7 | Progress, monthly check-in with the **ghost-overlay camera** (before ~11 Dec), baseline entry with past dates + workout backfill, strength tests, program line, milestones | Day 0 data is entered and the first deltas show |
+| 8 | Friday review and plan (short path, comebacks, best routines, reserves wording, identity sentence, special days, snack notes, weekly backup) | The first real ritual is done in the app |
+| 8b | **Halfway recap**. **Deadline: 19 Dec 2026** (numbers-only version if time is short) | The recap opens on Yalda |
 | 9 | Onboarding | A fresh install walks through setup |
+| 10 | Later, in this order: widget (aimed at before week 8, D67) · reminder fade offer (from week ~8, D57) · finish recap + after-the-finish mode (by ~week 18, D61) | |
+
+The slices before 8b must leave room to hit 19 Dec. If they slip, build 8b before slice 8.
 
 Onboarding is last: the user is the only user for now and is already set up by the seed data.
 
+Every slice also runs the accessibility checklist (§11, D68).
+
 ## 15. Later: a public release on Cafe Bazaar
 
-Far away, and **not in the MVP**. The user may publish the app on Cafe Bazaar for others. What we do now so that stays possible:
+**Not in the MVP.** Publishing on Cafe Bazaar is a **future goal, after the program** (D49). The research for it is in `research/07-marketing-strategy.md`. What we do now so that stays possible:
 
 - **App ID `app.beaesthetic` is final.** Android package names allow only Latin letters, digits and `_`, so every app in Iranian stores has an English ID. Stores match searches against the listing (title, description), not the package name. The ID has no effect on search ranking (Bazaar's own app is `com.farsitel.bazaar`).
 - **Nothing personal is hard-coded.** Program start and end dates live in `settings`; routines, the workout plan and reminder times are seed data the user can edit.
 - **The same release key** signs every build the user installs, so a store version can update the personal install later.
 - **The Persian app name** (launcher label) is a string resource, so it can differ per language.
 
-Left for that release: onboarding that sets your own program dates and routine; the Bazaar listing (a Persian title with the words people search for, description, screenshots); a short privacy note (the app collects nothing); and a check of Bazaar's current rules on target SDK and permissions such as `USE_EXACT_ALARM`.
+Left for that release: onboarding that sets your own program dates and routine; the Bazaar listing (a Persian title with the words people search for, description, screenshots); a short privacy note (the app collects nothing and has no internet permission; the usage log never leaves the phone); starter routines for people without their own plan; and a check of Bazaar's current rules on target SDK and permissions such as `USE_EXACT_ALARM`.

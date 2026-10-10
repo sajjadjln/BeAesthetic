@@ -10,24 +10,41 @@ _Last updated: 2026-10-10_
 | 2. Spec | ✅ Done (`docs/SPEC.md`). Some items still open, see below. |
 | 3. Design | ✅ **Approved 2026-10-10** (round 3, `docs/design/screens.html`); font and accents decided the same day (D47). |
 | 4. Architecture | ✅ **Approved 2026-10-10** (`docs/ARCHITECTURE.md`, D31–D45). |
+| Research | ✅ **Done 2026-10-10** (`research/`, start with `research/FINAL-REPORT.md`). All recommendations accepted except sharing (D48–D69). |
 | 5. Build | ⏳ **Next.** No app code exists yet. Done on the user's laptop in Android Studio, not in a cloud session. |
 
 The program itself started on **2026-10-09 (Day 0)**. Week 1 began 2026-10-10. Every week without the app is a week without reminders, so keep moving.
 
+## Dates that matter for the build
+
+| Date | What | Needs |
+|---|---|---|
+| ~Fri 6 Nov 2026 | 2nd photo set (Aban check-in, if the default rule in Q11 holds) | The photo checklist below (no app needed) |
+| 22 Nov | Chapter ② Azar starts | Slice 2 (chapter line) |
+| ~Fri 11 Dec | 3rd photo set (Azar check-in) | Ghost-overlay camera (slice 7) |
+| **19 Dec** | **Halfway recap must be ready** (Yalda = 21 Dec, week 11) | Slice 8b |
+| ~week 8 (28 Nov) | Widget target; reminder fade offers can start | Slice 10 |
+| ~week 18 (late Feb 2027) | After-the-finish mode ready | Slice 10 |
+| 20 Mar 2027 | Finish line, eve of Nowruz | Finish recap |
+
 ## Next steps
 
-1. **Phase 5, slice 1**, in a session on the user's laptop (Android Studio and the Android SDK are there): create the project (`:domain` + `:app`, app ID `app.beaesthetic`), theme (tokens with 5 accents, Estedad, RTL, both languages), Room with seeded tasks, Today with ticking, day snapshot, minimum day, week dots. See `ARCHITECTURE.md` §14 for the full slice list:
-   1. Skeleton + Today.
-   2. Reminders: planner, scheduler, receivers, reminder health, Xiaomi/HyperOS setup screen, Reminders screen.
-   3. Tasks list + task editor.
-   4. Workout plan editor + workout session.
-   5. Dashboard (grid, week rows, day detail).
+1. **Phase 5, slice 1**, in a session on the user's laptop (Android Studio and the Android SDK are there). Slice 1 now includes the **reminder core** (D50). Full list in `ARCHITECTURE.md` §14:
+   1. Skeleton + basic Today + reminder core (planner, scheduler, block notifications with anchors, reminder log) + usage log + `installDate` + no-`INTERNET` check.
+   2. Today complete (ring, dots, minimum day, chapter line + chapter-start card, tick feedback, comeback) + reminders complete (follow-ups, task alarms, health, Xiaomi setup, Reminders screen).
+   3. Tasks list + task editor (with the «بعد از…» anchor).
+   4. Workout plan editor + workout session (with the in-session «رکورد»).
+   5. Dashboard (with «قبل از اپ» cells).
    6. Backup/restore (before any photos are stored for real).
-   7. Progress + monthly check-in + baseline entry with past dates + strength tests.
-   8. Friday review and plan.
+   7. Progress + check-in with the ghost camera + baseline with workout backfill + strength tests + program line + milestones.
+   8. Friday review and plan (short path, comebacks, best routines, «روز ذخیره», identity sentence).
+   8b. Halfway recap, **by 19 Dec**.
    9. Onboarding.
-2. Screens not designed yet (onboarding, check-in, strength test, backup/restore, day detail, notifications, English layouts) are designed inside the slice that needs them, as a quick HTML mockup first.
+   10. Later: widget, reminder fade offer, finish recap + after-the-finish mode.
+2. Screens not designed yet (onboarding, check-in, strength test, backup/restore, day detail, notifications, English layouts, plus the research additions listed in `DESIGN.md`) are designed inside the slice that needs them, as a quick HTML mockup first.
 3. Before slice 1: the user creates the release keystore and stores it safely (`ARCHITECTURE.md` §13).
+4. **For the user, before ~6 Nov (no app needed):** take the 2nd photo set with the same setup as Day 0: same spot and background, same light (no flash), phone at the same height and distance (timer or stand), same time of day (before breakfast), same clothes, relaxed pose. Write the setup down once.
+5. After the first 2–3 weeks with the app: that's the baseline for the experiments in `research/10-experiment-backlog.md` (D66). The first ones (anchors, notification wording, in-session record) start around week 5–6.
 
 ## Open questions for the user
 
@@ -40,20 +57,19 @@ The program itself started on **2026-10-09 (Day 0)**. Week 1 began 2026-10-10. E
 7. **The workout plan** (exercises, sets, rep ranges for Sat / Mon / Wed). The user said they'll paste it. It seeds the Workout plan editor.
 8. **Snack list:** 5–10 snacks they can make.
 9. Day-level thresholds and the special-day cap (2/week) are defaults. Revisit after 2 weeks of real use.
-10. **Persian app name** (launcher label). Until decided, the label is «BeAesthetic» in both languages.
+10. **Persian app name** (launcher label). Until decided, the label is «BeAesthetic» in both languages. Pick it with the future Bazaar release in mind: say what the app does, avoid the "looks/aesthetic" connotation (D69).
 11. **Which Friday is the monthly check-in?** Needed for the check-in schedule. Default: the Friday closest to the 17th of each Jalali month (same spacing as Day 0). The mockup's «جمعه ۱۴ آذر» is sample data: 14 Azar 1405 is a Saturday.
 
 ## Backlog (after MVP, from `SPEC.md` §3.2)
 
-- Public release on Cafe Bazaar (far away; see `ARCHITECTURE.md` §15).
+- Public release on Cafe Bazaar: a **future goal, after the program** (D49; `ARCHITECTURE.md` §15, `research/07`).
 - Optional GitHub Actions workflow that runs the tests on push.
-- Goals with progress bars inside Progress.
+- Goals with progress bars inside Progress (milestones, D65, are the simple version in the MVP).
 - Before/after photo comparison slider.
-- In-app camera with a ghost overlay of the previous photo.
 - Meal and snack planner with recipes.
-- 5-week phases with new milestones.
-- Home-screen widget for Today.
 - Optional sync to the user's own .NET backend.
+
+Moved into the build by the research: the ghost-overlay camera (slice 7), "5-week phases" (now chapters, D51), the widget (slice 10, D67).
 
 ## Housekeeping
 

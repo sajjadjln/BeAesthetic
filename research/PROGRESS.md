@@ -18,16 +18,16 @@ _Last updated: 2026-10-10_
 ## Key decisions about the research itself
 - BeAesthetic has one user and no business goal, so phases 0, 3, 4, 6, 7 got the most weight; marketing (5) is short and conditional on a Bazaar release.
 - "Retention" = the user still doing the program in weeks 6–23. Experiments are n = 1 single-case designs (ABAB, multiple baseline, landmark comparison), not A/B tests.
-- Nothing in `docs/` or app code was changed. Recommendations are proposals.
+- The research itself changed no docs; the accepted decisions were applied afterwards (D48–D69).
 
 ## Limitations
 - Page fetching was blocked in this cloud environment; evidence comes from web-search excerpts. GitHub was reachable (Loop's score code read directly).
 
-## Pending (needs the user)
-1. Accept, change or reject the recommendations in `FINAL-REPORT.md` → action plan. Accepted ones go into `docs/DECISIONS.md` and the slice plan.
-2. Decide on the local usage log (F8) — it touches the "no analytics" rule even though nothing leaves the phone.
-3. Decide on the weekly share image (E10) — it changes SPEC §3.3.
-4. Is a Bazaar release a real goal? If yes, re-run competitor checks with page access and expand `07`.
+## User decisions (2026-10-10)
+- All recommendations accepted → D48–D69 in `docs/DECISIONS.md`, applied to SPEC, ARCHITECTURE, DESIGN, TASKS and CLAUDE.md.
+- Local usage log: approved (D59).
+- Sharing: rejected (D63). E10 dropped; recaps in the app only.
+- Cafe Bazaar: a future goal, after the program (D49). Before a release, re-run the competitor checks with page access and expand `07`.
 
 ## Next research steps (optional)
 - With page access: read current Play/Bazaar reviews of Loop, HabitNow, «عادت‌ساز», and Persian workout apps; verify prices.

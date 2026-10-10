@@ -4,11 +4,13 @@ _Research date: 2026-10-10 (Week 1 of the program). Files `00`–`10` hold the d
 
 **Limitation up front:** this environment blocked direct page access. Evidence comes from web-search excerpts of papers, company posts, reviews and store listings. No competitor app screens were inspected first-hand. Loop Habit Tracker's source code was read directly. Prices and ratings are as reported by secondary sources and may be out of date.
 
+> **User decisions (2026-10-10):** all recommendations accepted; local usage log approved; **no sharing** (the share image E10 is dropped and recaps stay in the app); a Cafe Bazaar release is a **future goal** after the program. Recorded as D48–D69 in `docs/DECISIONS.md` and applied to `SPEC.md`, `ARCHITECTURE.md`, `DESIGN.md` and `TASKS.md`.
+
 ---
 
 ## Executive summary
 
-BeAesthetic is a personal, offline Android coach for one person's 23-week body transformation (9 Oct 2026 → 20 Mar 2027). It has **one user, no business model and no code yet**. So "winning" here means **the user is still doing the program in week 23, and some routines survive after it**. A Cafe Bazaar release is a possibility, not a plan.
+BeAesthetic is a personal, offline Android coach for one person's 23-week body transformation (9 Oct 2026 → 20 Mar 2027). It has **one user, no business model and no code yet**. So "winning" here means **the user is still doing the program in week 23, and some routines survive after it**. A Cafe Bazaar release is a future goal, after the program (D49).
 
 **The design is already right on the things competitors get wrong.** No streaks, no punishment, a minimum-day floor, capped special days, local data, verified backups and a reminder health check each have research behind them. Competitors keep failing on exactly these points: punishing misses (Habitica, 75 Hard, a Persian habit app that resets after one miss), surprise billing (Finch, Fabulous) and data loss (Strong, Finch).
 
@@ -126,7 +128,7 @@ Streak counters and streak-at-top (Duolingo, «عادت‌ساز»); restart-on-
 
 | Implement | Experiment | Defer | Avoid |
 |---|---|---|---|
-| Chapters + finish line · comeback recognition · in-session PRs · anchor cues · progress line + pre-app cells · internal strength score · small celebration · Yalda + Nowruz recaps · minimum day (keep) · special days (keep) · reminders as designed | Real-world milestones · special days as reserves · identity sentence · weekly share image (needs a scope change) | Daily quests / weekly challenges · narrative layer | Points/XP · levels/ranks · streaks · leaderboards · currencies · avatars/pets · variable rewards · loss mechanics |
+| Chapters + finish line · comeback recognition · in-session PRs · anchor cues · progress line + pre-app cells · internal strength score · small celebration · Yalda + Nowruz recaps · minimum day (keep) · special days (keep) · reminders as designed | Real-world milestones · special days as reserves · identity sentence  | Daily quests / weekly challenges · narrative layer | Points/XP · levels/ranks · streaks · leaderboards · currencies · avatars/pets · variable rewards · loss mechanics |
 
 ## Prioritized action plan
 
@@ -158,7 +160,7 @@ Streak counters and streak-at-top (Duolingo, «عادت‌ساز»); restart-on-
 | E7 | Short Friday ritual | Pre/post, 4 + 4 weeks | Rituals done / weeks |
 | E8 | Yalda recap | Landmark comparison | Show-up days/week |
 | E9 | Reserves wording (optional) | Pre/post | Special-day use; rebound |
-| E10 | Weekly share image (optional) | ABAB, 3-week blocks | Show-up days/week |
+| ~~E10~~ | ~~Weekly share image~~ — dropped (no sharing) | | |
 
 ## Sources and research limitations
 

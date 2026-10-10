@@ -19,7 +19,7 @@ What's missing is aimed at the two things the user said make them quit: **boredo
 Ranking = expected effect on **doing the program through week 23** × confidence in the evidence ÷ effort. Scores are judgment, not measurement (method in `09`).
 
 ### 1. Program chapters and a visible finish line
-- **What:** split the 23 weeks into **5 chapters by Jalali month** (Mehr–Aban, Azar, Dey, Bahman, Esfand). Each starts with a fresh-start moment and ends at the monthly check-in. Show one quiet line on Today: «هفته ۵ از ۲۳ · فصل آذر» and on Progress a program line toward «نوروز ۱۴۰۶».
+- **What:** split the 23 weeks into **5 chapters by Jalali month** (Mehr–Aban, Azar, Dey, Bahman, Esfand). Each starts with a fresh-start moment on the 1st of the month; the monthly check-in is the chapter's proof point (as adopted in D51). Show one quiet line on Today: «هفته ۵ از ۲۳ · فصل آذر» and on Progress a program line toward «نوروز ۱۴۰۶».
 - **Why:** shorter goals mean more "almost there" moments (goal gradient; Kivetz 2006) and more fresh starts (Dai 2014); breaking the long middle fights the halfway dip (Bonezzi 2011). Fabulous journeys and Duolingo's path use the same idea.
 - **Adapted, not copied:** no levels or ranks; chapters are calendar facts the user already lives by (Jalali months), and they line up with the existing monthly check-ins (D28).
 - **Effort:** S (a pure function in `:domain/time` + two text lines). Replaces backlog item "5-week phases".
@@ -71,7 +71,7 @@ Ranking = expected effect on **doing the program through week 23** × confidence
 - **Risk:** noise. Cap it to these three moments.
 
 ### 8. Halfway and finish recaps
-- **What:** at **Yalda (week 11, ~21 Dec)** a private recap: days shown up so far, PRs, strength deltas, Day 0 vs latest photo pair, the user's identity sentence. At **29 Esfand** the full program recap. Saved as an image on request.
+- **What:** at **Yalda (week 11, ~21 Dec)** a private recap: days shown up so far, PRs, strength deltas, Day 0 vs latest photo pair, the user's identity sentence. At **29 Esfand** the full program recap. In the app only, no image export (D63: no sharing).
 - **Why:** recaps turn data into a story at a meaningful moment (Strava's Year in Sport); halfway is the motivational low point (Bonezzi 2011); physically recorded progress strengthens monitoring effects (Harkin 2016).
 - **Effort:** M. **Timing constraint:** must ship **before 19 Dec 2026** to land at halfway. If the build schedule can't make it, ship a simpler version (numbers only).
 - **Measure:** show-up days in the 3 weeks after Yalda vs the 3 before.
@@ -101,7 +101,7 @@ Ranking = expected effect on **doing the program through week 23** × confidence
 | Daily quests / weekly challenges | **Defer** | Only if boredom shows | M |
 | Long-term path | **Implement** | R1, R8 | S–M |
 | Leaderboards | **Avoid** | — | — |
-| Social accountability | **Experiment, if the user wants it** | Manual weekly share image to one friend (conflicts with SPEC §3.3) | S |
+| Social accountability | **Rejected by the user (D63: no sharing)** | Manual weekly share image to one friend (conflicts with SPEC §3.3) | S |
 | Currencies / unlockables | **Avoid** | — | — |
 | Avatars | **Avoid**; identity sentence **experiment** | Friday ritual, recaps | S |
 | Progress indicators | **Implement** (done) + finish line + R5 | Today, Dashboard, Progress | S |
