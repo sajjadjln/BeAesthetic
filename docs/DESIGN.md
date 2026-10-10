@@ -1,9 +1,9 @@
 # BeAesthetic: Design
 
-**Current design:** `docs/design/screens.html` (interactive; open it in a browser).
+**Current design:** `docs/design/screens.html` (interactive; open it in a browser). It holds every designed screen, in Estedad, with an accent bar at the top: pick any of the five colors and every screen follows.
 Published copy: https://claude.ai/artifact/BwuSiLCGAxV5fGR86MSmjH
 
-**Fonts and accent colors:** `docs/design/type-and-color.html` (https://claude.ai/artifact/WFBdvYr9iUavDkA1ifyZyE). The six fonts that were compared, Today in all five accents, and the «ظاهر و زبان» screen. Decided in D46–D47: **Estedad**, five accents, **green by default**.
+**Fonts and accent colors (the comparison behind D46–D47):** `docs/design/type-and-color.html` (https://claude.ai/artifact/WFBdvYr9iUavDkA1ifyZyE). The six fonts that were compared, Today in all five accents, and the «ظاهر و زبان» screen. Decided in D46–D47: **Estedad**, five accents, **green by default**.
 
 Kept for reference only:
 - `docs/design/screens-minimal.html`: minimal concept (https://claude.ai/artifact/SuxRScjnPrCJkpGEdogd7z)
@@ -114,7 +114,6 @@ Contrast was checked: text on accent buttons ≥ 4.3:1 (bold 16 px), accent chip
 - Six tiles: کارها · یادآورها · برنامه تمرین · پشتیبان · ظاهر و زبان · گوشی (Xiaomi battery/autostart setup).
 
 ### 06b ظاهر و زبان (Appearance and language)
-Designed in `type-and-color.html`.
 - «رنگ»: five named color circles (سبز · آبی · فیروزه‌ای · بنفش · نارنجی); the chosen one has a ring and a check.
 - A preview card: a small ring, a slice of the dashboard, and the chips (رکورد, مهم, روز ویژه) in the chosen color.
 - «حالت»: سیستم / تیره / روشن.

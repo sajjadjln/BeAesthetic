@@ -280,6 +280,44 @@ input[type="range"].seek::-moz-range-thumb { width: 22px; height: 22px; border-r
 .ministep { display: flex; align-items: center; gap: 8px; }
 .ministep button { width: 36px; height: 36px; border-radius: 10px; background: var(--sf2); display: grid; place-items: center; }
 .ministep span { min-width: 44px; text-align: center; font-weight: 700; font-variant-numeric: tabular-nums; }
+/* ---------- Accent colors (D47): green is the default (the .m-dark/.m-light tokens above) ---------- */
+/* The special-day color moves away from blue and violet; with orange, due/important turns yellow. */
+.m-dark.a-blue   { --acc:#4D9BF0; --acc-sub:#0F2440; --acc-on:#82BBFA; --w1:#112E52; --w2:#1A4D8A; --w3:#2F7AD6; --w4:#82BBFA; --sp:#9A66D4; --sp-sub:#2B1C42; --sp-on:#C6A2F0; }
+.m-dark.a-teal   { --acc:#2CC2B4; --acc-sub:#0C2E2B; --acc-on:#62DCCF; --w1:#0E3C38; --w2:#13675F; --w3:#1EA195; --w4:#62DCCF; }
+.m-dark.a-violet { --acc:#9B7BEA; --acc-sub:#241B3E; --acc-on:#C2AAFA; --w1:#2B2150; --w2:#46358A; --w3:#7458D0; --w4:#C2AAFA; --sp:#3A9FC2; --sp-sub:#0E2A33; --sp-on:#7CCBE4; }
+.m-dark.a-orange { --acc:#F28B3C; --acc-sub:#3A220F; --acc-on:#FFB27A; --w1:#3D2410; --w2:#6E3D16; --w3:#C2661F; --w4:#FFB27A; --nt:#E3D04E; --nt-sub:#302C0B; }
+.m-light.a-blue   { --acc:#1F6BD0; --acc-sub:#E2EDFC; --acc-on:#1A56A8; --w1:#CDE0FA; --w2:#98C1F3; --w3:#3C86E0; --w4:#1A56A8; --sp:#B08BE6; --sp-sub:#EADCFA; --sp-on:#6A3DAE; }
+.m-light.a-teal   { --acc:#0E8379; --acc-sub:#DDF4F1; --acc-on:#0A665E; --w1:#C0ECE7; --w2:#8BDCD3; --w3:#1FA195; --w4:#0A665E; }
+.m-light.a-orange { --acc:#C2570F; --acc-sub:#FCEADB; --acc-on:#9A440C; --w1:#FBD9BE; --w2:#F6B485; --w3:#E07B2E; --w4:#9A440C; --nt:#776804; --nt-sub:#F6F0C6; }
+.m-light.a-violet { --acc:#6644C8; --acc-sub:#EDE7FC; --acc-on:#5233AA; --w1:#DCD1FA; --w2:#B8A4F2; --w3:#8466DE; --w4:#5233AA; --sp:#6CC0DC; --sp-sub:#D4EEF6; --sp-on:#1D6A84; }
+.bar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; display: flex; flex-wrap: wrap; gap: 10px; align-items: center;
+  padding: 12px 16px; margin: -12px -16px 32px; background: var(--page-bg); border-bottom: 1px solid var(--page-line); }
+.bar > span { font-size: 12px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--page-muted); }
+.pill { font: inherit; font-size: 13px; font-weight: 600; color: var(--page-fg); background: transparent; border: 1px solid var(--page-line);
+  border-radius: 999px; height: 34px; padding: 0 14px; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; }
+.pill[aria-pressed="true"] { border-color: var(--page-fg); }
+.pill:focus-visible { outline: 2px solid var(--page-acc); outline-offset: 2px; }
+.pill .sw { width: 14px; height: 14px; border-radius: 50%; }
+
+/* ---------- Appearance and language (ظاهر و زبان) ---------- */
+.swatches { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; }
+.swatches button { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 12px 0 10px; border-radius: 16px; text-align: center; }
+.swatches button[aria-pressed="true"] { background: var(--sf2); }
+.swatches .dot { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; }
+.swatches .dot .i { color: #fff; opacity: 0; }
+.swatches button[aria-pressed="true"] .dot { box-shadow: 0 0 0 3px var(--sf), 0 0 0 5px currentColor; }
+.swatches button[aria-pressed="true"] .dot .i { opacity: 1; }
+.swatches .nm { font-size: 13px; font-weight: 600; color: var(--t2); }
+.swatches button[aria-pressed="true"] .nm { color: var(--t1); }
+.preview { display: grid; gap: 14px; }
+.preview .row1 { display: flex; align-items: center; gap: 16px; }
+.mini-ring { width: 64px; height: 64px; position: relative; flex: none; }
+.mini-ring svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+.mini-ring .trk { stroke: var(--sf2); } .mini-ring .val { stroke: var(--acc); }
+.mini-ring b { position: absolute; inset: 0; display: grid; place-items: center; font-size: 20px; font-weight: 800; }
+.mini-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; flex: 1; }
+.mini-grid .cell { width: 100%; height: auto; aspect-ratio: 1; border-radius: 5px; }
+.preview .chips { display: flex; gap: 6px; flex-wrap: wrap; }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 </style>
 
@@ -328,8 +366,10 @@ input[type="range"].seek::-moz-range-thumb { width: 22px; height: 22px; border-r
 <main class="wrap">
   <header class="intro">
     <h1>BeAesthetic</h1>
-    <p>The combined design: the minimal Today, Workout, Settings and task editor, plus the detailed Dashboard, Progress, Week plan, Tasks and Reminders, and a new Workout plan screen. Everything you can tap works. Font: Estedad. Accent: green, the default of five (see the type and color page).</p>
+    <p>The combined design: the minimal Today, Workout, Settings and task editor, plus the detailed Dashboard, Progress, Week plan, Tasks, Reminders, Workout plan and Appearance screens. Everything you can tap works. Font: Estedad. Pick an accent below (or in «ظاهر و زبان») and every screen follows.</p>
   </header>
+
+  <div class="bar" role="toolbar" aria-label="Accent color"><span>Accent</span><span id="ctl-accent" style="display:contents"></span></div>
 
   <section class="gallery">
 
@@ -491,6 +531,34 @@ input[type="range"].seek::-moz-range-thumb { width: 22px; height: 22px; border-r
         </div>
       </div>
       <figcaption><b>06 · تنظیمات</b>Six tiles. «ظاهر و زبان» = accent color (5 choices), dark/light, language. «گوشی» = Xiaomi battery and autostart setup.</figcaption>
+    </figure>
+
+    <!-- 06b Appearance and language -->
+    <figure>
+      <div class="phone m-dark" dir="rtl" lang="fa" id="appearance">
+        <div class="status"><span>۲۱:۰۶</span><span>۴۰٪</span></div>
+        <div class="topbar"><button class="icon-btn" aria-label="بازگشت"><svg class="i fwd"><use href="#i-back"/></svg></button><span class="t-title">ظاهر و زبان</span></div>
+        <div class="body">
+          <span class="sec-title">رنگ</span>
+          <div class="swatches" id="app-swatches"></div>
+          <div class="card pad preview">
+            <div class="row1">
+              <div class="mini-ring"><svg viewBox="0 0 120 120" aria-hidden="true"><circle class="trk" cx="60" cy="60" r="50" fill="none" stroke-width="14"/><circle class="val" cx="60" cy="60" r="50" fill="none" stroke-width="14" stroke-linecap="round" stroke-dasharray="314.2" stroke-dashoffset="94"/></svg><b>۷۰٪</b></div>
+              <div class="mini-grid" aria-label="نمونه داشبورد">
+                <i class="cell l4"></i><i class="cell l3"></i><i class="cell l4"></i><i class="cell l2"></i><i class="cell"></i><i class="cell sp"></i><i class="cell l1"></i>
+                <i class="cell l3"></i><i class="cell l4"></i><i class="cell l1"></i><i class="cell l3"></i><i class="cell l4"></i><i class="cell l2"></i><i class="cell l4"></i>
+              </div>
+            </div>
+            <div class="chips"><span class="chip acc">رکورد</span><span class="chip nt">مهم</span><span class="chip sp">روز ویژه</span><span class="chip neu">۲۱ از ۲۸ روز</span></div>
+          </div>
+          <span class="sec-title">حالت</span>
+          <div class="seg" data-seg role="group" aria-label="حالت"><button aria-pressed="true">سیستم</button><button aria-pressed="false">تیره</button><button aria-pressed="false">روشن</button></div>
+          <span class="sec-title">زبان</span>
+          <div class="seg" data-seg role="group" aria-label="زبان"><button aria-pressed="true">فارسی</button><button aria-pressed="false">English</button></div>
+          <button class="btn pri" style="margin-top:auto">ذخیره</button>
+        </div>
+      </div>
+      <figcaption><b>06b · ظاهر و زبان</b>Five accent colors (green is the default), dark/light, language. The preview card shows the ring, a slice of the dashboard and the chips in the chosen color. Tap a color: every screen on this page follows.</figcaption>
     </figure>
 
     <!-- 07 Tasks -->
@@ -800,5 +868,22 @@ input[type="range"].seek::-moz-range-thumb { width: 22px; height: 22px; border-r
     var ms = e.target.closest(".ministep button");
     if (ms) { var sp = ms.parentNode.querySelector("span"); var v = +sp.textContent.replace(/[۰-۹]/g, function (c) { return FA.indexOf(c); }); v = Math.max(1, v + (ms === ms.parentNode.firstElementChild ? 1 : -1)); sp.textContent = fa(v); }
   });
+  // Accent colors (D47): the bar and «ظاهر و زبان» set one accent for every phone
+  var ACCENTS = [["green","سبز","Green","#34C47A"],["blue","آبی","Blue","#4D9BF0"],["teal","فیروزه‌ای","Turquoise","#2CC2B4"],["violet","بنفش","Violet","#9B7BEA"],["orange","نارنجی","Orange","#F28B3C"]];
+  var accent = "green";
+  try { var sv = localStorage.getItem("ba-accent"); if (ACCENTS.some(function (a) { return a[0] === sv; })) accent = sv; } catch (e) {}
+  var ctl = document.getElementById("ctl-accent"), sws = document.getElementById("app-swatches");
+  ctl.innerHTML = ACCENTS.map(function (a) { return '<button class="pill" data-accent="' + a[0] + '"><span class="sw" style="background:' + a[3] + '"></span>' + a[2] + '</button>'; }).join("");
+  sws.innerHTML = ACCENTS.map(function (a) { return '<button data-accent="' + a[0] + '" aria-label="' + a[1] + '" style="color:' + a[3] + '"><span class="dot" style="background:' + a[3] + '"><svg class="i sm"><use href="#i-check"/></svg></span><span class="nm">' + a[1] + '</span></button>'; }).join("");
+  function applyAccent() {
+    document.querySelectorAll(".phone").forEach(function (ph) {
+      ACCENTS.forEach(function (a) { ph.classList.remove("a-" + a[0]); });
+      ph.classList.add("a-" + accent);
+    });
+    document.querySelectorAll("[data-accent]").forEach(function (b) { b.setAttribute("aria-pressed", b.dataset.accent === accent); });
+    try { localStorage.setItem("ba-accent", accent); } catch (e) {}
+  }
+  [ctl, sws].forEach(function (g) { g.addEventListener("click", function (e) { var b = e.target.closest("[data-accent]"); if (b) { accent = b.dataset.accent; applyAccent(); } }); });
+  applyAccent();
 })();
 </script>
