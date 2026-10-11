@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Persian only (D87). The default values/ folder is Persian; an English build would be a separate flavor. -->
+<resources>
+    <string name="app_name">پیکر</string>
+
+    <!-- Calendar -->
+    <string-array name="weekdays">
+        <item>شنبه</item>
+        <item>یکشنبه</item>
+        <item>دوشنبه</item>
+        <item>سه‌شنبه</item>
+        <item>چهارشنبه</item>
+        <item>پنجشنبه</item>
+        <item>جمعه</item>
+    </string-array>
+    <string-array name="jalali_months">
+        <item>فروردین</item>
+        <item>اردیبهشت</item>
+        <item>خرداد</item>
+        <item>تیر</item>
+        <item>مرداد</item>
+        <item>شهریور</item>
+        <item>مهر</item>
+        <item>آبان</item>
+        <item>آذر</item>
+        <item>دی</item>
+        <item>بهمن</item>
+        <item>اسفند</item>
+    </string-array>
+    <string name="date_day_month">%1$s %2$s</string>
+
+    <!-- Parts of the day -->
+    <string name="part_morning">صبح</string>
+    <string name="part_midday">ظهر</string>
+    <string name="part_evening">عصر</string>
+    <string name="part_night">شب</string>
+
+    <!-- Today -->
+    <string name="today_line_week">%1$s · هفته %2$s از %3$s</string>
+    <string name="today_line_day0">%1$s · روز صفر</string>
+    <string name="today_progress">%1$s از %2$s</string>
+    <string name="today_part_empty">این بخش امروز کاری نداره.</string>
+    <string name="tag_important">مهم</string>
+    <string name="tag_due">موعدش رسیده</string>
+    <string name="cd_settings">تنظیمات</string>
+
+    <!-- Notifications: neutral, forward-looking, no character (SPEC §7.2, D84) -->
+    <string name="channel_blocks">یادآور بخش‌های روز</string>
+    <string name="channel_follow_ups">یادآور دوباره‌ی کارهای مهم</string>
+    <string name="channel_ritual">مرور هفته و چک‌این</string>
+    <string name="channel_system">سیستم</string>
+    <string name="notif_block_title">%1$s · %2$s کار</string>
+    <string name="notif_line_with_anchor">%1$s · %2$s</string>
+    <string name="list_separator">"، "</string>
+    <string name="notif_test_title">یادآورها کار می‌کنن</string>
+    <string name="notif_test_text">این یه یادآور آزمایشیه.</string>
+
+    <!-- Seed tasks (SPEC §5). Tile labels stay one or two words. -->
+    <string name="seed_brush">مسواک</string>
+    <string name="seed_skincare">پوست</string>
+    <string name="seed_creatine">کراتین</string>
+    <string name="seed_protein">پروتئین</string>
+    <string name="seed_weigh_in">وزن</string>
+    <string name="seed_hike">کوه</string>
+    <string name="seed_vitamin_d">ویتامین D</string>
+    <string name="seed_workout">تمرین</string>
+    <string name="seed_shower">دوش</string>
+    <string name="seed_shampoo">شامپو</string>
+    <string name="seed_nails">ناخن</string>
+    <string name="seed_beard">ریش</string>
+    <string name="seed_haircut">اصلاح مو</string>
+    <string name="seed_min_pushups">۱۰ شنا</string>
+    <string name="seed_snack">میان‌وعده</string>
+
+    <!-- Seed anchors «بعد از…» (D55) -->
+    <string name="anchor_after_breakfast">بعد از صبحانه</string>
+    <string name="anchor_after_brushing">بعد از مسواک</string>
+    <string name="anchor_with_breakfast">با صبحانه</string>
+    <string name="anchor_before_breakfast">قبل از صبحانه</string>
+    <string name="anchor_with_lunch">با ناهار</string>
+    <string name="anchor_with_dinner">با شام</string>
+    <string name="anchor_after_workout">بعد از تمرین</string>
+    <string name="anchor_in_shower">توی دوش</string>
+    <string name="anchor_after_shower">بعد از دوش</string>
+    <string name="anchor_before_shower">قبل از دوش</string>
+    <string name="anchor_before_bed">قبل از خواب</string>
+    <string name="anchor_after_dinner">بعد از شام</string>
+
+    <!-- Notifications, slice 2 -->
+    <string name="channel_task_alarms">زنگ کارها</string>
+    <string name="notif_follow_up_text">هنوز وقتش هست.</string>
+    <string name="notif_action_done">انجام شد</string>
+    <string name="notif_health_title">یادآورها شاید بسته شدن</string>
+    <string name="notif_health_text">بزن تا درستش کنیم.</string>
+
+    <!-- Today, slice 2 -->
+    <string name="today_line_chapter">%1$s · هفته %2$s از %3$s · فصل %4$s</string>
+    <string name="today_line_countdown">%1$s · هفته %2$s از %3$s · %4$s</string>
+    <string name="countdown_to_nowruz">%1$s روز تا نوروز</string>
+    <string name="countdown_to_finish">%1$s روز تا خط پایان</string>
+    <string name="countdown_finish_nowruz">فردا نوروز · امروز خط پایان</string>
+    <string name="countdown_finish">امروز خط پایان</string>
+    <string name="ring_of">از %1$s</string>
+    <string name="today_minimum_label">روز حداقلی</string>
+    <string name="cd_minimum_day">روز حداقلی</string>
+    <string name="cd_this_week">این هفته</string>
+    <string name="cd_ring">%1$s از %2$s کار انجام شده</string>
+    <string name="cd_piker">پیکر</string>
+    <string name="banner_late">یه یادآور دیر رسید</string>
+    <string name="banner_blocked">یادآورها شاید بسته شدن</string>
+    <string name="banner_fix">درستش کن</string>
+    <string-array name="day_level_words">
+        <item>خالی</item>
+        <item>کم</item>
+        <item>نصفه</item>
+        <item>خوب</item>
+        <item>کامل</item>
+    </string-array>
+
+    <!-- Chapters (D51) -->
+    <string name="chapter_card_title">فصل %1$s %2$s شروع شد</string>
+    <string name="chapter_card_text">%1$s روز، یه شروع تازه. هیچ عددی صفر نمی‌شه.</string>
+    <string name="chapter_letter_button">یه نامه برای %1$s</string>
+    <string name="later">بعداً</string>
+    <string-array name="chapter_numbers">
+        <item>①</item>
+        <item>②</item>
+        <item>③</item>
+        <item>④</item>
+        <item>⑤</item>
+    </string-array>
+    <!-- The line «پیکر» says on each chapter's first day, showing the new outfit (D83). Index = chapter − 1. -->
+    <string-array name="chapter_lines">
+        <item>فصل تازه، شروع تازه.</item>
+        <item>فصل آذر! هدبندمو بستم.</item>
+        <item>فصل دی! کلاه و شال‌گردنم آماده‌ست.</item>
+        <item>فصل بهمن! عینکمو زدم. خفن شدیم.</item>
+        <item>فصل اسفند! سبزه‌مو گذاشتم.</item>
+    </string-array>
+
+    <!-- Letters (D72) -->
+    <string name="first_letter_title">یه نامه برای خودت؟</string>
+    <string name="first_letter_text">روز آخر، %1$s، باز می‌شه. هر وقت خواستی.</string>
+    <string name="first_letter_button">بنویسم</string>
+    <string name="letter_title">نامه به خودم</string>
+    <string name="letter_written_on">نوشته: %1$s</string>
+    <string name="letter_opens_on">باز می‌شه: %1$s</string>
+    <string name="letter_hint">سلام خودم،</string>
+    <string name="letter_seal_note">بعد از مهر و موم، تا %1$s نه می‌شه خوندش نه عوضش کرد. فقط می‌شه پاکش کرد.</string>
+    <string name="letter_seal">مهر و موم کن</string>
+    <string name="letter_arrived">یه نامه از %1$s برات اومده</string>
+    <string name="letter_tap_to_open">بزن تا باز بشه</string>
+    <string name="letter_from">از خودِ %1$s</string>
+    <string name="cd_close">بستن</string>
+    <string name="cd_back">برگشت</string>
+
+    <!-- «پیکر» lines (D82–D84): first person, informal, short. Never about a missed day, never about the body. -->
+    <string-array name="buddy_morning">
+        <item>صبح بخیر! اول یه لیوان آب.</item>
+        <item>روز جدید، بزن بریم.</item>
+        <item>امروز %1$s تا کار داریم. آروم آروم.</item>
+        <item>صبحت بخیر قهرمان!</item>
+    </string-array>
+    <string-array name="buddy_start">
+        <item>بزن بریم! اولیش با تو.</item>
+        <item>سلام! من همین‌جام.</item>
+        <item>یکی بزنیم؟</item>
+    </string-array>
+    <string-array name="buddy_tick">
+        <item>%1$s تا زدی. داره خوب پیش می‌ره!</item>
+        <item>همینه! یکی‌یکی.</item>
+        <item>دمت گرم.</item>
+        <item>%1$s تا! ادامه بده.</item>
+    </string-array>
+    <string-array name="buddy_part_done">
+        <item>%2$s کامل شد! ایول.</item>
+        <item>%2$s تموم شد. حال کردم!</item>
+    </string-array>
+    <string-array name="part_possessive">
+        <item>صبحت</item>
+        <item>ظهرت</item>
+        <item>عصرت</item>
+        <item>شبت</item>
+    </string-array>
+    <string-array name="buddy_day_done">
+        <item>امروز کامل شد! این بازوها مال خودته.</item>
+        <item>صد در صد. خفن بود.</item>
+    </string-array>
+    <string-array name="buddy_comeback">
+        <item>خوش برگشتی! بزن بریم.</item>
+        <item>اومدی! همینه که مهمه.</item>
+    </string-array>
+    <string-array name="buddy_minimum">
+        <item>امروز سبک. همینم حسابه.</item>
+        <item>حداقلشم یعنی هستی. کافیه.</item>
+    </string-array>
+    <string-array name="buddy_special">
+        <item>استراحت هم جزو برنامه‌ست.</item>
+        <item>امروز آروم. فردا ادامه می‌دیم.</item>
+    </string-array>
+    <string-array name="buddy_night">
+        <item>شب بخیر. فردا می‌بینمت.</item>
+        <item>خواب خوب یعنی عضله‌ی خوب.</item>
+    </string-array>
+    <string-array name="buddy_tap">
+        <item>بازوهامو دیدی؟ مال تو هم داره می‌شه.</item>
+        <item>آب خوردی؟</item>
+        <item>دست نزن، دارم پمپ می‌کنم!</item>
+    </string-array>
+    <string-array name="buddy_letter_day">
+        <item>نامه داری! از خودت.</item>
+    </string-array>
+
+    <!-- Settings (06) -->
+    <string name="settings_title">تنظیمات</string>
+    <string name="health_ok">یادآورها سالم‌اند</string>
+    <string name="health_not_ok">یادآورها یه نگاه می‌خوان</string>
+    <string name="settings_tasks">کارها</string>
+    <string name="settings_reminders">یادآورها</string>
+    <string name="settings_workout">برنامه تمرین</string>
+    <string name="settings_backup">پشتیبان</string>
+    <string name="settings_appearance">ظاهر</string>
+    <string name="settings_phone">گوشی</string>
+    <string name="soon">به‌زودی</string>
+    <string name="settings_version">نسخه %1$s · BeAesthetic</string>
+
+    <!-- Reminders (09) -->
+    <string name="reminders_title">یادآورها</string>
+    <string name="reminders_test">آزمایش</string>
+    <string name="profile_normal">روزهای عادی</string>
+    <string name="profile_friday">جمعه</string>
+    <string name="task_alarms">زنگ‌های کارها</string>
+    <string name="task_alarms_empty">هنوز هیچ کاری زنگ خودش رو نداره. از «کارها» اضافه می‌شه.</string>
+    <string name="follow_up_delay">یادآور دوباره برای «مهم»</string>
+    <string name="minutes">%1$s دقیقه</string>
+    <string name="friday_review">مرور جمعه</string>
+    <string name="every_day">هر روز</string>
+    <string name="ok">باشه</string>
+    <string name="cancel">بی‌خیال</string>
+    <string name="test_scheduled">یه دقیقه دیگه می‌رسه. گوشی رو قفل کن.</string>
+    <string name="test_arrived">رسید! یادآورها کار می‌کنن.</string>
+    <string name="test_blocked">زنگ زد، ولی اعلان‌ها بسته‌ان.</string>
+
+    <!-- Phone setup (N2) -->
+    <string name="phone_title">گوشی</string>
+    <string name="phone_this_week">این هفته</string>
+    <string name="phone_on_time">%1$s از %2$s به‌موقع</string>
+    <string name="phone_nothing_yet">هنوز یادآوری نرسیده.</string>
+    <string name="phone_late_detail">یکی %1$s دقیقه دیر رسید: %2$s، %3$s. احتمالاً صرفه‌جویی باتری.</string>
+    <string name="phone_missed_detail">یکی نرسید: %1$s، %2$s. احتمالاً گوشی اپ رو بسته.</string>
+    <string name="phone_blocked_detail">یکی زنگ زد ولی اعلان‌ها بسته بودن: %1$s، %2$s.</string>
+    <string name="phone_all_good">همه به‌موقع رسیدن.</string>
+    <string name="row_notifications">اعلان‌ها</string>
+    <string name="row_exact">زنگ دقیق</string>
+    <string name="row_autostart">اجرای خودکار</string>
+    <string name="row_battery">باتری: بدون محدودیت</string>
+    <string name="row_recents">قفل در اپ‌های اخیر</string>
+    <string name="row_recents_help">توی اپ‌های اخیر، کارت پیکر رو پایین بکش تا قفل بشه.</string>
+    <string name="row_confirm_help">بعد از تنظیم، تیکش رو بزن.</string>
+    <string name="open">باز کن</string>
+    <string name="test_notification">اعلان آزمایشی</string>
+
+    <!-- Appearance (06b) -->
+    <string name="appearance_title">ظاهر</string>
+    <string name="appearance_color">رنگ</string>
+    <string name="appearance_mode">حالت</string>
+    <string name="mode_system">سیستم</string>
+    <string name="mode_dark">تیره</string>
+    <string name="mode_light">روشن</string>
+    <string name="appearance_buddy">پیکر در صفحه‌ی امروز</string>
+    <string-array name="accent_names">
+        <item>سبز</item>
+        <item>آبی</item>
+        <item>فیروزه‌ای</item>
+        <item>بنفش</item>
+        <item>نارنجی</item>
+    </string-array>
+    <string name="chip_record">رکورد</string>
+    <string name="chip_special">روز ویژه</string>
+</resources>

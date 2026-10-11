@@ -1,0 +1,251 @@
+package app.beaesthetic.ui.components
+
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.PathEffect
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.drawscope.scale
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
+import app.beaesthetic.domain.score.DayStatus
+import app.beaesthetic.ui.theme.Ba
+import app.beaesthetic.ui.theme.BaMotion
+
+@Composable
+fun RoundIconButton(
+    icon: ImageVector,
+    description: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    selected: Boolean = false,
+) {
+    val colors = Ba.colors
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = modifier
+            .size(44.dp)
+            .clip(CircleShape)
+            .background(if (selected) colors.specialSubtle else colors.surface)
+            .selectable(selected = selected, role = Role.Button, onClick = onClick)
+            .semantics { contentDescription = description },
+    ) {
+        Icon(icon, contentDescription = null, tint = if (selected) colors.onSpecialSubtle else colors.text2, modifier = Modifier.size(22.dp))
+    }
+}
+
+/** A screen's top bar: back (mirrored by RTL, so it points right) and a title. */
+@Composable
+fun TopBar(title: String, onBack: () -> Unit, backDescription: String, icon: ImageVector = BaIcons.Back) {
+    Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp, vertical = 4.dp)) {
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier.size(48.dp).clip(CircleShape).clickable(role = Role.Button, onClick = onBack).semantics { contentDescription = backDescription },
+        ) {
+            Icon(icon, contentDescription = null, tint = Ba.colors.text1, modifier = Modifier.size(24.dp))
+        }
+        Text(title, style = Ba.type.title, color = Ba.colors.text1, modifier = Modifier.padding(start = 4.dp))
+    }
+}
+
+@Composable
+fun BaCard(modifier: Modifier = Modifier, padding: PaddingValues = PaddingValues(16.dp), content: @Composable ColumnScope.() -> Unit) {
+    Column(
+        modifier = modifier.fillMaxWidth().clip(RoundedCornerShape(16.dp)).background(Ba.colors.surface).padding(padding),
+        content = content,
+    )
+}
+
+enum class ChipKind { ACCENT, AMBER, SPECIAL, NEUTRAL }
+
+@Composable
+fun Chip(text: String, kind: ChipKind, modifier: Modifier = Modifier, icon: ImageVector? = null) {
+    val c = Ba.colors
+    val (bg, fg) = when (kind) {
+        ChipKind.ACCENT -> c.accentSubtle to c.onAccentSubtle
+        ChipKind.AMBER -> c.amberSubtle to c.amber
+        ChipKind.SPECIAL -> c.specialSubtle to c.onSpecialSubtle
+        ChipKind.NEUTRAL -> c.surface2 to c.text2
+    }
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(4.dp),
+        modifier = modifier.clip(RoundedCornerShape(50)).background(bg).padding(horizontal = 10.dp, vertical = 2.dp),
+    ) {
+        icon?.let { Icon(it, null, tint = fg, modifier = Modifier.size(14.dp)) }
+        Text(text, style = Ba.type.caption, color = fg, maxLines = 1)
+    }
+}
+
+@Composable
+fun PrimaryButton(text: String, onClick: () -> Unit, modifier: Modifier = Modifier, enabled: Boolean = true, icon: ImageVector? = null, height: Dp = 52.dp) {
+    val c = Ba.colors
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center,
+        modifier = modifier
+            .height(height)
+            .clip(RoundedCornerShape(12.dp))
+            .background(if (enabled) c.accent else c.surface2)
+            .clickable(enabled = enabled, role = Role.Button, onClick = onClick)
+            .padding(horizontal = 16.dp),
+    ) {
+        icon?.let { Icon(it, null, tint = if (enabled) c.onAccent else c.text3, modifier = Modifier.size(20.dp).padding(end = 2.dp)) }
+        Text(text, style = Ba.type.subtitle, color = if (enabled) c.onAccent else c.text3, modifier = Modifier.padding(start = if (icon != null) 6.dp else 0.dp))
+    }
+}
+
+@Composable
+fun SecondaryButton(text: String, onClick: () -> Unit, modifier: Modifier = Modifier, icon: ImageVector? = null, height: Dp = 52.dp) {
+    val c = Ba.colors
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center,
+        modifier = modifier
+            .height(height)
+            .clip(RoundedCornerShape(12.dp))
+            .background(c.surface2)
+            .clickable(role = Role.Button, onClick = onClick)
+            .padding(horizontal = 16.dp),
+    ) {
+        icon?.let { Icon(it, null, tint = c.text1, modifier = Modifier.size(20.dp)) }
+        Text(text, style = Ba.type.subtitle, color = c.text1, modifier = Modifier.padding(start = if (icon != null) 6.dp else 0.dp))
+    }
+}
+
+/** A list row inside a card. */
+@Composable
+fun ListRow(modifier: Modifier = Modifier, onClick: (() -> Unit)? = null, content: @Composable RowScope.() -> Unit) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
+        modifier = modifier
+            .fillMaxWidth()
+            .heightIn(min = 56.dp)
+            .then(if (onClick != null) Modifier.clickable(onClick = onClick) else Modifier)
+            .padding(horizontal = 16.dp, vertical = 8.dp),
+        content = content,
+    )
+}
+
+@Composable
+fun BaSwitch(checked: Boolean, onChange: (Boolean) -> Unit, description: String) {
+    val c = Ba.colors
+    Switch(
+        checked = checked,
+        onCheckedChange = onChange,
+        modifier = Modifier.semantics { contentDescription = description },
+        colors = SwitchDefaults.colors(
+            checkedThumbColor = c.onAccent, checkedTrackColor = c.accent, checkedBorderColor = c.accent,
+            uncheckedThumbColor = c.text3, uncheckedTrackColor = c.surface2, uncheckedBorderColor = c.border,
+        ),
+    )
+}
+
+@Composable
+fun SectionTitle(text: String, modifier: Modifier = Modifier) {
+    Text(text, style = Ba.type.label, color = Ba.colors.text2, modifier = modifier.padding(top = 8.dp, start = 4.dp))
+}
+
+/**
+ * The day ring: done / total (D27). The arc starts at the top and springs to its new value (D76).
+ */
+@Composable
+fun DayRing(done: Int, total: Int, centerBig: String, centerSmall: String, description: String, modifier: Modifier = Modifier, pulse: Int = 0, ringSize: Dp = 164.dp) {
+    val c = Ba.colors
+    val fraction by animateFloatAsState(if (total == 0) 0f else done.toFloat() / total, BaMotion.spring(), label = "ring")
+    val pulseScale = remember { Animatable(1f) }
+    LaunchedEffect(pulse) {
+        if (pulse > 0) {
+            pulseScale.animateTo(1.06f, BaMotion.spring())
+            pulseScale.animateTo(1f, BaMotion.bouncy())
+        }
+    }
+    Box(contentAlignment = Alignment.Center, modifier = modifier.size(ringSize).semantics { contentDescription = description }) {
+        Canvas(Modifier.size(ringSize)) {
+            val stroke = ringSize.toPx() * 10f / 164f
+            val inset = stroke / 2
+            val arcSize = Size(size.width - stroke, size.height - stroke)
+            scale(pulseScale.value) {
+                drawArc(c.surface2, 0f, 360f, false, Offset(inset, inset), arcSize, style = Stroke(stroke))
+                if (fraction > 0f) {
+                    val sweep = 360f * fraction
+                    drawArc(c.accent, -90f, sweep, false, Offset(inset, inset), arcSize, style = Stroke(stroke, cap = StrokeCap.Round))
+                }
+            }
+        }
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            val big = if (ringSize < 120.dp) Ba.type.headline else Ba.type.display
+            Text(centerBig, style = big, color = c.text1, textAlign = TextAlign.Center)
+            if (centerSmall.isNotEmpty()) Text(centerSmall, style = Ba.type.label, color = c.text2)
+        }
+    }
+}
+
+/** One dot of the week row, by level; before the app = dotted; future = an outline (D56). */
+@Composable
+fun DayDot(status: DayStatus, isToday: Boolean, modifier: Modifier = Modifier, size: Dp = 14.dp) {
+    val c = Ba.colors
+    val fill: Color? = when (status) {
+        is DayStatus.Level -> c.grid[status.level.coerceIn(0, 4)]
+        DayStatus.Special -> c.special
+        DayStatus.BeforeApp, DayStatus.Future -> null
+    }
+    Box(
+        modifier = modifier
+            .size(size + if (isToday) 8.dp else 0.dp)
+            .then(if (isToday) Modifier.border(2.dp, c.accent, CircleShape).padding(4.dp) else Modifier),
+        contentAlignment = Alignment.Center,
+    ) {
+        Canvas(Modifier.size(size)) {
+            if (fill != null) {
+                drawCircle(fill)
+            } else {
+                val dashed = status == DayStatus.BeforeApp
+                drawCircle(
+                    c.border,
+                    radius = this.size.minDimension / 2 - 1.dp.toPx(),
+                    style = Stroke(1.5.dp.toPx(), pathEffect = if (dashed) PathEffect.dashPathEffect(floatArrayOf(2.dp.toPx(), 2.dp.toPx())) else null),
+                )
+            }
+        }
+    }
+}

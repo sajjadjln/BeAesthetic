@@ -11,7 +11,7 @@ _Last updated: 2026-10-10_
 | 3. Design | ✅ **Approved 2026-10-10** (round 3, `docs/design/screens.html`); font and accents decided the same day (D47). |
 | 4. Architecture | ✅ **Approved 2026-10-10** (`docs/ARCHITECTURE.md`, D31–D45). |
 | Research | ✅ **Done 2026-10-10** (`research/`, start with `research/FINAL-REPORT.md`). All recommendations accepted except sharing (D48–D69). |
-| 5. Build | ⏳ **Next.** No app code exists yet. Done on the user's laptop in Android Studio, not in a cloud session. |
+| 5. Build | ⏳ **In progress.** Slices 1–2 built and checked on an emulator (2026-10-10, 2026-10-11). Next: slice 3. |
 
 The program itself started on **2026-10-09 (Day 0)**. Week 1 began 2026-10-10. Every week without the app is a week without reminders, so keep moving.
 
@@ -29,6 +29,8 @@ The program itself started on **2026-10-09 (Day 0)**. Week 1 began 2026-10-10. E
 
 ## Next steps
 
+0. **Slice 2 is built (2026-10-11).** Today complete: ring, week dots (before-app dotted, future outlined), minimum day (leaf), the chapter line and, in the last chapter, the countdown, the chapter-start card with the letter offer, the first-letter offer, the letter sheet and the letter's opening card, tick motion (fill from the touch point, 100% moment), «پیکر» with day poses, chapter outfits and the 7-day line picker. Reminders complete: follow-ups with «انجام شد», task alarms (scheduled; set them in slice 3's editor), health + Today banner + the watchdog's once-a-day warning, device-off marking at boot, the absence rule, Settings, «یادآورها», «گوشی» (Xiaomi intents) and «ظاهر». Database v2 with a tested migration. Checked on an emulator: the v1 database migrated with its ticks; the Night block and both follow-ups fired; «انجام شد» ticked the task on Today; the 1 Azar and 1 Esfand cards and the countdown showed with the debug clock. **Not yet checked on the Poco:** the Xiaomi rows (autostart, battery, recents) only show on a Xiaomi. **Next:** the user tries slice 2 on the phone, then slice 3 (tasks list and editor).
+0. **Slice 1 is built (2026-10-10).** What works: Room with the seeded routine, basic Today (header with week, part-of-day switcher, tiles that tick with the accent fill and a light vibration, «مهم» and «موعدش رسیده»), the day snapshot, the reminder core (planner, `setAlarmClock`, receivers for fire/boot/update/time change, the 6-hourly watchdog, block notifications with anchors in Persian, the reminder log), the usage log, `installDate`, the no-`INTERNET` and banned-dependency checks, the launcher and notification icons. Checked on an emulator: ticks survive a force-stop; the test alarm fires on time with the screen off; the 23:00 Night block arrived as «شب · ۳ کار» with anchors. **Next:** the user installs it on the Poco, sets Autostart and battery "No restrictions" by hand (the setup screen is slice 2), and lives with it for a few days. Then slice 2.
 1. **Phase 5, slice 1**, in a session on the user's laptop (Android Studio and the Android SDK are there). Slice 1 now includes the **reminder core** (D50). Full list in `ARCHITECTURE.md` §14:
    1. Skeleton + basic Today + reminder core (planner, scheduler, block notifications with anchors, reminder log) + usage log + `installDate` + no-`INTERNET` check.
    2. Today complete (ring, dots, minimum day, chapter line + chapter-start card with the letter offer, last-chapter countdown, tick feedback, comeback) + reminders complete (follow-ups, task alarms, health, Xiaomi setup, Reminders screen).
@@ -51,12 +53,12 @@ The program itself started on **2026-10-09 (Day 0)**. Week 1 began 2026-10-10. E
 
 ## Open questions for the user
 
-1. **Bedtime** on normal days and Fridays (sets the Night reminder; default 22:30).
+1. ~~Bedtime~~ → 23:30, Night block at 23:00 (D88).
 2. Is the **Friday hike** the Friday workout, or a home workout plus the hike?
-3. **What time does the user train?** (decides which part of the day the workout tile sits in; default evening 19:00)
+3. ~~Training time~~ → evening (D88).
 4. Keep the three **protein** ticks (breakfast / lunch / dinner)? (Default: yes)
 5. **Strength tests** every 2 weeks? Which **leg-health** test?
-6. **Beard and haircut** intervals (days); **vitamin D** dose and schedule.
+6. **Beard and haircut** intervals (days; seeded as 7 and 30, D90); **vitamin D** dose and schedule.
 7. **The workout plan** (exercises, sets, rep ranges for Sat / Mon / Wed). The user said they'll paste it. It seeds the Workout plan editor. With it: the **ladder rungs** for each move (D70). Default seeds: push-up = knee → standard → diamond → archer; pull-up = dead hang → negative → band-assisted → strict.
 8. **Snack list:** 5–10 snacks they can make.
 9. Day-level thresholds and the special-day cap (2/week) are defaults. Revisit after 2 weeks of real use.

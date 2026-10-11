@@ -29,7 +29,7 @@ For product rules see `SPEC.md`; for screens see `DESIGN.md`; for decision histo
 | Charts | Hand-drawn with Compose `Canvas` | We need one line chart, a sparkline and a grid. A chart library would be bigger than that code. |
 | Locale | Fixed to `fa` (Persian) on start-up | Persian only (D87): RTL and Persian digits even on a phone set to English. No language switch. |
 
-**SDK levels:** `minSdk 26` (Android 8: native `java.time`, notification channels). `targetSdk` and `compileSdk` = the latest stable SDK at slice 1.
+**SDK levels:** `minSdk 26` (Android 8: native `java.time`, notification channels). `targetSdk` and `compileSdk` = 36, the newest platform on the laptop at slice 1. Exact versions are in `gradle/libs.versions.toml` (D89).
 
 **Banned dependencies:** anything from `com.google.android.gms`, `com.google.firebase`, analytics or crash SDKs. A small Gradle check fails the build if one shows up in the dependency graph, even transitively.
 
@@ -227,9 +227,9 @@ Physical schema for `SPEC.md` §9, updated for D25–D28. Dates are ISO `LocalDa
 | `milestone` | id, title, metricId?, target?, reachedAt?, sortOrder | D65. Linked to a metric when it has one (e.g. pull-ups ≥ 10); otherwise ticked by hand. |
 | `event` | id, at, type (APP_OPEN·SCREEN·NOTIF_SHOWN·NOTIF_TAP·FIRST_TICK), ref?, valueMinutes? | D59. Local usage log. `ref` = screen name or reminder key. Rows older than 180 days are deleted. Included in backups. |
 | `recap` | key (HALFWAY·FINISH), seenAt? | D52. The content is computed; only "seen" is stored. |
-| `letter` | id, writtenAt, opensOn, text, openedAt? | D72. The UI refuses to show `text` before `opensOn`. Included in backups. |
+| `letter` | id, writtenOn, writtenAt, opensOn, text, openedAt?, isFirst | D72. Added in schema v2 (slice 2). The UI refuses to show `text` before `opensOn`. Included in backups. |
 | `round_number` | key (e.g. `reps:ladder:3:1000`, `workouts:50`, `days:100`), reachedOn, seenAt? | D71. Written when a total first crosses a round number, so it's noted once even if a log is later edited. Totals themselves are computed. |
-| `settings` | single row: programStartDate, rolloverHour, specialCapPerWeek, followUpMinutes, alarmMode, accentColor (GREEN·BLUE·TURQUOISE·VIOLET·ORANGE), themeMode (SYSTEM·DARK·LIGHT), backupTreeUri, lastOpenedAt, lastBackupAt, onboardingDone, programEndDate, installDate, halfwayDate?, identitySentence?, afterFinishMode (NONE·MAINTENANCE·NEW_PROGRAM), experimentFlags (bits, debug) | `installDate` drives the «قبل از اپ» cells (D56). |
+| `settings` | single row: programStartDate, rolloverHour, specialCapPerWeek, followUpMinutes, alarmMode, accentColor (GREEN·BLUE·TURQUOISE·VIOLET·ORANGE), themeMode (SYSTEM·DARK·LIGHT), backupTreeUri, lastOpenedAt, lastBackupAt, onboardingDone, programEndDate, installDate, halfwayDate?, identitySentence?, afterFinishMode (NONE·MAINTENANCE·NEW_PROGRAM), experimentFlags (bits, debug); v2: firstLetterOfferDone, cardDismissedOn?, healthSeenAt?, healthNotifiedOn?, autostartConfirmed, recentsLockConfirmed, showBuddy, ritualTime | `installDate` drives the «قبل از اپ» cells (D56). |
 
 ### The day snapshot (why some derived numbers are stored)
 
@@ -301,7 +301,7 @@ Android's own cloud backup (`allowBackup`) is **off**: it would send data to Goo
 - **Strings:** Persian only, in `values/` (D87). Lint fails the build on a hard-coded string, so a separate English build stays possible.
 - **Locale:** the app always runs in `fa` (layout RTL, Persian digits, Persian number formatting), whatever the phone's language.
 - **Motion (D76):** a `BaMotion` object in the theme holds the tokens from `DESIGN.md` → Motion (durations, the standard easing, and `spring()` specs for spring / settle / bouncy) and is provided through a `CompositionLocal`, like `BaColors`. Built only with Compose's animation APIs (`animate*AsState`, `Animatable`, `updateTransition`, `AnimatedContent`, `SharedTransitionLayout` for the workout tile → session), and `Canvas` for the ring, grid, charts and odometer. No Lottie. Compose's duration scale follows the system "Remove animations" setting, so motion becomes instant there; anything driven by hand reads the same scale. Vibration goes through one `Haptics` helper (light = `CONFIRM`, fallback `VIRTUAL_KEY`; medium = `EFFECT_HEAVY_CLICK`; record = a short waveform). No sound.
-- **The character «پیکر» (D82):** one `ImageVector` per pose in `ui/components/buddy/`, built from the same parts as `docs/design/piker.js` (ink outline, white border, shadow, body). The body color is a parameter (the accent); outfits are a separate overlay vector. A pose change is `AnimatedContent` with the bouncy spring; the bubble fades. `:domain`'s `BuddyPicker` decides the pose, line and outfit; the composable only draws. Lines are string arrays; the last-shown date per line is kept in the usage log (D59).
+- **The character «پیکر» (D82, D93):** `ui/components/buddy/PikerRig.kt` is a Compose `Canvas` port of `docs/design/piker.js`: the same parts (ink outline, white border, shadow, body), every pose, prop and outfit. The body color is a parameter (the accent); outfits are a separate overlay vector. A pose change is `AnimatedContent` with the bouncy spring; the bubble fades. `:domain`'s `BuddyPicker` decides the pose, line and outfit; the composable only draws. Lines are string arrays; the last-shown date per line is kept in the usage log (D59).
 - **Accessibility (D68):** every icon-only tab and tile has a content description; layouts are checked at 130% font size; day detail states the level as a number, so the grid isn't color-only.
 - **Crash log without an SDK:** an uncaught-exception handler writes the stack trace to a private file. Settings shows "last crash" with a share button. Nothing leaves the phone unless the user shares it.
 
@@ -311,7 +311,8 @@ Android's own cloud backup (`allowBackup`) is **off**: it would send data to Goo
 |---|---|---|
 | Unit, `:domain` (most tests) | Jalali; program date and the 04:00 rollover; week numbers; chapters and landmarks; "before the app"; comebacks; routine strength and fade/restore rules; milestones; recap content; ladder rung suggestion and "rungs reached"; lifetime totals and round-number crossings; letter opening dates; guess outcome; countdown; BuddyPicker (pose per state, outfit per chapter, no line repeated within 7 days, no pose outside the moment's set); due lists for every repeat type; interval due dates and "counts only on the first due day"; day level thresholds; weekly score with special days and the cap; reminder planner (both profiles, follow-ups, task alarm weekdays, absence rule, nothing in the past); reminder health (late, missed, device off); set pre-fill; progression suggestion; PRs and the in-session record; "since Day 0" deltas; check-in schedule; backup JSON round trip and reading older format versions | Any JVM: Android Studio on the laptop, or a cloud session (`:domain` needs no Android SDK) |
 | Unit, `:app` with Robolectric | DAOs on an in-memory database, the day snapshot writer, `AlarmScheduler.reconcile()` against a shadow AlarmManager, notification content | JVM |
-| Instrumented | Room migrations; backup → wipe → restore round trip | An emulator or the phone, before each release |
+| Unit, `:app` with Robolectric | Room migrations (`MigrationTestHelper`, schemas from the debug assets, D98) | JVM, every `./gradlew check` |
+| Instrumented | Backup → wipe → restore round trip | An emulator or the phone, before each release |
 | Manual, on the phone | A reminder checklist per release: fires at the right time with the screen off, after a reboot, after an update, with battery saver on | The user's Xiaomi |
 
 No UI screenshot tests in the MVP. Compose previews with fake state cover visual review.

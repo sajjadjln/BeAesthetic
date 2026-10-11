@@ -131,7 +131,7 @@ The bottom navigation has 4 **icon-only** tabs (mirrored in right-to-left mode):
 
 1. **Morning (target: under 30 seconds).** The 07:00 notification shows "Morning: 5 items". Tap it, Today opens on the Morning block, tick the items, done.
 2. **Training session.** Today → Workout. For each exercise you see last session's numbers. Each set is pre-filled with last time's number, so logging is usually one tap; set the effort on the 1–10 «درجه سختی» bar. Finishing the session ticks the workout item.
-3. **Night.** The 22:30 **[DEFAULT]** notification shows "Night: skincare, brush, prep tomorrow's snack: *oat balls*".
+3. **Night.** The 23:00 notification shows "Night: skincare, brush, prep tomorrow's snack: *oat balls*".
 4. **Friday ritual.**
    - Review: this week's row, the weekly score, PRs and best routines (in a neutral tone).
    - Plan: mark special days in advance (for example travel) and write each day's snack note (any length, e.g. a full recipe).
@@ -154,7 +154,7 @@ The bottom navigation has 4 **icon-only** tabs (mirrored in right-to-left mode):
 | Protein with breakfast **[OPEN: keep these 3?]** | Morning | Daily | | |
 | Vitamin D (with a meal) | Midday | Daily **[confirm dose and frequency]** | | |
 | Protein with lunch | Midday | Daily | | |
-| Workout | Evening **[OPEN: what time do you train?]** | Sat/Mon/Wed | | |
+| Workout | Evening (D88) | Sat/Mon/Wed | | |
 | Hike | Morning | Fridays | | |
 | Protein with dinner | Evening | Daily | | |
 | Shower | Evening | Every 2 days from the last one | | |
@@ -235,14 +235,14 @@ Non-negotiables are chosen per item in the app. The ✔ marks above are only my 
 
 ### 7.1 Schedule
 
-All times are **[DEFAULT]**, based on waking at 06:45. Bedtime is **[OPEN]**.
+All times are **[DEFAULT]**, based on waking at 06:45 and going to bed at 23:30 (D88).
 
 | Reminder | Normal days | Friday |
 |---|---|---|
 | Morning block | 07:00 | 07:00 (hike day, includes the weigh-in) |
 | Midday block | 13:30 | 13:30 |
 | Evening block | 19:00 | none (folded into the ritual) |
-| Night block | 22:30 | 22:30 |
+| Night block | 23:00 | 23:00 |
 | Weekly ritual | n/a | 19:00 |
 | Non-negotiable follow-up | +45 min after its block, **once** | same |
 
@@ -250,7 +250,7 @@ All times are **[DEFAULT]**, based on waking at 06:45. Bedtime is **[OPEN]**.
 - **One notification per block**, not one per item. It shows the pending count and the first few item names, each with its anchor when it has one (e.g. «اسکین‌کر · بعد از مسواک»). Tapping it opens Today on that block.
 - Tasks whose reminders were silenced (§6.6) are left out of the count and the names.
 - If a block has nothing pending, there's **no notification**.
-- **Follow-ups:** only for items marked non-negotiable, only once, and only if the item is still not done. The follow-up has a "Done" action, so you can tick it from the notification without opening the app.
+- **Follow-ups:** only for items marked non-negotiable, only once per block, and only if the item is still not done. Each pending important item gets its own notification with a "Done" action, so you can tick it without opening the app (D94).
 - **No catch-up.** A later block never repeats items from an earlier block. They stay visible in Today, but not in notifications.
 - **No guilt messages.** Notifications never say "you missed…". Wording is neutral and forward-looking.
 - **Absence:** after 3 days without opening the app, the block reminders reduce to Morning only, until you open the app again. That's less noise when you're away, and coming back is still easy.
