@@ -76,6 +76,43 @@ class TaskRepository(private val db: AppDatabase) {
             rows.associate { it.date to DaySnapshot(DayCounts(it.dueCount, it.doneCount, it.floorDone), special = it.special != null) }
         }
 
+    /** Active tasks with every completion date, for the tasks list (screens.html 07). */
+    fun observeTasks(): Flow<Pair<List<Task>, Map<Long, List<LocalDate>>>> = combine(
+        db.tasks().observeActive(),
+        db.completions().observeAll(),
+    ) { tasks, completions -> tasks.map { it.toDomain() } to completions.groupBy({ it.taskId }, { it.date }) }
+
+    suspend fun task(id: Long): Task? = db.tasks().get(id)?.takeIf { it.archivedAt == null }?.toDomain()
+
+    /**
+     * Adds a task (id 0) or updates one, then rewrites the editable days' snapshots: editing a task changes
+     * today and yesterday only, never older history (D37). Returns the task's id.
+     */
+    suspend fun save(task: Task, today: LocalDate, now: Instant): Long = db.withTransaction {
+        val id = if (task.id == 0L) {
+            db.tasks().insert(task.toEntity(createdAt = now))
+        } else {
+            val existing = checkNotNull(db.tasks().get(task.id))
+            db.tasks().update(task.toEntity(createdAt = existing.createdAt).copy(fadeOfferedAt = existing.fadeOfferedAt, remindersSilencedAt = existing.remindersSilencedAt))
+            task.id
+        }
+        writeEditableSnapshots(today)
+        id
+    }
+
+    /** Removes a task from today on. Its completions stay, so past days keep their colors. */
+    suspend fun archive(id: Long, today: LocalDate, now: Instant) = db.withTransaction {
+        db.tasks().archive(id, now)
+        writeEditableSnapshots(today)
+    }
+
+    /** Today always; yesterday only if the app already saw it (a day before install never gets a row, D56). */
+    private suspend fun writeEditableSnapshots(today: LocalDate) {
+        writeSnapshot(today)
+        val yesterday = today.minusDays(1)
+        if (db.days().get(yesterday) != null) writeSnapshot(yesterday)
+    }
+
     /** Tasks and completions as the reminder planner needs them. */
     suspend fun plannerData(upTo: LocalDate): Pair<List<Task>, Map<Long, List<LocalDate>>> {
         val tasks = db.tasks().active().map { it.toDomain() }
@@ -98,6 +135,39 @@ class TaskRepository(private val db: AppDatabase) {
         return DueRules.itemsFor(date, tasks.map { it.toDomain() }, byTask)
     }
 }
+
+fun Task.toEntity(createdAt: Instant): TaskEntity {
+    val (type, weekdays, everyN, once) = when (val r = repeat) {
+        Repeat.Daily -> Quad(RepeatType.DAILY, 0, null, null)
+        is Repeat.OnWeekdays -> Quad(RepeatType.WEEKDAYS, r.bits, null, null)
+        is Repeat.EveryNDays -> Quad(RepeatType.EVERY_N_DAYS, 0, r.n, null)
+        is Repeat.Once -> Quad(RepeatType.ONCE, 0, null, r.date)
+        Repeat.MinDayOnly -> Quad(RepeatType.MIN_DAY_ONLY, 0, null, null)
+    }
+    return TaskEntity(
+        id = id,
+        title = title,
+        icon = icon.name,
+        part = part,
+        repeat = type,
+        weekdays = weekdays,
+        everyNDays = everyN,
+        onceDate = once,
+        startDate = startDate,
+        isImportant = isImportant,
+        inMinimumDay = inMinimumDay,
+        action = action.name,
+        alarmTime = alarm?.minuteOfDay,
+        alarmWeekdays = alarm?.weekdays ?: 0,
+        alarmEnabled = alarm?.enabled ?: false,
+        anchor = anchor,
+        remindersSilencedAt = null,
+        sortOrder = sortOrder,
+        createdAt = createdAt,
+    )
+}
+
+private data class Quad(val type: RepeatType, val weekdays: Int, val everyN: Int?, val once: LocalDate?)
 
 fun TaskEntity.toDomain(): Task = Task(
     id = id,

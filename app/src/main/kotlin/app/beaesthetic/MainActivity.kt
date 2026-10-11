@@ -40,6 +40,7 @@ import app.beaesthetic.ui.settings.PhoneScreen
 import app.beaesthetic.ui.settings.RemindersScreen
 import app.beaesthetic.ui.settings.SettingsDestination
 import app.beaesthetic.ui.settings.SettingsScreen
+import app.beaesthetic.ui.tasks.TasksScreen
 import app.beaesthetic.ui.theme.Accent
 import app.beaesthetic.ui.theme.BaMotion
 import app.beaesthetic.ui.theme.PeykarTheme
@@ -52,6 +53,7 @@ import kotlinx.serialization.Serializable
 /** Type-safe routes (ARCHITECTURE §2). */
 @Serializable object HomeRoute
 @Serializable object SettingsRoute
+@Serializable object TasksRoute
 @Serializable object RemindersRoute
 @Serializable object PhoneRoute
 @Serializable object AppearanceRoute
@@ -128,6 +130,7 @@ class MainActivity : ComponentActivity() {
                     composable<SettingsRoute> {
                         SettingsScreen(container, DebugMenu.AVAILABLE, onBack = nav::popBackStack) { dest ->
                             when (dest) {
+                                SettingsDestination.TASKS -> nav.navigate(TasksRoute)
                                 SettingsDestination.REMINDERS -> nav.navigate(RemindersRoute)
                                 SettingsDestination.PHONE -> nav.navigate(PhoneRoute)
                                 SettingsDestination.APPEARANCE -> nav.navigate(AppearanceRoute)
@@ -136,6 +139,7 @@ class MainActivity : ComponentActivity() {
                             }
                         }
                     }
+                    composable<TasksRoute> { TasksScreen(container, onBack = nav::popBackStack) }
                     composable<RemindersRoute> { RemindersScreen(container, onBack = nav::popBackStack) }
                     composable<PhoneRoute> { PhoneScreen(container, onBack = nav::popBackStack) }
                     composable<AppearanceRoute> { AppearanceScreen(container, onBack = nav::popBackStack) }

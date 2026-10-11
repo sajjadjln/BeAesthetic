@@ -34,6 +34,16 @@ interface TaskDao {
     @Insert
     suspend fun insertAll(tasks: List<TaskEntity>)
 
+    @Insert
+    suspend fun insert(task: TaskEntity): Long
+
+    @androidx.room.Update
+    suspend fun update(task: TaskEntity)
+
+    /** Deleting archives: the row stays so history keeps the task's name (ARCHITECTURE §8). */
+    @Query("UPDATE task SET archivedAt = :at WHERE id = :id")
+    suspend fun archive(id: Long, at: Instant)
+
     @Query("SELECT * FROM task WHERE id = :id")
     suspend fun get(id: Long): TaskEntity?
 
@@ -49,6 +59,9 @@ interface CompletionDao {
 
     @Query("SELECT * FROM completion WHERE date <= :date")
     suspend fun upTo(date: LocalDate): List<CompletionEntity>
+
+    @Query("SELECT * FROM completion")
+    fun observeAll(): Flow<List<CompletionEntity>>
 
     @Query("SELECT COUNT(*) FROM completion WHERE taskId = :taskId AND date = :date")
     suspend fun count(taskId: Long, date: LocalDate): Int

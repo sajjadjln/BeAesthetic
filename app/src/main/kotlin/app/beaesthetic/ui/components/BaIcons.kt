@@ -57,6 +57,10 @@ object BaIcons {
     val Shield = stroke("M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z", "m9 12 2 2 4-4")
     val Lock = stroke(roundRect(4f, 11f, 16f, 10f, 2f), "M8 11V7a4 4 0 0 1 8 0v4")
     val Mail = stroke(roundRect(3f, 5f, 18f, 14f, 2f), "m3 7 9 6 9-6")
+    val Repeat = stroke("m17 2 4 4-4 4", "M3 11v-1a4 4 0 0 1 4-4h14", "m7 22-4-4 4-4", "M21 13v1a4 4 0 0 1-4 4H3")
+    val Plus = stroke("M12 5v14M5 12h14")
+    val Minus = stroke("M5 12h14")
+    val Flag = stroke("M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z", "M4 22v-7")
     val Pen = stroke("M12 20h9", "M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z")
 
     fun of(icon: TaskIcon): ImageVector = when (icon) {

@@ -23,14 +23,10 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TimePicker
-import androidx.compose.material3.TimePickerDefaults
-import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -82,6 +78,7 @@ import app.beaesthetic.ui.components.DayRing
 import app.beaesthetic.ui.components.ListRow
 import app.beaesthetic.ui.components.SecondaryButton
 import app.beaesthetic.ui.components.SectionTitle
+import app.beaesthetic.ui.components.TimePickerDialog
 import app.beaesthetic.ui.components.TopBar
 import app.beaesthetic.ui.theme.Accent
 import app.beaesthetic.ui.theme.Ba
@@ -143,8 +140,8 @@ fun SettingsScreen(container: AppContainer, debugAvailable: Boolean, onBack: () 
             Triple(SettingsDestination.APPEARANCE, BaIcons.Palette, R.string.settings_appearance),
             Triple(SettingsDestination.PHONE, BaIcons.Phone, R.string.settings_phone),
         )
-        // Tasks, the workout plan and backup arrive in slices 3, 4 and 6.
-        val ready = setOf(SettingsDestination.REMINDERS, SettingsDestination.APPEARANCE, SettingsDestination.PHONE)
+        // The workout plan and backup arrive in slices 4 and 6.
+        val ready = setOf(SettingsDestination.TASKS, SettingsDestination.REMINDERS, SettingsDestination.APPEARANCE, SettingsDestination.PHONE)
         tiles.chunked(2).forEach { row ->
             Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                 row.forEach { (dest, icon, label) ->
@@ -187,7 +184,6 @@ fun SettingsScreen(container: AppContainer, debugAvailable: Boolean, onBack: () 
 
 // ---------------------------------------------------------------- 09 Reminders
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RemindersScreen(container: AppContainer, onBack: () -> Unit) {
     val c = Ba.colors
@@ -279,22 +275,7 @@ fun RemindersScreen(container: AppContainer, onBack: () -> Unit) {
     }
 
     editing?.let { (minute, onSet) ->
-        val state = rememberTimePickerState(initialHour = minute / 60, initialMinute = minute % 60, is24Hour = true)
-        AlertDialog(
-            onDismissRequest = { editing = null },
-            confirmButton = { TextButton(onClick = { onSet(state.hour * 60 + state.minute); editing = null }) { Text(stringResource(R.string.ok), color = c.accent) } },
-            dismissButton = { TextButton(onClick = { editing = null }) { Text(stringResource(R.string.cancel), color = c.text2) } },
-            text = {
-                TimePicker(
-                    state,
-                    colors = TimePickerDefaults.colors(
-                        clockDialColor = c.surface2, selectorColor = c.accent, timeSelectorSelectedContainerColor = c.accentSubtle,
-                        timeSelectorSelectedContentColor = c.onAccentSubtle, timeSelectorUnselectedContainerColor = c.surface2,
-                    ),
-                )
-            },
-            containerColor = c.surface,
-        )
+        TimePickerDialog(minute, onPick = { onSet(it); editing = null }, onDismiss = { editing = null })
     }
 }
 

@@ -289,4 +289,73 @@
     </string-array>
     <string name="chip_record">رکورد</string>
     <string name="chip_special">روز ویژه</string>
+    <!-- Tasks (07) and the task editor (08) -->
+    <string name="tasks_title">کارها</string>
+    <string name="tasks_all">همه</string>
+    <string name="tasks_once">یک‌باره</string>
+    <string name="tasks_new">کار جدید</string>
+    <string name="tasks_empty_title">هنوز کاری اینجا نیست</string>
+    <string name="tasks_empty_text">اولین کارت رو اضافه کن، مثلاً مسواک صبح. بعد هر روز توی «امروز» میاد.</string>
+    <string name="tasks_part_empty">این بخش هنوز کاری نداره.</string>
+    <string name="repeat_daily">هر روز</string>
+    <string name="repeat_weekdays">روزهای خاص</string>
+    <string name="repeat_every_n">هر %1$s روز</string>
+    <string name="repeat_every_n_short">هر چند روز</string>
+    <string name="repeat_once">یک بار</string>
+    <string name="repeat_min_only">فقط روز حداقلی</string>
+    <string name="row_with_alarm">%1$s · زنگ %2$s</string>
+    <string name="row_once">%1$s · %2$s</string>
+    <string name="today">امروز</string>
+    <string name="tomorrow">فردا</string>
+    <string name="editor_new">کار جدید</string>
+    <string name="editor_edit">ویرایش کار</string>
+    <string name="editor_name">اسم کار</string>
+    <string name="editor_icon">آیکن</string>
+    <string name="editor_part">بخش روز</string>
+    <string name="editor_repeat">تکرار</string>
+    <string name="editor_every_n_help">از آخرین باری که انجامش دادی حساب می‌شه.</string>
+    <string name="editor_once_day">کدوم روز؟</string>
+    <string name="editor_anchor">بعد از…</string>
+    <string name="editor_anchor_hint">مثلاً بعد از صبحانه</string>
+    <string name="editor_anchor_help">توی یادآور کنار اسم کار میاد؛ کار رو به یه کار همیشگی می‌چسبونه.</string>
+    <string name="editor_alarm">زنگ</string>
+    <string name="editor_alarm_help">جدا از یادآور بخش روز، سر همین ساعت زنگ می‌زنه.</string>
+    <string name="editor_important">مهم</string>
+    <string name="editor_important_help">اگه انجام نشده بود، یه یادآور دوباره.</string>
+    <string name="editor_min_day">روز حداقلی</string>
+    <string name="editor_min_day_help">جزو حداقلِ روزهای سخت.</string>
+    <string name="save">ذخیره</string>
+    <string name="delete">حذف</string>
+    <string name="delete_title">این کار حذف بشه؟</string>
+    <string name="delete_text">از امروز دیگه توی «امروز» نمیاد. روزهای گذشته همون‌طور که بودن می‌مونن.</string>
+    <string name="delete_confirm">حذف کن</string>
+    <string name="error_title">اسم کار رو بنویس.</string>
+    <string name="error_weekdays">حداقل یه روز انتخاب کن.</string>
+    <string name="error_date">یه روز از امروز به بعد انتخاب کن.</string>
+    <string name="error_alarm_days">زنگ حداقل یه روز بزنه.</string>
+    <string name="cd_less">کمتر</string>
+    <string name="cd_more">بیشتر</string>
+    <string-array name="weekdays_short">
+        <item>ش</item>
+        <item>ی</item>
+        <item>د</item>
+        <item>س</item>
+        <item>چ</item>
+        <item>پ</item>
+        <item>ج</item>
+    </string-array>
+    <!-- In TaskIcon order. -->
+    <string-array name="task_icon_names">
+        <item>پوست</item>
+        <item>مسواک</item>
+        <item>مکمل</item>
+        <item>تخم‌مرغ</item>
+        <item>تمرین</item>
+        <item>کوه</item>
+        <item>ترازو</item>
+        <item>دوش</item>
+        <item>قیچی</item>
+        <item>خوراکی</item>
+        <item>آفتاب</item>
+    </string-array>
 </resources>
