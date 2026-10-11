@@ -24,17 +24,21 @@ android {
         versionName = "0.2.0"
     }
 
-    // The release key lives outside the repo (ARCHITECTURE §13). keystore.properties holds
-    // storeFile, storePassword, keyAlias and keyPassword; it is git-ignored.
+    // The release key lives outside the repo (ARCHITECTURE §13). Its passwords never go in a file the
+    // repo can see: scripts/release.sh asks for them and passes them as environment variables.
+    // (A git-ignored keystore.properties with storeFile, storePassword, keyAlias, keyPassword also works.)
     val keystoreFile = rootProject.file("keystore.properties")
-    if (keystoreFile.exists()) {
-        val props = Properties().apply { keystoreFile.inputStream().use { load(it) } }
+    val props = Properties().apply { if (keystoreFile.exists()) keystoreFile.inputStream().use { load(it) } }
+    fun signingValue(key: String, env: String): String? = props.getProperty(key) ?: providers.environmentVariable(env).orNull
+    val storePath = signingValue("storeFile", "PEYKAR_KEYSTORE")
+    val storePass = signingValue("storePassword", "PEYKAR_STORE_PASSWORD")
+    if (storePath != null && storePass != null) {
         signingConfigs {
             create("release") {
-                storeFile = file(props.getProperty("storeFile"))
-                storePassword = props.getProperty("storePassword")
-                keyAlias = props.getProperty("keyAlias")
-                keyPassword = props.getProperty("keyPassword")
+                storeFile = file(storePath)
+                storePassword = storePass
+                keyAlias = signingValue("keyAlias", "PEYKAR_KEY_ALIAS") ?: "peykar"
+                keyPassword = signingValue("keyPassword", "PEYKAR_KEY_PASSWORD") ?: storePass
             }
         }
     }
