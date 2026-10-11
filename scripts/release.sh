@@ -5,13 +5,15 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-export PEYKAR_KEYSTORE="${1:-$HOME/peykar-release.jks}"
-export PEYKAR_KEY_ALIAS="${2:-peykar}"
-[ -f "$PEYKAR_KEYSTORE" ] || { echo "Keystore not found: $PEYKAR_KEYSTORE"; exit 1; }
-
-read -r -s -p "Keystore password: " PEYKAR_STORE_PASSWORD; echo
-export PEYKAR_STORE_PASSWORD
-export PEYKAR_KEY_PASSWORD="$PEYKAR_STORE_PASSWORD"   # keytool's default PKCS12 store uses one password
+# With keystore.properties (made once by scripts/save-signing.sh) nothing is asked; Gradle reads it.
+if [ ! -f keystore.properties ]; then
+  export PEYKAR_KEYSTORE="${1:-$HOME/peykar-release.jks}"
+  export PEYKAR_KEY_ALIAS="${2:-peykar}"
+  [ -f "$PEYKAR_KEYSTORE" ] || { echo "Keystore not found: $PEYKAR_KEYSTORE"; exit 1; }
+  read -r -s -p "Keystore password: " PEYKAR_STORE_PASSWORD; echo
+  export PEYKAR_STORE_PASSWORD
+  export PEYKAR_KEY_PASSWORD="$PEYKAR_STORE_PASSWORD"   # keytool's default PKCS12 store uses one password
+fi
 
 export JAVA_HOME="${JAVA_HOME:-/Applications/Android Studio.app/Contents/jbr/Contents/Home}"
 # No configuration cache here: it would store the build's inputs, passwords included, on disk.
