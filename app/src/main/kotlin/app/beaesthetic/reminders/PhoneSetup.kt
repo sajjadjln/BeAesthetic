@@ -2,12 +2,14 @@ package app.beaesthetic.reminders
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.AppOpsManager
 import android.content.ActivityNotFoundException
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.PowerManager
+import android.os.Process
 import android.provider.Settings
 import androidx.core.net.toUri
 
@@ -22,6 +24,27 @@ object PhoneSetup {
         it.equals("xiaomi", ignoreCase = true) || it.equals("redmi", ignoreCase = true) || it.equals("poco", ignoreCase = true)
     }
 
+    /**
+     * Xiaomi's autostart switch, read through its app-op (10008). Not public API, so it may not work on every
+     * MIUI/HyperOS version: null means "can't tell", and the screen then asks the user instead.
+     */
+    fun autostartState(context: Context): Boolean? {
+        if (!isXiaomi()) return null
+        return try {
+            val ops = context.getSystemService(AppOpsManager::class.java)
+            val check = AppOpsManager::class.java.getMethod("checkOpNoThrow", Int::class.javaPrimitiveType, Int::class.javaPrimitiveType, String::class.java)
+            when (check.invoke(ops, OP_AUTO_START, Process.myUid(), context.packageName) as Int) {
+                AppOpsManager.MODE_ALLOWED -> true
+                AppOpsManager.MODE_IGNORED, AppOpsManager.MODE_ERRORED -> false
+                else -> null
+            }
+        } catch (_: Throwable) {
+            null
+        }
+    }
+
+    private const val OP_AUTO_START = 10008
+
     fun isIgnoringBattery(context: Context): Boolean =
         context.getSystemService(PowerManager::class.java).isIgnoringBatteryOptimizations(context.packageName)
 
@@ -31,7 +54,7 @@ object PhoneSetup {
         details(activity),
     )
 
-    /** Only Android 12–12L asks for exact alarms; 13+ uses USE_EXACT_ALARM, granted at install. */
+    /** The system "Alarms and reminders" switch (Android 12+), then the app's details page. */
     fun openExactAlarms(activity: Activity) = tryAll(
         activity,
         *listOfNotNull(
@@ -49,11 +72,15 @@ object PhoneSetup {
         details(activity),
     )
 
-    /** Xiaomi's per-app battery saver first ("No restrictions"), then Android's own "don't optimize" prompt. */
+    /**
+     * Android's own "let it run in the background" prompt first: it really changes the state, and the screen
+     * can read it back. Once that's done, Xiaomi's per-app battery saver ("No restrictions") is next.
+     */
     @SuppressLint("BatteryLife") // Sideloaded APK; the reminders are the product (ARCHITECTURE §7.3).
     fun openBattery(activity: Activity) = tryAll(
         activity,
         *listOfNotNull(
+            if (!isIgnoringBattery(activity)) Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS, "package:${activity.packageName}".toUri()) else null,
             if (isXiaomi()) {
                 Intent().setComponent(ComponentName("com.miui.powerkeeper", "com.miui.powerkeeper.ui.HiddenAppsConfigActivity"))
                     .putExtra("package_name", activity.packageName)
@@ -61,7 +88,6 @@ object PhoneSetup {
             } else {
                 null
             },
-            Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS, "package:${activity.packageName}".toUri()),
             Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS),
             details(activity),
         ).toTypedArray(),

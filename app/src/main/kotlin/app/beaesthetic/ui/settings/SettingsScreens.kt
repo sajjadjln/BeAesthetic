@@ -367,12 +367,26 @@ fun PhoneScreen(container: AppContainer, onBack: () -> Unit) {
     var notifOk by remember { mutableStateOf(true) }
     var exactOk by remember { mutableStateOf(true) }
     var batteryOk by remember { mutableStateOf(true) }
+    // Xiaomi's autostart, read from the phone when it can be; null = the phone won't say.
+    var autostart by remember { mutableStateOf<Boolean?>(null) }
+    var openedAutostart by remember { mutableStateOf(false) }
+    var ask by remember { mutableStateOf<Ask?>(null) }
     var testKey by remember { mutableStateOf<String?>(null) }
     LifecycleEventEffect(Lifecycle.Event.ON_RESUME) {
         notifOk = container.notifier.canNotify()
         exactOk = container.scheduler.canScheduleExact()
         batteryOk = PhoneSetup.isIgnoringBattery(context)
-        if (!exactOk || !notifOk) scope.launch { container.scheduler.reconcile("phone-screen") }
+        autostart = PhoneSetup.autostartState(context)
+        // Back from Xiaomi's autostart screen and the phone can't tell us: ask, never assume.
+        if (openedAutostart && autostart == null) ask = Ask.AUTOSTART
+        openedAutostart = false
+        // Re-plan with whatever is allowed now (exact alarms may have just been switched on).
+        scope.launch { container.scheduler.reconcile("phone-screen") }
+    }
+    fun confirm(which: Ask, on: Boolean) = scope.launch {
+        container.db.settings().get()?.let {
+            container.db.settings().upsert(if (which == Ask.AUTOSTART) it.copy(autostartConfirmed = on) else it.copy(recentsLockConfirmed = on))
+        }
     }
     // Opening this screen counts as seeing the problems: Today's banner goes quiet until something new happens.
     LaunchedEffect(Unit) {
@@ -394,27 +408,45 @@ fun PhoneScreen(container: AppContainer, onBack: () -> Unit) {
             HealthBars(logRows, health, now, Modifier.padding(vertical = 10.dp))
             Text(healthDetail(health), style = Ba.type.caption, color = c.text2)
         }
+        // Each row opens the real setting. The tick shows the phone's real state; only what no API can read
+        // (autostart on some versions, the recents lock) is confirmed by the user after doing it.
         BaCard(padding = androidx.compose.foundation.layout.PaddingValues(0.dp)) {
-            CheckRow(stringResource(R.string.row_notifications), notifOk, null) { PhoneSetup.openNotifications(activity) }
+            CheckRow(stringResource(R.string.row_notifications), notifOk, stringResource(R.string.row_notifications_help)) { PhoneSetup.openNotifications(activity) }
             HorizontalDivider(color = c.border)
-            CheckRow(stringResource(R.string.row_exact), exactOk, null) { PhoneSetup.openExactAlarms(activity) }
+            CheckRow(stringResource(R.string.row_exact), exactOk, stringResource(R.string.row_exact_help)) { PhoneSetup.openExactAlarms(activity) }
             if (xiaomi) {
                 HorizontalDivider(color = c.border)
+                val known = autostart
                 CheckRow(
-                    stringResource(R.string.row_autostart), settings?.autostartConfirmed == true, stringResource(R.string.row_confirm_help),
-                    onConfirm = { on -> scope.launch { settings?.let { container.db.settings().upsert(it.copy(autostartConfirmed = on)) } } },
-                ) { PhoneSetup.openAutostart(activity) }
+                    stringResource(R.string.row_autostart),
+                    known ?: (settings?.autostartConfirmed == true),
+                    stringResource(if (known == null) R.string.row_autostart_help_unknown else R.string.row_autostart_help),
+                ) {
+                    openedAutostart = true
+                    PhoneSetup.openAutostart(activity)
+                }
             }
             HorizontalDivider(color = c.border)
-            CheckRow(stringResource(R.string.row_battery), batteryOk, null) { PhoneSetup.openBattery(activity) }
+            CheckRow(stringResource(R.string.row_battery), batteryOk, stringResource(if (xiaomi) R.string.row_battery_help_xiaomi else R.string.row_battery_help)) {
+                PhoneSetup.openBattery(activity)
+            }
             if (xiaomi) {
                 HorizontalDivider(color = c.border)
-                CheckRow(
-                    stringResource(R.string.row_recents), settings?.recentsLockConfirmed == true, stringResource(R.string.row_recents_help),
-                    onConfirm = { on -> scope.launch { settings?.let { container.db.settings().upsert(it.copy(recentsLockConfirmed = on)) } } },
-                    onOpen = null,
-                )
+                CheckRow(stringResource(R.string.row_recents), settings?.recentsLockConfirmed == true, stringResource(R.string.row_recents_help)) {
+                    ask = Ask.RECENTS
+                }
             }
+        }
+        ask?.let { which ->
+            val c2 = Ba.colors
+            AlertDialog(
+                onDismissRequest = { ask = null },
+                containerColor = c2.surface,
+                title = { Text(stringResource(if (which == Ask.AUTOSTART) R.string.ask_autostart_title else R.string.ask_recents_title), style = Ba.type.title, color = c2.text1) },
+                text = { Text(stringResource(if (which == Ask.AUTOSTART) R.string.ask_autostart_text else R.string.ask_recents_text), style = Ba.type.body, color = c2.text2) },
+                confirmButton = { TextButton(onClick = { confirm(which, true); ask = null }) { Text(stringResource(if (which == Ask.AUTOSTART) R.string.ask_yes_autostart else R.string.ask_yes_recents), color = c2.accent) } },
+                dismissButton = { TextButton(onClick = { confirm(which, false); ask = null }) { Text(stringResource(R.string.ask_not_yet), color = c2.text2) } },
+            )
         }
         SecondaryButton(
             stringResource(R.string.test_notification),
@@ -469,28 +501,29 @@ private fun HealthBars(rows: List<LogRow>, health: Health, now: Instant, modifie
     }
 }
 
+private enum class Ask { AUTOSTART, RECENTS }
+
+/** One setup row: the whole row opens the setting; the circle only shows the state, it can't be ticked. */
 @Composable
-private fun CheckRow(label: String, ok: Boolean, help: String?, onConfirm: ((Boolean) -> Unit)? = null, onOpen: (() -> Unit)?) {
+private fun CheckRow(label: String, ok: Boolean, help: String?, onOpen: () -> Unit) {
     val c = Ba.colors
-    ListRow {
+    ListRow(onClick = onOpen) {
         Box(
             contentAlignment = Alignment.Center,
             modifier = Modifier
                 .size(26.dp)
                 .clip(CircleShape)
                 .background(if (ok) c.accent else c.surface)
-                .then(if (ok) Modifier else Modifier.border(2.dp, c.border, CircleShape))
-                .then(if (onConfirm != null) Modifier.clickable(role = Role.Checkbox) { onConfirm(!ok) } else Modifier)
-                .semantics { contentDescription = label },
+                .then(if (ok) Modifier else Modifier.border(2.dp, c.border, CircleShape)),
         ) {
             if (ok) Icon(BaIcons.Check, null, tint = c.onAccent, modifier = Modifier.size(16.dp))
         }
-        Column(Modifier.weight(1f)) {
+        Column(Modifier.weight(1f).semantics(mergeDescendants = true) {}) {
             Text(label, style = Ba.type.subtitle, color = c.text1)
             help?.let { Text(it, style = Ba.type.caption, color = c.text3) }
         }
-        onOpen?.let {
-            Box(Modifier.clip(RoundedCornerShape(10.dp)).background(c.surface2).clickable(role = Role.Button, onClick = it).padding(horizontal = 12.dp, vertical = 6.dp)) {
+        if (!ok) {
+            Box(Modifier.clip(RoundedCornerShape(10.dp)).background(c.surface2).padding(horizontal = 12.dp, vertical = 6.dp)) {
                 Text(stringResource(R.string.open), style = Ba.type.label, color = c.text1)
             }
         }

@@ -27,14 +27,24 @@ class Notifier(appContext: Context) {
     private val context = PersianLocale.wrap(appContext)
     private val manager = NotificationManagerCompat.from(appContext)
 
+    /**
+     * Reminder channels vibrate: some phones (Xiaomi among them) leave a channel silent on the wrist unless
+     * vibration is set on it. A channel's settings are fixed once created, so changing them needs a new id;
+     * the old ids are deleted.
+     */
     fun createChannels() {
         val system = context.getSystemService(NotificationManager::class.java)
+        OLD_CHANNELS.forEach(system::deleteNotificationChannel)
+        fun reminder(id: String, name: Int, importance: Int) = NotificationChannel(id, context.getString(name), importance).apply {
+            enableVibration(true)
+            vibrationPattern = VIBRATION
+        }
         system.createNotificationChannels(
             listOf(
-                NotificationChannel(CHANNEL_BLOCKS, context.getString(R.string.channel_blocks), NotificationManager.IMPORTANCE_DEFAULT),
-                NotificationChannel(CHANNEL_FOLLOW_UPS, context.getString(R.string.channel_follow_ups), NotificationManager.IMPORTANCE_HIGH),
-                NotificationChannel(CHANNEL_TASK_ALARMS, context.getString(R.string.channel_task_alarms), NotificationManager.IMPORTANCE_HIGH),
-                NotificationChannel(CHANNEL_RITUAL, context.getString(R.string.channel_ritual), NotificationManager.IMPORTANCE_DEFAULT),
+                reminder(CHANNEL_BLOCKS, R.string.channel_blocks, NotificationManager.IMPORTANCE_DEFAULT),
+                reminder(CHANNEL_FOLLOW_UPS, R.string.channel_follow_ups, NotificationManager.IMPORTANCE_HIGH),
+                reminder(CHANNEL_TASK_ALARMS, R.string.channel_task_alarms, NotificationManager.IMPORTANCE_HIGH),
+                reminder(CHANNEL_RITUAL, R.string.channel_ritual, NotificationManager.IMPORTANCE_DEFAULT),
                 NotificationChannel(CHANNEL_SYSTEM, context.getString(R.string.channel_system), NotificationManager.IMPORTANCE_LOW),
             ),
         )
@@ -107,9 +117,10 @@ class Notifier(appContext: Context) {
 
     fun cancel(id: Int) = manager.cancel(id)
 
+    /** The test goes through the Blocks channel, so it sounds and vibrates exactly like a real reminder. */
     @Suppress("MissingPermission")
     fun showTest(key: String) {
-        val notification = base(CHANNEL_SYSTEM)
+        val notification = base(CHANNEL_BLOCKS)
             .setContentTitle(context.getString(R.string.notif_test_title))
             .setContentText(context.getString(R.string.notif_test_text))
             .setContentIntent(openToday(null, key))
@@ -154,11 +165,13 @@ class Notifier(appContext: Context) {
     }
 
     companion object {
-        const val CHANNEL_BLOCKS = "blocks"
-        const val CHANNEL_FOLLOW_UPS = "follow_ups"
-        const val CHANNEL_TASK_ALARMS = "task_alarms"
-        const val CHANNEL_RITUAL = "ritual"
+        const val CHANNEL_BLOCKS = "blocks_v2"
+        const val CHANNEL_FOLLOW_UPS = "follow_ups_v2"
+        const val CHANNEL_TASK_ALARMS = "task_alarms_v2"
+        const val CHANNEL_RITUAL = "ritual_v2"
         const val CHANNEL_SYSTEM = "system"
+        private val OLD_CHANNELS = listOf("blocks", "follow_ups", "task_alarms", "ritual")
+        private val VIBRATION = longArrayOf(0, 250, 150, 250)
 
         private const val TEST_NOTIFICATION_ID = 900
         private const val HEALTH_NOTIFICATION_ID = 901

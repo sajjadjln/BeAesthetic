@@ -6,11 +6,10 @@
 
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <!-- Exact alarms: USE_EXACT_ALARM on 33+ (sideloaded APK, ARCHITECTURE §7.3), SCHEDULE_EXACT_ALARM on 31–32. -->
+    <!-- Exact alarms: USE_EXACT_ALARM (granted at install on 33+, ARCHITECTURE §7.3). SCHEDULE_EXACT_ALARM too,
+         on every version, so the system "Alarms and reminders" switch exists if a phone refuses the first. -->
     <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
-    <uses-permission
-        android:name="android.permission.SCHEDULE_EXACT_ALARM"
-        android:maxSdkVersion="32" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
 

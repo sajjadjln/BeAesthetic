@@ -255,8 +255,20 @@
     <string name="row_autostart">اجرای خودکار</string>
     <string name="row_battery">باتری: بدون محدودیت</string>
     <string name="row_recents">قفل در اپ‌های اخیر</string>
-    <string name="row_recents_help">توی اپ‌های اخیر، کارت پیکر رو پایین بکش تا قفل بشه.</string>
-    <string name="row_confirm_help">بعد از تنظیم، تیکش رو بزن.</string>
+    <string name="row_notifications_help">اعلان‌های پیکر روشن باشه.</string>
+    <string name="row_exact_help">«زنگ‌ها و یادآورها»: یادآور سر دقیقه برسه.</string>
+    <string name="row_autostart_help">گوشی بعد از روشن شدن، پیکر رو راه بندازه.</string>
+    <string name="row_autostart_help_unknown">گوشی وضعیتش رو نمی‌گه؛ بعد از روشن کردن ازت می‌پرسم.</string>
+    <string name="row_battery_help">گوشی پیکر رو برای صرفه‌جویی نبنده.</string>
+    <string name="row_battery_help_xiaomi">اول «اجازه بده»، بعد توی صرفه‌جویی باتری «بدون محدودیت».</string>
+    <string name="row_recents_help">«پاک کردن همه» پیکر رو نبنده.</string>
+    <string name="ask_autostart_title">اجرای خودکار</string>
+    <string name="ask_autostart_text">برای پیکر روشنش کردی؟</string>
+    <string name="ask_recents_title">قفل در اپ‌های اخیر</string>
+    <string name="ask_recents_text">صفحه‌ی اپ‌های اخیر رو باز کن (از پایین صفحه بکش بالا و نگه دار). کارت پیکر رو نگه دار و آیکن قفل رو بزن. با قفل، «پاک کردن همه» و پاک‌کننده‌ی گوشی پیکر رو نمی‌بندن، پس یادآورها سر جاشون می‌مونن.</string>
+    <string name="ask_yes_autostart">آره، روشنه</string>
+    <string name="ask_yes_recents">قفلش کردم</string>
+    <string name="ask_not_yet">هنوز نه</string>
     <string name="open">باز کن</string>
     <string name="test_notification">اعلان آزمایشی</string>
 
