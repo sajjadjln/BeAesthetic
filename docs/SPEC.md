@@ -49,9 +49,9 @@ The program is split into five **chapters** that follow the Jalali months. A cha
 
 | Sat | Sun | Mon | Tue | Wed | Thu | Fri |
 |---|---|---|---|---|---|---|
-| Training | Rest | Training | Rest | Training | Rest | Hike + weekly ritual |
+| Training | Rest (optional easy cardio) | Training | Rest (optional easy cardio) | Training | Rest | Training + weekly ritual |
 
-**[OPEN]** Your first message said "4-day/week home program (Sat/Mon/Wed/Fri)" and "hiking on Fridays". Is Friday's session the hike itself, or a home workout plus the hike? The table above assumes **the hike is Friday's session**.
+Training is in the morning, from the user's 12-week plan (`docs/program/12-week-program.md`, D102). Friday is a training day; a hike is an optional hobby. The app itself doesn't know any of this: the user enters it (D100).
 
 ## 3. Scope
 
@@ -62,8 +62,8 @@ The program is split into five **chapters** that follow the Jalali months. A cha
 | M1 | **Today screen** | A day ring, this week's dots, a part-of-day switcher (Morning, Midday, Evening, Night; the current part is selected) and icon tiles. Tap a tile to complete it. The header shows the week and chapter («هفته ۵ از ۲۳ · فصل آبان»). A tick gives a soft haptic and a short accent fill (D58). The first tick after a day at level 0 says «خوش برگشتی» once (D53). The character «پیکر» sits under the ring with one line that follows the day (D82). |
 | M2 | **Tasks and routines** | Daily items, items on specific weekdays, **"every N days from the last time"** items, and one-off items ("once"). Each item can be marked important (UI: «مهم»; one follow-up reminder) and/or part of the minimum day, and can have its own alarm time on chosen weekdays. An optional anchor «بعد از…» says what the task follows (D55). |
 | M3 | **Minimum day** | A leaf button on Today toggles «روز حداقلی». Minimum shows only the floor items. Doing the floor guarantees the day at least the lightest shade. |
-| M4 | **Workout log** | Your program loaded from the plan you'll paste. Each session shows the last session's numbers, and each set is pre-filled with them. You log reps or seconds plus effort for each set. A set that beats the previous best shows «رکورد» at once (D54). Exercises sit on **ladders** of harder variants; reaching the top of the range offers the next rung (D70). The end of a session notes any round-number total crossed (D71). |
-| M5 | **Strength tests** | Pull-ups, push-ups, plank, dead hang and one leg-health test. Every 2 weeks **[DEFAULT, confirm]**. Before each test, an optional guess; the result is shown next to it (D73). |
+| M4 | **Workout log** | The plan the user entered in the editor (M14). Each session shows the last session's numbers, and each set is pre-filled with them. You log reps or seconds plus effort for each set. A set that beats the previous best shows «رکورد» at once (D54). Exercises sit on **ladders** of harder variants; reaching the top of the range offers the next rung (D70). The end of a session notes any round-number total crossed (D71). |
+| M5 | **Strength tests** | Tests the user defines (D106), e.g. pull-ups, push-ups, plank, dead hang, toe-touch gap, knee-to-wall. Taken with the monthly check-in. Before each test, an optional guess; the result is shown next to it (D73). |
 | M6 | **Dashboard (داشبورد)** | A GitHub-style grid covering the whole program: accent intensity (green by default) = % of the day done, gray = nothing done, its own color for special days. Days before the app was installed show as «قبل از اپ» (dotted), not gray (D56). Tap a square to see that day. |
 | M7 | **Progress (پیشرفت)** | Weight (weekly), tape measurements and photos (**monthly**), strength numbers. Cards showing "since Day 0", plus simple line charts. A program line toward «نوروز ۱۴۰۶». 5–8 real-world milestones the user picks (D65). A ghost-overlay camera for the photos (D64). Ladders (D70) and lifetime totals (D71). After each check-in, a **reveal** of the new photos next to Day 0 with a compare slider (D75). |
 | M8 | **Friday ritual** | Review (this week's row, wins, personal records) and then plan (special days, and a free-text snack note for each day that opens like a drop-down). About 10 minutes, or about a minute on the **short path**: review → start the week, with the plan steps optional (D62). Wins include comebacks and best routines (D53, D57). The identity sentence is shown (D65). |
@@ -71,7 +71,7 @@ The program is split into five **chapters** that follow the Jalali months. A cha
 | M10 | **Reliability setup** | A setup screen for Xiaomi/MIUI/HyperOS and other aggressive phones (Autostart, battery settings), a test notification, and detection of reminders that fired late or not at all. |
 | M11 | **Backup** | Automatic weekly zip (data and photos) into a folder you choose, synced to your PC with Syncthing. Plus manual export/import and a restore flow that has been tested. |
 | M12 | **Persian** | Persian only, right-to-left, Persian digits. Jalali dates first with Gregorian underneath. An English version would be a separate build (D87). |
-| M14 | **Workout plan editor** | Settings → برنامه تمرین: pick a weekday, name the workout, add exercises (reps or seconds, sets, range), reorder by dragging. |
+| M14 | **Workout plan editor** | Settings → برنامه تمرین: pick a weekday, name the workout, add exercises (reps or seconds, sets, range or «حداکثر», optional kg, per side, target effort, rest, note; D105), reorder by dragging. Edited by hand when the program changes (D104). |
 | M13 | **Onboarding** | Welcome → program dates → reminder times → reliability setup → backup folder → baseline entry (with past dates, plus the workout backfill) → program import → identity sentence and milestones. |
 | M15 | **Chapters and recaps** | Five chapters by Jalali month; a halfway recap at Yalda (must ship by 19 Dec 2026) and a finish recap. In the app only (D51, D52, D63). Sealed **letters to your future self** at each chapter start (D72). A **countdown to Nowruz** on Today, in the last chapter only (D74). |
 | M16 | **After the finish line** | The finish recap offers maintenance or a new program (§6.5). Built by ~week 18 (D61). |
@@ -144,6 +144,8 @@ The bottom navigation has 4 **icon-only** tabs (mirrored in right-to-left mode):
 9. **Finish line.** On 29 Esfand: final photos, the finish recap, then «ادامه» (maintenance) or «برنامه تازه» (new dates).
 
 ## 5. Default routine set (editable in the app)
+
+**Dev seed only.** A fresh install starts empty (D100); slice 9 removes this seed. The list stays here as the user's own routine and as a test fixture.
 
 | Item | Block | Schedule | Non-negotiable | Minimum day |
 |---|---|---|---|---|

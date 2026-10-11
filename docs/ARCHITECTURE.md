@@ -211,13 +211,13 @@ Physical schema for `SPEC.md` §9, updated for D25–D28. Dates are ISO `LocalDa
 | `day` | date, special (SICK·TRAVEL·OFF)?, minimumMode, dueCount, doneCount, floorDone | Replaces DayMeta. Holds the **day snapshot**, see below. A future row can hold only a planned special day. |
 | `snack_note` | date, text, updatedAt | |
 | `week` | weekStart (Saturday), ritualDoneAt?, reviewNote? | |
-| `ladder` | id, name, sortOrder | D70. A move family, e.g. «شنا», «بارفیکس». Seeded: push-up and pull-up. |
+| `ladder` | id, name, sortOrder | D70. A move family, e.g. «شنا», «بارفیکس». Added by the user (D100). |
 | `exercise` | id, name, kind (REPS·SECONDS), ladderId?, rung?, archivedAt? | One `name`, typed in whichever language the user uses. The next harder variant = same ladder, `rung + 1` (replaces `nextExerciseId`, D70). |
-| `workout` | id, weekday (unique), name | A = Sat, B = Mon, C = Wed. |
-| `workout_exercise` | workoutId, position, exerciseId, sets, rangeMin, rangeMax | Key (workoutId, position). Drag-to-reorder rewrites positions. |
+| `workout` | id, weekday (unique), name | One per training weekday (the user's plan: Sat, Mon, Wed, Fri; D102). |
+| `workout_exercise` | workoutId, position, exerciseId, sets, rangeMin?, rangeMax?, kg?, perSide, targetEffort?, restSeconds?, note? | Key (workoutId, position). Drag-to-reorder rewrites positions. No range = «حداکثر» (D105). `kg` is the default load (D103). |
 | `session` | id, workoutId, date, startedAt, finishedAt? | |
-| `set_log` | sessionId, exerciseId, setIndex, value, effort (1–10) | D27: effort is per set, 1–10. |
-| `metric` | id, kind (BODY·TAPE·STRENGTH), key, name, unit (kg·cm·reps·s), higherIsBetter, sortOrder | Seeded: weight, 5 tape sites (waist, chest, arm, thigh, shoulders; D85), the strength tests. |
+| `set_log` | sessionId, exerciseId, setIndex, value, kg?, effort (1–10) | D27: effort is per set, 1–10. `kg` per set (D103). |
+| `metric` | id, kind (BODY·TAPE·STRENGTH), key, name, unit (kg·cm·reps·s), higherIsBetter, sortOrder | Added by the user, nothing seeded (D100). The editor suggests weight and the 5 tape sites (D85). Strength tests are user-defined (D106). |
 | `metric_entry` | id, metricId, date, value, guess?, note? | Baseline entries simply carry the Day 0 date. `guess` = the strength-test guess (D73). |
 | `check_in` | idx (0–6), date, doneAt? | D28: 7 monthly check-ins. |
 | `photo` | checkInIdx, pose (FRONT·SIDE·BACK), fileName, takenAt | Key (checkInIdx, pose). |
@@ -349,7 +349,7 @@ Each slice ends with an installable APK, a short demo note, and a pause for feed
 
 The slices before 8b must leave room to hit 19 Dec. If they slip, build 8b before slice 8.
 
-Onboarding is last: the user is the only user for now and is already set up by the seed data.
+Onboarding is last: the user is the only user for now and is already set up by the dev seed. Slice 9 removes the seed: a fresh install starts empty (D100).
 
 Every slice also runs the accessibility checklist (§11, D68).
 
@@ -358,7 +358,7 @@ Every slice also runs the accessibility checklist (§11, D68).
 **Not in the MVP.** Publishing on Cafe Bazaar is a **future goal, after the program** (D49). The research for it is in `research/07-marketing-strategy.md`. What we do now so that stays possible:
 
 - **App ID `app.beaesthetic` is final.** Android package names allow only Latin letters, digits and `_`, so every app in Iranian stores has an English ID. Stores match searches against the listing (title, description), not the package name. The ID has no effect on search ranking (Bazaar's own app is `com.farsitel.bazaar`).
-- **Nothing personal is hard-coded.** Program start and end dates live in `settings`; routines, the workout plan and reminder times are seed data the user can edit.
+- **Nothing personal is hard-coded.** Program start and end dates live in `settings`; routines, the workout plan, metrics and reminder times are added by the user; a fresh install starts empty (D100).
 - **The same release key** signs every build the user installs, so a store version can update the personal install later.
 - **An English version** (D87) would be a separate build: a Gradle product flavor `en` with its own `strings.xml`, LTR, Latin digits, the name "BeAesthetic" and its own app ID (e.g. `app.beaesthetic.en`) and listing. The Persian app never contains English.
 - **The app name** (launcher label) is a string resource: «پیکر» (D79). "BeAesthetic" is the Latin name (app ID, an English build). The icon is an adaptive vector icon with a monochrome layer and a white notification silhouette (D78).

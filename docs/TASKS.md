@@ -1,6 +1,6 @@
 # Tasks and status
 
-_Last updated: 2026-10-10_
+_Last updated: 2026-10-11_
 
 ## Where we are
 
@@ -29,6 +29,7 @@ The program itself started on **2026-10-09 (Day 0)**. Week 1 began 2026-10-10. E
 
 ## Next steps
 
+0. **The workout plan arrived (2026-10-11):** `docs/program/12-week-program.md`. It shaped D100–D106: the app starts empty, training is in the morning, sets log optional kg, the plan editor holds range or «حداکثر», per side, target effort, rest and a note, and strength tests are user-defined and monthly. The workout tile is still in Evening in the dev seed; move it to Morning in slice 3's editor.
 0. **Slice 2 is built (2026-10-11).** Today complete: ring, week dots (before-app dotted, future outlined), minimum day (leaf), the chapter line and, in the last chapter, the countdown, the chapter-start card with the letter offer, the first-letter offer, the letter sheet and the letter's opening card, tick motion (fill from the touch point, 100% moment), «پیکر» with day poses, chapter outfits and the 7-day line picker. Reminders complete: follow-ups with «انجام شد», task alarms (scheduled; set them in slice 3's editor), health + Today banner + the watchdog's once-a-day warning, device-off marking at boot, the absence rule, Settings, «یادآورها», «گوشی» (Xiaomi intents) and «ظاهر». Database v2 with a tested migration. Checked on an emulator: the v1 database migrated with its ticks; the Night block and both follow-ups fired; «انجام شد» ticked the task on Today; the 1 Azar and 1 Esfand cards and the countdown showed with the debug clock. **Checked on the Poco (2026-10-11, release 0.2.1):** the signed release installs and runs; the test notification arrives and vibrates; the «گوشی» rows open the real settings and show their real state (D99). **Next:** a few days of real use, then slice 3 (tasks list and editor).
 0. **Slice 1 is built (2026-10-10).** What works: Room with the seeded routine, basic Today (header with week, part-of-day switcher, tiles that tick with the accent fill and a light vibration, «مهم» and «موعدش رسیده»), the day snapshot, the reminder core (planner, `setAlarmClock`, receivers for fire/boot/update/time change, the 6-hourly watchdog, block notifications with anchors in Persian, the reminder log), the usage log, `installDate`, the no-`INTERNET` and banned-dependency checks, the launcher and notification icons. Checked on an emulator: ticks survive a force-stop; the test alarm fires on time with the screen off; the 23:00 Night block arrived as «شب · ۳ کار» with anchors. **Next:** the user installs it on the Poco, sets Autostart and battery "No restrictions" by hand (the setup screen is slice 2), and lives with it for a few days. Then slice 2.
 1. **Phase 5, slice 1**, in a session on the user's laptop (Android Studio and the Android SDK are there). Slice 1 now includes the **reminder core** (D50). Full list in `ARCHITECTURE.md` §14:
@@ -54,16 +55,16 @@ The program itself started on **2026-10-09 (Day 0)**. Week 1 began 2026-10-10. E
 ## Open questions for the user
 
 1. ~~Bedtime~~ → 23:30, Night block at 23:00 (D88).
-2. Is the **Friday hike** the Friday workout, or a home workout plus the hike?
+2. ~~Friday hike~~ → Friday is a training day; the hike is a hobby (D102).
 3. ~~Training time~~ → evening (D88).
-4. Keep the three **protein** ticks (breakfast / lunch / dinner)? (Default: yes)
-5. **Strength tests** every 2 weeks? Which **leg-health** test?
-6. **Beard and haircut** intervals (days; seeded as 7 and 30, D90); **vitamin D** dose and schedule.
-7. **The workout plan** (exercises, sets, rep ranges for Sat / Mon / Wed). The user said they'll paste it. It seeds the Workout plan editor. With it: the **ladder rungs** for each move (D70). Default seeds: push-up = knee → standard → diamond → archer; pull-up = dead hang → negative → band-assisted → strict.
-8. **Snack list:** 5–10 snacks they can make.
+4. ~~Protein ticks~~ → the user adds their own tasks (D100).
+5. ~~Strength tests~~ → user-defined, with the monthly check-in (D106).
+6. ~~Beard, haircut, vitamin D~~ → the user adds their own tasks (D100).
+7. ~~The workout plan~~ → pasted 2026-10-11 (`docs/program/12-week-program.md`); the user enters it in the editor (slice 4), nothing seeded (D100, D105).
+8. ~~Snack list~~ → not seeded (D100).
 9. Day-level thresholds and the special-day cap (2/week) are defaults. Revisit after 2 weeks of real use.
 10. ~~Persian app name~~ → **«پیکر»** (D79). English stays "BeAesthetic". **Logo:** ✅ the cartoon sticker (D81), files in `docs/design/logo/`; board (`docs/design/logo.html`, https://claude.ai/artifact/2o9iY6KqvcGFTbhYhFF6j9) (D78, D80). **Character:** the sticker guy lives in the app as «پیکر», a hype gym buddy (D82–D84).
-11. **Which Friday is the monthly check-in?** Needed for the check-in schedule. Default: the Friday closest to the 17th of each Jalali month (same spacing as Day 0). The mockups use that default: «جمعه ۲۰ آذر» (11 Dec).
+11. ~~Check-in Friday~~ → the Friday closest to the 17th of each Jalali month (D101).
 
 12. ~~Tape sites~~ → waist, chest, arm (right, flexed), thigh (right), shoulders (D85, confirmed).
 
