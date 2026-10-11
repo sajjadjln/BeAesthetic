@@ -225,6 +225,7 @@ Board: `docs/design/character.html`. Rig: `docs/design/piker.js` (17 poses, face
 - **«زنگ»** card with a switch: the time (large) and **7 day circles** to choose which weekdays the alarm rings.
 - Toggles: «مهم» (one extra reminder), «روز حداقلی» (part of the floor).
 - «ذخیره».
+- As built (D107): all 11 icons; a 5th repeat choice «فقط روز حداقلی»; «هر N روز» as a − / + stepper; «یک بار» as day pills for the next 4 weeks; suggestion chips under «بعد از…»; «حذف» under «ذخیره» for an existing task. Problems show in amber after the first «ذخیره» (D110).
 
 ### 09 یادآورها (Reminders)
 - Health card with an «آزمایش» (test) button.
