@@ -42,7 +42,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -57,7 +56,6 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import app.beaesthetic.AppContainer
 import app.beaesthetic.R
 import app.beaesthetic.domain.tasks.FormError
 import app.beaesthetic.domain.tasks.Repeat
@@ -68,7 +66,6 @@ import app.beaesthetic.domain.tasks.TaskForms
 import app.beaesthetic.domain.tasks.TaskIcon
 import app.beaesthetic.domain.text.PersianDigits
 import app.beaesthetic.domain.time.Part
-import app.beaesthetic.domain.time.ProgramCalendar
 import app.beaesthetic.domain.time.Weekdays
 import app.beaesthetic.ui.clockText
 import app.beaesthetic.ui.components.BaCard
@@ -90,7 +87,9 @@ import app.beaesthetic.ui.components.TopBar
 import app.beaesthetic.ui.jalaliDayMonth
 import app.beaesthetic.ui.settings.Segmented
 import app.beaesthetic.ui.theme.Ba
-import kotlinx.coroutines.launch
+import app.beaesthetic.ui.theme.PeykarTheme
+import app.beaesthetic.ui.theme.ThemeMode
+import androidx.compose.ui.tooling.preview.Preview
 import java.time.LocalDate
 
 /** What the sheet is editing: a new task (in a part) or an existing one. */
@@ -102,13 +101,15 @@ private sealed interface Editing {
 // ---------------------------------------------------------------- 07 Tasks
 
 @Composable
-fun TasksScreen(container: AppContainer, onBack: () -> Unit) {
+fun TasksRoute(viewModel: TasksViewModel, onBack: () -> Unit) {
+    val state by viewModel.state.collectAsStateWithLifecycle()
+    TasksScreen(state, onBack, onSave = viewModel::save, onDelete = viewModel::delete)
+}
+
+/** Stateless: the list and the editor sheet. Only the filter and the open sheet are local UI state. */
+@Composable
+fun TasksScreen(state: TasksUiState?, onBack: () -> Unit, onSave: (TaskForm, Task?) -> Unit, onDelete: (Task) -> Unit) {
     val c = Ba.colors
-    val scope = rememberCoroutineScope()
-    val data by remember { container.tasks.observeTasks() }.collectAsStateWithLifecycle(null)
-    val settings by container.db.settings().observe().collectAsStateWithLifecycle(null)
-    val rollover = settings?.rolloverHour ?: ProgramCalendar.DEFAULT_ROLLOVER_HOUR
-    val today = container.clock.programDate(rollover)
     // 0 = all, then one per part.
     var filter by rememberSaveable { mutableStateOf(0) }
     var editing by remember { mutableStateOf<Editing?>(null) }
@@ -116,7 +117,7 @@ fun TasksScreen(container: AppContainer, onBack: () -> Unit) {
     Box(Modifier.fillMaxSize().background(c.bg).safeDrawingPadding()) {
         Column(Modifier.fillMaxSize()) {
             TopBar(stringResource(R.string.tasks_title), onBack, stringResource(R.string.cd_back))
-            val (tasks, completions) = data ?: return@Column
+            val (today, tasks, completions) = state ?: return@Column
             val listed = tasks.filter { TaskForms.isListed(it, completions[it.id].orEmpty(), today) }
             Column(
                 verticalArrangement = Arrangement.spacedBy(12.dp),
@@ -155,31 +156,36 @@ fun TasksScreen(container: AppContainer, onBack: () -> Unit) {
         )
     }
 
+    val s = state ?: return
     editing?.let { e ->
-        val all = data?.first.orEmpty()
         TaskEditorSheet(
             editing = e,
-            today = today,
-            allTasks = all,
+            today = s.today,
+            allTasks = s.tasks,
             onDismiss = { editing = null },
             onSave = { form ->
-                val original = (e as? Editing.Existing)?.task
-                val task = TaskForms.toTask(form, original, today, TaskForms.sortOrderFor(form, original, all))
                 editing = null
-                scope.launch {
-                    container.tasks.save(task, today, container.clock.now())
-                    container.scheduler.reconcile("task-edit")
-                }
+                onSave(form, (e as? Editing.Existing)?.task)
             },
             onDelete = { task ->
                 editing = null
-                scope.launch {
-                    container.tasks.archive(task.id, today, container.clock.now())
-                    container.scheduler.reconcile("task-delete")
-                }
+                onDelete(task)
             },
         )
     }
+}
+
+@Preview(locale = "fa", showBackground = true, widthDp = 380, heightDp = 800)
+@Composable
+private fun TasksPreview() {
+    val today = LocalDate.of(2026, 10, 12)
+    val tasks = listOf(
+        Task(1, "مسواک", TaskIcon.TOOTH, Part.MORNING, Repeat.Daily, today, inMinimumDay = true),
+        Task(2, "کراتین", TaskIcon.PILL, Part.MORNING, Repeat.Daily, today, alarm = app.beaesthetic.domain.tasks.TaskAlarm(9 * 60, 127, true)),
+        Task(3, "ناخن", TaskIcon.SCISSORS, Part.EVENING, Repeat.EveryNDays(7), today),
+        Task(4, "خرید", TaskIcon.APPLE, Part.MIDDAY, Repeat.Once(today.plusDays(1)), today, isImportant = true),
+    )
+    PeykarTheme(mode = ThemeMode.DARK) { TasksScreen(TasksUiState(today, tasks, emptyMap()), onBack = {}, onSave = { _, _ -> }, onDelete = {}) }
 }
 
 @Composable

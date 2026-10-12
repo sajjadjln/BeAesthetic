@@ -37,7 +37,6 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -56,11 +55,8 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import app.beaesthetic.AppContainer
 import app.beaesthetic.R
 import app.beaesthetic.domain.text.PersianDigits
-import app.beaesthetic.domain.time.ProgramCalendar
-import app.beaesthetic.domain.time.Weekdays
 import app.beaesthetic.domain.workout.Exercise
 import app.beaesthetic.domain.workout.ExerciseKind
 import app.beaesthetic.domain.workout.PlanError
@@ -86,8 +82,10 @@ import app.beaesthetic.ui.components.Stepper
 import app.beaesthetic.ui.components.TopBar
 import app.beaesthetic.ui.settings.Segmented
 import app.beaesthetic.ui.theme.Ba
+import app.beaesthetic.ui.theme.PeykarTheme
+import app.beaesthetic.ui.theme.ThemeMode
+import androidx.compose.ui.tooling.preview.Preview
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 private sealed interface EditingItem {
     data object New : EditingItem
@@ -97,33 +95,48 @@ private sealed interface EditingItem {
 // ---------------------------------------------------------------- 10 Workout plan editor
 
 @Composable
-fun PlanScreen(container: AppContainer, onBack: () -> Unit) {
+fun PlanRoute(viewModel: PlanViewModel, onBack: () -> Unit) {
+    val state by viewModel.state.collectAsStateWithLifecycle()
+    PlanScreen(
+        state,
+        onBack,
+        PlanActions(viewModel::setName, viewModel::saveItem, viewModel::removeItem, viewModel::move),
+    )
+}
+
+/** What the plan editor can change; each takes the weekday (Saturday = 0). */
+data class PlanActions(
+    val setName: (Int, String) -> Unit = { _, _ -> },
+    val saveItem: (Int, PlanItemForm, PlanItem?) -> Unit = { _, _, _ -> },
+    val removeItem: (Int, PlanItem) -> Unit = { _, _ -> },
+    val move: (Int, Int, Int) -> Unit = { _, _, _ -> },
+)
+
+/** Stateless: the picked day and the open sheet are the only local UI state. */
+@Composable
+fun PlanScreen(state: PlanUiState?, onBack: () -> Unit, actions: PlanActions) {
     val c = Ba.colors
-    val scope = rememberCoroutineScope()
-    val plans by remember { container.workouts.observePlans() }.collectAsStateWithLifecycle(null)
-    val exercises by remember { container.workouts.observeExercises() }.collectAsStateWithLifecycle(emptyList())
-    val links by remember { container.workouts.observeHarderLinks() }.collectAsStateWithLifecycle(emptyMap())
-    val settings by container.db.settings().observe().collectAsStateWithLifecycle(null)
-    val today = container.clock.programDate(settings?.rolloverHour ?: ProgramCalendar.DEFAULT_ROLLOVER_HOUR)
-    var weekday by rememberSaveable { mutableIntStateOf(Weekdays.index(today.dayOfWeek)) }
+    var picked by rememberSaveable { mutableStateOf<Int?>(null) }
     var editing by remember { mutableStateOf<EditingItem?>(null) }
 
     Column(Modifier.fillMaxSize().background(c.bg).safeDrawingPadding()) {
         TopBar(stringResource(R.string.settings_workout), onBack, stringResource(R.string.cd_back))
-        val all = plans ?: return@Column
+        val s = state ?: return@Column
+        val weekday = picked ?: s.todayWeekday
+        val all = s.plans
+        val exercises = s.exercises
+        val links = s.links
         val plan = all[weekday]
         Column(
             verticalArrangement = Arrangement.spacedBy(14.dp),
             modifier = Modifier.fillMaxWidth().verticalScroll(rememberScrollState()).padding(start = 16.dp, end = 16.dp, bottom = 32.dp),
         ) {
-            DayPicker(all, weekday) { weekday = it }
-            WorkoutName(plan) { name -> scope.launch { container.workouts.setName(plan.weekday, name) } }
+            DayPicker(all, weekday) { picked = it }
+            WorkoutName(plan) { name -> actions.setName(plan.weekday, name) }
             if (plan.items.isEmpty()) {
                 EmptyDay()
             } else {
-                ExerciseList(plan, onOpen = { editing = EditingItem.Existing(it) }) { from, to ->
-                    scope.launch { container.workouts.move(plan.weekday, from, to) }
-                }
+                ExerciseList(plan, onOpen = { editing = EditingItem.Existing(it) }) { from, to -> actions.move(plan.weekday, from, to) }
                 if (plan.items.size > 1) Text(stringResource(R.string.plan_drag_help), style = Ba.type.caption, color = c.text3, modifier = Modifier.padding(horizontal = 4.dp))
             }
             SecondaryButton(stringResource(R.string.plan_new_exercise), onClick = { editing = EditingItem.New }, icon = BaIcons.Plus, modifier = Modifier.fillMaxWidth())
@@ -139,11 +152,11 @@ fun PlanScreen(container: AppContainer, onBack: () -> Unit) {
                 onDismiss = { editing = null },
                 onSave = { form ->
                     editing = null
-                    scope.launch { container.workouts.saveItem(plan.weekday, form, original) }
+                    actions.saveItem(plan.weekday, form, original)
                 },
                 onRemove = { item ->
                     editing = null
-                    scope.launch { container.workouts.removeItem(plan.weekday, item.exercise.id) }
+                    actions.removeItem(plan.weekday, item)
                 },
             )
         }
@@ -444,4 +457,14 @@ private fun SwitchRow(title: Int, help: Int, checked: Boolean, onChange: (Boolea
         }
         BaSwitch(checked, onChange, stringResource(title))
     }
+}
+
+@Preview(locale = "fa", showBackground = true, widthDp = 380, heightDp = 800)
+@Composable
+private fun PlanPreview() {
+    val squat = Exercise(1, "اسکات بلغاری", ExerciseKind.REPS)
+    val wallSit = Exercise(2, "اسکات دیوار", ExerciseKind.SECONDS)
+    val monday = WorkoutPlan(2, "پایین‌تنه", listOf(PlanItem(wallSit, 3, 30, 45), PlanItem(squat, 3, 8, 12, kg = 6.0, perSide = true, targetEffort = 8, restSeconds = 120)))
+    val plans = (0..6).map { if (it == 2) monday else WorkoutPlan(it, "", emptyList()) }
+    PeykarTheme(mode = ThemeMode.DARK) { PlanScreen(PlanUiState(plans, listOf(squat, wallSit), emptyMap(), 2), onBack = {}, actions = PlanActions()) }
 }

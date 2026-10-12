@@ -88,7 +88,7 @@ Room (Flow) ──► Repository ──► ViewModel ──► UiState (StateFlo
 ```
 
 - **No use-case class per action.** A ViewModel calls repositories and pure domain functions directly. Use-case classes would be one-line wrappers.
-- **One `UiState` data class per screen.** Screens are stateless composables that take the state and a few lambdas, so every screen has a Compose preview with fake data.
+- **One `UiState` data class per screen.** Screens are stateless composables that take the state and a few lambdas, so every screen has a Compose preview with fake data. A screen's only local state is UI state (a filter, the picked day, an open sheet). Each screen has a `…Route` that collects its ViewModel and a stateless `…Screen`.
 - **One `ProgramClock`** wraps `java.time.Clock` and exposes "now", "program date" and a Flow that ticks at the next boundary (04:00 rollover and part-of-day changes). Tests and the debug menu replace it with a fake clock.
 - **Debug menu** (debug builds only): set a fake "now", fire any reminder at once, run a backup, show the reminder log, show the usage log (D59), and switch the experiment toggles from `research/10-experiment-backlog.md` (D66). This is how reminder logic gets checked on the real phone without waiting for 22:30.
 

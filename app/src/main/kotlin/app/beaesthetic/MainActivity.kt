@@ -40,8 +40,10 @@ import app.beaesthetic.ui.settings.PhoneScreen
 import app.beaesthetic.ui.settings.RemindersScreen
 import app.beaesthetic.ui.settings.SettingsDestination
 import app.beaesthetic.ui.settings.SettingsScreen
-import app.beaesthetic.ui.tasks.TasksScreen
-import app.beaesthetic.ui.workout.PlanScreen
+import app.beaesthetic.ui.tasks.TasksRoute as TasksScreenRoute
+import app.beaesthetic.ui.tasks.TasksViewModel
+import app.beaesthetic.ui.workout.PlanRoute as PlanScreenRoute
+import app.beaesthetic.ui.workout.PlanViewModel
 import app.beaesthetic.ui.workout.SessionScreen
 import app.beaesthetic.ui.workout.SessionViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -147,14 +149,14 @@ class MainActivity : ComponentActivity() {
                             }
                         }
                     }
-                    composable<TasksRoute> { TasksScreen(container, onBack = nav::popBackStack) }
+                    composable<TasksRoute> { TasksScreenRoute(viewModel { TasksViewModel(container) }, onBack = nav::popBackStack) }
                     composable<RemindersRoute> { RemindersScreen(container, onBack = nav::popBackStack) }
                     composable<PhoneRoute> { PhoneScreen(container, onBack = nav::popBackStack) }
                     composable<AppearanceRoute> { AppearanceScreen(container, onBack = nav::popBackStack) }
                     composable<LetterRoute> { entry ->
                         LetterScreen(container, entry.toRoute<LetterRoute>().first, onDone = nav::popBackStack)
                     }
-                    composable<PlanRoute> { PlanScreen(container, onBack = nav::popBackStack) }
+                    composable<PlanRoute> { PlanScreenRoute(viewModel { PlanViewModel(container) }, onBack = nav::popBackStack) }
                     composable<WorkoutRoute> {
                         // One session per visit: a new view model each time the screen opens.
                         val session: SessionViewModel = viewModel(factory = viewModelFactory {
