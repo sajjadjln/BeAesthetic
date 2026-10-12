@@ -10,4 +10,11 @@ class PersianDigitsTest {
         assertEquals("۱۴۰۵", PersianDigits.format(1405))
         assertEquals("12.5", PersianDigits.normalize("۱۲.٥"))
     }
+
+    @Test
+    fun `decimals use the Persian separator and drop a trailing zero`() {
+        assertEquals("۸٫۵", PersianDigits.format(8.5))
+        assertEquals("۱۵", PersianDigits.format(15.0))
+        assertEquals("۰", PersianDigits.format(0.0))
+    }
 }

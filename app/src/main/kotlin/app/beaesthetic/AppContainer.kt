@@ -4,6 +4,9 @@ import android.content.Context
 import app.beaesthetic.data.db.AppDatabase
 import app.beaesthetic.data.repo.Seed
 import app.beaesthetic.data.repo.TaskRepository
+import app.beaesthetic.data.repo.WorkoutRepository
+import app.beaesthetic.domain.reminders.BlockContent
+import app.beaesthetic.domain.time.Part
 import app.beaesthetic.domain.time.ProgramCalendar
 import app.beaesthetic.events.EventLog
 import app.beaesthetic.reminders.AlarmScheduler
@@ -13,6 +16,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import java.time.LocalDate
 
 /** Manual DI (D33): every long-lived object, built once in [App]. Receivers and workers read `app.container`. */
 class AppContainer(context: Context) {
@@ -22,6 +26,7 @@ class AppContainer(context: Context) {
     val clock = ProgramClock()
     val db = AppDatabase.build(appContext)
     val tasks = TaskRepository(db)
+    val workouts = WorkoutRepository(db, tasks)
     val events = EventLog(db.events(), clock)
     val notifier = Notifier(appContext)
     val scheduler = AlarmScheduler(appContext, db, tasks, clock)
@@ -38,5 +43,13 @@ class AppContainer(context: Context) {
             Seed.ensure(db, PersianLocale.wrap(appContext), installDate, clock.now())
             ready = true
         }
+    }
+
+    /** A block notification goes away once its part has nothing pending. */
+    suspend fun cancelEmptyBlocks(date: LocalDate) {
+        val day = tasks.day(date)
+        Part.entries
+            .filter { BlockContent.lines(it, day.items, day.minimumMode).isEmpty() }
+            .forEach(notifier::cancelBlock)
     }
 }

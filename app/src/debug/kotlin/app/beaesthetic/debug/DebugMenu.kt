@@ -110,6 +110,11 @@ object DebugMenu {
                                 }, modifier = Modifier.weight(1f)) { Text(label) }
                             }
                         }
+                        // A week later: the same weekday's workout again, to see «قبلی» and «رکورد».
+                        OutlinedButton(onClick = {
+                            container.clock.offset = container.clock.offset.plusDays(7)
+                            message = "Clock moved a week ahead. Go back to Today."
+                        }, modifier = Modifier.fillMaxWidth()) { Text("+1 week") }
                         OutlinedButton(onClick = {
                             container.clock.offset = Duration.ZERO
                             scope.launch { container.scheduler.reconcile("debug-clock-reset"); message = "Real clock." }

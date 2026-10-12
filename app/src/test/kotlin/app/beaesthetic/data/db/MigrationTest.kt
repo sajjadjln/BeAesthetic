@@ -51,6 +51,30 @@ class MigrationTest {
         }
     }
 
+    @Test
+    fun `2 to 3 keeps every row and adds the empty workout tables`() {
+        helper.createDatabase(DB, 2).use { db ->
+            db.execSQL(
+                "INSERT INTO task (id, title, icon, part, repeat, weekdays, startDate, isImportant, inMinimumDay, action, alarmWeekdays, alarmEnabled, sortOrder, createdAt) " +
+                    "VALUES (3, 'تمرین', 'DUMBBELL', 'MORNING', 'WEEKDAYS', 85, '2026-10-10', 0, 0, 'WORKOUT', 0, 0, 0, 1791600000000)",
+            )
+            db.execSQL("INSERT INTO completion (taskId, date, completedAt) VALUES (3, '2026-10-12', 1791800000000)")
+            db.execSQL("INSERT INTO letter (id, writtenOn, writtenAt, opensOn, text, isFirst) VALUES (1, '2026-10-11', 1791700000000, '2026-11-22', 'سلام', 1)")
+        }
+
+        helper.runMigrationsAndValidate(DB, 3, true).use { db ->
+            db.query("SELECT action FROM task WHERE id = 3").use { c -> c.moveToFirst(); assertEquals("WORKOUT", c.getString(0)) }
+            db.query("SELECT COUNT(*) FROM completion").use { c -> c.moveToFirst(); assertEquals(1, c.getInt(0)) }
+            db.query("SELECT text FROM letter").use { c -> c.moveToFirst(); assertEquals("سلام", c.getString(0)) }
+            listOf("exercise", "workout", "workout_exercise", "session", "set_log").forEach { table ->
+                db.query("SELECT COUNT(*) FROM $table").use { c -> c.moveToFirst(); assertEquals(0, c.getInt(0)) }
+            }
+            // A set with kg in halves round-trips.
+            db.execSQL("INSERT INTO set_log (sessionId, exerciseId, setIndex, value, kg, effort, loggedAt) VALUES (1, 1, 0, 12, 8.5, 8, 1791800000000)")
+            db.query("SELECT kg FROM set_log").use { c -> c.moveToFirst(); assertEquals(8.5, c.getDouble(0), 0.0) }
+        }
+    }
+
     private companion object {
         const val DB = "migration-test.db"
     }

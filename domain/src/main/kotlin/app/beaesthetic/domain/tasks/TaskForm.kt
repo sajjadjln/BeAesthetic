@@ -36,6 +36,8 @@ data class TaskForm(
     val alarmOn: Boolean = false,
     val alarmMinute: Int = TaskForms.DEFAULT_ALARM_MINUTE,
     val alarmWeekdays: Int = Weekdays.ALL,
+    /** «تمرین روز»: the tile opens the workout session (D117). */
+    val opensWorkout: Boolean = false,
 )
 
 object TaskForms {
@@ -61,6 +63,7 @@ object TaskForms {
             alarmMinute = task.alarm?.minuteOfDay ?: DEFAULT_ALARM_MINUTE,
             alarmWeekdays = task.alarm?.weekdays?.takeIf { it != 0 } ?: Weekdays.ALL,
             onceDate = task.startDate,
+            opensWorkout = task.action == TaskAction.WORKOUT,
         )
         return when (val r = task.repeat) {
             Repeat.Daily -> base.copy(repeat = RepeatKind.DAILY)
@@ -88,7 +91,7 @@ object TaskForms {
 
     /**
      * The task the form describes. A new task starts [today]; an edited one keeps its id, start date,
-     * action and silenced reminders, so its history and "every N days" clock stay as they were.
+     * other actions (slices 7 and 8 add their switches) and silenced reminders, so its history and "every N days" clock stay as they were.
      * The caller has checked [errors] first.
      */
     fun toTask(form: TaskForm, original: Task?, today: LocalDate, sortOrder: Int): Task {
@@ -111,7 +114,11 @@ object TaskForms {
             isImportant = form.important,
             // A minimum-day-only task is part of the floor by definition.
             inMinimumDay = form.inMinimumDay || form.repeat == RepeatKind.MIN_DAY_ONLY,
-            action = original?.action ?: TaskAction.NONE,
+            action = when {
+                form.opensWorkout -> TaskAction.WORKOUT
+                original?.action == TaskAction.WORKOUT -> TaskAction.NONE
+                else -> original?.action ?: TaskAction.NONE
+            },
             anchor = form.anchor.trim().take(MAX_ANCHOR).ifBlank { null },
             alarm = if (keepAlarm) TaskAlarm(form.alarmMinute, form.alarmWeekdays and Weekdays.ALL, form.alarmOn) else null,
             remindersSilenced = original?.remindersSilenced ?: false,

@@ -145,4 +145,16 @@ class TaskFormTest {
         assertFalse(TaskForms.isListed(once, listOf(today.minusDays(1)), today))
         assertTrue(TaskForms.isListed(task(2), listOf(today.minusDays(1)), today))
     }
+
+    @Test
+    fun `the workout switch sets and clears only the workout action`() {
+        val plain = task(1)
+        assertEquals(TaskAction.WORKOUT, TaskForms.toTask(TaskForms.from(plain).copy(opensWorkout = true), plain, today, 0).action)
+        val workout = plain.copy(action = TaskAction.WORKOUT)
+        assertTrue(TaskForms.from(workout).opensWorkout)
+        assertEquals(TaskAction.NONE, TaskForms.toTask(TaskForms.from(workout).copy(opensWorkout = false), workout, today, 0).action)
+        // A weigh-in keeps its action; slice 7 gives it its own switch.
+        val weighIn = plain.copy(action = TaskAction.WEIGH_IN)
+        assertEquals(TaskAction.WEIGH_IN, TaskForms.toTask(TaskForms.from(weighIn), weighIn, today, 0).action)
+    }
 }

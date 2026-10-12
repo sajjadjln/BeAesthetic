@@ -41,6 +41,10 @@ import app.beaesthetic.ui.settings.RemindersScreen
 import app.beaesthetic.ui.settings.SettingsDestination
 import app.beaesthetic.ui.settings.SettingsScreen
 import app.beaesthetic.ui.tasks.TasksScreen
+import app.beaesthetic.ui.workout.PlanScreen
+import app.beaesthetic.ui.workout.SessionScreen
+import app.beaesthetic.ui.workout.SessionViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import app.beaesthetic.ui.theme.Accent
 import app.beaesthetic.ui.theme.BaMotion
 import app.beaesthetic.ui.theme.PeykarTheme
@@ -59,6 +63,8 @@ import kotlinx.serialization.Serializable
 @Serializable object AppearanceRoute
 @Serializable object DebugRoute
 @Serializable data class LetterRoute(val first: Boolean)
+@Serializable object PlanRoute
+@Serializable object WorkoutRoute
 
 class MainActivity : ComponentActivity() {
 
@@ -125,6 +131,7 @@ class MainActivity : ComponentActivity() {
                             onOpenSettings = { nav.navigate(SettingsRoute) },
                             onFixReminders = { nav.navigate(PhoneRoute) },
                             onWriteLetter = { first -> nav.navigate(LetterRoute(first)) },
+                            onOpenWorkout = { nav.navigate(WorkoutRoute) },
                         )
                     }
                     composable<SettingsRoute> {
@@ -134,6 +141,7 @@ class MainActivity : ComponentActivity() {
                                 SettingsDestination.REMINDERS -> nav.navigate(RemindersRoute)
                                 SettingsDestination.PHONE -> nav.navigate(PhoneRoute)
                                 SettingsDestination.APPEARANCE -> nav.navigate(AppearanceRoute)
+                                SettingsDestination.WORKOUT -> nav.navigate(PlanRoute)
                                 SettingsDestination.DEBUG -> nav.navigate(DebugRoute)
                                 else -> Unit
                             }
@@ -145,6 +153,18 @@ class MainActivity : ComponentActivity() {
                     composable<AppearanceRoute> { AppearanceScreen(container, onBack = nav::popBackStack) }
                     composable<LetterRoute> { entry ->
                         LetterScreen(container, entry.toRoute<LetterRoute>().first, onDone = nav::popBackStack)
+                    }
+                    composable<PlanRoute> { PlanScreen(container, onBack = nav::popBackStack) }
+                    composable<WorkoutRoute> {
+                        // One session per visit: a new view model each time the screen opens.
+                        val session: SessionViewModel = viewModel(factory = viewModelFactory {
+                            initializer { SessionViewModel(container, resources.getStringArray(R.array.buddy_workout_done).size) }
+                        })
+                        SessionScreen(
+                            session,
+                            onClose = nav::popBackStack,
+                            onOpenPlan = { nav.navigate(PlanRoute) { popUpTo<HomeRoute>() } },
+                        )
                     }
                     composable<DebugRoute> { DebugMenu.Screen(container, onClose = nav::popBackStack) }
                 }

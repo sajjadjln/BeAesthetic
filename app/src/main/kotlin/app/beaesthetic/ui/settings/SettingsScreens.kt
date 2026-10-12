@@ -150,8 +150,8 @@ fun SettingsScreen(container: AppContainer, debugAvailable: Boolean, onBack: () 
             Triple(SettingsDestination.APPEARANCE, BaIcons.Palette, R.string.settings_appearance),
             Triple(SettingsDestination.PHONE, BaIcons.Phone, R.string.settings_phone),
         )
-        // The workout plan and backup arrive in slices 4 and 6.
-        val ready = setOf(SettingsDestination.TASKS, SettingsDestination.REMINDERS, SettingsDestination.APPEARANCE, SettingsDestination.PHONE)
+        // Backup arrives in slice 6.
+        val ready = setOf(SettingsDestination.TASKS, SettingsDestination.REMINDERS, SettingsDestination.WORKOUT, SettingsDestination.APPEARANCE, SettingsDestination.PHONE)
         tiles.chunked(2).forEach { row ->
             Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                 row.forEach { (dest, icon, label) ->

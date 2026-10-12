@@ -61,6 +61,7 @@ object BaIcons {
     val Plus = stroke("M12 5v14M5 12h14")
     val Minus = stroke("M5 12h14")
     val Flag = stroke("M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z", "M4 22v-7")
+    val Grip = stroke(circle(9f, 6f, 1f), circle(15f, 6f, 1f), circle(9f, 12f, 1f), circle(15f, 12f, 1f), circle(9f, 18f, 1f), circle(15f, 18f, 1f))
     val Pen = stroke("M12 20h9", "M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z")
 
     fun of(icon: TaskIcon): ImageVector = when (icon) {

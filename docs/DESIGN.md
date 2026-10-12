@@ -193,6 +193,7 @@ Board: `docs/design/character.html`. Rig: `docs/design/piker.js` (17 poses, face
 - A big round ✓ button logs the set (ثبت).
 - **End of session:** a short summary; a round number crossed shows here («۱٬۰۰۰ شنا از روز صفر») (D71). When every set hit the top of its range: «پله بعد: شنای الماسی؟» with «بله» / «بعداً» (D70).
 - **Record** (D54): when a logged set beats that exercise's best, its circle fills with the accent and shows «رکورد» for a moment.
+- As built (D115–D118): the dashes jump between moves; «پایان» (top, once a set is logged) shows the summary; the line under the name holds the plan («۳ × ۸–۱۲، ۶ کیلو، هر طرف…») and the note; a unit line («تکرار، هر طرف») under the number; the kg chip under it; a done circle can be tapped to correct the set; the summary has «پیکر» cheering, the set and record counts, each move's values, «پایان» and «ادامه‌ی تمرین». A day without a plan shows «پیکر» thinking and a button to the plan editor.
 
 ### 05 هفته (Friday review and plan)
 - Steps: مرور (done) → برنامه.
@@ -239,6 +240,8 @@ Board: `docs/design/character.html`. Rig: `docs/design/piker.js` (17 poses, face
 - Workout name field (e.g. «تمرین A · پایین‌تنه»).
 - Exercise list: drag handle, name, a chip like «۳ × ۱۲–۱۵». A row opens to: تکرار / ثانیه, sets (− / +), range from–to.
 - «حرکت جدید» adds an exercise.
+- As built (D105, D114, D118): the day pills show the number of moves (or «—»), not a letter. The name saves as you type. Rows show the drag handle, the name, a details line (kg, per side, effort, rest) and the sets chip. A row opens a bottom sheet (not inline): name with suggestions of moves from other days, تکرار / ثانیه, sets, «حداکثر» or from–to, «وزنه» with kg, «هر طرف», target effort, rest, note, «ذخیره», «برداشتن از این روز».
+- Today's workout tile (D117): wide, first in its part, a check circle and the accent play button.
 
 ### 11 Today (light)
 Same as 01 with light tokens.

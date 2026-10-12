@@ -158,3 +158,75 @@ data class LetterEntity(
     val openedAt: Instant? = null,
     val isFirst: Boolean = false,
 )
+
+// v3 (slice 4): the workout plan and logged sets (ARCHITECTURE §8, D103–D105, D114).
+
+/** A move, shared by name across the week (D114). `ladderId` and `rung` are filled in slice 4b (D70). */
+@Entity(tableName = "exercise")
+data class ExerciseEntity(
+    @PrimaryKey(autoGenerate = true) val id: Long = 0,
+    val name: String,
+    /** REPS or SECONDS. */
+    val kind: String,
+    val ladderId: Long? = null,
+    val rung: Int? = null,
+    val archivedAt: Instant? = null,
+)
+
+/** One per weekday (Saturday = 0). A weekday without rows in `workout_exercise` is a rest day. */
+@Entity(tableName = "workout", indices = [Index(value = ["weekday"], unique = true)])
+data class WorkoutEntity(
+    @PrimaryKey(autoGenerate = true) val id: Long = 0,
+    val weekday: Int,
+    val name: String,
+)
+
+/** A plan row (D105). No range = «حداکثر». `kg` is the default load (D103). */
+@Entity(tableName = "workout_exercise", primaryKeys = ["workoutId", "position"], indices = [Index("exerciseId")])
+data class WorkoutExerciseEntity(
+    val workoutId: Long,
+    val position: Int,
+    val exerciseId: Long,
+    val sets: Int,
+    val rangeMin: Int? = null,
+    val rangeMax: Int? = null,
+    val kg: Double? = null,
+    val perSide: Boolean = false,
+    val targetEffort: Int? = null,
+    val restSeconds: Int? = null,
+    val note: String? = null,
+)
+
+/** A workout done on a program date. Created with its first set; opening it again the same day continues it (D115). */
+@Entity(tableName = "session", indices = [Index(value = ["workoutId", "date"]), Index("date")])
+data class SessionEntity(
+    @PrimaryKey(autoGenerate = true) val id: Long = 0,
+    val workoutId: Long,
+    val date: LocalDate,
+    val startedAt: Instant,
+    val finishedAt: Instant? = null,
+)
+
+/** A logged set (D27, D103). Logging the same set again replaces it. */
+@Entity(tableName = "set_log", primaryKeys = ["sessionId", "exerciseId", "setIndex"], indices = [Index("exerciseId")])
+data class SetLogEntity(
+    val sessionId: Long,
+    val exerciseId: Long,
+    val setIndex: Int,
+    val value: Int,
+    val kg: Double? = null,
+    val effort: Int,
+    val loggedAt: Instant,
+)
+
+/** A set with its session's date, for history and records. */
+data class SetWithDate(
+    val sessionId: Long,
+    val exerciseId: Long,
+    val setIndex: Int,
+    val value: Int,
+    val kg: Double?,
+    val effort: Int,
+    val loggedAt: Instant,
+    val date: LocalDate,
+)

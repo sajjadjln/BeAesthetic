@@ -108,10 +108,11 @@ data class TodayActions(
     val writeLetter: (first: Boolean) -> Unit = {},
     val dismissCard: () -> Unit = {},
     val openLetter: (Long) -> Unit = {},
+    val openWorkout: () -> Unit = {},
 )
 
 @Composable
-fun TodayRoute(viewModel: TodayViewModel, onOpenSettings: () -> Unit, onFixReminders: () -> Unit, onWriteLetter: (Boolean) -> Unit) {
+fun TodayRoute(viewModel: TodayViewModel, onOpenSettings: () -> Unit, onFixReminders: () -> Unit, onWriteLetter: (Boolean) -> Unit, onOpenWorkout: () -> Unit) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     LaunchedEffect(Unit) { viewModel.screenShown() }
     LifecycleEventEffect(Lifecycle.Event.ON_RESUME) { viewModel.refreshSystemState() }
@@ -127,6 +128,7 @@ fun TodayRoute(viewModel: TodayViewModel, onOpenSettings: () -> Unit, onFixRemin
             writeLetter = onWriteLetter,
             dismissCard = viewModel::dismissCard,
             openLetter = viewModel::openLetter,
+            openWorkout = onOpenWorkout,
         ),
     )
 }
@@ -188,7 +190,11 @@ fun TodayScreen(state: TodayUiState?, actions: TodayActions) {
                     Text(stringResource(R.string.today_part_empty), style = Ba.type.body, color = colors.text3, modifier = Modifier.padding(vertical = 24.dp))
                 }
             }
-            items(tiles, key = { it.taskId }) { tile -> TaskTile(tile, onToggle = { actions.toggle(tile.taskId) }) }
+            // The workout tile is wide (screens.html 01) and comes first, so it never leaves a hole in the grid.
+            val ordered = tiles.sortedByDescending { it.opensWorkout }
+            items(ordered, key = { it.taskId }, span = { GridItemSpan(if (it.opensWorkout) maxLineSpan else 1) }) { tile ->
+                TaskTile(tile, onToggle = { actions.toggle(tile.taskId) }, onPlay = if (tile.opensWorkout) actions.openWorkout else null)
+            }
             state.banner?.let { banner ->
                 item(span = { GridItemSpan(maxLineSpan) }) { HealthBannerRow(banner, actions.fixReminders, Modifier.padding(top = 8.dp)) }
             }
@@ -488,7 +494,7 @@ private fun PartDot(visible: Boolean, modifier: Modifier) {
  * 96% and springs back, with a light vibration. An untick drains back without vibrating (D76).
  */
 @Composable
-private fun TaskTile(tile: TileUi, onToggle: () -> Unit) {
+private fun TaskTile(tile: TileUi, onToggle: () -> Unit, onPlay: (() -> Unit)? = null) {
     val colors = Ba.colors
     val haptics = rememberHaptics()
     val interaction = remember { MutableInteractionSource() }
@@ -504,7 +510,7 @@ private fun TaskTile(tile: TileUi, onToggle: () -> Unit) {
     Box(
         modifier = Modifier
             .graphicsLayer { scaleX = scale; scaleY = scale }
-            .heightIn(min = 108.dp)
+            .heightIn(min = if (onPlay != null) 84.dp else 108.dp)
             .clip(shape)
             .drawBehind {
                 drawRect(colors.surface)
@@ -531,6 +537,10 @@ private fun TaskTile(tile: TileUi, onToggle: () -> Unit) {
             )
             .padding(16.dp),
     ) {
+        if (onPlay != null) {
+            WideTileContent(tile, fill.value, checkBg, onPlay)
+            return@Box
+        }
         Icon(
             BaIcons.of(tile.icon),
             contentDescription = null,
@@ -569,6 +579,40 @@ private fun TaskTile(tile: TileUi, onToggle: () -> Unit) {
                     color = if (tile.done) colors.onAccentSubtle.copy(alpha = 0.7f) else colors.amber,
                 )
             }
+        }
+    }
+}
+
+/** The workout tile: tapping it ticks like any tile; the play button opens the session (DESIGN 01, D117). */
+@Composable
+private fun androidx.compose.foundation.layout.BoxScope.WideTileContent(tile: TileUi, fill: Float, checkBg: androidx.compose.ui.graphics.Color, onPlay: () -> Unit) {
+    val colors = Ba.colors
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
+        modifier = Modifier.align(Alignment.Center).fillMaxWidth(),
+    ) {
+        Icon(BaIcons.of(tile.icon), null, tint = if (tile.done) colors.onAccentSubtle else colors.text2, modifier = Modifier.size(28.dp))
+        Text(tile.title, style = Ba.type.tile, color = colors.text1, modifier = Modifier.weight(1f))
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier
+                .size(24.dp)
+                .clip(CircleShape)
+                .background(checkBg)
+                .then(if (tile.done) Modifier else Modifier.border(2.dp, colors.border, CircleShape)),
+        ) {
+            Icon(BaIcons.Check, null, tint = colors.onAccent, modifier = Modifier.size(14.dp).graphicsLayer { alpha = fill })
+        }
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier
+                .size(48.dp)
+                .clip(CircleShape)
+                .background(colors.accent)
+                .clickable(role = Role.Button, onClick = onPlay),
+        ) {
+            Icon(BaIcons.Play, stringResource(R.string.cd_start_workout), tint = colors.onAccent, modifier = Modifier.size(22.dp))
         }
     }
 }

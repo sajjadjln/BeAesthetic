@@ -14,7 +14,6 @@ import app.beaesthetic.domain.buddy.Outfit
 import app.beaesthetic.domain.buddy.Pose
 import app.beaesthetic.domain.buddy.TodayState
 import app.beaesthetic.domain.reminders.Attention
-import app.beaesthetic.domain.reminders.BlockContent
 import app.beaesthetic.domain.reminders.PartOfDay
 import app.beaesthetic.domain.reminders.ReminderHealth
 import app.beaesthetic.domain.reminders.ReminderSlot
@@ -23,6 +22,7 @@ import app.beaesthetic.domain.score.DayStatus
 import app.beaesthetic.domain.score.DaySnapshot
 import app.beaesthetic.domain.score.Days
 import app.beaesthetic.domain.tasks.DayItem
+import app.beaesthetic.domain.tasks.TaskAction
 import app.beaesthetic.domain.tasks.TaskIcon
 import app.beaesthetic.domain.time.Chapter
 import app.beaesthetic.domain.time.Chapters
@@ -31,6 +31,7 @@ import app.beaesthetic.domain.time.Jalali
 import app.beaesthetic.domain.time.JalaliDate
 import app.beaesthetic.domain.time.Part
 import app.beaesthetic.domain.time.ProgramCalendar
+import app.beaesthetic.domain.time.Weekdays
 import app.beaesthetic.reminders.AlarmScheduler.Companion.toLogRow
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -59,6 +60,8 @@ data class TileUi(
     /** An "every N days" or one-off task that is due: «موعدش رسیده». */
     val due: Boolean,
     val part: Part = Part.MORNING,
+    /** A workout task on a day with a plan: wide, with the play button (D117). */
+    val opensWorkout: Boolean = false,
 )
 
 /** The header's last part: the chapter, or in the last chapter the countdown (D74). */
@@ -123,6 +126,7 @@ private data class Inputs(
     val snapshots: Map<LocalDate, DaySnapshot>,
     val settings: TodaySettings,
     val letters: List<LetterEntity>,
+    val plannedDays: Set<Int>,
 )
 
 private fun SettingsEntity.calendar() = ProgramCalendar(programStartDate, programEndDate, rolloverHour)
@@ -173,7 +177,8 @@ class TodayViewModel(
             container.tasks.observeSnapshots(minOf(weekStart, n.date.minusDays(1)), weekStart.plusDays(6)),
             todaySettings,
             container.db.letters().observeAll(),
-        ) { day, snapshots, s, letters -> Inputs(n, day, snapshots, s, letters) }
+            container.workouts.observePlannedDays(),
+        ) { day, snapshots, s, letters, planned -> Inputs(n, day, snapshots, s, letters, planned) }
     }
 
     private val health = container.db.reminderLog()
@@ -205,7 +210,7 @@ class TodayViewModel(
             val settings = container.db.settings().get() ?: return@launch
             val nowDone = container.tasks.toggle(taskId, current.date, container.clock.now())
             if (nowDone) container.events.firstTickIfNeeded(current.date, settings.rolloverHour)
-            cancelEmptyBlocks(current.date)
+            container.cancelEmptyBlocks(current.date)
         }
     }
 
@@ -213,7 +218,7 @@ class TodayViewModel(
         val current = state.value ?: return
         viewModelScope.launch {
             container.tasks.setMinimumMode(current.date, !current.minimumMode)
-            cancelEmptyBlocks(current.date)
+            container.cancelEmptyBlocks(current.date)
         }
     }
 
@@ -242,14 +247,6 @@ class TodayViewModel(
 
     fun screenShown() {
         viewModelScope.launch { container.events.screen("today") }
-    }
-
-    /** A block notification goes away once its part has nothing pending. */
-    private suspend fun cancelEmptyBlocks(date: LocalDate) {
-        val day = container.tasks.day(date)
-        Part.entries
-            .filter { BlockContent.lines(it, day.items, day.minimumMode).isEmpty() }
-            .forEach(container.notifier::cancelBlock)
     }
 
     /**
@@ -285,6 +282,8 @@ class TodayViewModel(
 
     private fun toState(input: Inputs, selected: Part, banner: HealthBanner?, tapCount: Int, line: Pair<Moment, Int>?): TodayUiState {
         val (n, day, snapshots, s, letters) = input
+        val trainsToday = Weekdays.index(n.date.dayOfWeek) in input.plannedDays
+        fun tile(item: DayItem) = tile(item, trainsToday)
         val date = n.date
         val calendar = n.calendar
         val chapter = Chapters.at(calendar, date)
@@ -292,7 +291,7 @@ class TodayViewModel(
 
         val visible = day.items.filterNot { it.minDayOnly }
         val floor = day.items.filter { it.inFloor }
-        val tiles = visible.groupBy { it.task.part }.mapValues { (_, items) -> items.map(::tile) }
+        val tiles = visible.groupBy { it.task.part }.mapValues { (_, items) -> items.map { tile(it) } }
         val ring = if (day.minimumMode) floor else visible
 
         // Today's dot is live; the other days come from their stored snapshots (D37).
@@ -337,7 +336,7 @@ class TodayViewModel(
             selectedPart = selected,
             minimumMode = day.minimumMode,
             tiles = tiles,
-            floorTiles = floor.map(::tile),
+            floorTiles = floor.map { tile(it) },
             completeParts = tiles.filterValues { list -> list.isNotEmpty() && list.all { it.done } }.keys,
             done = ring.count { it.done },
             total = ring.size,
@@ -365,6 +364,8 @@ class TodayViewModel(
         return cards
     }
 
-    private fun tile(item: DayItem) =
-        TileUi(item.task.id, item.task.title, item.task.icon, item.done, item.task.isImportant, due = item.dueSince != null, part = item.task.part)
+    private fun tile(item: DayItem, trainsToday: Boolean) = TileUi(
+        item.task.id, item.task.title, item.task.icon, item.done, item.task.isImportant, due = item.dueSince != null, part = item.task.part,
+        opensWorkout = trainsToday && item.task.action == TaskAction.WORKOUT,
+    )
 }

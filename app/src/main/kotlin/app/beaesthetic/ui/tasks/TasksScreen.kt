@@ -74,6 +74,12 @@ import app.beaesthetic.ui.clockText
 import app.beaesthetic.ui.components.BaCard
 import app.beaesthetic.ui.components.BaIcons
 import app.beaesthetic.ui.components.BaSwitch
+import app.beaesthetic.ui.components.ErrorLine
+import app.beaesthetic.ui.components.InputBox
+import app.beaesthetic.ui.components.Labeled
+import app.beaesthetic.ui.components.PickPill
+import app.beaesthetic.ui.components.Stepper
+import app.beaesthetic.ui.components.ToggleRow
 import app.beaesthetic.ui.components.Chip
 import app.beaesthetic.ui.components.ChipKind
 import app.beaesthetic.ui.components.ListRow
@@ -386,6 +392,7 @@ private fun TaskEditorSheet(
             }
 
             ToggleRow(BaIcons.Flag, R.string.editor_important, R.string.editor_important_help, form.important) { form = form.copy(important = it) }
+            ToggleRow(BaIcons.Dumbbell, R.string.editor_workout, R.string.editor_workout_help, form.opensWorkout) { form = form.copy(opensWorkout = it) }
             val floorForced = form.repeat == RepeatKind.MIN_DAY_ONLY
             ToggleRow(BaIcons.Leaf, R.string.editor_min_day, R.string.editor_min_day_help, form.inMinimumDay || floorForced, enabled = !floorForced) {
                 form = form.copy(inMinimumDay = it)
@@ -420,26 +427,6 @@ private fun TaskEditorSheet(
 }
 
 @Composable
-private fun Labeled(label: Int, content: @Composable () -> Unit) {
-    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        Text(stringResource(label), style = Ba.type.label, color = Ba.colors.text2)
-        content()
-    }
-}
-
-/**
- * A form problem, in neutral words and colors: nothing in the app is ever red. A [scrollTo] above 0 brings
- * it into view; a new value (another failed save) does it again.
- */
-@OptIn(ExperimentalFoundationApi::class)
-@Composable
-private fun ErrorLine(text: Int, scrollTo: Int = 0) {
-    val requester = remember { BringIntoViewRequester() }
-    LaunchedEffect(scrollTo) { if (scrollTo > 0) requester.bringIntoView() }
-    Text(stringResource(text), style = Ba.type.caption, color = Ba.colors.amber, modifier = Modifier.bringIntoViewRequester(requester))
-}
-
-@Composable
 private fun NameField(value: String, onChange: (String) -> Unit) {
     val c = Ba.colors
     BasicTextField(
@@ -453,26 +440,6 @@ private fun NameField(value: String, onChange: (String) -> Unit) {
         decorationBox = { inner ->
             Box {
                 if (value.isEmpty()) Text(stringResource(R.string.editor_name), style = Ba.type.headline, color = c.text3)
-                inner()
-            }
-        },
-    )
-}
-
-@Composable
-private fun InputBox(value: String, hint: String, onChange: (String) -> Unit) {
-    val c = Ba.colors
-    BasicTextField(
-        value = value,
-        onValueChange = onChange,
-        singleLine = true,
-        textStyle = Ba.type.body.copy(color = c.text1),
-        cursorBrush = SolidColor(c.accent),
-        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-        modifier = Modifier.fillMaxWidth(),
-        decorationBox = { inner ->
-            Box(Modifier.fillMaxWidth().clip(RoundedCornerShape(12.dp)).background(c.surface2).padding(horizontal = 14.dp, vertical = 12.dp)) {
-                if (value.isEmpty()) Text(hint, style = Ba.type.body, color = c.text3)
                 inner()
             }
         },
@@ -508,22 +475,6 @@ private fun PickBox(selected: Boolean, onClick: () -> Unit, modifier: Modifier =
     ) { content(if (selected) c.onAccentSubtle else c.text2) }
 }
 
-@Composable
-private fun PickPill(text: String, selected: Boolean, small: Boolean = false, onClick: () -> Unit) {
-    val c = Ba.colors
-    Box(
-        contentAlignment = Alignment.Center,
-        modifier = Modifier
-            .height(if (small) 34.dp else 40.dp)
-            .clip(RoundedCornerShape(50))
-            .background(if (selected) c.accentSubtle else c.surface2)
-            .selectable(selected, role = Role.RadioButton, onClick = onClick)
-            .padding(horizontal = 14.dp),
-    ) {
-        Text(text, style = if (small) Ba.type.caption else Ba.type.label, color = if (selected) c.onAccentSubtle else c.text1)
-    }
-}
-
 /** 7 day circles, Saturday first (on the right in RTL). */
 @Composable
 private fun DayCircles(bits: Int, onChange: (Int) -> Unit) {
@@ -549,30 +500,6 @@ private fun DayCircles(bits: Int, onChange: (Int) -> Unit) {
     }
 }
 
-@Composable
-private fun Stepper(value: Int, range: IntRange, label: String, onChange: (Int) -> Unit) {
-    val c = Ba.colors
-    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-        StepButton(BaIcons.Minus, stringResource(R.string.cd_less), enabled = value > range.first) { onChange(value - 1) }
-        Text(label, style = Ba.type.subtitle, color = c.text1)
-        StepButton(BaIcons.Plus, stringResource(R.string.cd_more), enabled = value < range.last) { onChange(value + 1) }
-    }
-}
-
-@Composable
-private fun StepButton(icon: androidx.compose.ui.graphics.vector.ImageVector, description: String, enabled: Boolean, onClick: () -> Unit) {
-    val c = Ba.colors
-    Box(
-        contentAlignment = Alignment.Center,
-        modifier = Modifier
-            .size(44.dp)
-            .clip(CircleShape)
-            .background(c.surface2)
-            .clickable(enabled = enabled, role = Role.Button, onClick = onClick)
-            .semantics { contentDescription = description },
-    ) { Icon(icon, null, tint = if (enabled) c.text1 else c.text3, modifier = Modifier.size(20.dp)) }
-}
-
 /** The next 4 weeks as pills (a one-off task is close by); an edited task's past date stays at the start. */
 @Composable
 private fun DayStrip(selected: LocalDate?, today: LocalDate, onPick: (LocalDate) -> Unit) {
@@ -582,18 +509,5 @@ private fun DayStrip(selected: LocalDate?, today: LocalDate, onPick: (LocalDate)
     }
     LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
         items(days) { d -> PickPill(dayLabel(d, today), selected = d == selected) { onPick(d) } }
-    }
-}
-
-@Composable
-private fun ToggleRow(icon: androidx.compose.ui.graphics.vector.ImageVector, title: Int, help: Int, checked: Boolean, enabled: Boolean = true, onChange: (Boolean) -> Unit) {
-    val c = Ba.colors
-    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-        Icon(icon, null, tint = c.text2, modifier = Modifier.size(20.dp))
-        Column(Modifier.weight(1f)) {
-            Text(stringResource(title), style = Ba.type.subtitle, color = if (enabled) c.text1 else c.text3)
-            Text(stringResource(help), style = Ba.type.caption, color = c.text3)
-        }
-        if (enabled) BaSwitch(checked, onChange, stringResource(title)) else BaSwitch(checked, {}, stringResource(title))
     }
 }

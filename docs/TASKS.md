@@ -1,6 +1,6 @@
 # Tasks and status
 
-_Last updated: 2026-10-11_
+_Last updated: 2026-10-12_
 
 ## Where we are
 
@@ -11,7 +11,7 @@ _Last updated: 2026-10-11_
 | 3. Design | ✅ **Approved 2026-10-10** (round 3, `docs/design/screens.html`); font and accents decided the same day (D47). |
 | 4. Architecture | ✅ **Approved 2026-10-10** (`docs/ARCHITECTURE.md`, D31–D45). |
 | Research | ✅ **Done 2026-10-10** (`research/`, start with `research/FINAL-REPORT.md`). All recommendations accepted except sharing (D48–D69). |
-| 5. Build | ⏳ **In progress.** Slices 1–3 built and checked on an emulator (2026-10-10, 2026-10-11). Next: slice 4. |
+| 5. Build | ⏳ **In progress.** Slices 1–3 built and checked; slice 4a (plan editor + session) built 2026-10-12. Next: the user tries 4a, then 4b. |
 
 The program itself started on **2026-10-09 (Day 0)**. Week 1 began 2026-10-10. Every week without the app is a week without reminders, so keep moving.
 
@@ -29,6 +29,7 @@ The program itself started on **2026-10-09 (Day 0)**. Week 1 began 2026-10-10. E
 
 ## Next steps
 
+0. **Slice 4a is built (2026-10-12, 0.4.0, D113–D118).** The plan editor (Settings → «برنامه تمرین»): day pills, the workout name, moves with a drag handle, and an exercise sheet (name with suggestions from other days, reps or seconds, sets, range or «حداکثر», kg, per side, target effort, rest, note). The session: the wide workout tile's play button opens it; pre-filled big number, kg chip, effort bar, set circles, «قبلی», «رکورد», dashes to jump between moves, «پایان» and the summary with «پیکر». Any logged set ticks the workout task; closing and reopening the same day continues. Database v3 (exercise, workout, workout_exercise, session, set_log) with a tested migration. Checked on an emulator: the v2 data migrated; a Monday plan with two moves (6 kg per side, and seconds «حداکثر»); 3 sets logged ticked «تمرین» on Today; reopening continued on the second move, also after a reinstall; the summary showed; a week later (debug «+1 week») the sets were pre-filled from last week with «قبلی» and 11 reps showed «رکورد»; dragging a row saved the new order. **For the user:** install 0.4.0, turn on «تمرین روز» on your workout task, enter your 4 days from `docs/program/12-week-program.md`, and log a real session. **Not yet:** ladders, the next-rung offer and round numbers (4b, D113). **Small open points:** the shared − / + stepper puts − on the right in RTL (the mockup puts + on the right), in the task editor too; the play icon isn't mirrored for RTL.
 0. **0.3.1 (2026-10-12):** fixes the autostart row flashing «باز کن» and the health line that stayed on «یه نگاه می‌خوان» after checking (D112). The missed reminder on the morning of 12 Oct isn't explained yet: connect the Poco and read the reminder log.
 0. **Slice 3 is built (2026-10-11, 0.3.0):** the tasks list (07: filter by part, one-offs first, markers for «مهم», floor, alarm and every-N, an empty state) and the task editor sheet (08: name, 11 icons, part, repeat with weekdays / every N / one-off day, «بعد از…» with suggestions from anchors in use, the «زنگ» card with time and days, «مهم», «روز حداقلی», delete = archive). Saving re-plans reminders and rewrites today's snapshot (D107–D111). Checked on an emulator: moved «تمرین» to Morning, added Friday and a 09:00 alarm; the alarm was planned for the next training day (Mon 12 Oct 09:00) with Sat/Mon/Wed/Fri; a one-off for tomorrow saved and showed «فردا · صبح»; deleting it archived the row and kept today's snapshot right; an empty name shows the amber message at the top. **For the user:** install 0.3.0 and move your workout to Morning with Friday added (D102); add your own tasks (creatine, water, the Daily 5 mobility). **Next:** slice 4 (workout plan editor + session, D103–D105).
 0. **The workout plan arrived (2026-10-11):** `docs/program/12-week-program.md`. It shaped D100–D106: the app starts empty, training is in the morning, sets log optional kg, the plan editor holds range or «حداکثر», per side, target effort, rest and a note, and strength tests are user-defined and monthly.

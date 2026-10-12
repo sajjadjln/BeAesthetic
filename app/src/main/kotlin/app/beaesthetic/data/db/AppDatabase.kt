@@ -198,6 +198,67 @@ interface LetterDao {
     suspend fun markOpened(id: Long, at: Instant)
 }
 
+@Dao
+interface WorkoutDao {
+    @Query("SELECT * FROM workout")
+    fun observeWorkouts(): Flow<List<WorkoutEntity>>
+
+    @Query("SELECT * FROM workout_exercise ORDER BY workoutId, position")
+    fun observeItems(): Flow<List<WorkoutExerciseEntity>>
+
+    @Query("SELECT * FROM exercise WHERE archivedAt IS NULL ORDER BY name")
+    fun observeExercises(): Flow<List<ExerciseEntity>>
+
+    @Query("SELECT * FROM exercise WHERE archivedAt IS NULL")
+    suspend fun exercises(): List<ExerciseEntity>
+
+    @Query("SELECT * FROM workout WHERE weekday = :weekday")
+    suspend fun workout(weekday: Int): WorkoutEntity?
+
+    @Insert
+    suspend fun insertWorkout(workout: WorkoutEntity): Long
+
+    @Query("UPDATE workout SET name = :name WHERE id = :id")
+    suspend fun setName(id: Long, name: String)
+
+    @Query("SELECT * FROM workout_exercise WHERE workoutId = :workoutId ORDER BY position")
+    suspend fun items(workoutId: Long): List<WorkoutExerciseEntity>
+
+    @Query("SELECT * FROM workout_exercise")
+    suspend fun allItems(): List<WorkoutExerciseEntity>
+
+    @Query("DELETE FROM workout_exercise WHERE workoutId = :workoutId")
+    suspend fun deleteItems(workoutId: Long)
+
+    @Insert
+    suspend fun insertItems(items: List<WorkoutExerciseEntity>)
+
+    @Insert
+    suspend fun insertExercise(exercise: ExerciseEntity): Long
+
+    @Query("UPDATE exercise SET name = :name, kind = :kind WHERE id = :id")
+    suspend fun updateExercise(id: Long, name: String, kind: String)
+
+    @Query("SELECT * FROM session WHERE workoutId = :workoutId AND date = :date ORDER BY id LIMIT 1")
+    suspend fun session(workoutId: Long, date: LocalDate): SessionEntity?
+
+    @Insert
+    suspend fun insertSession(session: SessionEntity): Long
+
+    @Query("UPDATE session SET finishedAt = :at WHERE id = :id")
+    suspend fun finish(id: Long, at: Instant)
+
+    /** Every set of the given moves (all time, small: ~4 sets × 4 sessions a week). */
+    @Query(
+        "SELECT set_log.sessionId, set_log.exerciseId, set_log.setIndex, set_log.value, set_log.kg, set_log.effort, set_log.loggedAt, session.date " +
+            "FROM set_log JOIN session ON session.id = set_log.sessionId WHERE set_log.exerciseId IN (:exerciseIds) ORDER BY set_log.loggedAt",
+    )
+    fun observeSets(exerciseIds: List<Long>): Flow<List<SetWithDate>>
+
+    @Upsert
+    suspend fun upsertSet(set: SetLogEntity)
+}
+
 @Database(
     entities = [
         TaskEntity::class,
@@ -208,10 +269,15 @@ interface LetterDao {
         SettingsEntity::class,
         EventEntity::class,
         LetterEntity::class,
+        ExerciseEntity::class,
+        WorkoutEntity::class,
+        WorkoutExerciseEntity::class,
+        SessionEntity::class,
+        SetLogEntity::class,
     ],
-    version = 2,
+    version = 3,
     exportSchema = true,
-    autoMigrations = [AutoMigration(from = 1, to = 2)],
+    autoMigrations = [AutoMigration(from = 1, to = 2), AutoMigration(from = 2, to = 3)],
 )
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
@@ -223,6 +289,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun settings(): SettingsDao
     abstract fun events(): EventDao
     abstract fun letters(): LetterDao
+    abstract fun workouts(): WorkoutDao
 
     companion object {
         // Never fallbackToDestructiveMigration: schema changes must never wipe data (ARCHITECTURE §8).

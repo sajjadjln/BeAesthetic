@@ -131,8 +131,7 @@ class NotificationActionReceiver : BroadcastReceiver() {
                 if (date == today || date == today.minusDays(1)) {
                     container.tasks.complete(taskId, date, container.clock.now())
                     container.events.firstTickIfNeeded(date, settings.rolloverHour)
-                    val day = container.tasks.day(date)
-                    Part.entries.filter { BlockContent.lines(it, day.items, day.minimumMode).isEmpty() }.forEach(container.notifier::cancelBlock)
+                    container.cancelEmptyBlocks(date)
                 }
             } finally {
                 pending.finish()

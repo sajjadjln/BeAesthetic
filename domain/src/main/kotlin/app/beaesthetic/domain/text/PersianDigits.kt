@@ -13,6 +13,12 @@ object PersianDigits {
 
     fun format(number: Long): String = format(number.toString())
 
+    /** «۸٫۵», «۱۵»: no trailing «٫۰», and the Persian decimal separator. */
+    fun format(number: Double): String {
+        val text = java.math.BigDecimal.valueOf(number).stripTrailingZeros().toPlainString()
+        return format(text.replace('.', '٫'))
+    }
+
     /** Turns any supported digits into Latin digits, for parsing. */
     fun normalize(text: String): String = buildString(text.length) {
         for (c in text) {

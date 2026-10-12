@@ -358,4 +358,71 @@
         <item>خوراکی</item>
         <item>آفتاب</item>
     </string-array>
+
+    <!-- Slice 4a: task editor's workout switch (D117) -->
+    <string name="editor_workout">تمرین روز</string>
+    <string name="editor_workout_help">کاشی‌اش تمرینِ برنامه‌ی همون روز رو باز می‌کنه</string>
+    <string name="cd_start_workout">شروع تمرین</string>
+
+    <!-- 10 Workout plan editor (D105, D114) -->
+    <string name="plan_name_hint">اسم تمرین، مثلاً «بالاتنه A»</string>
+    <string name="plan_new_exercise">حرکت جدید</string>
+    <string name="plan_empty_title">این روز تمرینی نداره</string>
+    <string name="plan_empty_text">با «حرکت جدید» برنامه‌ی این روز رو بساز. روزی که حرکتی نداره روز استراحته.</string>
+    <string name="plan_drag_help">برای جابه‌جایی، دستگیره رو نگه دار و بکش</string>
+    <string name="cd_drag">جابه‌جا کردن</string>
+    <string name="ex_editor_new">حرکت جدید</string>
+    <string name="ex_editor_edit">ویرایش حرکت</string>
+    <string name="ex_name">اسم حرکت</string>
+    <string name="ex_kind">هر ست چی می‌شمره؟</string>
+    <string name="ex_kind_reps">تکرار</string>
+    <string name="ex_kind_seconds">ثانیه</string>
+    <string name="ex_sets">ست</string>
+    <string name="ex_sets_value">%1$s ست</string>
+    <string name="ex_range">بازه</string>
+    <string name="ex_max">حداکثر</string>
+    <string name="ex_max_help">بدون بازه؛ تا جایی که می‌تونی</string>
+    <string name="ex_from">از %1$s</string>
+    <string name="ex_to">تا %1$s</string>
+    <string name="ex_kg">وزنه</string>
+    <string name="ex_kg_help">توی تمرین از دفعه‌ی قبل پر می‌شه</string>
+    <string name="kg_value">%1$s کیلو</string>
+    <string name="ex_per_side">هر طرف</string>
+    <string name="ex_per_side_help">عدد هر ست برای یک طرفه</string>
+    <string name="ex_effort">سختی هدف</string>
+    <string name="ex_effort_value">سختی %1$s</string>
+    <string name="ex_rest">استراحت</string>
+    <string name="none_dash">—</string>
+    <string name="rest_seconds">%1$s ثانیه</string>
+    <string name="rest_minutes">%1$s دقیقه</string>
+    <string name="ex_note">یادداشت</string>
+    <string name="ex_note_hint">مثلاً «۵ ثانیه پایین آمدن»</string>
+    <string name="error_ex_name">اسم حرکت رو بنویس</string>
+    <string name="error_ex_duplicate">این حرکت همین الان توی این روز هست</string>
+    <string name="ex_remove">برداشتن از این روز</string>
+    <string name="chip_range">%1$s × %2$s–%3$s</string>
+    <string name="chip_max">%1$s × حداکثر</string>
+    <string name="unit_seconds_short">ث</string>
+
+    <!-- 04 Workout session (D103, D115, D116) -->
+    <string name="session_prev">قبلی %1$s</string>
+    <string name="session_effort">درجه سختی</string>
+    <string name="session_log">ثبت</string>
+    <string name="session_finish">پایان</string>
+    <string name="session_set_of">ست %1$s از %2$s</string>
+    <string name="session_exercise_of">حرکت %1$s از %2$s</string>
+    <string name="session_no_plan_title">امروز برنامه‌ای نیست</string>
+    <string name="session_no_plan_text">توی تنظیمات ← برنامه تمرین، تمرینِ این روز رو بساز.</string>
+    <string name="summary_title">تمرین تموم شد</string>
+    <string name="summary_partial">تا اینجا ثبت شد</string>
+    <string name="summary_sets">%1$s ست</string>
+    <string name="summary_records">%1$s رکورد</string>
+    <string name="summary_continue">ادامه‌ی تمرین</string>
+    <string name="cd_kg_less">نیم کیلو کمتر</string>
+    <string name="cd_kg_more">نیم کیلو بیشتر</string>
+    <string-array name="buddy_workout_done">
+        <item>دمت گرم! تمرین ثبت شد</item>
+        <item>اینه! یه تمرین دیگه رفت تو کارنامه</item>
+        <item>عالی بود، حالا یه آب بخور</item>
+    </string-array>
 </resources>
