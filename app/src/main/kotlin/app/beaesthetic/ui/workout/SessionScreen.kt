@@ -56,6 +56,8 @@ import app.beaesthetic.domain.buddy.Outfit
 import app.beaesthetic.domain.buddy.Pose
 import app.beaesthetic.domain.text.PersianDigits
 import app.beaesthetic.domain.workout.ExerciseKind
+import app.beaesthetic.domain.workout.Offer
+import app.beaesthetic.domain.workout.RoundNumbers
 import app.beaesthetic.domain.workout.WorkoutRules
 import app.beaesthetic.ui.components.BaIcons
 import app.beaesthetic.ui.components.PrimaryButton
@@ -89,7 +91,7 @@ fun SessionScreen(viewModel: SessionViewModel, onClose: () -> Unit, onOpenPlan: 
             SessionUi.Loading -> Unit
             is SessionUi.NoPlan -> NoPlan(s.outfit, onClose, onOpenPlan)
             is SessionUi.Logging -> Logging(s, flash, viewModel, onClose, onLog = { haptics.light(); viewModel.log() })
-            is SessionUi.Summary -> Summary(s, onDone = onClose, onResume = viewModel::resume)
+            is SessionUi.Summary -> Summary(s, onDone = onClose, onResume = viewModel::resume, onAccept = viewModel::acceptOffer, onLater = viewModel::laterOffer)
         }
     }
 }
@@ -157,6 +159,12 @@ private fun Logging(s: SessionUi.Logging, flash: Pair<Long, Int>?, vm: SessionVi
         }
 
         Text(item.exercise.name, style = Ba.type.headline.copy(fontSize = 26.sp), color = c.text1, textAlign = TextAlign.Center)
+        s.ladder?.let { l ->
+            // «پله‌ی ۲ از ۴، بعدی: الماسی» (screens.html 04, D70).
+            val rung = stringResource(R.string.ladder_rung, PersianDigits.format(l.rung), PersianDigits.format(l.of))
+            val next = l.next?.let { stringResource(R.string.ladder_next, it) } ?: stringResource(R.string.ladder_top)
+            Text(rung + SEP + next, style = Ba.type.label, color = c.onAccentSubtle, textAlign = TextAlign.Center)
+        }
         val details = listOf(setsChip(item), planDetails(item)).filter { it.isNotEmpty() }.joinToString(SEP)
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Text(details, style = Ba.type.label, color = c.text2, textAlign = TextAlign.Center)
@@ -173,7 +181,8 @@ private fun Logging(s: SessionUi.Logging, flash: Pair<Long, Int>?, vm: SessionVi
                 style = Ba.type.display.copy(fontSize = 96.sp, lineHeight = 100.sp),
                 color = c.text1,
                 textAlign = TextAlign.Center,
-                modifier = Modifier.widthIn(min = 120.dp),
+                // A fixed width keeps − and + under the thumb when the number grows to 3 digits (seconds).
+                modifier = Modifier.width(170.dp),
             )
             CounterButton(BaIcons.Minus, stringResource(R.string.cd_less)) { vm.stepValue(up = false) }
         }
@@ -355,9 +364,12 @@ private fun NoPlan(outfit: Outfit, onClose: () -> Unit, onOpenPlan: () -> Unit) 
 
 /** The end of a session: what was logged, the records, and «پیکر» cheering (D82). Round numbers come in 4b. */
 @Composable
-private fun Summary(s: SessionUi.Summary, onDone: () -> Unit, onResume: () -> Unit) {
+private fun Summary(s: SessionUi.Summary, onDone: () -> Unit, onResume: () -> Unit, onAccept: (Offer) -> Unit, onLater: (Offer) -> Unit) {
     val c = Ba.colors
     val lines = stringArrayResource(R.array.buddy_workout_done)
+    val haptics = rememberHaptics()
+    // A round number is a moment (D76): a medium buzz once, when the summary first shows it.
+    LaunchedEffect(s.rounds.isNotEmpty()) { if (s.rounds.isNotEmpty()) haptics.medium() }
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(14.dp),
@@ -371,6 +383,8 @@ private fun Summary(s: SessionUi.Summary, onDone: () -> Unit, onResume: () -> Un
             if (s.records > 0) add(stringResource(R.string.summary_records, PersianDigits.format(s.records)))
         }.joinToString(SEP)
         Text(counts, style = Ba.type.title, color = c.onAccentSubtle)
+        s.rounds.forEach { RoundNumberLine(it) }
+        s.offers.forEach { OfferCard(it, onAccept, onLater) }
         Column(
             verticalArrangement = Arrangement.spacedBy(10.dp),
             modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(16.dp)).background(c.surface).padding(16.dp),
@@ -389,3 +403,58 @@ private fun Summary(s: SessionUi.Summary, onDone: () -> Unit, onResume: () -> Un
 }
 
 private const val RECORD_CHIP_MS = 1_600L
+
+/** «۱٬۰۰۰ تکرار شنا از روز صفر» (D121): lands with a bounce. */
+@Composable
+private fun RoundNumberLine(r: RoundUi) {
+    val c = Ba.colors
+    val pop = remember { Animatable(0.6f) }
+    LaunchedEffect(r) { pop.animateTo(1f, BaMotion.bouncy()) }
+    val n = r.crossing.value
+    val text = when (r.crossing.kind) {
+        RoundNumbers.Kind.REPS -> stringResource(R.string.round_reps, PersianDigits.grouped(n), r.name.orEmpty())
+        RoundNumbers.Kind.SECONDS -> stringResource(R.string.round_minutes, PersianDigits.grouped(n / 60), r.name.orEmpty())
+        RoundNumbers.Kind.WORKOUTS -> stringResource(R.string.round_workouts, PersianDigits.grouped(n))
+        RoundNumbers.Kind.DAYS -> stringResource(R.string.round_days, PersianDigits.grouped(n))
+    }
+    Text(
+        text,
+        style = Ba.type.subtitle,
+        color = c.onAccent,
+        textAlign = TextAlign.Center,
+        modifier = Modifier
+            .graphicsLayer { scaleX = pop.value; scaleY = pop.value }
+            .clip(RoundedCornerShape(50))
+            .background(c.accent)
+            .padding(horizontal = 16.dp, vertical = 6.dp),
+    )
+}
+
+/** «پله‌ی بعد: …؟» or «بازه بشه ۹–۱۳؟» with «بله» / «بعداً» (D120). Never changes the plan without «بله». */
+@Composable
+private fun OfferCard(o: OfferUi, onAccept: (Offer) -> Unit, onLater: (Offer) -> Unit) {
+    val c = Ba.colors
+    val (title, text) = when (val offer = o.offer) {
+        is Offer.NextRung -> stringResource(R.string.offer_next_rung, offer.harder.name) to stringResource(R.string.offer_next_rung_text, o.moveName)
+        is Offer.RaiseRange -> stringResource(R.string.offer_raise, PersianDigits.format(offer.from), PersianDigits.format(offer.to)) to
+            stringResource(R.string.offer_raise_text, o.moveName)
+    }
+    Column(
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(16.dp)).background(c.accentSubtle).padding(16.dp),
+    ) {
+        Text(title, style = Ba.type.subtitle, color = c.onAccentSubtle)
+        Text(text, style = Ba.type.caption, color = c.text2)
+        if (o.accepted) {
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                Icon(BaIcons.Check, null, tint = c.onAccentSubtle, modifier = Modifier.size(18.dp))
+                Text(stringResource(R.string.offer_accepted), style = Ba.type.label, color = c.onAccentSubtle)
+            }
+        } else {
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
+                PrimaryButton(stringResource(R.string.offer_yes), onClick = { onAccept(o.offer) }, height = 44.dp, modifier = Modifier.weight(1f))
+                SecondaryButton(stringResource(R.string.later), onClick = { onLater(o.offer) }, height = 44.dp)
+            }
+        }
+    }
+}

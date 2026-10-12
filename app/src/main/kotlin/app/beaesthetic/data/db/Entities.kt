@@ -161,7 +161,10 @@ data class LetterEntity(
 
 // v3 (slice 4): the workout plan and logged sets (ARCHITECTURE §8, D103–D105, D114).
 
-/** A move, shared by name across the week (D114). `ladderId` and `rung` are filled in slice 4b (D70). */
+/**
+ * A move, shared by name across the week (D114). Ladders are chains of [harderId] links (D119, v4); the v3
+ * columns `ladderId` and `rung` stay empty.
+ */
 @Entity(tableName = "exercise")
 data class ExerciseEntity(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
@@ -171,6 +174,8 @@ data class ExerciseEntity(
     val ladderId: Long? = null,
     val rung: Int? = null,
     val archivedAt: Instant? = null,
+    /** «حرکت سخت‌تر»: the next harder variant (v4). */
+    val harderId: Long? = null,
 )
 
 /** One per weekday (Saturday = 0). A weekday without rows in `workout_exercise` is a rest day. */
@@ -229,4 +234,15 @@ data class SetWithDate(
     val effort: Int,
     val loggedAt: Instant,
     val date: LocalDate,
+)
+
+/**
+ * A round number crossed (D71, D121), e.g. `reps:ladder:3:1000`, `workouts:50`, `days:100`. Written once,
+ * when first crossed, so editing a log never takes it back. `seenAt` = the Today card was dismissed (v4).
+ */
+@Entity(tableName = "round_number")
+data class RoundNumberEntity(
+    @PrimaryKey val key: String,
+    val reachedOn: LocalDate,
+    val seenAt: Instant? = null,
 )

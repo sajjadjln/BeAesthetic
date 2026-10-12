@@ -42,4 +42,20 @@ class DaysTest {
         assertFalse(Days.isComeback(DayStatus.Level(2), DayStatus.Special))
         assertFalse(Days.isComeback(DayStatus.Level(2), DayStatus.BeforeApp))
     }
+
+    @Test
+    fun `days shown up count level 1 and above, up to today`() {
+        val install = LocalDate.of(2026, 10, 10)
+        val today = LocalDate.of(2026, 10, 14)
+        val snapshots = mapOf(
+            LocalDate.of(2026, 10, 9) to DaySnapshot(DayCounts(10, 5, false)), // before the app
+            LocalDate.of(2026, 10, 10) to DaySnapshot(DayCounts(10, 1, false)),
+            LocalDate.of(2026, 10, 11) to DaySnapshot(DayCounts(10, 0, false)),
+            LocalDate.of(2026, 10, 12) to DaySnapshot(DayCounts(10, 0, true)), // floor done
+            LocalDate.of(2026, 10, 13) to DaySnapshot(DayCounts(10, 9, false), special = true),
+            LocalDate.of(2026, 10, 14) to DaySnapshot(DayCounts(10, 10, false)),
+            LocalDate.of(2026, 10, 15) to DaySnapshot(DayCounts(10, 10, false)), // future
+        )
+        assertEquals(3, Days.shownUp(snapshots, today, install))
+    }
 }

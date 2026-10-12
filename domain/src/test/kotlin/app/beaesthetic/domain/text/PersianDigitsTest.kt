@@ -17,4 +17,10 @@ class PersianDigitsTest {
         assertEquals("۱۵", PersianDigits.format(15.0))
         assertEquals("۰", PersianDigits.format(0.0))
     }
+
+    @Test
+    fun `thousands use the Persian separator`() {
+        assertEquals("۱٬۰۰۰", PersianDigits.grouped(1_000))
+        assertEquals("۱۰۰", PersianDigits.grouped(100))
+    }
 }

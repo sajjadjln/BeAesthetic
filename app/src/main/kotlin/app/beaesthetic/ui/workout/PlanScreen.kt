@@ -102,6 +102,7 @@ fun PlanScreen(container: AppContainer, onBack: () -> Unit) {
     val scope = rememberCoroutineScope()
     val plans by remember { container.workouts.observePlans() }.collectAsStateWithLifecycle(null)
     val exercises by remember { container.workouts.observeExercises() }.collectAsStateWithLifecycle(emptyList())
+    val links by remember { container.workouts.observeHarderLinks() }.collectAsStateWithLifecycle(emptyMap())
     val settings by container.db.settings().observe().collectAsStateWithLifecycle(null)
     val today = container.clock.programDate(settings?.rolloverHour ?: ProgramCalendar.DEFAULT_ROLLOVER_HOUR)
     var weekday by rememberSaveable { mutableIntStateOf(Weekdays.index(today.dayOfWeek)) }
@@ -134,6 +135,7 @@ fun PlanScreen(container: AppContainer, onBack: () -> Unit) {
                 original = original,
                 dayItems = plan.items,
                 exercises = exercises,
+                links = links,
                 onDismiss = { editing = null },
                 onSave = { form ->
                     editing = null
@@ -312,14 +314,18 @@ private fun ExerciseSheet(
     original: PlanItem?,
     dayItems: List<PlanItem>,
     exercises: List<Exercise>,
+    links: Map<Long, Long>,
     onDismiss: () -> Unit,
     onSave: (PlanItemForm) -> Unit,
     onRemove: (PlanItem) -> Unit,
 ) {
     val c = Ba.colors
-    var form by remember(original) { mutableStateOf(original?.let(PlanForms::from) ?: PlanItemForm()) }
+    var form by remember(original) {
+        val harder = original?.let { o -> links[o.exercise.id]?.let { id -> exercises.firstOrNull { it.id == id }?.name } }.orEmpty()
+        mutableStateOf(original?.let { PlanForms.from(it, harder) } ?: PlanItemForm())
+    }
     var tried by remember(original) { mutableStateOf(false) }
-    val errors = PlanForms.errors(form, dayItems, original)
+    val errors = PlanForms.errors(form, dayItems, original, exercises, links)
     val sheet = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val scroll = rememberScrollState()
     LaunchedEffect(tried, errors.isEmpty()) { if (tried && errors.isNotEmpty()) scroll.animateScrollTo(0) }
@@ -394,6 +400,19 @@ private fun ExerciseSheet(
             Labeled(R.string.ex_rest) {
                 val label = if (form.rest == 0) stringResource(R.string.none_dash) else restText(form.rest)
                 Stepper(form.rest / PlanForms.REST_STEP, 0..PlanForms.MAX_REST / PlanForms.REST_STEP, label) { form = form.copy(rest = it * PlanForms.REST_STEP) }
+            }
+
+            // «حرکت سخت‌تر» (D119): the next rung of this move's ladder.
+            Labeled(R.string.ex_harder) {
+                InputBox(form.harder, stringResource(R.string.ex_harder_hint), onChange = { form = form.copy(harder = it.take(PlanForms.MAX_NAME)) })
+                if (PlanError.HARDER_LOOP in errors) ErrorLine(R.string.error_harder_loop)
+                val harderSuggestions = PlanForms.harderSuggestions(form.harder, form.name, exercises, links)
+                if (harderSuggestions.isNotEmpty()) {
+                    FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                        harderSuggestions.forEach { e -> PickPill(e.name, selected = false, small = true) { form = form.copy(harder = e.name) } }
+                    }
+                }
+                Text(stringResource(R.string.ex_harder_help), style = Ba.type.caption, color = c.text3)
             }
 
             Labeled(R.string.ex_note) {

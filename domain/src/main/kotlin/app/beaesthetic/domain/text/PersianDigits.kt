@@ -13,6 +13,9 @@ object PersianDigits {
 
     fun format(number: Long): String = format(number.toString())
 
+    /** «۱٬۰۰۰»: thousands grouped with the Persian separator. */
+    fun grouped(number: Int): String = format("%,d".format(java.util.Locale.ROOT, number).replace(',', '٬'))
+
     /** «۸٫۵», «۱۵»: no trailing «٫۰», and the Persian decimal separator. */
     fun format(number: Double): String {
         val text = java.math.BigDecimal.valueOf(number).stripTrailingZeros().toPlainString()

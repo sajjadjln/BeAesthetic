@@ -17,12 +17,17 @@ data class PlanItemForm(
     /** Seconds; 0 = no rest shown. */
     val rest: Int = 0,
     val note: String = "",
+    /** «حرکت سخت‌تر» (D119): the next harder variant's name; empty = none. */
+    val harder: String = "",
 )
 
 enum class PlanError {
     NO_NAME,
     /** The move is already in this day's list; set logs are per move, so it can't be there twice. */
     DUPLICATE,
+
+    /** «حرکت سخت‌تر» is the move itself or one of its easier variants. */
+    HARDER_LOOP,
 }
 
 /** Which exercise row a saved form points to (D114). */
@@ -49,7 +54,8 @@ object PlanForms {
     const val MAX_NOTE = 60
     const val MAX_WORKOUT_NAME = 40
 
-    fun from(item: PlanItem): PlanItemForm {
+    /** [harder] is the name of the move's next harder variant, if it has one. */
+    fun from(item: PlanItem, harder: String = ""): PlanItemForm {
         val blank = PlanItemForm()
         return PlanItemForm(
             name = item.exercise.name,
@@ -64,6 +70,7 @@ object PlanForms {
             effort = item.targetEffort ?: 0,
             rest = item.restSeconds ?: 0,
             note = item.note.orEmpty(),
+            harder = harder,
         )
     }
 
@@ -79,11 +86,38 @@ object PlanForms {
         return if (k.isEmpty()) null else exercises.firstOrNull { key(it.name) == k }
     }
 
-    /** [editing] is the row being edited (null for a new one); [dayItems] is the day's whole list. */
-    fun errors(form: PlanItemForm, dayItems: List<PlanItem>, editing: PlanItem?): Set<PlanError> = buildSet {
+    /**
+     * [editing] is the row being edited (null for a new one); [dayItems] is the day's whole list. [exercises]
+     * and [harderOf] (move → its harder move) catch a «حرکت سخت‌تر» that would close a loop.
+     */
+    fun errors(
+        form: PlanItemForm,
+        dayItems: List<PlanItem>,
+        editing: PlanItem?,
+        exercises: List<Exercise> = emptyList(),
+        harderOf: Map<Long, Long> = emptyMap(),
+    ): Set<PlanError> = buildSet {
         val k = key(form.name)
         if (k.isEmpty()) add(PlanError.NO_NAME)
         if (k.isNotEmpty() && dayItems.any { it.exercise.id != editing?.exercise?.id && key(it.exercise.name) == k }) add(PlanError.DUPLICATE)
+        val h = key(form.harder)
+        if (h.isNotEmpty()) {
+            // The move being saved: the one the name matches, else the row's own move (a rename keeps it).
+            val self = match(form.name, exercises)?.id ?: editing?.exercise?.id
+            val harder = match(form.harder, exercises)?.id
+            if (h == k || (self != null && harder != null && Ladders.makesLoop(self, harder, harderOf))) add(PlanError.HARDER_LOOP)
+        }
+    }
+
+    /** Moves for the «حرکت سخت‌تر» field: never the move itself or its easier variants; the text filters. */
+    fun harderSuggestions(typed: String, name: String, exercises: List<Exercise>, harderOf: Map<Long, Long>, limit: Int = 8): List<Exercise> {
+        val self = match(name, exercises)?.id
+        val k = key(typed)
+        return exercises
+            .filter { key(it.name) != key(name) && (self == null || !Ladders.makesLoop(self, it.id, harderOf)) }
+            .filter { (k.isEmpty() || key(it.name).contains(k)) && key(it.name) != k }
+            .sortedBy { it.name }
+            .take(limit)
     }
 
     /** Existing moves for the name field, the ones already in this day left out; the typed text filters. */

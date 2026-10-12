@@ -75,6 +75,24 @@ class MigrationTest {
         }
     }
 
+    @Test
+    fun `3 to 4 keeps the plan and the log and adds ladder links and round numbers`() {
+        helper.createDatabase(DB, 3).use { db ->
+            db.execSQL("INSERT INTO exercise (id, name, kind) VALUES (1, 'شنا', 'REPS')")
+            db.execSQL("INSERT INTO workout (id, weekday, name) VALUES (1, 2, 'Lower A')")
+            db.execSQL("INSERT INTO workout_exercise (workoutId, position, exerciseId, sets, rangeMin, rangeMax, perSide) VALUES (1, 0, 1, 4, 8, 15, 0)")
+            db.execSQL("INSERT INTO session (id, workoutId, date, startedAt) VALUES (1, 1, '2026-10-12', 1791800000000)")
+            db.execSQL("INSERT INTO set_log (sessionId, exerciseId, setIndex, value, effort, loggedAt) VALUES (1, 1, 0, 12, 8, 1791800000000)")
+        }
+
+        helper.runMigrationsAndValidate(DB, 4, true).use { db ->
+            db.query("SELECT name, harderId FROM exercise").use { c -> c.moveToFirst(); assertEquals("شنا", c.getString(0)); assertEquals(true, c.isNull(1)) }
+            db.query("SELECT rangeMax FROM workout_exercise").use { c -> c.moveToFirst(); assertEquals(15, c.getInt(0)) }
+            db.query("SELECT value FROM set_log").use { c -> c.moveToFirst(); assertEquals(12, c.getInt(0)) }
+            db.query("SELECT COUNT(*) FROM round_number").use { c -> c.moveToFirst(); assertEquals(0, c.getInt(0)) }
+        }
+    }
+
     private companion object {
         const val DB = "migration-test.db"
     }

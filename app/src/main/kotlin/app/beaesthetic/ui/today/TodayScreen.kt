@@ -109,6 +109,7 @@ data class TodayActions(
     val dismissCard: () -> Unit = {},
     val openLetter: (Long) -> Unit = {},
     val openWorkout: () -> Unit = {},
+    val dismissDaysShownUp: () -> Unit = {},
 )
 
 @Composable
@@ -129,6 +130,7 @@ fun TodayRoute(viewModel: TodayViewModel, onOpenSettings: () -> Unit, onFixRemin
             dismissCard = viewModel::dismissCard,
             openLetter = viewModel::openLetter,
             openWorkout = onOpenWorkout,
+            dismissDaysShownUp = viewModel::dismissDaysShownUp,
         ),
     )
 }
@@ -330,6 +332,34 @@ private fun CardFor(card: TodayCard, actions: TodayActions) {
         is TodayCard.ChapterStart -> ChapterCard(card, actions)
         is TodayCard.FirstLetter -> FirstLetterCard(card, actions)
         is TodayCard.LetterArrived -> LetterArrivedCard(card, actions)
+        is TodayCard.DaysShownUp -> DaysShownUpCard(card, actions.dismissDaysShownUp)
+    }
+}
+
+/** A days-shown-up round number (D121): «پیکر» cheers, the number lands with a bounce and a medium buzz. */
+@Composable
+private fun DaysShownUpCard(card: TodayCard.DaysShownUp, onOk: () -> Unit) {
+    val c = Ba.colors
+    val haptics = rememberHaptics()
+    val lines = stringArrayResource(R.array.buddy_round)
+    val pop = remember { Animatable(0.6f) }
+    LaunchedEffect(card.days) {
+        haptics.medium()
+        pop.animateTo(1f, BaMotion.bouncy())
+    }
+    BaCard {
+        Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(10.dp), modifier = Modifier.fillMaxWidth()) {
+            Piker(Pose.CHEER, c.accent, card.outfit, Modifier.width(150.dp))
+            Bubble(lines[card.days % lines.size])
+            Text(
+                stringResource(R.string.round_days, PersianDigits.grouped(card.days)),
+                style = Ba.type.headline,
+                color = c.onAccentSubtle,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.graphicsLayer { scaleX = pop.value; scaleY = pop.value },
+            )
+            PrimaryButton(stringResource(R.string.round_ok), onClick = onOk, height = 44.dp, modifier = Modifier.fillMaxWidth())
+        }
     }
 }
 

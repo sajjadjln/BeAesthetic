@@ -42,6 +42,13 @@ object Days {
         status(date, today, installDate, snapshots[date])
     }
 
+    /** Days shown up (D121): days up to [today] at level 1 or more. Special days and days before the app don't count. */
+    fun shownUp(snapshots: Map<LocalDate, DaySnapshot>, today: LocalDate, installDate: LocalDate): Int =
+        snapshots.count { (date, snapshot) ->
+            val s = status(date, today, installDate, snapshot)
+            s is DayStatus.Level && s.level >= 1
+        }
+
     /**
      * A comeback (D53): a day at level 1 or more right after a day at level 0. Special days and days before
      * the app are not level 0, so they never make the next day a comeback.

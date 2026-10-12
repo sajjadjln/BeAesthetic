@@ -425,4 +425,29 @@
         <item>اینه! یه تمرین دیگه رفت تو کارنامه</item>
         <item>عالی بود، حالا یه آب بخور</item>
     </string-array>
+
+    <!-- Slice 4b: ladders (D119), the progression offer (D120), round numbers (D121) -->
+    <string name="ex_harder">حرکت سخت‌تر</string>
+    <string name="ex_harder_hint">مثلاً «شنا شیب منفی»</string>
+    <string name="ex_harder_help">پله‌ی بعدی این حرکت. وقتی همه‌ی ست‌ها به سقف بازه رسید، پیشنهادش میاد.</string>
+    <string name="error_harder_loop">این یکی آسون‌تره؛ نمی‌تونه پله‌ی بعدی باشه</string>
+    <string name="ladder_rung">پله‌ی %1$s از %2$s</string>
+    <string name="ladder_next">بعدی: %1$s</string>
+    <string name="ladder_top">آخرین پله</string>
+    <string name="offer_next_rung">پله‌ی بعد: %1$s؟</string>
+    <string name="offer_next_rung_text">همه‌ی ست‌های %1$s به سقف بازه رسید.</string>
+    <string name="offer_raise">بازه بشه %1$s–%2$s؟</string>
+    <string name="offer_raise_text">همه‌ی ست‌های %1$s سقف بازه بود.</string>
+    <string name="offer_yes">بله</string>
+    <string name="offer_accepted">برنامه عوض شد</string>
+    <string name="round_reps">%1$s تکرار %2$s از روز صفر</string>
+    <string name="round_minutes">%1$s دقیقه %2$s از روز صفر</string>
+    <string name="round_workouts">%1$s تمرین از روز صفر</string>
+    <string name="round_days">%1$s روز حضور از روز صفر</string>
+    <string name="round_ok">دمت گرم</string>
+    <string-array name="buddy_round">
+        <item>عدد رُند! ببین چقدر اومدی</item>
+        <item>اینو قاب بگیریم!</item>
+        <item>روز به روز، رسیدی اینجا</item>
+    </string-array>
 </resources>

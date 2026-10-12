@@ -10,9 +10,14 @@ import app.beaesthetic.domain.text.PersianDigits
 import app.beaesthetic.domain.time.Chapters
 import app.beaesthetic.domain.time.ProgramCalendar
 import app.beaesthetic.domain.time.Weekdays
+import app.beaesthetic.domain.workout.Exercise
 import app.beaesthetic.domain.workout.ExerciseKind
+import app.beaesthetic.domain.workout.Ladders
 import app.beaesthetic.domain.workout.LoggedSet
+import app.beaesthetic.domain.workout.Offer
 import app.beaesthetic.domain.workout.PlanItem
+import app.beaesthetic.domain.workout.Progression
+import app.beaesthetic.domain.workout.RoundNumbers
 import app.beaesthetic.domain.workout.SetDraft
 import app.beaesthetic.domain.workout.WorkoutPlan
 import app.beaesthetic.domain.workout.WorkoutRules
@@ -31,6 +36,7 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 
@@ -39,6 +45,15 @@ data class SetCircle(val value: Int?, val record: Boolean, val current: Boolean)
 
 /** A finished move in the summary: its name and the values logged, «۱۲، ۱۲، ۱۰». */
 data class SummaryLine(val name: String, val values: List<Int>, val kind: ExerciseKind)
+
+/** «پله‌ی ۲ از ۴، بعدی: الماسی» under the move's name (D70). [next] is null on the top rung. */
+data class LadderLine(val rung: Int, val of: Int, val next: String?)
+
+/** An offer in the summary (D120) and whether «بله» was tapped. */
+data class OfferUi(val offer: Offer, val moveName: String, val accepted: Boolean)
+
+/** A round number crossed today (D121), with the move's name for reps and seconds. */
+data class RoundUi(val crossing: RoundNumbers.Crossing, val name: String?)
 
 sealed interface SessionUi {
     data object Loading : SessionUi
@@ -59,9 +74,21 @@ sealed interface SessionUi {
         /** Per move: every planned set logged (the dashes at the top). */
         val exercisesDone: List<Boolean>,
         val anyLogged: Boolean,
+        val ladder: LadderLine?,
+        /** The current set was logged before: ✓ corrects it. */
+        val correcting: Boolean,
     ) : SessionUi
 
-    data class Summary(val outfit: Outfit, val allDone: Boolean, val sets: Int, val records: Int, val lines: List<SummaryLine>, val lineIndex: Int) : SessionUi
+    data class Summary(
+        val outfit: Outfit,
+        val allDone: Boolean,
+        val sets: Int,
+        val records: Int,
+        val lines: List<SummaryLine>,
+        val lineIndex: Int,
+        val offers: List<OfferUi>,
+        val rounds: List<RoundUi>,
+    ) : SessionUi
 }
 
 /** Where the user put the session; null fields follow the plan (the first open move, its next set). */
@@ -69,7 +96,13 @@ private data class Cursor(val exercise: Int, val set: Int? = null)
 
 private data class Setup(val date: LocalDate, val weekday: Int, val outfit: Outfit)
 
-private data class Ui(val cursor: Cursor?, val draft: SetDraft?, val summary: Boolean)
+private data class Ui(val cursor: Cursor?, val draft: SetDraft?, val summary: Boolean, val offers: OfferAnswers)
+
+/** Offers answered in this summary, by move: «بله» or «بعداً». */
+private data class OfferAnswers(val accepted: Set<Long> = emptySet(), val later: Set<Long> = emptySet())
+
+/** Moves, ladder links and today's round numbers. */
+private data class Library(val exercises: Map<Long, Exercise>, val links: Map<Long, Long>, val rounds: List<RoundNumbers.Crossing>)
 
 /** The workout session (screens.html 04, D103, D115, D116). Every set is saved the moment ✓ is tapped. */
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -86,8 +119,19 @@ class SessionViewModel(private val container: AppContainer, private val summaryL
     /** A set that just became a record (exerciseId, setIndex): the screen bursts its circle and vibrates. */
     val records: SharedFlow<Pair<Long, Int>> = _records
 
+    private val answers = MutableStateFlow(OfferAnswers())
+
+    /** The day's plan as it was when the session opened: accepting an offer changes the plan, not this session. */
     private val plan: Flow<WorkoutPlan> = setup.filterNotNull().flatMapLatest { s ->
-        container.workouts.observePlans().map { it[s.weekday] }
+        container.workouts.observePlans().map { it[s.weekday] }.take(1)
+    }
+
+    private val library: Flow<Library> = setup.filterNotNull().flatMapLatest { s ->
+        combine(
+            container.workouts.observeExercises(),
+            container.workouts.observeHarderLinks(),
+            container.workouts.observeRoundNumbersOn(s.date),
+        ) { ex, links, rounds -> Library(ex.associateBy { it.id }, links, rounds) }
     }
 
     /** Every set of the plan's moves, all time, in the order they were logged. */
@@ -101,9 +145,9 @@ class SessionViewModel(private val container: AppContainer, private val summaryL
         setup.filterNotNull(),
         plan,
         sets,
-        sessionId,
-        combine(cursor, draft, summary) { c, d, s -> Ui(c, d, s) },
-    ) { s, p, all, sid, ui -> toUi(s, p, all, sid, ui) }
+        combine(sessionId, library) { sid, lib -> sid to lib },
+        combine(cursor, draft, summary, answers) { c, d, s, a -> Ui(c, d, s, a) },
+    ) { s, p, all, (sid, lib), ui -> toUi(s, p, all, sid, lib, ui) }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), SessionUi.Loading)
 
     init {
@@ -119,7 +163,7 @@ class SessionViewModel(private val container: AppContainer, private val summaryL
         }
     }
 
-    private fun toUi(s: Setup, plan: WorkoutPlan, all: List<LoggedSet>, sid: Long?, ui: Ui): SessionUi {
+    private fun toUi(s: Setup, plan: WorkoutPlan, all: List<LoggedSet>, sid: Long?, lib: Library, ui: Ui): SessionUi {
         val items = plan.items
         if (items.isEmpty()) return SessionUi.NoPlan(s.outfit)
         val here = if (sid == null) emptyList() else all.filter { it.sessionId == sid }
@@ -132,7 +176,13 @@ class SessionViewModel(private val container: AppContainer, private val summaryL
                 val mine = here.filter { it.exerciseId == item.exercise.id }.sortedBy { it.setIndex }
                 if (mine.isEmpty()) null else SummaryLine(item.exercise.name, mine.map { it.value }, item.exercise.kind)
             }
-            return SessionUi.Summary(s.outfit, open == null, here.size, records.size, lines, s.date.dayOfYear % summaryLines.coerceAtLeast(1))
+            val offers = Progression.offers(items, here) { id -> lib.links[id]?.let(lib.exercises::get) }
+                .filter { it.exerciseId !in ui.offers.later }
+                .map { o -> OfferUi(o, items.first { it.exercise.id == o.exerciseId }.exercise.name, o.exerciseId in ui.offers.accepted) }
+            return SessionUi.Summary(
+                s.outfit, open == null, here.size, records.size, lines, s.date.dayOfYear % summaryLines.coerceAtLeast(1),
+                offers, rounds(items, here, lib),
+            )
         }
 
         val ex = (ui.cursor?.exercise ?: open ?: 0).coerceIn(items.indices)
@@ -161,7 +211,41 @@ class SessionViewModel(private val container: AppContainer, private val summaryL
             previous = previous,
             exercisesDone = items.map { (counts[it.exercise.id] ?: 0) >= it.sets },
             anyLogged = here.isNotEmpty(),
+            ladder = ladderLine(item.exercise.id, lib),
+            correcting = existing != null,
         )
+    }
+
+    private fun ladderLine(id: Long, lib: Library): LadderLine? {
+        val chain = Ladders.chain(id, lib.links)
+        if (chain.size < 2) return null
+        val at = chain.indexOf(id)
+        return LadderLine(at + 1, chain.size, chain.getOrNull(at + 1)?.let { lib.exercises[it]?.name })
+    }
+
+    /**
+     * Today's round numbers that belong to this session: workouts, and reps or seconds of a ladder this session
+     * logged. Named after the move logged today on that ladder. Only the highest of each total.
+     */
+    private fun rounds(items: List<PlanItem>, here: List<LoggedSet>, lib: Library): List<RoundUi> {
+        if (here.isEmpty()) return emptyList()
+        val loggedMoves = items.filter { item -> here.any { it.exerciseId == item.exercise.id } }
+        val byLadder = loggedMoves.associateBy { Ladders.root(it.exercise.id, lib.links) }
+        return RoundNumbers.highestEach(lib.rounds)
+            .filter { it.kind == RoundNumbers.Kind.WORKOUTS || (it.ladder != null && it.ladder in byLadder) }
+            .map { RoundUi(it, it.ladder?.let { l -> byLadder[l]?.exercise?.name }) }
+    }
+
+    /** «بله»: the plan changes for next time (D120). */
+    fun acceptOffer(offer: Offer) {
+        val setup = setup.value ?: return
+        answers.value = answers.value.copy(accepted = answers.value.accepted + offer.exerciseId)
+        viewModelScope.launch { container.workouts.accept(setup.weekday, offer) }
+    }
+
+    /** «بعداً»: hidden for now; it comes again the next time the top is reached. */
+    fun laterOffer(offer: Offer) {
+        answers.value = answers.value.copy(later = answers.value.later + offer.exerciseId)
     }
 
     private fun logging(): SessionUi.Logging? = state.value as? SessionUi.Logging
@@ -216,6 +300,11 @@ class SessionViewModel(private val container: AppContainer, private val summaryL
 
     private suspend fun advance(s: SessionUi.Logging, record: Boolean) {
         draft.value = null
+        if (s.correcting) {
+            // A correction stays on its set, so several sets can be fixed in a row.
+            cursor.value = Cursor(s.exerciseIndex, s.setIndex)
+            return
+        }
         val doneHere = s.circles.count { it.value != null && !it.current } + 1
         if (doneHere < s.item.sets) {
             // The next open set of this move.

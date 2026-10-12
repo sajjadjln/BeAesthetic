@@ -6,6 +6,7 @@ import app.beaesthetic.AppContainer
 import app.beaesthetic.data.db.EventEntity
 import app.beaesthetic.data.db.EventType
 import app.beaesthetic.data.db.LetterEntity
+import app.beaesthetic.data.db.RoundNumberEntity
 import app.beaesthetic.data.db.SettingsEntity
 import app.beaesthetic.data.repo.DayView
 import app.beaesthetic.domain.buddy.BuddyPicker
@@ -32,6 +33,7 @@ import app.beaesthetic.domain.time.JalaliDate
 import app.beaesthetic.domain.time.Part
 import app.beaesthetic.domain.time.ProgramCalendar
 import app.beaesthetic.domain.time.Weekdays
+import app.beaesthetic.domain.workout.RoundNumbers
 import app.beaesthetic.reminders.AlarmScheduler.Companion.toLogRow
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -78,6 +80,9 @@ sealed interface TodayCard {
     data class ChapterStart(val chapter: Chapter, val letterOpensOn: LocalDate, val outfit: Outfit) : TodayCard
     data class FirstLetter(val opensOn: LocalDate) : TodayCard
     data class LetterArrived(val id: Long, val writtenOn: LocalDate, val text: String, val opened: Boolean, val outfit: Outfit) : TodayCard
+
+    /** «۳۰ روز حضور از روز صفر» (D121), until «دمت گرم». */
+    data class DaysShownUp(val days: Int, val outfit: Outfit) : TodayCard
 }
 
 data class BuddyUi(val pose: Pose, val outfit: Outfit, val moment: Moment, val lineIndex: Int, val count: Int, val total: Int, val part: Part)
@@ -104,6 +109,8 @@ data class TodayUiState(
     val cards: List<TodayCard>,
     val buddy: BuddyUi?,
     val banner: HealthBanner?,
+    /** Days at level 1 or more since Day 0, today included (D121). */
+    val daysShownUp: Int = 0,
 ) {
     val dayComplete: Boolean get() = total > 0 && done == total
 }
@@ -127,6 +134,9 @@ private data class Inputs(
     val settings: TodaySettings,
     val letters: List<LetterEntity>,
     val plannedDays: Set<Int>,
+    /** Every stored day since Day 0, for days shown up (D121). */
+    val allDays: Map<LocalDate, DaySnapshot>,
+    val unseenDays: List<RoundNumberEntity>,
 )
 
 private fun SettingsEntity.calendar() = ProgramCalendar(programStartDate, programEndDate, rolloverHour)
@@ -177,8 +187,12 @@ class TodayViewModel(
             container.tasks.observeSnapshots(minOf(weekStart, n.date.minusDays(1)), weekStart.plusDays(6)),
             todaySettings,
             container.db.letters().observeAll(),
-            container.workouts.observePlannedDays(),
-        ) { day, snapshots, s, letters, planned -> Inputs(n, day, snapshots, s, letters, planned) }
+            combine(
+                container.workouts.observePlannedDays(),
+                container.tasks.observeSnapshots(n.calendar.day0, n.date),
+                container.db.roundNumbers().observeUnseenDays(),
+            ) { planned, all, unseen -> Triple(planned, all, unseen) },
+        ) { day, snapshots, s, letters, (planned, all, unseen) -> Inputs(n, day, snapshots, s, letters, planned, all, unseen) }
     }
 
     private val health = container.db.reminderLog()
@@ -194,6 +208,7 @@ class TodayViewModel(
         toState(input, picked ?: input.now.part, banner, tapCount, line)
     }
         .onEach(::ensureBuddyLine)
+        .onEach(::noteDaysShownUp)
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
 
     init {
@@ -230,11 +245,16 @@ class TodayViewModel(
         val current = state.value ?: return
         viewModelScope.launch {
             val s = container.db.settings().get() ?: return@launch
-            when (current.cards.lastOrNull()) {
+            when (current.cards.lastOrNull { it !is TodayCard.DaysShownUp }) {
                 is TodayCard.FirstLetter -> container.db.settings().upsert(s.copy(firstLetterOfferDone = true))
                 else -> container.db.settings().upsert(s.copy(cardDismissedOn = current.date))
             }
         }
+    }
+
+    /** «دمت گرم» on a days-shown-up card. */
+    fun dismissDaysShownUp() {
+        viewModelScope.launch { container.db.roundNumbers().markDaysSeen(container.clock.now()) }
     }
 
     fun openLetter(id: Long) {
@@ -275,6 +295,18 @@ class TodayViewModel(
         }
     }
 
+    private var notedDays = -1
+
+    /** Writes a days-shown-up round number when it's first crossed (D121); the card then shows on Today. */
+    private fun noteDaysShownUp(state: TodayUiState?) {
+        val days = state?.daysShownUp ?: return
+        if (days == notedDays) return
+        notedDays = days
+        val reached = RoundNumbers.reached(RoundNumbers.Kind.DAYS, null, days)
+        if (reached.isEmpty()) return
+        viewModelScope.launch { container.db.roundNumbers().insertAll(reached.map { RoundNumberEntity(it.key, state.date) }) }
+    }
+
     private fun parseLine(e: EventEntity): Pair<Moment, Int>? {
         val (m, i) = e.ref?.split(":")?.takeIf { it.size == 2 } ?: return null
         return runCatching { Moment.valueOf(m) to i.toInt() }.getOrNull()
@@ -303,7 +335,11 @@ class TodayViewModel(
         val yesterday = date.minusDays(1)
         val yesterdayStatus = Days.status(yesterday, date, s.installDate, snapshots[yesterday])
 
-        val cards = cards(date, calendar, s, letters, outfit)
+        val shownUp = Days.shownUp(input.allDays + (date to liveSnapshots.getValue(date)), date, s.installDate)
+        val cards = cards(date, calendar, s, letters, outfit) + input.unseenDays
+            .mapNotNull { row -> RoundNumbers.parse(row.key)?.let { TodayCard.DaysShownUp(it.value, outfit) } }
+            .sortedByDescending { it.days }
+            .take(1)
         val buddy = if (!s.showBuddy || cards.isNotEmpty()) {
             null
         } else {
@@ -345,6 +381,7 @@ class TodayViewModel(
             cards = cards,
             buddy = buddy,
             banner = banner,
+            daysShownUp = shownUp,
         )
     }
 

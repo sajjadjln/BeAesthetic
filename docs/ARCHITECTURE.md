@@ -211,8 +211,8 @@ Physical schema for `SPEC.md` §9, updated for D25–D28. Dates are ISO `LocalDa
 | `day` | date, special (SICK·TRAVEL·OFF)?, minimumMode, dueCount, doneCount, floorDone | Replaces DayMeta. Holds the **day snapshot**, see below. A future row can hold only a planned special day. |
 | `snack_note` | date, text, updatedAt | |
 | `week` | weekStart (Saturday), ritualDoneAt?, reviewNote? | |
-| `ladder` | id, name, sortOrder | D70. A move family, e.g. «شنا», «بارفیکس». Added by the user (D100). |
-| `exercise` | id, name, kind (REPS·SECONDS), ladderId?, rung?, archivedAt? | One `name`, typed in whichever language the user uses. The next harder variant = same ladder, `rung + 1` (replaces `nextExerciseId`, D70). |
+| ~~`ladder`~~ | — | Not built: ladders are `exercise.harderId` chains (D119). |
+| `exercise` | id, name, kind (REPS·SECONDS), ladderId?, rung?, archivedAt?, harderId? | One `name`, typed in whichever language the user uses. A ladder is a chain of `harderId` links (v4, D119); `ladderId` and `rung` (v3) stay empty. |
 | `workout` | id, weekday (unique), name | One per training weekday (the user's plan: Sat, Mon, Wed, Fri; D102). |
 | `workout_exercise` | workoutId, position, exerciseId, sets, rangeMin?, rangeMax?, kg?, perSide, targetEffort?, restSeconds?, note? | Key (workoutId, position). Drag-to-reorder rewrites positions. No range = «حداکثر» (D105). `kg` is the default load (D103). |
 | `session` | id, workoutId, date, startedAt, finishedAt? | Created with the first set; the same workout on the same date continues it (D115). |

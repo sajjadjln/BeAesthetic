@@ -79,4 +79,24 @@ class PlanFormTest {
         assertNull(item.note)
         assertNull(item.kg)
     }
+
+    @Test
+    fun `the harder move can't be the move itself or an easier one`() {
+        val knee = Exercise(10, "شنا زانو", ExerciseKind.REPS)
+        val pushUp = Exercise(11, "شنا", ExerciseKind.REPS)
+        val moves = listOf(knee, pushUp)
+        val links = mapOf(knee.id to pushUp.id)
+        val editing = PlanItem(pushUp, 3)
+        assertEquals(setOf(PlanError.HARDER_LOOP), PlanForms.errors(PlanItemForm(name = "شنا", harder = "شنا زانو"), emptyList(), editing, moves, links))
+        assertEquals(setOf(PlanError.HARDER_LOOP), PlanForms.errors(PlanItemForm(name = "شنا", harder = " شنا "), emptyList(), editing, moves, links))
+        assertTrue(PlanForms.errors(PlanItemForm(name = "شنا", harder = "شنا الماسی"), emptyList(), editing, moves, links).isEmpty())
+        // Suggestions leave out the move and its easier variants.
+        assertEquals(emptyList(), PlanForms.harderSuggestions("", "شنا", moves, links))
+        assertEquals(listOf(pushUp), PlanForms.harderSuggestions("", "شنا زانو", moves, links))
+    }
+
+    @Test
+    fun `the harder name round-trips through the form`() {
+        assertEquals("شنا الماسی", PlanForms.from(PlanItem(press, 3), harder = "شنا الماسی").harder)
+    }
 }

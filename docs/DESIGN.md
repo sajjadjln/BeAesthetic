@@ -242,6 +242,9 @@ Board: `docs/design/character.html`. Rig: `docs/design/piker.js` (17 poses, face
 - «حرکت جدید» adds an exercise.
 - As built (D105, D114, D118): the day pills show the number of moves (or «—»), not a letter. The name saves as you type. Rows show the drag handle, the name, a details line (kg, per side, effort, rest) and the sets chip. A row opens a bottom sheet (not inline): name with suggestions of moves from other days, تکرار / ثانیه, sets, «حداکثر» or from–to, «وزنه» with kg, «هر طرف», target effort, rest, note, «ذخیره», «برداشتن از این روز».
 - Today's workout tile (D117): wide, first in its part, a check circle and the accent play button.
+- «حرکت سخت‌تر» (D119): a field in the move sheet with suggestions (never the move itself or an easier one); a loop shows an amber line.
+- Slice 4b in the session: the ladder line under the name («پله‌ی ۱ از ۲، بعدی: …» or «آخرین پله»). The summary shows round numbers as accent pills that land with a bounce (D121) and offer cards (D120) in the accent-subtle color with «بله» / «بعداً»; «بله» turns into «برنامه عوض شد». Correcting a set stays on that set; «پایان» opens the summary.
+- Today (D121): a days-shown-up card with «پیکر» cheering and «دمت گرم».
 
 ### 11 Today (light)
 Same as 01 with light tokens.

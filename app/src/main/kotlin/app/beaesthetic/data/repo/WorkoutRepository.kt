@@ -3,6 +3,7 @@ package app.beaesthetic.data.repo
 import androidx.room.withTransaction
 import app.beaesthetic.data.db.AppDatabase
 import app.beaesthetic.data.db.ExerciseEntity
+import app.beaesthetic.data.db.RoundNumberEntity
 import app.beaesthetic.data.db.SessionEntity
 import app.beaesthetic.data.db.SetLogEntity
 import app.beaesthetic.data.db.SetWithDate
@@ -12,10 +13,13 @@ import app.beaesthetic.domain.tasks.TaskAction
 import app.beaesthetic.domain.workout.Exercise
 import app.beaesthetic.domain.workout.ExerciseChoice
 import app.beaesthetic.domain.workout.ExerciseKind
+import app.beaesthetic.domain.workout.Ladders
 import app.beaesthetic.domain.workout.LoggedSet
+import app.beaesthetic.domain.workout.Offer
 import app.beaesthetic.domain.workout.PlanForms
 import app.beaesthetic.domain.workout.PlanItem
 import app.beaesthetic.domain.workout.PlanItemForm
+import app.beaesthetic.domain.workout.RoundNumbers
 import app.beaesthetic.domain.workout.WorkoutPlan
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
@@ -23,12 +27,15 @@ import kotlinx.coroutines.flow.map
 import java.time.Instant
 import java.time.LocalDate
 
-/** The workout plan (screens.html 10) and sessions (04). Slice 4a. */
+/** The workout plan (screens.html 10), sessions (04), ladders (D119) and round numbers (D121). */
 class WorkoutRepository(private val db: AppDatabase, private val tasks: TaskRepository) {
 
     private val dao = db.workouts()
 
     fun observeExercises(): Flow<List<Exercise>> = dao.observeExercises().map { rows -> rows.map { it.toDomain() } }
+
+    /** «حرکت سخت‌تر» links, move → its harder move (D119). */
+    fun observeHarderLinks(): Flow<Map<Long, Long>> = dao.observeExercises().map { rows -> rows.harderLinks() }
 
     /** All 7 weekdays, Saturday first; a weekday with no rows is an empty plan. */
     fun observePlans(): Flow<List<WorkoutPlan>> = combine(dao.observeWorkouts(), dao.observeItems(), dao.observeExercises()) { workouts, items, exercises ->
@@ -68,11 +75,41 @@ class WorkoutRepository(private val db: AppDatabase, private val tasks: TaskRepo
             is ExerciseChoice.Rename -> choice.id.also { dao.updateExercise(it, name, kind) }
             ExerciseChoice.New -> dao.insertExercise(ExerciseEntity(name = name, kind = kind))
         }
+        saveHarder(exerciseId, form)
         val item = PlanForms.toItem(form, Exercise(exerciseId, name, form.kind))
         val list = rows.toMutableList()
         val entity = item.toEntity(workoutId, 0)
         if (editingPosition != null) list[rows.indexOfFirst { it.position == editingPosition }] = entity else list += entity
         rewrite(workoutId, list)
+    }
+
+    /**
+     * Links [exerciseId] to the move named in «حرکت سخت‌تر», adding that move if it's new (same kind). Empty
+     * unlinks. The harder move loses any other easier move, so a chain never branches; a loop is never saved.
+     */
+    private suspend fun saveHarder(exerciseId: Long, form: PlanItemForm) {
+        val name = PlanForms.cleanName(form.harder)
+        if (name.isEmpty()) {
+            dao.setHarder(exerciseId, null)
+            return
+        }
+        val all = dao.allExercises()
+        val links = all.harderLinks()
+        val harderId = PlanForms.match(name, all.filter { it.archivedAt == null }.map { it.toDomain() })?.id
+            ?: dao.insertExercise(ExerciseEntity(name = name, kind = form.kind.name))
+        if (Ladders.makesLoop(exerciseId, harderId, links)) return
+        dao.setHarder(exerciseId, harderId)
+        dao.unlinkEasier(harderId, keep = exerciseId)
+    }
+
+    /** «بله» on an offer (D120): the next rung takes the move's place in that day, or the range moves up. */
+    suspend fun accept(weekday: Int, offer: Offer) = db.withTransaction {
+        val w = dao.workout(weekday) ?: return@withTransaction
+        val row = dao.item(w.id, offer.exerciseId) ?: return@withTransaction
+        when (offer) {
+            is Offer.NextRung -> if (dao.item(w.id, offer.harder.id) == null) dao.updateItem(row.copy(exerciseId = offer.harder.id))
+            is Offer.RaiseRange -> dao.updateItem(row.copy(rangeMin = offer.from, rangeMax = offer.to))
+        }
     }
 
     /** Takes a row out of the day. The move and its logged sets stay, so its history is kept. */
@@ -120,11 +157,29 @@ class WorkoutRepository(private val db: AppDatabase, private val tasks: TaskRepo
             tasks.day(date).items
                 .filter { it.task.action == TaskAction.WORKOUT && !it.done }
                 .forEach { tasks.complete(it.task.id, date, now) }
+            noteWorkoutRoundNumbers(date)
             id
         }
 
+    /** Writes the reps, seconds and workout round numbers crossed by now (D121), dated [date]. */
+    private suspend fun noteWorkoutRoundNumbers(date: LocalDate) {
+        val exercises = dao.allExercises()
+        val kinds = exercises.associate { it.id to it.toDomain().kind }
+        val links = exercises.harderLinks()
+        val crossed = RoundNumbers.workoutCrossings(dao.allSets().map { it.toDomain() }, kinds::get) { Ladders.root(it, links) }
+        val fresh = RoundNumbers.new(crossed, db.roundNumbers().keys().toSet())
+        db.roundNumbers().insertAll(fresh.map { RoundNumberEntity(it.key, date) })
+    }
+
+    /** The round numbers crossed on [date], for the session summary. */
+    fun observeRoundNumbersOn(date: LocalDate): Flow<List<RoundNumbers.Crossing>> =
+        db.roundNumbers().observeOn(date).map { rows -> rows.mapNotNull { RoundNumbers.parse(it.key) } }
+
     suspend fun finish(sessionId: Long, now: Instant) = dao.finish(sessionId, now)
 }
+
+private fun List<ExerciseEntity>.harderLinks(): Map<Long, Long> =
+    mapNotNull { e -> e.harderId?.let { e.id to it } }.toMap()
 
 fun ExerciseEntity.toDomain() = Exercise(id, name, runCatching { ExerciseKind.valueOf(kind) }.getOrDefault(ExerciseKind.REPS))
 

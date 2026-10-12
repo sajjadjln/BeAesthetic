@@ -239,6 +239,16 @@ interface WorkoutDao {
     @Query("UPDATE exercise SET name = :name, kind = :kind WHERE id = :id")
     suspend fun updateExercise(id: Long, name: String, kind: String)
 
+    @Query("UPDATE exercise SET harderId = :harderId WHERE id = :id")
+    suspend fun setHarder(id: Long, harderId: Long?)
+
+    /** A move has at most one easier move (D119): linking a new one unlinks the old. */
+    @Query("UPDATE exercise SET harderId = NULL WHERE harderId = :harderId AND id != :keep")
+    suspend fun unlinkEasier(harderId: Long, keep: Long)
+
+    @Query("SELECT * FROM exercise")
+    suspend fun allExercises(): List<ExerciseEntity>
+
     @Query("SELECT * FROM session WHERE workoutId = :workoutId AND date = :date ORDER BY id LIMIT 1")
     suspend fun session(workoutId: Long, date: LocalDate): SessionEntity?
 
@@ -257,6 +267,39 @@ interface WorkoutDao {
 
     @Upsert
     suspend fun upsertSet(set: SetLogEntity)
+
+    /** Every set ever logged, for lifetime totals (small: a few thousand rows over the program). */
+    @Query(
+        "SELECT set_log.sessionId, set_log.exerciseId, set_log.setIndex, set_log.value, set_log.kg, set_log.effort, set_log.loggedAt, session.date " +
+            "FROM set_log JOIN session ON session.id = set_log.sessionId",
+    )
+    suspend fun allSets(): List<SetWithDate>
+
+    @Query("SELECT * FROM workout_exercise WHERE workoutId = :workoutId AND exerciseId = :exerciseId")
+    suspend fun item(workoutId: Long, exerciseId: Long): WorkoutExerciseEntity?
+
+    @androidx.room.Update
+    suspend fun updateItem(item: WorkoutExerciseEntity)
+}
+
+@Dao
+interface RoundNumberDao {
+    @Query("SELECT key FROM round_number")
+    suspend fun keys(): List<String>
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertAll(rows: List<RoundNumberEntity>)
+
+    @Query("SELECT * FROM round_number WHERE reachedOn = :date")
+    fun observeOn(date: LocalDate): Flow<List<RoundNumberEntity>>
+
+    /** Days-shown-up crossings not dismissed yet: the Today card. */
+    @Query("SELECT * FROM round_number WHERE key LIKE 'days:%' AND seenAt IS NULL")
+    fun observeUnseenDays(): Flow<List<RoundNumberEntity>>
+
+    /** «دمت گرم»: every days-shown-up crossing so far is seen, so an older one never shows after a newer one. */
+    @Query("UPDATE round_number SET seenAt = :at WHERE key LIKE 'days:%' AND seenAt IS NULL")
+    suspend fun markDaysSeen(at: Instant)
 }
 
 @Database(
@@ -274,10 +317,11 @@ interface WorkoutDao {
         WorkoutExerciseEntity::class,
         SessionEntity::class,
         SetLogEntity::class,
+        RoundNumberEntity::class,
     ],
-    version = 3,
+    version = 4,
     exportSchema = true,
-    autoMigrations = [AutoMigration(from = 1, to = 2), AutoMigration(from = 2, to = 3)],
+    autoMigrations = [AutoMigration(from = 1, to = 2), AutoMigration(from = 2, to = 3), AutoMigration(from = 3, to = 4)],
 )
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
@@ -290,6 +334,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun events(): EventDao
     abstract fun letters(): LetterDao
     abstract fun workouts(): WorkoutDao
+    abstract fun roundNumbers(): RoundNumberDao
 
     companion object {
         // Never fallbackToDestructiveMigration: schema changes must never wipe data (ARCHITECTURE §8).
