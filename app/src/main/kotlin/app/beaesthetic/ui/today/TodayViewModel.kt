@@ -13,6 +13,7 @@ import app.beaesthetic.domain.buddy.Moment
 import app.beaesthetic.domain.buddy.Outfit
 import app.beaesthetic.domain.buddy.Pose
 import app.beaesthetic.domain.buddy.TodayState
+import app.beaesthetic.domain.reminders.Attention
 import app.beaesthetic.domain.reminders.BlockContent
 import app.beaesthetic.domain.reminders.PartOfDay
 import app.beaesthetic.domain.reminders.ReminderHealth
@@ -180,12 +181,10 @@ class TodayViewModel(
         .map { rows -> ReminderHealth.check(rows.map { it.toLogRow() }, container.clock.now()) }
 
     val state: StateFlow<TodayUiState?> = combine(inputs, pickedPart, health, systemOk, combine(taps, buddyLine) { t, l -> t to l }) { input, picked, h, sysOk, (tapCount, line) ->
-        val seen = input.settings.healthSeenAt
-        fun fresh(at: Instant) = seen == null || at > seen
-        val banner = when {
-            !sysOk || (h.missed + h.blocked).any { fresh(it.scheduledAt) } -> HealthBanner.BLOCKED
-            h.late.any { fresh(it.scheduledAt) } -> HealthBanner.LATE
-            else -> null
+        val banner = when (ReminderHealth.attention(h, input.settings.healthSeenAt, sysOk)) {
+            Attention.BLOCKED -> HealthBanner.BLOCKED
+            Attention.LATE -> HealthBanner.LATE
+            Attention.NONE -> null
         }
         toState(input, picked ?: input.now.part, banner, tapCount, line)
     }

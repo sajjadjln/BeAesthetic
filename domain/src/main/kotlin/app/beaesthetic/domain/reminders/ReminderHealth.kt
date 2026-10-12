@@ -22,6 +22,9 @@ data class Health(val checked: Int, val late: List<LogRow>, val missed: List<Log
     val ok: Boolean get() = late.isEmpty() && missed.isEmpty() && blocked.isEmpty()
 }
 
+/** What the health line and Today's banner say (D96). */
+enum class Attention { NONE, LATE, BLOCKED }
+
 object ReminderHealth {
     val GRACE: Duration = Duration.ofMinutes(10)
     val WINDOW: Duration = Duration.ofDays(7)
@@ -37,6 +40,21 @@ object ReminderHealth {
         val blocked = fired.filter { it.outcome == Outcome.NOTIFICATIONS_OFF }
         val late = fired.filter { it.outcome != Outcome.NOTIFICATIONS_OFF && Duration.between(it.scheduledAt, it.firedAt) > GRACE }
         return Health(due.size, late, missed, blocked)
+    }
+
+    /**
+     * Whether reminders need a look. Problems before [seenAt] were already seen (the user opened «گوشی», or a
+     * test notification arrived) and are quiet until something new happens. Notifications or exact alarms
+     * being off ([systemOk] false) always count. One answer for Today's banner and every health line, so
+     * they never disagree.
+     */
+    fun attention(health: Health, seenAt: Instant?, systemOk: Boolean = true): Attention {
+        fun fresh(row: LogRow) = seenAt == null || row.scheduledAt > seenAt
+        return when {
+            !systemOk || (health.missed + health.blocked).any(::fresh) -> Attention.BLOCKED
+            health.late.any(::fresh) -> Attention.LATE
+            else -> Attention.NONE
+        }
     }
 
     /**

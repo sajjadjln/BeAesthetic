@@ -58,6 +58,7 @@ import app.beaesthetic.data.db.ReminderOutcome
 import app.beaesthetic.data.db.SettingsEntity
 import app.beaesthetic.data.repo.toDomain
 import app.beaesthetic.domain.reminders.AlarmKind
+import app.beaesthetic.domain.reminders.Attention
 import app.beaesthetic.domain.reminders.Health
 import app.beaesthetic.domain.reminders.LogRow
 import app.beaesthetic.domain.reminders.Outcome
@@ -102,10 +103,19 @@ private fun SettingsPage(title: String, onBack: () -> Unit, content: @Composable
     }
 }
 
+/**
+ * True when reminders are fine: no problem the user hasn't seen yet, and notifications and exact alarms on.
+ * The same rule as Today's banner (ReminderHealth.attention), so the two never disagree.
+ */
 @Composable
-private fun rememberHealth(container: AppContainer): Health? {
-    val flow = remember { container.db.reminderLog().observeSince(Instant.now() - ReminderHealth.WINDOW).map { rows -> ReminderHealth.check(rows.map { it.toLogRow() }, container.clock.now()) } }
-    return flow.collectAsStateWithLifecycle(null).value
+private fun rememberRemindersOk(container: AppContainer): Boolean {
+    val health = remember { container.db.reminderLog().observeSince(Instant.now() - ReminderHealth.WINDOW).map { rows -> ReminderHealth.check(rows.map { it.toLogRow() }, container.clock.now()) } }
+        .collectAsStateWithLifecycle(null).value
+    val settings by container.db.settings().observe().collectAsStateWithLifecycle(null)
+    var systemOk by remember { mutableStateOf(container.notifier.canNotify() && container.scheduler.canScheduleExact()) }
+    LifecycleEventEffect(Lifecycle.Event.ON_RESUME) { systemOk = container.notifier.canNotify() && container.scheduler.canScheduleExact() }
+    if (health == null) return true
+    return ReminderHealth.attention(health, settings?.healthSeenAt, systemOk) == Attention.NONE
 }
 
 @Composable
@@ -129,9 +139,9 @@ enum class SettingsDestination { TASKS, REMINDERS, WORKOUT, BACKUP, APPEARANCE, 
 @Composable
 fun SettingsScreen(container: AppContainer, debugAvailable: Boolean, onBack: () -> Unit, onOpen: (SettingsDestination) -> Unit) {
     val c = Ba.colors
-    val health = rememberHealth(container)
+    val remindersOk = rememberRemindersOk(container)
     SettingsPage(stringResource(R.string.settings_title), onBack) {
-        HealthLine(health?.ok ?: true)
+        HealthLine(remindersOk)
         val tiles = listOf(
             Triple(SettingsDestination.TASKS, BaIcons.List, R.string.settings_tasks),
             Triple(SettingsDestination.REMINDERS, BaIcons.Bell, R.string.settings_reminders),
@@ -188,7 +198,7 @@ fun SettingsScreen(container: AppContainer, debugAvailable: Boolean, onBack: () 
 fun RemindersScreen(container: AppContainer, onBack: () -> Unit) {
     val c = Ba.colors
     val scope = rememberCoroutineScope()
-    val health = rememberHealth(container)
+    val remindersOk = rememberRemindersOk(container)
     val slots by container.db.slots().observeAll().collectAsStateWithLifecycle(emptyList())
     val tasks by container.db.tasks().observeActive().collectAsStateWithLifecycle(emptyList())
     val settings by container.db.settings().observe().collectAsStateWithLifecycle(null)
@@ -204,7 +214,7 @@ fun RemindersScreen(container: AppContainer, onBack: () -> Unit) {
     }
 
     SettingsPage(stringResource(R.string.reminders_title), onBack) {
-        HealthLine(health?.ok ?: true) {
+        HealthLine(remindersOk) {
             Box(Modifier.clip(RoundedCornerShape(50)).clickable { scope.launch { testKey = container.scheduler.scheduleTest(Duration.ofMinutes(1)) } }) {
                 Chip(stringResource(R.string.reminders_test), ChipKind.ACCENT)
             }
@@ -327,6 +337,12 @@ fun Segmented(options: List<String>, selected: Int, onSelect: (Int) -> Unit) {
 @Composable
 private fun TestStatus(container: AppContainer, key: String) {
     val row by remember(key) { container.db.reminderLog().observeLatest(key) }.collectAsStateWithLifecycle(null)
+    // A test that arrives proves reminders work now: older problems count as seen, like opening «گوشی» (D96).
+    LaunchedEffect(row?.outcome) {
+        if (row?.outcome == ReminderOutcome.SHOWN) {
+            container.db.settings().get()?.let { container.db.settings().upsert(it.copy(healthSeenAt = container.clock.now())) }
+        }
+    }
     val text = when (row?.outcome) {
         ReminderOutcome.SHOWN -> stringResource(R.string.test_arrived)
         ReminderOutcome.NOTIFICATIONS_OFF -> stringResource(R.string.test_blocked)
@@ -345,11 +361,12 @@ fun PhoneScreen(container: AppContainer, onBack: () -> Unit) {
     val scope = rememberCoroutineScope()
     val settings by container.db.settings().observe().collectAsStateWithLifecycle(null)
     val rows by remember { container.db.reminderLog().observeSince(Instant.now() - ReminderHealth.WINDOW) }.collectAsStateWithLifecycle(emptyList())
-    var notifOk by remember { mutableStateOf(true) }
-    var exactOk by remember { mutableStateOf(true) }
-    var batteryOk by remember { mutableStateOf(true) }
+    // Read before the first frame, so a row never shows «باز کن» for a moment and then drops it.
+    var notifOk by remember { mutableStateOf(container.notifier.canNotify()) }
+    var exactOk by remember { mutableStateOf(container.scheduler.canScheduleExact()) }
+    var batteryOk by remember { mutableStateOf(PhoneSetup.isIgnoringBattery(context)) }
     // Xiaomi's autostart, read from the phone when it can be; null = the phone won't say.
-    var autostart by remember { mutableStateOf<Boolean?>(null) }
+    var autostart by remember { mutableStateOf(PhoneSetup.autostartState(context)) }
     var openedAutostart by remember { mutableStateOf(false) }
     var ask by remember { mutableStateOf<Ask?>(null) }
     var testKey by remember { mutableStateOf<String?>(null) }
@@ -390,8 +407,9 @@ fun PhoneScreen(container: AppContainer, onBack: () -> Unit) {
             Text(healthDetail(health), style = Ba.type.caption, color = c.text2)
         }
         // Each row opens the real setting. The tick shows the phone's real state; only what no API can read
-        // (autostart on some versions, the recents lock) is confirmed by the user after doing it.
-        BaCard(padding = androidx.compose.foundation.layout.PaddingValues(0.dp)) {
+        // (autostart on some versions, the recents lock) is confirmed by the user after doing it. Those come
+        // from settings, so the rows wait for settings to load.
+        if (settings != null) BaCard(padding = androidx.compose.foundation.layout.PaddingValues(0.dp)) {
             CheckRow(stringResource(R.string.row_notifications), notifOk, stringResource(R.string.row_notifications_help)) { PhoneSetup.openNotifications(activity) }
             HorizontalDivider(color = c.border)
             CheckRow(stringResource(R.string.row_exact), exactOk, stringResource(R.string.row_exact_help)) { PhoneSetup.openExactAlarms(activity) }
