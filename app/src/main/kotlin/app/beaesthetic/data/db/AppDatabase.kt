@@ -63,6 +63,10 @@ interface CompletionDao {
     @Query("SELECT * FROM completion")
     fun observeAll(): Flow<List<CompletionEntity>>
 
+    /** The tasks done on [date], archived ones too, so a past day keeps its names (the day sheet, D1). */
+    @Query("SELECT task.* FROM task JOIN completion ON completion.taskId = task.id WHERE completion.date = :date ORDER BY task.part, task.sortOrder, task.id")
+    fun observeDoneOn(date: LocalDate): Flow<List<TaskEntity>>
+
     @Query("SELECT COUNT(*) FROM completion WHERE taskId = :taskId AND date = :date")
     suspend fun count(taskId: Long, date: LocalDate): Int
 
@@ -83,6 +87,9 @@ interface DayDao {
 
     @Query("SELECT * FROM day WHERE date BETWEEN :from AND :to")
     fun observeRange(from: LocalDate, to: LocalDate): Flow<List<DayEntity>>
+
+    @Query("UPDATE day SET special = :special WHERE date = :date")
+    suspend fun setSpecial(date: LocalDate, special: String?)
 
     @Upsert
     suspend fun upsert(day: DayEntity)
@@ -184,6 +191,9 @@ interface EventDao {
 
     @Query("SELECT * FROM event WHERE type = :type AND at >= :since ORDER BY at")
     suspend fun ofTypeSince(type: String, since: Instant): List<EventEntity>
+
+    @Query("SELECT COUNT(*) FROM event WHERE type = :type AND ref = :ref AND at >= :since")
+    suspend fun countSince(type: String, ref: String, since: Instant): Int
 }
 
 @Dao

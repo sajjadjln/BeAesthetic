@@ -16,6 +16,9 @@ class EventLog(private val dao: EventDao, private val clock: ProgramClock) {
 
     suspend fun screen(name: String) = log(EventType.SCREEN, ref = name)
 
+    /** Whether [name] was opened since [since] (the dashboard's once-a-day entrance, D76). */
+    suspend fun screenSeenSince(name: String, since: java.time.Instant): Boolean = dao.countSince(EventType.SCREEN, name, since) > 0
+
     suspend fun notificationShown(key: String) = log(EventType.NOTIF_SHOWN, ref = key)
 
     suspend fun notificationTapped(key: String) = log(EventType.NOTIF_TAP, ref = key)

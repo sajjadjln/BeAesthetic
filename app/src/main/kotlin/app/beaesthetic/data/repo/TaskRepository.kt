@@ -70,6 +70,21 @@ class TaskRepository(private val db: AppDatabase) {
         writeSnapshot(date)
     }
 
+    /**
+     * Marks [date] as a special day (sick, travel, off) or clears it (null). The square takes the special
+     * color and the day leaves the weekly score (SPEC §6.2). The caller checks the weekly cap.
+     */
+    suspend fun setSpecial(date: LocalDate, kind: String?) = db.withTransaction {
+        if (db.days().get(date) == null) writeSnapshot(date)
+        db.days().setSpecial(date, kind)
+    }
+
+    /** The stored special kind of [date], if any. */
+    fun observeSpecial(date: LocalDate): Flow<String?> = db.days().observe(date).map { it?.special }
+
+    /** Tasks done on [date] (archived ones too), for the day sheet. */
+    fun observeDoneOn(date: LocalDate): Flow<List<Task>> = db.completions().observeDoneOn(date).map { rows -> rows.map { it.toDomain() } }
+
     /** Stored snapshots for a date range (week dots, comebacks). */
     fun observeSnapshots(from: LocalDate, to: LocalDate): Flow<Map<LocalDate, DaySnapshot>> =
         db.days().observeRange(from, to).map { rows ->

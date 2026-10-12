@@ -21,6 +21,7 @@ import app.beaesthetic.domain.workout.PlanItem
 import app.beaesthetic.domain.workout.PlanItemForm
 import app.beaesthetic.domain.workout.RoundNumbers
 import app.beaesthetic.domain.workout.WorkoutPlan
+import app.beaesthetic.domain.workout.WorkoutRules
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
@@ -176,6 +177,15 @@ class WorkoutRepository(private val db: AppDatabase, private val tasks: TaskRepo
         db.roundNumbers().observeOn(date).map { rows -> rows.mapNotNull { RoundNumbers.parse(it.key) } }
 
     suspend fun finish(sessionId: Long, now: Instant) = dao.finish(sessionId, now)
+
+    /** The moves that got a «رکورد» on [date] (D54), for the day sheet. */
+    suspend fun recordsOn(date: LocalDate): List<String> {
+        val all = dao.allSets().sortedBy { it.loggedAt }
+        val names = dao.allExercises().associate { it.id to it.name }
+        val day = all.filter { it.date == date }.map { it.toDomain() }
+        val before = all.filter { it.date < date }.map { it.toDomain() }
+        return WorkoutRules.records(day, before).map { it.first }.distinct().mapNotNull(names::get)
+    }
 }
 
 private fun List<ExerciseEntity>.harderLinks(): Map<Long, Long> =

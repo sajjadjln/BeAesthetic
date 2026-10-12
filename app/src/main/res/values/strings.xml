@@ -450,4 +450,56 @@
         <item>اینو قاب بگیریم!</item>
         <item>روز به روز، رسیدی اینجا</item>
     </string-array>
+
+    <!-- Slice 5: tabs, dashboard (02) and the day sheet (D1) -->
+    <string name="tab_today">امروز</string>
+    <string name="tab_dashboard">داشبورد</string>
+    <string name="dash_title">داشبورد</string>
+    <string name="dash_range">%1$s تا %2$s %3$s</string>
+    <string name="dash_shown_up_value">%1$s از %2$s</string>
+    <string name="dash_shown_up">روز حضور</string>
+    <string name="dash_special">روز ویژه</string>
+    <string name="dash_whole">کل مسیر</string>
+    <string name="dash_day_of">روز %1$s از %2$s</string>
+    <string name="dash_less">کمتر</string>
+    <string name="dash_more">بیشتر</string>
+    <string name="dash_legend_special">ویژه</string>
+    <string name="dash_before_app">قبل از اپ</string>
+    <string name="dash_weeks">هفته به هفته</string>
+    <string name="dash_week">هفته %1$s</string>
+    <string name="dash_week0">روز صفر</string>
+    <string name="dash_week_range">%1$s تا %2$s</string>
+    <string name="dash_current">جاری</string>
+    <string name="dash_score">%1$s٪</string>
+    <string name="cd_day_square">%1$s، %2$s</string>
+    <string name="level_words">سطح %1$s از ۴</string>
+    <string name="level_gap">چیزی ثبت نشد</string>
+    <string name="detail_counts">%1$s از %2$s</string>
+    <string name="detail_done">انجام شد</string>
+    <string name="detail_record">رکورد %1$s</string>
+    <string name="detail_before_app">این روز قبل از نصب اپ بود.</string>
+    <string name="detail_special_q">روز ویژه بود؟</string>
+    <string name="detail_special_full">سقف روزهای ویژه‌ی این هفته پره</string>
+    <string name="detail_edit_yesterday">ویرایش تیک‌های دیروز</string>
+    <string name="detail_yesterday_help">روی هر کار بزن تا تیکش عوض شه.</string>
+    <string name="detail_week">هفته %1$s</string>
+    <string name="special_sick">مریض</string>
+    <string name="special_travel">سفر</string>
+    <string name="special_off">استراحت</string>
+    <string name="special_day_kind">روز ویژه · %1$s</string>
+    <string name="yesterday">دیروز</string>
+    <string-array name="gregorian_months">
+        <item>ژانویه</item>
+        <item>فوریه</item>
+        <item>مارس</item>
+        <item>آوریل</item>
+        <item>مه</item>
+        <item>ژوئن</item>
+        <item>ژوئیه</item>
+        <item>اوت</item>
+        <item>سپتامبر</item>
+        <item>اکتبر</item>
+        <item>نوامبر</item>
+        <item>دسامبر</item>
+    </string-array>
 </resources>

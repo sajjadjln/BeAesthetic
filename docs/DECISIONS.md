@@ -212,6 +212,14 @@ Proposed in the follow-up conversation; the user: "add all the top picks". All f
 | D121 | **Round numbers** (D71): reps per ladder (all rungs; a move without a ladder is its own) 100 · 500 · 1,000 · 2,500 · 5,000 · 10,000; seconds per timed ladder 10 · 30 · 60 · 120 minutes; workouts (sessions with a logged set) 10 · 25 · 50 · 75; days shown up (level ≥ 1) 30 · 60 · 100 · 150. Reps, seconds and workouts show at the end of the session; days shown up as a card on Today until «دمت گرم». Each is written to `round_number` when first crossed and never again. | User choice; days aren't about a session. | Final |
 | D122 | **A «هر طرف» set counts as logged** (10 per leg adds 10 to the total). | User choice; totals match the numbers in the log. | Final |
 
+## Build, slice 5 (2026-10-12)
+
+| # | Decision | Why | Status |
+|---|---|---|---|
+| D123 | **The tab bar shows only built tabs:** Today and Dashboard now; Progress and Week join in slices 7 and 8. Icons only, RTL from the right, the active tab has a small accent dot. Today is the root; another tab sits one step above it, so back returns to Today. | User choice; no tab that leads nowhere. | Final |
+| D124 | **Yesterday's ticks are fixed in the day sheet:** «ویرایش تیک‌های دیروز» shows yesterday's due tasks as chips to tap on or off (a name used in two parts gets its part). Nothing marks them as missed. | User choice; one place, no new screen. | Final |
+| D125 | **Dashboard details (slice 5).** The grid has a column for every week the program touches, so Day 0's week and the finish day's week are there too (25 columns for this program); days outside the program aren't drawn. The summary counts days shown up from install to today, special days apart. A week's score (finished weeks only) is the average done share of its non-special days since install, a day the app never saw counting as 0; the chip is in the accent from 80 %, neutral below, «جاری» for the running week. The day sheet shows a gap as «چیزی ثبت نشد» in a neutral color, never «۰ از ۱۵». Special days are set in the sheet for today and yesterday, within the weekly cap; picking the same kind again clears it. The squares fill in once a day, the first time the dashboard opens. | Found while building and checking on the emulator. | Default |
+
 ## Superseded
 
 - Weekly focus sentence (Phase 2) → removed in D24.

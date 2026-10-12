@@ -42,6 +42,18 @@ import app.beaesthetic.ui.settings.SettingsDestination
 import app.beaesthetic.ui.settings.SettingsScreen
 import app.beaesthetic.ui.tasks.TasksRoute as TasksScreenRoute
 import app.beaesthetic.ui.tasks.TasksViewModel
+import app.beaesthetic.ui.components.BottomBar
+import app.beaesthetic.ui.components.Tab
+import app.beaesthetic.ui.dashboard.DashboardRoute
+import app.beaesthetic.ui.dashboard.DashboardViewModel
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.consumeWindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import app.beaesthetic.ui.workout.PlanRoute as PlanScreenRoute
 import app.beaesthetic.ui.workout.PlanViewModel
 import app.beaesthetic.ui.workout.SessionScreen
@@ -66,6 +78,7 @@ import kotlinx.serialization.Serializable
 @Serializable object DebugRoute
 @Serializable data class LetterRoute(val first: Boolean)
 @Serializable object PlanRoute
+@Serializable object DashboardTab
 @Serializable object WorkoutRoute
 
 class MainActivity : ComponentActivity() {
@@ -128,13 +141,18 @@ class MainActivity : ComponentActivity() {
                     exitTransition = { fadeOut(tween(BaMotion.SHORT)) },
                 ) {
                     composable<HomeRoute> {
-                        TodayRoute(
-                            today,
-                            onOpenSettings = { nav.navigate(SettingsRoute) },
-                            onFixReminders = { nav.navigate(PhoneRoute) },
-                            onWriteLetter = { first -> nav.navigate(LetterRoute(first)) },
-                            onOpenWorkout = { nav.navigate(WorkoutRoute) },
-                        )
+                        WithTabs(Tab.TODAY, nav) {
+                            TodayRoute(
+                                today,
+                                onOpenSettings = { nav.navigate(SettingsRoute) },
+                                onFixReminders = { nav.navigate(PhoneRoute) },
+                                onWriteLetter = { first -> nav.navigate(LetterRoute(first)) },
+                                onOpenWorkout = { nav.navigate(WorkoutRoute) },
+                            )
+                        }
+                    }
+                    composable<DashboardTab> {
+                        WithTabs(Tab.DASHBOARD, nav) { DashboardRoute(viewModel { DashboardViewModel(container) }) }
                     }
                     composable<SettingsRoute> {
                         SettingsScreen(container, DebugMenu.AVAILABLE, onBack = nav::popBackStack) { dest ->
@@ -171,6 +189,24 @@ class MainActivity : ComponentActivity() {
                     composable<DebugRoute> { DebugMenu.Screen(container, onClose = nav::popBackStack) }
                 }
             }
+        }
+    }
+
+    /**
+     * A tab screen with the bottom bar under it. The bar takes the navigation-bar inset, so the screen above
+     * doesn't pad for it again. Tabs don't stack: Today is the root, the others sit one step above it.
+     */
+    @Composable
+    private fun WithTabs(selected: Tab, nav: NavHostController, content: @Composable () -> Unit) {
+        Column(Modifier.fillMaxSize()) {
+            Box(Modifier.weight(1f).consumeWindowInsets(WindowInsets.navigationBars)) { content() }
+            BottomBar(selected, onSelect = { tab ->
+                if (tab == selected) return@BottomBar
+                when (tab) {
+                    Tab.TODAY -> nav.popBackStack(HomeRoute, inclusive = false)
+                    Tab.DASHBOARD -> nav.navigate(DashboardTab) { popUpTo<HomeRoute>(); launchSingleTop = true }
+                }
+            })
         }
     }
 

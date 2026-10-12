@@ -173,6 +173,7 @@ Board: `docs/design/character.html`. Rig: `docs/design/piker.js` (17 poses, face
 - «کل مسیر»: a 23-column × 7-row grid of small squares (week 1 on the right, Saturday on top); Jalali month labels below.
 - Legend: less → more, special, and «قبل از اپ» (D56): a dotted outline with no fill, for days before the app was installed.
 - «هفته به هفته»: one row per week (newest on top): label + date range, 7 squares, and a score chip («جاری» for the current week).
+- As built (D123–D125): the grid includes Day 0's and the finish day's weeks (25 columns); the week row of Day 0 is «روز صفر». Week chips: accent from 80 %, neutral below. The tab bar has Today and Dashboard only for now. The day sheet (D1) shows the Gregorian date in Persian («۱۱ اکتبر ۲۰۲۶»), the level line, «انجام شد» chips (and «رکورد …» for records that day), «روز ویژه بود؟» and, for yesterday, the tick chips.
 
 ### 03 پیشرفت (Progress)
 - Monthly check-in card: «چک‌این ماهانه: جمعه ۱۴ آذر · وزن، متر، ۳ عکس» and the days left.
