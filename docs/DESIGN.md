@@ -162,7 +162,8 @@ Board: `docs/design/character.html`. Rig: `docs/design/piker.js` (17 poses, face
 - **Tiles** (2 columns): an icon + one or two words. Tap toggles done (accent fill + check), with a soft haptic and a ~200 ms fill (D58). A finished part of the day and a 100% day get a slightly bigger moment.
   - Important task: **gold outline** and the word «مهم».
   - Due interval task: **amber outline** and a chip «موعدش رسیده».
-  - Workout: a wide tile with a play button that opens the Workout session.
+- **«تمرین امروز» card** (D126): between the «پیکر» row and the part switcher, so it shows in every part. Workout name, moves and sets, a tick circle and ▶. Card or ▶ opens the session; the circle ticks without logging. The linked task doesn't appear as a tile. On a day without a plan: one quiet row, «امروز استراحت. فردا: …», that opens the plan.
+- **«هر وقت» card** (D127): folded at the bottom, «هر وقت · N». Opens with one tap; items have a round check; a ticked item fades out. «یه چیز اضافه کن» opens the simple sheet on «هر وقت». Hidden when empty. Never counts in the ring.
 - **«پیکر» row** (D82): under the ring and week dots, the character and one line that follows the day (see The character). He also says the **comeback** line (D53): on the first tick after a day at level 0, «خوش برگشتی», shown once, with the welcome pose.
 - **Cards** (one at a time, above the tiles): chapter start with the letter offer (D51, D72), a letter on its opening day (D72), a round number crossed (D71), recap at Yalda and 29 Esfand (D52), the one-time offer to silence a routine's reminders (D57), plus the existing ritual, check-in and welcome-back cards.
 - **Minimum day** (leaf on): the part-of-day switcher hides, «روز حداقلی» shows, and only the floor tiles appear.
@@ -218,7 +219,8 @@ Board: `docs/design/character.html`. Rig: `docs/design/piker.js` (17 poses, face
 
 ### 07 کارها (Tasks)
 - Filter: همه / صبح / ظهر / عصر / شب.
-- Sections: one-off tasks, then each part of the day. Rows show the name and the repeat rule; markers: «مهم» chip, leaf (in minimum day), bell (own alarm), repeat icon (every N days).
+- Sections: «هر وقت» (D127), then dated one-off tasks, then each part of the day. A part filter hides «هر وقت». The workout task has a dumbbell marker (D126).
+- Rows show the name and the repeat rule; markers: «مهم» chip, leaf (in minimum day), bell (own alarm), repeat icon (every N days).
 - Floating «کار جدید» button.
 
 ### 08 کار جدید / ویرایش (Task editor, bottom sheet)
@@ -227,7 +229,9 @@ Board: `docs/design/character.html`. Rig: `docs/design/piker.js` (17 poses, face
 - **«زنگ»** card with a switch: the time (large) and **7 day circles** to choose which weekdays the alarm rings.
 - Toggles: «مهم» (one extra reminder), «روز حداقلی» (part of the floor).
 - «ذخیره».
-- As built (D107): all 11 icons; a 5th repeat choice «فقط روز حداقلی»; «هر N روز» as a − / + stepper; «یک بار» as day pills for the next 4 weeks; suggestion chips under «بعد از…»; «حذف» under «ذخیره» for an existing task. Problems show in amber after the first «ذخیره» (D110).
+- **Simple first (D128):** the sheet opens with the name and «کِی؟» (هر وقت · امروز · فردا · یه روز… · هر روز), a line saying which day and part, «تنظیمات بیشتر» and «ذخیره». The full form below is behind «تنظیمات بیشتر». Mockup: `tasks-v2.html` C–E.
+- In the full form: «هر وقت» joins the repeat choices and hides part, anchor, alarm, floor and «کار تمرین». «یک بار» is one date row that opens the **Jalali calendar** (D129). The alarm shows the day circles only for «هر روز» and «روزهای خاص»; otherwise it's a time with «همون روز» or «روزهایی که موعدشه» (D130). The «کار تمرین» switch (D126) sits at the end.
+- As built (D107): all 11 icons; a 5th repeat choice «فقط روز حداقلی»; «هر N روز» as a − / + stepper; «یک بار» as day pills for the next 4 weeks (now the calendar, D129); suggestion chips under «بعد از…»; «حذف» under «ذخیره» for an existing task. Problems show in amber after the first «ذخیره» (D110).
 
 ### 09 یادآورها (Reminders)
 - Health card with an «آزمایش» (test) button.

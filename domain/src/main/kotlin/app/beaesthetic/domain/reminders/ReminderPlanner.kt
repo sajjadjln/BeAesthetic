@@ -2,6 +2,7 @@ package app.beaesthetic.domain.reminders
 
 import app.beaesthetic.domain.tasks.DayItem
 import app.beaesthetic.domain.tasks.DueRules
+import app.beaesthetic.domain.tasks.Repeat
 import app.beaesthetic.domain.tasks.Task
 import app.beaesthetic.domain.time.Part
 import app.beaesthetic.domain.time.ProgramCalendar
@@ -78,10 +79,10 @@ object ReminderPlanner {
                     add(PlannedAlarm(followUpKey(date, slot.part), followAt, AlarmKind.FOLLOW_UP, date, slot.part))
                 }
             }
-            // A task's own alarm rings on its chosen weekdays (D25); it is skipped at fire time if already done.
+            // A task's own alarm (D25, D130); it is skipped at fire time if already done.
             for (task in input.tasks) {
                 val alarm = task.alarm ?: continue
-                if (!alarm.enabled || !Weekdays.contains(alarm.weekdays, date.dayOfWeek) || date < task.startDate) continue
+                if (!alarm.enabled || date < task.startDate || !alarmRings(task, alarm.weekdays, date, input.completions)) continue
                 val time = LocalTime.of(alarm.minuteOfDay / 60, alarm.minuteOfDay % 60)
                 val calendarDate = if (alarm.minuteOfDay < input.rolloverHour * 60) date.plusDays(1) else date
                 val at = LocalDateTime.of(calendarDate, time).atZone(input.zone).toInstant()
@@ -94,6 +95,18 @@ object ReminderPlanner {
     /** Slice-1 signature, kept for callers that only plan blocks. */
     fun plan(now: Instant, zone: ZoneId, slots: List<ReminderSlot>, rolloverHour: Int, lastOpenedAt: Instant?): List<PlannedAlarm> =
         plan(PlannerInput(now, zone, slots, rolloverHour, lastOpenedAt))
+
+    /**
+     * Whether a task's alarm rings on [date] (D130): a one-off on its own day only; «هر N روز» on the days it
+     * shows (due and not done when planned); «هر وقت» never; the rest on the alarm's weekdays.
+     */
+    private fun alarmRings(task: Task, weekdays: Int, date: LocalDate, completions: Map<Long, Collection<LocalDate>>): Boolean =
+        when (val repeat = task.repeat) {
+            is Repeat.Once -> date == repeat.date
+            is Repeat.EveryNDays -> DueRules.itemFor(date, task, completions[task.id].orEmpty())?.let { !it.done } == true
+            Repeat.Anytime -> false
+            else -> Weekdays.contains(weekdays, date.dayOfWeek)
+        }
 
     private fun hasImportant(items: List<DayItem>, part: Part): Boolean =
         items.any { it.task.part == part && it.task.isImportant && !it.task.remindersSilenced && !it.minDayOnly }

@@ -65,6 +65,11 @@ object BaIcons {
     val Grid = stroke(roundRect(4f, 4f, 7f, 7f, 1.5f), roundRect(13f, 4f, 7f, 7f, 1.5f), roundRect(4f, 13f, 7f, 7f, 1.5f), roundRect(13f, 13f, 7f, 7f, 1.5f))
     val Grip = stroke(circle(9f, 6f, 1f), circle(15f, 6f, 1f), circle(9f, 12f, 1f), circle(15f, 12f, 1f), circle(9f, 18f, 1f), circle(15f, 18f, 1f))
     val Pen = stroke("M12 20h9", "M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z")
+    val Calendar = stroke(roundRect(3f, 4f, 18f, 18f, 3f), "M16 2v4M8 2v4M3 10h18")
+    val ChevronDown = stroke("m6 9 6 6 6-6")
+    /** Points "forward" (later in time): right in LTR, left in RTL (time flows right to left). */
+    val ChevronForward = stroke("m9 18 6-6-6-6", autoMirror = true)
+    val ChevronBackward = stroke("m15 18-6-6 6-6", autoMirror = true)
 
     fun of(icon: TaskIcon): ImageVector = when (icon) {
         TaskIcon.DROP -> Drop
@@ -78,6 +83,7 @@ object BaIcons {
         TaskIcon.SCISSORS -> Scissors
         TaskIcon.APPLE -> Apple
         TaskIcon.SUN -> Sun
+        TaskIcon.CHECK -> CheckCircle
     }
 
     fun of(part: Part): ImageVector = when (part) {

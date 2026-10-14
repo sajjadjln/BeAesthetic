@@ -93,6 +93,31 @@ class MigrationTest {
         }
     }
 
+    @Test
+    fun `4 to 5 keeps settings and tasks and adds the anytime card state`() {
+        helper.createDatabase(DB, 4).use { db ->
+            db.execSQL(
+                "INSERT INTO settings (id, programStartDate, programEndDate, installDate, rolloverHour, specialCapPerWeek, followUpMinutes, ritualTime, " +
+                    "alarmMode, accentColor, themeMode, showBuddy, onboardingDone, afterFinishMode, experimentFlags, firstLetterOfferDone, autostartConfirmed, recentsLockConfirmed) " +
+                    "VALUES (1, '2026-10-09', '2027-03-20', '2026-10-10', 4, 2, 45, 1140, 'ALARM_CLOCK', 'TEAL', 'DARK', 1, 0, 'NONE', 0, 1, 1, 0)",
+            )
+            db.execSQL(
+                "INSERT INTO task (id, title, icon, part, repeat, weekdays, startDate, isImportant, inMinimumDay, action, alarmWeekdays, alarmEnabled, sortOrder, createdAt) " +
+                    "VALUES (3, 'تمرین', 'DUMBBELL', 'MORNING', 'WEEKDAYS', 85, '2026-10-10', 0, 0, 'WORKOUT', 0, 0, 0, 1791600000000)",
+            )
+        }
+
+        helper.runMigrationsAndValidate(DB, 5, true).use { db ->
+            db.query("SELECT accentColor, autostartConfirmed, anytimeOpen FROM settings").use { c ->
+                c.moveToFirst()
+                assertEquals("TEAL", c.getString(0))
+                assertEquals(1, c.getInt(1))
+                assertEquals(0, c.getInt(2))
+            }
+            db.query("SELECT action, weekdays FROM task WHERE id = 3").use { c -> c.moveToFirst(); assertEquals("WORKOUT", c.getString(0)); assertEquals(85, c.getInt(1)) }
+        }
+    }
+
     private companion object {
         const val DB = "migration-test.db"
     }

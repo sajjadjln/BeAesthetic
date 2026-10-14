@@ -19,13 +19,19 @@ sealed interface Repeat {
 
     /** Shows only in minimum-day mode and never counts in the score. */
     data object MinDayOnly : Repeat
+
+    /**
+     * «هر وقت» (D127): no day, part, alarm or floor. Listed in Today's «هر وقت» card until done; never a
+     * day item, so it never counts in the score, never reminds and never leaves a gap.
+     */
+    data object Anytime : Repeat
 }
 
 /** What tapping the tile does beyond ticking it. Slice 1 only ticks. */
 enum class TaskAction { NONE, WORKOUT, HIKE, WEIGH_IN, SNACK_NOTE }
 
-/** Icon keys; `:app` maps each to a vector. */
-enum class TaskIcon { DROP, TOOTH, PILL, EGG, DUMBBELL, MOUNTAIN, SCALE, SHOWER, SCISSORS, APPLE, SUN }
+/** Icon keys; `:app` maps each to a vector. New keys go last: the editor's names are listed by ordinal. */
+enum class TaskIcon { DROP, TOOTH, PILL, EGG, DUMBBELL, MOUNTAIN, SCALE, SHOWER, SCISSORS, APPLE, SUN, CHECK }
 
 /** A task's own alarm (D25), rung on chosen weekdays. Scheduled from slice 2. */
 data class TaskAlarm(val minuteOfDay: Int, val weekdays: Int, val enabled: Boolean)

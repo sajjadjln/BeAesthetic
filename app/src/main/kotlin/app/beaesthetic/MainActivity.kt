@@ -148,6 +148,7 @@ class MainActivity : ComponentActivity() {
                                 onFixReminders = { nav.navigate(PhoneRoute) },
                                 onWriteLetter = { first -> nav.navigate(LetterRoute(first)) },
                                 onOpenWorkout = { nav.navigate(WorkoutRoute) },
+                                onOpenPlan = { nav.navigate(PlanRoute) },
                             )
                         }
                     }

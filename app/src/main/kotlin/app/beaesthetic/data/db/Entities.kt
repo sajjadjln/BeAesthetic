@@ -12,7 +12,7 @@ import java.time.LocalDate
 // Physical schema: ARCHITECTURE §8. Dates are ISO strings, times are minutes after midnight,
 // instants are epoch milliseconds (see Converters). Tables for later slices are added by migrations.
 
-enum class RepeatType { DAILY, WEEKDAYS, EVERY_N_DAYS, ONCE, MIN_DAY_ONLY }
+enum class RepeatType { DAILY, WEEKDAYS, EVERY_N_DAYS, ONCE, MIN_DAY_ONLY, ANYTIME }
 
 @Entity(tableName = "task")
 data class TaskEntity(
@@ -123,6 +123,9 @@ data class SettingsEntity(
     /** Xiaomi settings no API can read: the user confirms them with a tick. */
     @ColumnInfo(defaultValue = "0") val autostartConfirmed: Boolean = false,
     @ColumnInfo(defaultValue = "0") val recentsLockConfirmed: Boolean = false,
+    // v5 (slice 5b)
+    /** Today's «هر وقت» card is open (D127); remembered as the user left it. */
+    @ColumnInfo(defaultValue = "0") val anytimeOpen: Boolean = false,
 )
 
 object EventType {

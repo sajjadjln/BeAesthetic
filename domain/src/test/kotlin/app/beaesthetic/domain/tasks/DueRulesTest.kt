@@ -104,4 +104,23 @@ class DueRulesTest {
         assertEquals(1, DayScore.level(floorOnly.copy(done = 0)))
         assertEquals(0, DayScore.level(DayCounts(0, 0, false)))
     }
+
+    @Test
+    fun `anytime is never a day item and never counts (D127)`() {
+        val list = task(1, Repeat.Anytime)
+        assertNull(DueRules.itemFor(start, list, emptyList()))
+        val counts = DayScore.counts(DueRules.itemsFor(start, listOf(list, task(2, Repeat.Daily)), mapOf(1L to listOf(start))))
+        assertEquals(DayCounts(due = 1, done = 0, floorDone = false), counts)
+    }
+
+    @Test
+    fun `the anytime list keeps open items, then today's ticks, and drops older ones`() {
+        val tasks = listOf(task(1, Repeat.Anytime), task(2, Repeat.Anytime), task(3, Repeat.Anytime), task(4, Repeat.Daily))
+        val day = start.plusDays(5)
+        val done = mapOf(1L to listOf(day), 3L to listOf(day.minusDays(1)))
+        val list = DueRules.anytime(day, tasks, done)
+        assertEquals(listOf(2L, 1L), list.map { it.task.id })
+        assertEquals(listOf(false, true), list.map { it.done })
+        assertTrue(list.none { it.countsInScore })
+    }
 }

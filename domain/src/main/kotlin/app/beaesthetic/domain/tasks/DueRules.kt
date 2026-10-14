@@ -79,6 +79,22 @@ object DueRules {
 
             Repeat.MinDayOnly ->
                 if (date >= task.startDate) DayItem(task, doneToday, countsInScore = false) else null
+
+            // Never a day item (D127): see [anytime].
+            Repeat.Anytime -> null
         }
     }
+
+    /**
+     * Today's «هر وقت» list (D127): every undated task not done before [date], open ones first. One done
+     * on [date] stays, ticked, until the day ends, so a wrong tick can be undone.
+     */
+    fun anytime(date: LocalDate, tasks: List<Task>, completions: Map<Long, Collection<LocalDate>>): List<DayItem> =
+        tasks
+            .filter { it.repeat == Repeat.Anytime }
+            .mapNotNull { task ->
+                val done = completions[task.id].orEmpty()
+                if (done.any { it < date }) null else DayItem(task, done = date in done, countsInScore = false)
+            }
+            .sortedWith(compareBy({ it.done }, { it.task.sortOrder }, { it.task.id }))
 }

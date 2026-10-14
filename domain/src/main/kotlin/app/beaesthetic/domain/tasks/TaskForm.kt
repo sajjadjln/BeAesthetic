@@ -4,8 +4,11 @@ import app.beaesthetic.domain.time.Part
 import app.beaesthetic.domain.time.Weekdays
 import java.time.LocalDate
 
-/** The repeat choices of the task editor (screens.html 08), plus the minimum-day-only kind. */
-enum class RepeatKind { DAILY, WEEKDAYS, EVERY_N_DAYS, ONCE, MIN_DAY_ONLY }
+/** The repeat choices of the task editor (screens.html 08), plus the minimum-day-only kind and «هر وقت» (D127). */
+enum class RepeatKind { DAILY, WEEKDAYS, EVERY_N_DAYS, ONCE, MIN_DAY_ONLY, ANYTIME }
+
+/** «کِی؟» in the simple sheet (D128): هر وقت · امروز · فردا · یه روز… · هر روز. */
+enum class When { ANYTIME, TODAY, TOMORROW, DAY, DAILY }
 
 enum class FormError {
     NO_TITLE,
@@ -23,7 +26,7 @@ enum class FormError {
  */
 data class TaskForm(
     val title: String = "",
-    val icon: TaskIcon = TaskIcon.DROP,
+    val icon: TaskIcon = TaskIcon.CHECK,
     val part: Part = Part.MORNING,
     val repeat: RepeatKind = RepeatKind.DAILY,
     val weekdays: Int = 0,
@@ -48,8 +51,48 @@ object TaskForms {
     const val MAX_ANCHOR = 30
     const val DEFAULT_ALARM_MINUTE = 9 * 60
 
-    /** A new task in [part]; a one-off defaults to [today]. */
-    fun blank(part: Part, today: LocalDate): TaskForm = TaskForm(part = part, onceDate = today)
+    /** The repeat choices of the full form, in screen order. */
+    val FULL_KINDS = listOf(RepeatKind.ANYTIME, RepeatKind.ONCE, RepeatKind.DAILY, RepeatKind.WEEKDAYS, RepeatKind.EVERY_N_DAYS, RepeatKind.MIN_DAY_ONLY)
+
+    /** A new task in [part], starting on [repeat]; a one-off defaults to [today]. */
+    fun blank(part: Part, today: LocalDate, repeat: RepeatKind = RepeatKind.DAILY): TaskForm =
+        TaskForm(part = part, onceDate = today, repeat = repeat)
+
+    /** The alarm rings on chosen weekdays only for these; a one-off rings on its day, «هر N روز» on the days it's due (D130). */
+    fun alarmUsesDays(kind: RepeatKind): Boolean = kind == RepeatKind.DAILY || kind == RepeatKind.WEEKDAYS || kind == RepeatKind.MIN_DAY_ONLY
+
+    /** «هر وقت» has no part, anchor, alarm, floor or workout link (D127). */
+    fun isAnytime(form: TaskForm): Boolean = form.repeat == RepeatKind.ANYTIME
+
+    /** What «کِی؟» shows for [form], or null when its repeat isn't one of the simple choices. */
+    fun whenOf(form: TaskForm, today: LocalDate): When? = when (form.repeat) {
+        RepeatKind.ANYTIME -> When.ANYTIME
+        RepeatKind.DAILY -> When.DAILY
+        RepeatKind.ONCE -> when (form.onceDate) {
+            today -> When.TODAY
+            today.plusDays(1) -> When.TOMORROW
+            else -> When.DAY
+        }
+        else -> null
+    }
+
+    /** Picks a «کِی؟» choice. [day] is the calendar's pick for [When.DAY]. */
+    fun withWhen(form: TaskForm, choice: When, today: LocalDate, day: LocalDate? = null): TaskForm = when (choice) {
+        When.ANYTIME -> form.copy(repeat = RepeatKind.ANYTIME)
+        When.DAILY -> form.copy(repeat = RepeatKind.DAILY)
+        When.TODAY -> form.copy(repeat = RepeatKind.ONCE, onceDate = today)
+        When.TOMORROW -> form.copy(repeat = RepeatKind.ONCE, onceDate = today.plusDays(1))
+        When.DAY -> form.copy(repeat = RepeatKind.ONCE, onceDate = day ?: form.onceDate ?: today)
+    }
+
+    /**
+     * Whether the simple sheet can show [task] without hiding anything (D128): a name, a simple «کِی؟», and
+     * none of anchor, «مهم», floor, an alarm that's on, or an action. Icon and part are kept as they are.
+     */
+    fun fitsSimple(task: Task): Boolean =
+        (task.repeat == Repeat.Anytime || task.repeat == Repeat.Daily || task.repeat is Repeat.Once) &&
+            task.anchor.isNullOrBlank() && !task.isImportant && !task.inMinimumDay &&
+            task.alarm?.enabled != true && task.action == TaskAction.NONE
 
     fun from(task: Task): TaskForm {
         val base = TaskForm(
@@ -71,6 +114,7 @@ object TaskForms {
             is Repeat.EveryNDays -> base.copy(repeat = RepeatKind.EVERY_N_DAYS, everyNDays = r.n)
             is Repeat.Once -> base.copy(repeat = RepeatKind.ONCE, onceDate = r.date)
             Repeat.MinDayOnly -> base.copy(repeat = RepeatKind.MIN_DAY_ONLY)
+            Repeat.Anytime -> base.copy(repeat = RepeatKind.ANYTIME)
         }
     }
 
@@ -86,7 +130,7 @@ object TaskForms {
             val keptPast = date != null && (original?.repeat as? Repeat.Once)?.date == date
             if (date == null || (date < today && !keptPast)) add(FormError.BAD_DATE)
         }
-        if (form.alarmOn && form.alarmWeekdays and Weekdays.ALL == 0) add(FormError.NO_ALARM_DAYS)
+        if (form.alarmOn && alarmUsesDays(form.repeat) && form.alarmWeekdays and Weekdays.ALL == 0) add(FormError.NO_ALARM_DAYS)
     }
 
     /**
@@ -101,9 +145,13 @@ object TaskForms {
             RepeatKind.EVERY_N_DAYS -> Repeat.EveryNDays(form.everyNDays.coerceIn(MIN_EVERY_N, MAX_EVERY_N))
             RepeatKind.ONCE -> Repeat.Once(requireNotNull(form.onceDate))
             RepeatKind.MIN_DAY_ONLY -> Repeat.MinDayOnly
+            RepeatKind.ANYTIME -> Repeat.Anytime
         }
+        val anytime = isAnytime(form)
         // The alarm's time and days are kept when it's switched off, so switching it back on restores them.
-        val keepAlarm = form.alarmOn || original?.alarm != null
+        // «هر وقت» never rings (D127), but keeps them too.
+        val alarmOn = form.alarmOn && !anytime
+        val keepAlarm = alarmOn || original?.alarm != null
         return Task(
             id = original?.id ?: 0,
             title = form.title.trim().take(MAX_TITLE),
@@ -112,15 +160,15 @@ object TaskForms {
             repeat = repeat,
             startDate = original?.startDate ?: today,
             isImportant = form.important,
-            // A minimum-day-only task is part of the floor by definition.
-            inMinimumDay = form.inMinimumDay || form.repeat == RepeatKind.MIN_DAY_ONLY,
+            // A minimum-day-only task is part of the floor by definition; «هر وقت» never is.
+            inMinimumDay = !anytime && (form.inMinimumDay || form.repeat == RepeatKind.MIN_DAY_ONLY),
             action = when {
-                form.opensWorkout -> TaskAction.WORKOUT
+                form.opensWorkout && !anytime -> TaskAction.WORKOUT
                 original?.action == TaskAction.WORKOUT -> TaskAction.NONE
                 else -> original?.action ?: TaskAction.NONE
             },
-            anchor = form.anchor.trim().take(MAX_ANCHOR).ifBlank { null },
-            alarm = if (keepAlarm) TaskAlarm(form.alarmMinute, form.alarmWeekdays and Weekdays.ALL, form.alarmOn) else null,
+            anchor = if (anytime) null else form.anchor.trim().take(MAX_ANCHOR).ifBlank { null },
+            alarm = if (keepAlarm) TaskAlarm(form.alarmMinute, form.alarmWeekdays and Weekdays.ALL, alarmOn) else null,
             remindersSilenced = original?.remindersSilenced ?: false,
             sortOrder = sortOrder,
         )
@@ -147,7 +195,7 @@ object TaskForms {
             .filter { it != current.trim() }
             .take(limit)
 
-    /** The list (screens.html 07) hides a one-off task once it was done before [today]: it's finished. */
+    /** The list (screens.html 07) hides a one-off or «هر وقت» task once it was done before [today]: it's finished. */
     fun isListed(task: Task, doneDates: Collection<LocalDate>, today: LocalDate): Boolean =
-        task.repeat !is Repeat.Once || doneDates.none { it < today }
+        (task.repeat !is Repeat.Once && task.repeat != Repeat.Anytime) || doneDates.none { it < today }
 }

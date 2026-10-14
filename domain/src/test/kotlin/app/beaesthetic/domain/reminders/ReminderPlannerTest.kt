@@ -146,4 +146,37 @@ class ReminderPlannerTest {
         assertEquals(7L, plan.first().taskId)
         assertEquals(at(2026, 10, 15, 14, 0), plan.first().at)
     }
+
+    @Test
+    fun `a one-off rings on its day only, whatever the weekdays say (D130)`() {
+        val now = at(2026, 10, 14, 12, 0) // Wednesday
+        val alarm = TaskAlarm(18 * 60, Weekdays.ALL, enabled = true)
+        val once = task(7, Part.EVENING, alarm = alarm).copy(repeat = Repeat.Once(LocalDate.of(2026, 10, 15)))
+        val plan = ReminderPlanner.plan(PlannerInput(now, zone, slots, 4, now, tasks = listOf(once))).filter { it.kind == AlarmKind.TASK }
+        assertEquals(listOf("task:7:2026-10-15"), plan.map { it.key })
+    }
+
+    @Test
+    fun `every N days rings on the days it shows, never before (D130)`() {
+        val now = at(2026, 10, 14, 12, 0) // Wednesday
+        val alarm = TaskAlarm(20 * 60, 0, enabled = true) // no weekdays at all: they're ignored
+        val nails = task(7, Part.EVENING, alarm = alarm).copy(repeat = Repeat.EveryNDays(3))
+        // Done on Tuesday 13 Oct: due again on Friday 16 Oct, past the horizon.
+        val done = mapOf(7L to listOf(LocalDate.of(2026, 10, 13)))
+        val notYet = ReminderPlanner.plan(PlannerInput(now, zone, slots, 4, now, tasks = listOf(nails), completions = done))
+        assertTrue(notYet.none { it.kind == AlarmKind.TASK })
+        // Done on Sunday 11 Oct: due since Wednesday, so it rings today and tomorrow.
+        val due = mapOf(7L to listOf(LocalDate.of(2026, 10, 11)))
+        val plan = ReminderPlanner.plan(PlannerInput(now, zone, slots, 4, now, tasks = listOf(nails), completions = due))
+        assertEquals(listOf("task:7:2026-10-14", "task:7:2026-10-15"), plan.filter { it.kind == AlarmKind.TASK }.map { it.key })
+    }
+
+    @Test
+    fun `an anytime task never rings and makes no follow-up (D127)`() {
+        val now = at(2026, 10, 14, 5, 0)
+        val alarm = TaskAlarm(9 * 60, Weekdays.ALL, enabled = true)
+        val item = task(7, Part.MORNING, important = true, alarm = alarm).copy(repeat = Repeat.Anytime)
+        val plan = ReminderPlanner.plan(PlannerInput(now, zone, slots, 4, now, tasks = listOf(item)))
+        assertTrue(plan.none { it.kind == AlarmKind.TASK || it.kind == AlarmKind.FOLLOW_UP })
+    }
 }

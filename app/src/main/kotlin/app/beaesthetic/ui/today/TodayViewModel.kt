@@ -23,6 +23,8 @@ import app.beaesthetic.domain.score.DayStatus
 import app.beaesthetic.domain.score.DaySnapshot
 import app.beaesthetic.domain.score.Days
 import app.beaesthetic.domain.tasks.DayItem
+import app.beaesthetic.domain.tasks.Task
+import app.beaesthetic.domain.tasks.TaskForm
 import app.beaesthetic.domain.tasks.TaskAction
 import app.beaesthetic.domain.tasks.TaskIcon
 import app.beaesthetic.domain.time.Chapter
@@ -34,6 +36,7 @@ import app.beaesthetic.domain.time.Part
 import app.beaesthetic.domain.time.ProgramCalendar
 import app.beaesthetic.domain.time.Weekdays
 import app.beaesthetic.domain.workout.RoundNumbers
+import app.beaesthetic.domain.workout.WorkoutPlan
 import app.beaesthetic.reminders.AlarmScheduler.Companion.toLogRow
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -62,9 +65,19 @@ data class TileUi(
     /** An "every N days" or one-off task that is due: «موعدش رسیده». */
     val due: Boolean,
     val part: Part = Part.MORNING,
-    /** A workout task on a day with a plan: wide, with the play button (D117). */
-    val opensWorkout: Boolean = false,
 )
+
+/** «تمرین امروز» above the part switcher, or the rest-day row (D126). */
+sealed interface WorkoutCardUi {
+    /** Today's plan. [taskId] is the linked «کار تمرین» due today, if any: it ticks with the first set. */
+    data class Training(val name: String, val moves: Int, val sets: Int, val taskId: Long?, val done: Boolean) : WorkoutCardUi
+
+    /** No plan today: the next one, [weekday] (Saturday = 0) [daysAway] days from today. */
+    data class Rest(val name: String, val weekday: Int, val daysAway: Int) : WorkoutCardUi
+}
+
+/** One «هر وقت» item (D127). A done one stays, ticked, until the day ends. */
+data class AnytimeUi(val taskId: Long, val title: String, val done: Boolean, val important: Boolean)
 
 /** The header's last part: the chapter, or in the last chapter the countdown (D74). */
 sealed interface HeaderTail {
@@ -111,6 +124,9 @@ data class TodayUiState(
     val banner: HealthBanner?,
     /** Days at level 1 or more since Day 0, today included (D121). */
     val daysShownUp: Int = 0,
+    val workout: WorkoutCardUi? = null,
+    val anytime: List<AnytimeUi> = emptyList(),
+    val anytimeOpen: Boolean = false,
 ) {
     val dayComplete: Boolean get() = total > 0 && done == total
 }
@@ -125,6 +141,7 @@ private data class TodaySettings(
     val firstLetterOfferDone: Boolean,
     val cardDismissedOn: LocalDate?,
     val healthSeenAt: Instant?,
+    val anytimeOpen: Boolean,
 )
 
 private data class Inputs(
@@ -133,7 +150,7 @@ private data class Inputs(
     val snapshots: Map<LocalDate, DaySnapshot>,
     val settings: TodaySettings,
     val letters: List<LetterEntity>,
-    val plannedDays: Set<Int>,
+    val plans: List<WorkoutPlan>,
     /** Every stored day since Day 0, for days shown up (D121). */
     val allDays: Map<LocalDate, DaySnapshot>,
     val unseenDays: List<RoundNumberEntity>,
@@ -177,7 +194,7 @@ class TodayViewModel(
         .onEach { pickedPart.value = null }
 
     private val todaySettings = settings
-        .map { TodaySettings(it.installDate, it.showBuddy, it.firstLetterOfferDone, it.cardDismissedOn, it.healthSeenAt) }
+        .map { TodaySettings(it.installDate, it.showBuddy, it.firstLetterOfferDone, it.cardDismissedOn, it.healthSeenAt, it.anytimeOpen) }
         .distinctUntilChanged()
 
     private val inputs: Flow<Inputs> = now.flatMapLatest { n ->
@@ -188,7 +205,7 @@ class TodayViewModel(
             todaySettings,
             container.db.letters().observeAll(),
             combine(
-                container.workouts.observePlannedDays(),
+                container.workouts.observePlans(),
                 container.tasks.observeSnapshots(n.calendar.day0, n.date),
                 container.db.roundNumbers().observeUnseenDays(),
             ) { planned, all, unseen -> Triple(planned, all, unseen) },
@@ -226,6 +243,25 @@ class TodayViewModel(
             val nowDone = container.tasks.toggle(taskId, current.date, container.clock.now())
             if (nowDone) container.events.firstTickIfNeeded(current.date, settings.rolloverHour)
             container.cancelEmptyBlocks(current.date)
+        }
+    }
+
+    /** Opens or closes the «هر وقت» card; remembered (D127). */
+    fun setAnytimeOpen(open: Boolean) {
+        viewModelScope.launch { container.db.settings().setAnytimeOpen(open) }
+    }
+
+    /** Every active task, for the editor's suggestions when a task is added from Today. */
+    val editorTasks: StateFlow<List<Task>> = container.tasks.observeTasks()
+        .map { it.first }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
+
+    /** Adds a task from the «هر وقت» card (D128) and re-plans reminders. */
+    fun saveTask(form: TaskForm) {
+        val current = state.value ?: return
+        viewModelScope.launch {
+            container.tasks.saveForm(form, null, current.date, container.clock.now())
+            container.scheduler.reconcile("task-edit")
         }
     }
 
@@ -314,8 +350,6 @@ class TodayViewModel(
 
     private fun toState(input: Inputs, selected: Part, banner: HealthBanner?, tapCount: Int, line: Pair<Moment, Int>?): TodayUiState {
         val (n, day, snapshots, s, letters) = input
-        val trainsToday = Weekdays.index(n.date.dayOfWeek) in input.plannedDays
-        fun tile(item: DayItem) = tile(item, trainsToday)
         val date = n.date
         val calendar = n.calendar
         val chapter = Chapters.at(calendar, date)
@@ -323,7 +357,11 @@ class TodayViewModel(
 
         val visible = day.items.filterNot { it.minDayOnly }
         val floor = day.items.filter { it.inFloor }
-        val tiles = visible.groupBy { it.task.part }.mapValues { (_, items) -> items.map { tile(it) } }
+        val workout = workoutCard(date, input.plans, visible)
+        // The card stands in for the linked task's tile (D126); the task still counts in the ring.
+        val workoutTaskId = (workout as? WorkoutCardUi.Training)?.taskId
+        val tiles = visible.filter { it.task.id != workoutTaskId }.groupBy { it.task.part }.mapValues { (_, items) -> items.map { tile(it) } }
+        val partsDone = visible.groupBy { it.task.part }.filterValues { list -> list.all(DayItem::done) }.keys
         val ring = if (day.minimumMode) floor else visible
 
         // Today's dot is live; the other days come from their stored snapshots (D37).
@@ -373,7 +411,7 @@ class TodayViewModel(
             minimumMode = day.minimumMode,
             tiles = tiles,
             floorTiles = floor.map { tile(it) },
-            completeParts = tiles.filterValues { list -> list.isNotEmpty() && list.all { it.done } }.keys,
+            completeParts = partsDone,
             done = ring.count { it.done },
             total = ring.size,
             weekDots = dots,
@@ -382,7 +420,24 @@ class TodayViewModel(
             buddy = buddy,
             banner = banner,
             daysShownUp = shownUp,
+            workout = workout,
+            anytime = day.anytime.map { AnytimeUi(it.task.id, it.task.title, it.done, it.task.isImportant) },
+            anytimeOpen = s.anytimeOpen,
         )
+    }
+
+    /** Today's plan with its linked task, or the next plan on a rest day; null with no plan at all (D126). */
+    private fun workoutCard(date: LocalDate, plans: List<WorkoutPlan>, visible: List<DayItem>): WorkoutCardUi? {
+        val planned = plans.filter { it.items.isNotEmpty() }.associateBy { it.weekday }
+        if (planned.isEmpty()) return null
+        val today = Weekdays.index(date.dayOfWeek)
+        planned[today]?.let { plan ->
+            val linked = visible.firstOrNull { it.task.action == TaskAction.WORKOUT }
+            return WorkoutCardUi.Training(plan.name, plan.items.size, plan.items.sumOf { it.sets }, linked?.task?.id, linked?.done == true)
+        }
+        val ahead = (1..7).first { (today + it) % 7 in planned }
+        val next = planned.getValue((today + ahead) % 7)
+        return WorkoutCardUi.Rest(next.name, next.weekday, ahead)
     }
 
     private fun cards(date: LocalDate, calendar: ProgramCalendar, s: TodaySettings, letters: List<LetterEntity>, outfit: Outfit): List<TodayCard> {
@@ -401,8 +456,7 @@ class TodayViewModel(
         return cards
     }
 
-    private fun tile(item: DayItem, trainsToday: Boolean) = TileUi(
+    private fun tile(item: DayItem) = TileUi(
         item.task.id, item.task.title, item.task.icon, item.done, item.task.isImportant, due = item.dueSince != null, part = item.task.part,
-        opensWorkout = trainsToday && item.task.action == TaskAction.WORKOUT,
     )
 }

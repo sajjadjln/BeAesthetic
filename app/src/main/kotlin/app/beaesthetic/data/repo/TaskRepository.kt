@@ -15,6 +15,8 @@ import app.beaesthetic.domain.tasks.Repeat
 import app.beaesthetic.domain.tasks.Task
 import app.beaesthetic.domain.tasks.TaskAction
 import app.beaesthetic.domain.tasks.TaskAlarm
+import app.beaesthetic.domain.tasks.TaskForm
+import app.beaesthetic.domain.tasks.TaskForms
 import app.beaesthetic.domain.tasks.TaskIcon
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
@@ -22,8 +24,8 @@ import kotlinx.coroutines.flow.map
 import java.time.Instant
 import java.time.LocalDate
 
-/** What Today needs for one program date. */
-data class DayView(val date: LocalDate, val items: List<DayItem>, val minimumMode: Boolean)
+/** What Today needs for one program date. [anytime] is the «هر وقت» list (D127), never part of [items]. */
+data class DayView(val date: LocalDate, val items: List<DayItem>, val minimumMode: Boolean, val anytime: List<DayItem> = emptyList())
 
 class TaskRepository(private val db: AppDatabase) {
 
@@ -32,7 +34,9 @@ class TaskRepository(private val db: AppDatabase) {
         db.completions().observeUpTo(date),
         db.days().observe(date),
     ) { tasks, completions, day ->
-        DayView(date, items(date, tasks, completions), day?.minimumMode ?: false)
+        val domain = tasks.map { it.toDomain() }
+        val byTask = completions.groupBy({ it.taskId }, { it.date })
+        DayView(date, DueRules.itemsFor(date, domain, byTask), day?.minimumMode ?: false, DueRules.anytime(date, domain, byTask))
     }
 
     suspend fun day(date: LocalDate): DayView {
@@ -115,6 +119,16 @@ class TaskRepository(private val db: AppDatabase) {
         id
     }
 
+    /**
+     * Saves the task editor's form (a new task when [original] is null), from the tasks list or Today
+     * (D107, D128). The caller re-plans reminders.
+     */
+    suspend fun saveForm(form: TaskForm, original: Task?, today: LocalDate, now: Instant): Long {
+        val tasks = db.tasks().active().map { it.toDomain() }
+        val task = TaskForms.toTask(form, original, today, TaskForms.sortOrderFor(form, original, tasks))
+        return save(task, today, now)
+    }
+
     /** Removes a task from today on. Its completions stay, so past days keep their colors. */
     suspend fun archive(id: Long, today: LocalDate, now: Instant) = db.withTransaction {
         db.tasks().archive(id, now)
@@ -158,6 +172,7 @@ fun Task.toEntity(createdAt: Instant): TaskEntity {
         is Repeat.EveryNDays -> Quad(RepeatType.EVERY_N_DAYS, 0, r.n, null)
         is Repeat.Once -> Quad(RepeatType.ONCE, 0, null, r.date)
         Repeat.MinDayOnly -> Quad(RepeatType.MIN_DAY_ONLY, 0, null, null)
+        Repeat.Anytime -> Quad(RepeatType.ANYTIME, 0, null, null)
     }
     return TaskEntity(
         id = id,
@@ -195,6 +210,7 @@ fun TaskEntity.toDomain(): Task = Task(
         RepeatType.EVERY_N_DAYS -> Repeat.EveryNDays(everyNDays ?: 1)
         RepeatType.ONCE -> Repeat.Once(onceDate ?: startDate)
         RepeatType.MIN_DAY_ONLY -> Repeat.MinDayOnly
+        RepeatType.ANYTIME -> Repeat.Anytime
     },
     startDate = startDate,
     isImportant = isImportant,

@@ -167,6 +167,9 @@ interface SettingsDao {
 
     @Query("UPDATE settings SET lastOpenedAt = :at WHERE id = 1")
     suspend fun setLastOpenedAt(at: Instant)
+
+    @Query("UPDATE settings SET anytimeOpen = :open WHERE id = 1")
+    suspend fun setAnytimeOpen(open: Boolean)
 }
 
 @Dao
@@ -329,9 +332,9 @@ interface RoundNumberDao {
         SetLogEntity::class,
         RoundNumberEntity::class,
     ],
-    version = 4,
+    version = 5,
     exportSchema = true,
-    autoMigrations = [AutoMigration(from = 1, to = 2), AutoMigration(from = 2, to = 3), AutoMigration(from = 3, to = 4)],
+    autoMigrations = [AutoMigration(from = 1, to = 2), AutoMigration(from = 2, to = 3), AutoMigration(from = 3, to = 4), AutoMigration(from = 4, to = 5)],
 )
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {

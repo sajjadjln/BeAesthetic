@@ -60,7 +60,7 @@ Training is in the morning, from the user's 12-week plan (`docs/program/12-week-
 | # | Feature | Notes |
 |---|---|---|
 | M1 | **Today screen** | A day ring, this week's dots, a part-of-day switcher (Morning, Midday, Evening, Night; the current part is selected) and icon tiles. Tap a tile to complete it. The header shows the week and chapter («هفته ۵ از ۲۳ · فصل آبان»). A tick gives a soft haptic and a short accent fill (D58). The first tick after a day at level 0 says «خوش برگشتی» once (D53). The character «پیکر» sits under the ring with one line that follows the day (D82). |
-| M2 | **Tasks and routines** | Daily items, items on specific weekdays, **"every N days from the last time"** items, and one-off items ("once"). Each item can be marked important (UI: «مهم»; one follow-up reminder) and/or part of the minimum day, and can have its own alarm time on chosen weekdays. An optional anchor «بعد از…» says what the task follows (D55). |
+| M2 | **Tasks and routines** | Daily items, items on specific weekdays, **"every N days from the last time"** items, one-off items ("once"), and **«هر وقت» items** with no date that never count in the day (D127). Each item can be marked important (UI: «مهم»; one follow-up reminder) and/or part of the minimum day, and can have its own alarm time on chosen weekdays. An optional anchor «بعد از…» says what the task follows (D55). |
 | M3 | **Minimum day** | A leaf button on Today toggles «روز حداقلی». Minimum shows only the floor items. Doing the floor guarantees the day at least the lightest shade. |
 | M4 | **Workout log** | The plan the user entered in the editor (M14). Each session shows the last session's numbers, and each set is pre-filled with them. You log reps or seconds plus effort for each set. A set that beats the previous best shows «رکورد» at once (D54). Exercises sit on **ladders** of harder variants; reaching the top of the range offers the next rung (D70). The end of a session notes any round-number total crossed (D71). |
 | M5 | **Strength tests** | Tests the user defines (D106), e.g. pull-ups, push-ups, plank, dead hang, toe-touch gap, knee-to-wall. Taken with the monthly check-in. Before each test, an optional guess; the result is shown next to it (D73). |
@@ -90,7 +90,7 @@ Training is in the morning, from the user's 12-week plan (`docs/program/12-week-
 
 ### 3.3 Deliberately out of scope
 - Calorie and protein tracking. (Protein stays only as three checklist items, see §5.)
-- A general calendar and a full task manager (projects, priorities). Simple one-off tasks are in scope (repeat = once).
+- A general calendar and a full task manager (projects, priorities). Simple one-off tasks (repeat = once) and undated «هر وقت» items (D127) are in scope.
 - Accounts, cloud login, Firebase, Google Play Services, analytics and crash-reporting SDKs.
 - Social features, sharing and leaderboards. Confirmed after the research: no share images either, recaps included (D63).
 - Health Connect, Google Fit and wearables.

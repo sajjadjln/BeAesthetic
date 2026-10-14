@@ -42,12 +42,12 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -79,6 +79,11 @@ import app.beaesthetic.domain.time.Jalali
 import app.beaesthetic.domain.time.Part
 import app.beaesthetic.domain.time.Weekdays
 import app.beaesthetic.ui.components.BaCard
+import app.beaesthetic.ui.components.Chip
+import app.beaesthetic.ui.components.ChipKind
+import app.beaesthetic.domain.tasks.RepeatKind
+import app.beaesthetic.ui.tasks.Editing
+import app.beaesthetic.ui.tasks.TaskEditorSheet
 import app.beaesthetic.ui.components.BaIcons
 import app.beaesthetic.ui.components.DayDot
 import app.beaesthetic.ui.components.DayRing
@@ -110,11 +115,23 @@ data class TodayActions(
     val openLetter: (Long) -> Unit = {},
     val openWorkout: () -> Unit = {},
     val dismissDaysShownUp: () -> Unit = {},
+    val openPlan: () -> Unit = {},
+    val setAnytimeOpen: (Boolean) -> Unit = {},
+    val addAnytime: () -> Unit = {},
 )
 
 @Composable
-fun TodayRoute(viewModel: TodayViewModel, onOpenSettings: () -> Unit, onFixReminders: () -> Unit, onWriteLetter: (Boolean) -> Unit, onOpenWorkout: () -> Unit) {
+fun TodayRoute(
+    viewModel: TodayViewModel,
+    onOpenSettings: () -> Unit,
+    onFixReminders: () -> Unit,
+    onWriteLetter: (Boolean) -> Unit,
+    onOpenWorkout: () -> Unit,
+    onOpenPlan: () -> Unit,
+) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    // «یه چیز اضافه کن» opens the simple sheet on «هر وقت» in the part being looked at (D128).
+    var adding by remember { mutableStateOf<Part?>(null) }
     LaunchedEffect(Unit) { viewModel.screenShown() }
     LifecycleEventEffect(Lifecycle.Event.ON_RESUME) { viewModel.refreshSystemState() }
     TodayScreen(
@@ -131,8 +148,23 @@ fun TodayRoute(viewModel: TodayViewModel, onOpenSettings: () -> Unit, onFixRemin
             openLetter = viewModel::openLetter,
             openWorkout = onOpenWorkout,
             dismissDaysShownUp = viewModel::dismissDaysShownUp,
+            openPlan = onOpenPlan,
+            setAnytimeOpen = viewModel::setAnytimeOpen,
+            addAnytime = { adding = state?.selectedPart ?: Part.MORNING },
         ),
     )
+    val s = state
+    val part = adding
+    if (s != null && part != null) {
+        val tasks by viewModel.editorTasks.collectAsStateWithLifecycle()
+        TaskEditorSheet(
+            editing = Editing.New(part, RepeatKind.ANYTIME),
+            today = s.date,
+            allTasks = tasks,
+            onDismiss = { adding = null },
+            onSave = { form -> adding = null; viewModel.saveTask(form) },
+        )
+    }
 }
 
 @Composable
@@ -182,6 +214,16 @@ fun TodayScreen(state: TodayUiState?, actions: TodayActions) {
             }
             state.cards.forEach { card -> item(span = { GridItemSpan(maxLineSpan) }) { CardFor(card, actions) } }
             state.buddy?.let { buddy -> item(span = { GridItemSpan(maxLineSpan) }) { BuddyRow(buddy, actions.tapBuddy) } }
+            // «تمرین امروز» sits above the part switcher, so it shows in every part (D126).
+            if (!state.minimumMode) {
+                when (val w = state.workout) {
+                    is WorkoutCardUi.Training -> item(span = { GridItemSpan(maxLineSpan) }) {
+                        WorkoutCard(w, actions.openWorkout, w.taskId?.let { id -> { actions.toggle(id) } })
+                    }
+                    is WorkoutCardUi.Rest -> item(span = { GridItemSpan(maxLineSpan) }) { RestRow(w, actions.openPlan) }
+                    null -> Unit
+                }
+            }
             if (!state.minimumMode) {
                 item(span = { GridItemSpan(maxLineSpan) }) {
                     PartSwitcher(state.selectedPart, state.completeParts, actions.selectPart, Modifier.padding(vertical = 6.dp))
@@ -192,10 +234,11 @@ fun TodayScreen(state: TodayUiState?, actions: TodayActions) {
                     Text(stringResource(R.string.today_part_empty), style = Ba.type.body, color = colors.text3, modifier = Modifier.padding(vertical = 24.dp))
                 }
             }
-            // The workout tile is wide (screens.html 01) and comes first, so it never leaves a hole in the grid.
-            val ordered = tiles.sortedByDescending { it.opensWorkout }
-            items(ordered, key = { it.taskId }, span = { GridItemSpan(if (it.opensWorkout) maxLineSpan else 1) }) { tile ->
-                TaskTile(tile, onToggle = { actions.toggle(tile.taskId) }, onPlay = if (tile.opensWorkout) actions.openWorkout else null)
+            items(tiles, key = { it.taskId }) { tile -> TaskTile(tile, onToggle = { actions.toggle(tile.taskId) }) }
+            if (!state.minimumMode && state.anytime.isNotEmpty()) {
+                item(span = { GridItemSpan(maxLineSpan) }) {
+                    AnytimeCard(state.anytime, state.anytimeOpen, actions, Modifier.padding(top = 6.dp))
+                }
             }
             state.banner?.let { banner ->
                 item(span = { GridItemSpan(maxLineSpan) }) { HealthBannerRow(banner, actions.fixReminders, Modifier.padding(top = 8.dp)) }
@@ -524,7 +567,7 @@ private fun PartDot(visible: Boolean, modifier: Modifier) {
  * 96% and springs back, with a light vibration. An untick drains back without vibrating (D76).
  */
 @Composable
-private fun TaskTile(tile: TileUi, onToggle: () -> Unit, onPlay: (() -> Unit)? = null) {
+private fun TaskTile(tile: TileUi, onToggle: () -> Unit) {
     val colors = Ba.colors
     val haptics = rememberHaptics()
     val interaction = remember { MutableInteractionSource() }
@@ -540,7 +583,7 @@ private fun TaskTile(tile: TileUi, onToggle: () -> Unit, onPlay: (() -> Unit)? =
     Box(
         modifier = Modifier
             .graphicsLayer { scaleX = scale; scaleY = scale }
-            .heightIn(min = if (onPlay != null) 84.dp else 108.dp)
+            .heightIn(min = 108.dp)
             .clip(shape)
             .drawBehind {
                 drawRect(colors.surface)
@@ -567,10 +610,6 @@ private fun TaskTile(tile: TileUi, onToggle: () -> Unit, onPlay: (() -> Unit)? =
             )
             .padding(16.dp),
     ) {
-        if (onPlay != null) {
-            WideTileContent(tile, fill.value, checkBg, onPlay)
-            return@Box
-        }
         Icon(
             BaIcons.of(tile.icon),
             contentDescription = null,
@@ -613,37 +652,159 @@ private fun TaskTile(tile: TileUi, onToggle: () -> Unit, onPlay: (() -> Unit)? =
     }
 }
 
-/** The workout tile: tapping it ticks like any tile; the play button opens the session (DESIGN 01, D117). */
+/**
+ * «تمرین امروز» (D126): the card and ▶ open the session; logging a set ticks the linked task. The circle
+ * ticks it without logging, and only shows when a «کار تمرین» is due today ([onTick] not null).
+ */
 @Composable
-private fun androidx.compose.foundation.layout.BoxScope.WideTileContent(tile: TileUi, fill: Float, checkBg: androidx.compose.ui.graphics.Color, onPlay: () -> Unit) {
+private fun WorkoutCard(card: WorkoutCardUi.Training, onOpen: () -> Unit, onTick: (() -> Unit)?) {
     val colors = Ba.colors
+    val haptics = rememberHaptics()
+    val bg by animateColorAsState(if (card.done) colors.accentSubtle else colors.surface, tween(BaMotion.SHORT), label = "workoutBg")
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(12.dp),
-        modifier = Modifier.align(Alignment.Center).fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(20.dp))
+            .background(bg)
+            .clickable(role = Role.Button, onClick = onOpen)
+            .padding(horizontal = 16.dp, vertical = 14.dp),
     ) {
-        Icon(BaIcons.of(tile.icon), null, tint = if (tile.done) colors.onAccentSubtle else colors.text2, modifier = Modifier.size(28.dp))
-        Text(tile.title, style = Ba.type.tile, color = colors.text1, modifier = Modifier.weight(1f))
         Box(
             contentAlignment = Alignment.Center,
-            modifier = Modifier
-                .size(24.dp)
-                .clip(CircleShape)
-                .background(checkBg)
-                .then(if (tile.done) Modifier else Modifier.border(2.dp, colors.border, CircleShape)),
-        ) {
-            Icon(BaIcons.Check, null, tint = colors.onAccent, modifier = Modifier.size(14.dp).graphicsLayer { alpha = fill })
+            modifier = Modifier.size(44.dp).clip(RoundedCornerShape(14.dp)).background(if (card.done) colors.surface else colors.accentSubtle),
+        ) { Icon(BaIcons.Dumbbell, null, tint = colors.onAccentSubtle, modifier = Modifier.size(24.dp)) }
+        Column(Modifier.weight(1f)) {
+            Text(stringResource(R.string.workout_today), style = Ba.type.caption, color = colors.text2)
+            Text(card.name.ifBlank { stringResource(R.string.workout_default_name) }, style = Ba.type.subtitle, color = colors.text1)
+            Text(
+                if (card.done) {
+                    stringResource(R.string.workout_card_done)
+                } else {
+                    stringResource(R.string.workout_card_sub, PersianDigits.format(card.moves), PersianDigits.format(card.sets))
+                },
+                style = Ba.type.caption,
+                color = colors.text3,
+            )
+        }
+        if (onTick != null) {
+            val tickLabel = stringResource(R.string.cd_workout_tick)
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier
+                    .size(44.dp)
+                    .clip(CircleShape)
+                    .toggleable(card.done, role = Role.Checkbox) { nowDone -> if (nowDone) haptics.light(); onTick() }
+                    .semantics { contentDescription = tickLabel },
+            ) {
+                CheckCircle(card.done, Modifier.size(28.dp))
+            }
         }
         Box(
             contentAlignment = Alignment.Center,
-            modifier = Modifier
-                .size(48.dp)
-                .clip(CircleShape)
-                .background(colors.accent)
-                .clickable(role = Role.Button, onClick = onPlay),
+            modifier = Modifier.size(48.dp).clip(CircleShape).background(colors.accent).clickable(role = Role.Button, onClick = onOpen),
         ) {
             Icon(BaIcons.Play, stringResource(R.string.cd_start_workout), tint = colors.onAccent, modifier = Modifier.size(22.dp))
         }
+    }
+}
+
+/** A rest day: one quiet row that names the next workout and opens the plan (D126). */
+@Composable
+private fun RestRow(rest: WorkoutCardUi.Rest, onOpenPlan: () -> Unit) {
+    val colors = Ba.colors
+    val name = rest.name.ifBlank { stringResource(R.string.workout_default_name) }
+    val text = if (rest.daysAway == 1) {
+        stringResource(R.string.workout_rest_tomorrow, name)
+    } else {
+        stringResource(R.string.workout_rest_later, stringArrayResource(R.array.weekdays)[rest.weekday], name)
+    }
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(10.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(16.dp))
+            .background(colors.surface)
+            .clickable(role = Role.Button, onClickLabel = stringResource(R.string.cd_open_plan), onClick = onOpenPlan)
+            .padding(horizontal = 14.dp, vertical = 12.dp),
+    ) {
+        Icon(BaIcons.Dumbbell, null, tint = colors.text2, modifier = Modifier.size(20.dp))
+        Text(text, style = Ba.type.body, color = colors.text2, modifier = Modifier.weight(1f))
+        Icon(BaIcons.ChevronForward, null, tint = colors.text3, modifier = Modifier.size(18.dp))
+    }
+}
+
+/**
+ * «هر وقت» (D127): folded at the bottom, it opens with one tap and remembers it. A ticked item dims and
+ * stays until the day ends, so a wrong tick can be undone; it never counts in the ring.
+ */
+@Composable
+private fun AnytimeCard(items: List<AnytimeUi>, open: Boolean, actions: TodayActions, modifier: Modifier = Modifier) {
+    val colors = Ba.colors
+    val haptics = rememberHaptics()
+    val chevron by animateFloatAsState(if (open) 180f else 0f, tween(BaMotion.SHORT), label = "anytimeChevron")
+    Column(modifier.fillMaxWidth().clip(RoundedCornerShape(20.dp)).background(colors.surface)) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(10.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .toggleable(open, role = Role.Button) { actions.setAnytimeOpen(it) }
+                .padding(horizontal = 16.dp, vertical = 14.dp),
+        ) {
+            Icon(BaIcons.List, null, tint = colors.text2, modifier = Modifier.size(20.dp))
+            Text(stringResource(R.string.anytime_title), style = Ba.type.subtitle, color = colors.text1, modifier = Modifier.weight(1f))
+            Chip(PersianDigits.format(items.count { !it.done }), ChipKind.NEUTRAL)
+            Icon(BaIcons.ChevronDown, null, tint = colors.text3, modifier = Modifier.size(18.dp).graphicsLayer { rotationZ = chevron })
+        }
+        AnimatedVisibility(open, enter = expandVertically() + fadeIn()) {
+            Column {
+                Box(Modifier.fillMaxWidth().height(1.dp).background(colors.border))
+                items.forEach { item ->
+                    val alpha by animateFloatAsState(if (item.done) 0.45f else 1f, tween(BaMotion.SHORT), label = "anytimeAlpha")
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(12.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .toggleable(item.done, role = Role.Checkbox) { nowDone -> if (nowDone) haptics.light(); actions.toggle(item.taskId) }
+                            .heightIn(min = 48.dp)
+                            .padding(horizontal = 16.dp, vertical = 10.dp)
+                            .graphicsLayer { this.alpha = alpha },
+                    ) {
+                        CheckCircle(item.done, Modifier.size(24.dp))
+                        Text(item.title, style = Ba.type.body, color = colors.text1, modifier = Modifier.weight(1f))
+                        if (item.important && !item.done) Text(stringResource(R.string.tag_important), style = Ba.type.caption, color = colors.amber)
+                    }
+                }
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable(role = Role.Button, onClick = actions.addAnytime)
+                        .padding(start = 16.dp, end = 16.dp, top = 10.dp, bottom = 14.dp),
+                ) {
+                    Icon(BaIcons.Plus, null, tint = colors.text3, modifier = Modifier.size(20.dp))
+                    Text(stringResource(R.string.anytime_add), style = Ba.type.body, color = colors.text3)
+                }
+            }
+        }
+    }
+}
+
+/** The round check of a tile, the workout card and «هر وقت» rows. */
+@Composable
+private fun CheckCircle(done: Boolean, modifier: Modifier = Modifier) {
+    val colors = Ba.colors
+    val bg by animateColorAsState(if (done) colors.accent else colors.surface, tween(BaMotion.SHORT), label = "checkCircle")
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = modifier.clip(CircleShape).background(bg).then(if (done) Modifier else Modifier.border(2.dp, colors.border, CircleShape)),
+    ) {
+        if (done) Icon(BaIcons.Check, null, tint = colors.onAccent, modifier = Modifier.fillMaxSize(0.6f))
     }
 }
 

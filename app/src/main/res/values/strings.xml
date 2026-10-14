@@ -314,7 +314,6 @@
     <string name="editor_part">بخش روز</string>
     <string name="editor_repeat">تکرار</string>
     <string name="editor_every_n_help">از آخرین باری که انجامش دادی حساب می‌شه.</string>
-    <string name="editor_once_day">کدوم روز؟</string>
     <string name="editor_anchor">بعد از…</string>
     <string name="editor_anchor_hint">مثلاً بعد از صبحانه</string>
     <string name="editor_anchor_help">توی یادآور کنار اسم کار میاد؛ کار رو به یه کار همیشگی می‌چسبونه.</string>
@@ -357,11 +356,12 @@
         <item>قیچی</item>
         <item>خوراکی</item>
         <item>آفتاب</item>
+        <item>تیک</item>
     </string-array>
 
     <!-- Slice 4a: task editor's workout switch (D117) -->
-    <string name="editor_workout">تمرین روز</string>
-    <string name="editor_workout_help">کاشی‌اش تمرینِ برنامه‌ی همون روز رو باز می‌کنه</string>
+    <string name="editor_workout">کار تمرین</string>
+    <string name="editor_workout_help">روزهای برنامه، کارت «تمرین امروز» جاش میاد و با اولین ست تیک می‌خوره.</string>
     <string name="cd_start_workout">شروع تمرین</string>
 
     <!-- 10 Workout plan editor (D105, D114) -->
@@ -502,4 +502,30 @@
         <item>نوامبر</item>
         <item>دسامبر</item>
     </string-array>
+
+    <!-- Slice 5b: workout card, «هر وقت», simple sheet, calendar (D126–D130) -->
+    <string name="repeat_anytime">هر وقت</string>
+    <string name="tasks_anytime">هر وقت</string>
+    <string name="when_label">کِی؟</string>
+    <string name="when_day">یه روز…</string>
+    <string name="when_help_anytime">هر وقت انجامش دادی تیک بزن. توی «هر وقت» می‌مونه؛ نه یادآور داره، نه شمرده می‌شه.</string>
+    <string name="when_help_dated">%1$s · %2$s</string>
+    <string name="editor_more">تنظیمات بیشتر</string>
+    <string name="editor_date">روز</string>
+    <string name="alarm_on_day">همون روز</string>
+    <string name="alarm_when_due">روزهایی که موعدشه</string>
+    <string name="calendar_picked">%1$s %2$s · %3$s</string>
+    <string name="calendar_gregorian">%1$s %2$s</string>
+    <string name="cd_prev_month">ماه قبل</string>
+    <string name="cd_next_month">ماه بعد</string>
+    <string name="workout_today">تمرین امروز</string>
+    <string name="workout_default_name">تمرین</string>
+    <string name="workout_card_sub">%1$s حرکت، %2$s ست</string>
+    <string name="workout_card_done">انجام شد</string>
+    <string name="workout_rest_tomorrow">امروز استراحت. فردا: %1$s</string>
+    <string name="workout_rest_later">امروز استراحت. %1$s: %2$s</string>
+    <string name="cd_workout_tick">تیک تمرین بدون ثبت ست</string>
+    <string name="cd_open_plan">برنامه تمرین</string>
+    <string name="anytime_title">هر وقت</string>
+    <string name="anytime_add">یه چیز اضافه کن</string>
 </resources>
