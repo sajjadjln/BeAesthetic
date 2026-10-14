@@ -1,6 +1,7 @@
 package app.beaesthetic
 
 import android.content.Context
+import app.beaesthetic.backup.BackupService
 import app.beaesthetic.data.db.AppDatabase
 import app.beaesthetic.data.repo.Seed
 import app.beaesthetic.data.repo.TaskRepository
@@ -30,6 +31,7 @@ class AppContainer(context: Context) {
     val events = EventLog(db.events(), clock)
     val notifier = Notifier(appContext)
     val scheduler = AlarmScheduler(appContext, db, tasks, clock)
+    val backup = BackupService(appContext, db, clock)
 
     private val readyLock = Mutex()
     @Volatile private var ready = false

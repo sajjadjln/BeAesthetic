@@ -9,7 +9,9 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -150,25 +152,25 @@ fun SettingsScreen(container: AppContainer, debugAvailable: Boolean, onBack: () 
             Triple(SettingsDestination.APPEARANCE, BaIcons.Palette, R.string.settings_appearance),
             Triple(SettingsDestination.PHONE, BaIcons.Phone, R.string.settings_phone),
         )
-        // Backup arrives in slice 6.
-        val ready = setOf(SettingsDestination.TASKS, SettingsDestination.REMINDERS, SettingsDestination.WORKOUT, SettingsDestination.APPEARANCE, SettingsDestination.PHONE)
+        val backup by remember { container.backup.observeStatus() }.collectAsStateWithLifecycle(null)
         tiles.chunked(2).forEach { row ->
-            Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+            // Tiles in a row share one height, whatever their second line.
+            Row(horizontalArrangement = Arrangement.spacedBy(10.dp), modifier = Modifier.height(IntrinsicSize.Min)) {
                 row.forEach { (dest, icon, label) ->
-                    val enabled = dest in ready
                     Column(
                         verticalArrangement = Arrangement.spacedBy(14.dp),
                         modifier = Modifier
                             .weight(1f)
+                            .fillMaxHeight()
                             .clip(RoundedCornerShape(20.dp))
                             .background(c.surface)
-                            .clickable(enabled = enabled, role = Role.Button) { onOpen(dest) }
+                            .clickable(role = Role.Button) { onOpen(dest) }
                             .padding(16.dp),
                     ) {
-                        Icon(icon, null, tint = if (enabled) c.text2 else c.text3, modifier = Modifier.size(26.dp))
+                        Icon(icon, null, tint = c.text2, modifier = Modifier.size(26.dp))
                         Column {
-                            Text(stringResource(label), style = Ba.type.tile, color = if (enabled) c.text1 else c.text3)
-                            if (!enabled) Text(stringResource(R.string.soon), style = Ba.type.caption, color = c.text3)
+                            Text(stringResource(label), style = Ba.type.tile, color = c.text1)
+                            if (dest == SettingsDestination.BACKUP) backup?.let { b -> BackupTileLine(b) }
                         }
                     }
                 }
@@ -190,6 +192,21 @@ fun SettingsScreen(container: AppContainer, debugAvailable: Boolean, onBack: () 
             SecondaryButton("Debug", onClick = { onOpen(SettingsDestination.DEBUG) }, modifier = Modifier.fillMaxWidth())
         }
     }
+}
+
+/** «۳ روز پیش» under «پشتیبان», amber when the folder needs a look (SPEC §8). */
+@Composable
+private fun BackupTileLine(status: app.beaesthetic.backup.BackupStatus) {
+    val c = Ba.colors
+    val text = when {
+        !status.hasFolder -> stringResource(R.string.settings_backup_none)
+        status.notice == app.beaesthetic.domain.backup.BackupNotice.FAILED -> stringResource(R.string.backup_failed)
+        status.daysSince == null -> stringResource(R.string.backup_none_yet)
+        status.daysSince == 0L -> stringResource(R.string.settings_backup_today)
+        else -> stringResource(R.string.settings_backup_days, PersianDigits.format(status.daysSince))
+    }
+    val fine = status.notice == app.beaesthetic.domain.backup.BackupNotice.NONE
+    Text(text, style = Ba.type.caption, color = if (fine) c.text3 else c.amber)
 }
 
 // ---------------------------------------------------------------- 09 Reminders

@@ -221,7 +221,6 @@
     <string name="settings_backup">پشتیبان</string>
     <string name="settings_appearance">ظاهر</string>
     <string name="settings_phone">گوشی</string>
-    <string name="soon">به‌زودی</string>
     <string name="settings_version">نسخه %1$s · BeAesthetic</string>
 
     <!-- Reminders (09) -->
@@ -528,4 +527,54 @@
     <string name="cd_open_plan">برنامه تمرین</string>
     <string name="anytime_title">هر وقت</string>
     <string name="anytime_add">یه چیز اضافه کن</string>
+
+    <!-- Slice 6: backup and restore (flows B1–B2, D132–D135) -->
+    <string name="backup_title">پشتیبان</string>
+    <string name="backup_last_today">آخرین پشتیبان: امروز</string>
+    <string name="backup_last_yesterday">آخرین پشتیبان: دیروز</string>
+    <string name="backup_last_days">آخرین پشتیبان: %1$s روز پیش</string>
+    <string name="backup_none_yet">هنوز پشتیبانی گرفته نشده</string>
+    <string name="backup_failed">پشتیبان آخر نشد</string>
+    <string name="backup_no_folder">پشتیبان هنوز جایی نداره</string>
+    <string name="backup_detail">%1$s · %2$s · %3$s عکس</string>
+    <string name="backup_failed_help">شاید پوشه جابه‌جا شده. دوباره امتحان کن یا پوشه رو دوباره انتخاب کن.</string>
+    <string name="backup_no_folder_help">یه پوشه انتخاب کن که Syncthing به کامپیوترت ببره.</string>
+    <string name="backup_now">همین الان پشتیبان بگیر</string>
+    <string name="backup_running">داره پشتیبان می‌گیره…</string>
+    <string name="backup_folder">پوشه</string>
+    <string name="backup_folder_none">انتخاب نشده</string>
+    <string name="backup_folder_pick">انتخاب کن</string>
+    <string name="backup_folder_change">عوض کن</string>
+    <string name="backup_auto">خودکار</string>
+    <string name="backup_auto_help">هر جمعه که اپ رو باز کنی، و هر وقت یه هفته گذشته باشه.</string>
+    <string name="backup_recent">%1$s تای آخر</string>
+    <string name="backup_reason_manual">دستی</string>
+    <string name="backup_reason_auto">خودکار</string>
+    <string name="backup_reason_before_restore">پیش از بازگردانی</string>
+    <string name="backup_restore">بازگردانی از فایل</string>
+    <string name="backup_privacy">همه‌چی روی همین گوشیه و پیکر اجازه‌ی اینترنت نداره. Syncthing پوشه رو به کامپیوترت می‌بره.</string>
+    <string name="backup_saved">پشتیبان گرفته شد.</string>
+    <string name="backup_restored">بازگردانی شد. همه‌چی سر جاشه.</string>
+    <string name="backup_not_ours">این فایل پشتیبان پیکر نیست.</string>
+    <string name="backup_newer">این پشتیبان مال نسخه‌ی جدیدتر پیکره؛ اول اپ رو به‌روز کن.</string>
+    <string name="backup_damaged">این فایل خرابه و نمی‌شه ازش بازگردانی کرد.</string>
+    <string name="backup_restore_failed">بازگردانی نشد؛ داده‌ها همون‌طور که بودن موندن.</string>
+    <string name="size_mb">%1$s مگ</string>
+    <string name="size_kb">%1$s کیلوبایت</string>
+    <string name="restore_title">بازگردانی این فایل؟</string>
+    <string name="restore_date">تاریخ</string>
+    <string name="restore_version">نسخه‌ی اپ</string>
+    <string name="restore_days">روزهای ثبت‌شده</string>
+    <string name="restore_sessions">تمرین</string>
+    <string name="restore_sessions_value">%1$s جلسه</string>
+    <string name="restore_tasks">کارها</string>
+    <string name="restore_photos">عکس</string>
+    <string name="restore_note">اول از همه‌ی داده‌های فعلی یه پشتیبان می‌گیرم، بعد جایگزین می‌کنم. اگه چیزی وسطش خراب شد، همه‌چی همون‌طور که بود می‌مونه.</string>
+    <string name="restore_confirm">جایگزین کن</string>
+    <string name="restore_running">داره بازگردانی می‌کنه…</string>
+    <string name="restore_cancel">نه</string>
+    <string name="settings_backup_none">پوشه انتخاب نشده</string>
+    <string name="settings_backup_today">امروز</string>
+    <string name="settings_backup_days">%1$s روز پیش</string>
+    <string name="banner_backup_look">یه نگاه بنداز</string>
 </resources>

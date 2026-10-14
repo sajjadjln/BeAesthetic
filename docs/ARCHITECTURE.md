@@ -229,7 +229,8 @@ Physical schema for `SPEC.md` §9, updated for D25–D28. Dates are ISO `LocalDa
 | `recap` | key (HALFWAY·FINISH), seenAt? | D52. The content is computed; only "seen" is stored. |
 | `letter` | id, writtenOn, writtenAt, opensOn, text, openedAt?, isFirst | D72. Added in schema v2 (slice 2). The UI refuses to show `text` before `opensOn`. Included in backups. |
 | `round_number` | key (e.g. `reps:ladder:3:1000`, `workouts:50`, `days:100`), reachedOn, seenAt? | D71. Written when a total first crosses a round number, so it's noted once even if a log is later edited. Totals themselves are computed. |
-| `settings` | single row: programStartDate, rolloverHour, specialCapPerWeek, followUpMinutes, alarmMode, accentColor (GREEN·BLUE·TURQUOISE·VIOLET·ORANGE), themeMode (SYSTEM·DARK·LIGHT), backupTreeUri, lastOpenedAt, lastBackupAt, onboardingDone, programEndDate, installDate, halfwayDate?, identitySentence?, afterFinishMode (NONE·MAINTENANCE·NEW_PROGRAM), experimentFlags (bits, debug); v2: firstLetterOfferDone, cardDismissedOn?, healthSeenAt?, healthNotifiedOn?, autostartConfirmed, recentsLockConfirmed, showBuddy, ritualTime; v5: anytimeOpen (D127) | `installDate` drives the «قبل از اپ» cells (D56). |
+| `settings` | single row: programStartDate, rolloverHour, specialCapPerWeek, followUpMinutes, alarmMode, accentColor (GREEN·BLUE·TURQUOISE·VIOLET·ORANGE), themeMode (SYSTEM·DARK·LIGHT), backupTreeUri, lastOpenedAt, lastBackupAt, onboardingDone, programEndDate, installDate, halfwayDate?, identitySentence?, afterFinishMode (NONE·MAINTENANCE·NEW_PROGRAM), experimentFlags (bits, debug); v2: firstLetterOfferDone, cardDismissedOn?, healthSeenAt?, healthNotifiedOn?, autostartConfirmed, recentsLockConfirmed, showBuddy, ritualTime; v5: anytimeOpen (D127); v6: autoBackup (D133) | `installDate` drives the «قبل از اپ» cells (D56). |
+| `backup_record` | id, at, fileName, sizeBytes, photoCount, reason (MANUAL·AUTO·BEFORE_RESTORE), ok, error? | Every backup try (v6, slice 6). Kept on the phone, never in a backup (D132). Feeds the backup screen, the Settings tile and the Today row (D134). |
 
 ### The day snapshot (why some derived numbers are stored)
 
@@ -252,11 +253,11 @@ A day the app never saw has no row, which is a gray gap, which is exactly right.
 
 ### Format
 
-`beaesthetic-1405-07-24-1930.zip` (Jalali date in the name, so it sorts naturally and reads easily):
+`beaesthetic-1405-07-24-193012.zip` (Jalali date and time to the second in the name, so it sorts naturally, never collides and reads easily; D133):
 
 ```
 manifest.json     formatVersion, appVersion, dbSchemaVersion, createdAt, counts per table, photo list with sizes
-data.json         every table as plain JSON (documented in docs/BACKUP_FORMAT.md, written in slice 6)
+data.json         every table as plain JSON, row by row (docs/BACKUP_FORMAT.md, D132)
 photos/           0-front.jpg, 0-side.jpg … 6-back.jpg
 db/beaesthetic.db raw database copy, an emergency fallback only
 ```
@@ -273,7 +274,7 @@ db/beaesthetic.db raw database copy, an emergency fallback only
 
 **Folder:** chosen once with the system folder picker (Storage Access Framework); the app keeps a persistable permission. The user points it at a folder that **Syncthing-Fork** syncs to the PC. (The official Syncthing Android app was discontinued in late 2024; Syncthing-Fork continues it.)
 
-**When:** at the end of the Friday ritual, after each check-in, from Settings by hand, and, as a safety net, on app open if the last backup is more than 7 days old. Backups run as a WorkManager job, so leaving the screen doesn't cut one off.
+**When:** at the end of the Friday ritual, after each check-in, from Settings by hand, and, as a safety net, on app open if the last backup is more than 7 days old. Until the ritual exists (slice 8), also on app open on a Friday (D133). The automatic backup runs as a WorkManager job; a manual one runs in the app's scope. Either way, leaving the screen doesn't cut one off.
 
 ### Restore
 
@@ -282,7 +283,7 @@ db/beaesthetic.db raw database copy, an emergency fallback only
 3. On confirm: **first make a backup of the current data**, then replace everything in one transaction, copy the photos, and re-plan reminders.
 4. Anything that fails rolls back; the old data stays.
 
-An instrumented test exports, wipes, restores and compares every table and photo. Slice 6 is not done until this test passes on the phone.
+A test exports, wipes, restores and compares every table and photo (`BackupRoundTripTest`, Robolectric on the real schema), plus an older backup with missing tables and columns, a newer one refused, and the phone's own settings kept. A manual round trip on the phone (backup, restore from the file) confirms the folder side.
 
 Android's own cloud backup (`allowBackup`) is **off**: it would send data to Google Drive, and it can't be trusted on phones without Google services anyway.
 

@@ -65,6 +65,9 @@ object BaIcons {
     val Grid = stroke(roundRect(4f, 4f, 7f, 7f, 1.5f), roundRect(13f, 4f, 7f, 7f, 1.5f), roundRect(4f, 13f, 7f, 7f, 1.5f), roundRect(13f, 13f, 7f, 7f, 1.5f))
     val Grip = stroke(circle(9f, 6f, 1f), circle(15f, 6f, 1f), circle(9f, 12f, 1f), circle(15f, 12f, 1f), circle(9f, 18f, 1f), circle(15f, 18f, 1f))
     val Pen = stroke("M12 20h9", "M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z")
+    val Folder = stroke("M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z")
+    val Upload = stroke("M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4", "m17 8-5-5-5 5", "M12 3v12")
+    val Download = stroke("M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4", "m7 10 5 5 5-5", "M12 15V3")
     val Calendar = stroke(roundRect(3f, 4f, 18f, 18f, 3f), "M16 2v4M8 2v4M3 10h18")
     val ChevronDown = stroke("m6 9 6 6 6-6")
     /** Points "forward" (later in time): right in LTR, left in RTL (time flows right to left). */

@@ -34,6 +34,7 @@ class App : Application() {
                 container.events.appOpen()
                 container.events.prune()
                 container.scheduler.reconcile("app-open")
+                container.backup.autoIfDue()
             }
         }
     }

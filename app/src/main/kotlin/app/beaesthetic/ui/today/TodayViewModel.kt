@@ -3,7 +3,9 @@ package app.beaesthetic.ui.today
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.beaesthetic.AppContainer
+import app.beaesthetic.backup.BackupStatus
 import app.beaesthetic.data.db.EventEntity
+import app.beaesthetic.domain.backup.BackupNotice
 import app.beaesthetic.data.db.EventType
 import app.beaesthetic.data.db.LetterEntity
 import app.beaesthetic.data.db.RoundNumberEntity
@@ -127,6 +129,8 @@ data class TodayUiState(
     val workout: WorkoutCardUi? = null,
     val anytime: List<AnytimeUi> = emptyList(),
     val anytimeOpen: Boolean = false,
+    /** The backup row under the tiles (SPEC §8); shown only when no reminder banner is. */
+    val backup: BackupStatus? = null,
 ) {
     val dayComplete: Boolean get() = total > 0 && done == total
 }
@@ -216,13 +220,13 @@ class TodayViewModel(
         .observeSince(Instant.now() - ReminderHealth.WINDOW)
         .map { rows -> ReminderHealth.check(rows.map { it.toLogRow() }, container.clock.now()) }
 
-    val state: StateFlow<TodayUiState?> = combine(inputs, pickedPart, health, systemOk, combine(taps, buddyLine) { t, l -> t to l }) { input, picked, h, sysOk, (tapCount, line) ->
+    val state: StateFlow<TodayUiState?> = combine(inputs, pickedPart, combine(health, container.backup.observeStatus()) { h, b -> h to b }, systemOk, combine(taps, buddyLine) { t, l -> t to l }) { input, picked, (h, backup), sysOk, (tapCount, line) ->
         val banner = when (ReminderHealth.attention(h, input.settings.healthSeenAt, sysOk)) {
             Attention.BLOCKED -> HealthBanner.BLOCKED
             Attention.LATE -> HealthBanner.LATE
             Attention.NONE -> null
         }
-        toState(input, picked ?: input.now.part, banner, tapCount, line)
+        toState(input, picked ?: input.now.part, banner, tapCount, line).copy(backup = backup.takeIf { banner == null && it.notice != BackupNotice.NONE })
     }
         .onEach(::ensureBuddyLine)
         .onEach(::noteDaysShownUp)

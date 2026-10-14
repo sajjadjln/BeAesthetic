@@ -126,6 +126,9 @@ data class SettingsEntity(
     // v5 (slice 5b)
     /** Today's «هر وقت» card is open (D127); remembered as the user left it. */
     @ColumnInfo(defaultValue = "0") val anytimeOpen: Boolean = false,
+    // v6 (slice 6)
+    /** The automatic backup (D133); on by default. Kept on this phone through a restore. */
+    @ColumnInfo(defaultValue = "1") val autoBackup: Boolean = true,
 )
 
 object EventType {
@@ -248,4 +251,20 @@ data class RoundNumberEntity(
     @PrimaryKey val key: String,
     val reachedOn: LocalDate,
     val seenAt: Instant? = null,
+)
+
+/**
+ * One backup try (slice 6, v6). Kept on this phone only: a restore never replaces it (D132). [reason] is a
+ * BackupReason name; [error] is a short technical note when [ok] is false.
+ */
+@Entity(tableName = "backup_record", indices = [Index("at")])
+data class BackupRecordEntity(
+    @PrimaryKey(autoGenerate = true) val id: Long = 0,
+    val at: Instant,
+    val fileName: String,
+    val sizeBytes: Long,
+    val photoCount: Int,
+    val reason: String,
+    val ok: Boolean,
+    val error: String? = null,
 )

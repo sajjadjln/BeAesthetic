@@ -170,6 +170,39 @@ interface SettingsDao {
 
     @Query("UPDATE settings SET anytimeOpen = :open WHERE id = 1")
     suspend fun setAnytimeOpen(open: Boolean)
+
+    @Query("UPDATE settings SET backupTreeUri = :uri WHERE id = 1")
+    suspend fun setBackupTreeUri(uri: String?)
+
+    @Query("UPDATE settings SET autoBackup = :on WHERE id = 1")
+    suspend fun setAutoBackup(on: Boolean)
+
+    @Query("UPDATE settings SET lastBackupAt = :at WHERE id = 1")
+    suspend fun setLastBackupAt(at: Instant)
+}
+
+@Dao
+interface BackupRecordDao {
+    @Insert
+    suspend fun insert(row: BackupRecordEntity): Long
+
+    @Query("SELECT * FROM backup_record ORDER BY at DESC LIMIT :limit")
+    fun observeRecent(limit: Int): Flow<List<BackupRecordEntity>>
+
+    @Query("SELECT * FROM backup_record WHERE ok = 1 ORDER BY at DESC LIMIT 1")
+    suspend fun lastOk(): BackupRecordEntity?
+
+    @Query("SELECT * FROM backup_record WHERE ok = 1 ORDER BY at DESC LIMIT 1")
+    fun observeLastOk(): Flow<BackupRecordEntity?>
+
+    @Query("SELECT * FROM backup_record ORDER BY at DESC LIMIT 1")
+    fun observeLast(): Flow<BackupRecordEntity?>
+
+    @Query("SELECT * FROM backup_record WHERE ok = 1 ORDER BY at DESC LIMIT :limit")
+    fun observeRecentOk(limit: Int): Flow<List<BackupRecordEntity>>
+
+    @Query("SELECT * FROM backup_record ORDER BY at DESC LIMIT 1")
+    suspend fun last(): BackupRecordEntity?
 }
 
 @Dao
@@ -331,10 +364,11 @@ interface RoundNumberDao {
         SessionEntity::class,
         SetLogEntity::class,
         RoundNumberEntity::class,
+        BackupRecordEntity::class,
     ],
-    version = 5,
+    version = 6,
     exportSchema = true,
-    autoMigrations = [AutoMigration(from = 1, to = 2), AutoMigration(from = 2, to = 3), AutoMigration(from = 3, to = 4), AutoMigration(from = 4, to = 5)],
+    autoMigrations = [AutoMigration(from = 1, to = 2), AutoMigration(from = 2, to = 3), AutoMigration(from = 3, to = 4), AutoMigration(from = 4, to = 5), AutoMigration(from = 5, to = 6)],
 )
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
@@ -348,10 +382,13 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun letters(): LetterDao
     abstract fun workouts(): WorkoutDao
     abstract fun roundNumbers(): RoundNumberDao
+    abstract fun backups(): BackupRecordDao
 
     companion object {
+        const val NAME = "beaesthetic.db"
+
         // Never fallbackToDestructiveMigration: schema changes must never wipe data (ARCHITECTURE §8).
         fun build(context: Context): AppDatabase =
-            Room.databaseBuilder(context, AppDatabase::class.java, "beaesthetic.db").build()
+            Room.databaseBuilder(context, AppDatabase::class.java, NAME).build()
     }
 }

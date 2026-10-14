@@ -118,6 +118,32 @@ class MigrationTest {
         }
     }
 
+    @Test
+    fun `5 to 6 keeps settings and adds the backup history, auto backup on`() {
+        helper.createDatabase(DB, 5).use { db ->
+            db.execSQL(
+                "INSERT INTO settings (id, programStartDate, programEndDate, installDate, rolloverHour, specialCapPerWeek, followUpMinutes, ritualTime, " +
+                    "alarmMode, accentColor, themeMode, showBuddy, onboardingDone, afterFinishMode, experimentFlags, firstLetterOfferDone, autostartConfirmed, recentsLockConfirmed, anytimeOpen) " +
+                    "VALUES (1, '2026-10-09', '2027-03-20', '2026-10-10', 4, 2, 45, 1140, 'ALARM_CLOCK', 'GREEN', 'SYSTEM', 1, 0, 'NONE', 0, 1, 1, 1, 1)",
+            )
+            db.execSQL(
+                "INSERT INTO task (id, title, icon, part, repeat, weekdays, startDate, isImportant, inMinimumDay, action, alarmWeekdays, alarmEnabled, sortOrder, createdAt) " +
+                    "VALUES (21, 'جو دوسر', 'CHECK', 'MORNING', 'ANYTIME', 0, '2026-10-14', 0, 0, 'NONE', 0, 0, 0, 1791950000000)",
+            )
+        }
+
+        helper.runMigrationsAndValidate(DB, 6, true).use { db ->
+            db.query("SELECT anytimeOpen, autoBackup, backupTreeUri FROM settings").use { c ->
+                c.moveToFirst()
+                assertEquals(1, c.getInt(0))
+                assertEquals(1, c.getInt(1))
+                assertEquals(true, c.isNull(2))
+            }
+            db.query("SELECT repeat FROM task WHERE id = 21").use { c -> c.moveToFirst(); assertEquals("ANYTIME", c.getString(0)) }
+            db.query("SELECT COUNT(*) FROM backup_record").use { c -> c.moveToFirst(); assertEquals(0, c.getInt(0)) }
+        }
+    }
+
     private companion object {
         const val DB = "migration-test.db"
     }

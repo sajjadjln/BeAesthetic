@@ -72,6 +72,8 @@ import app.beaesthetic.R
 import app.beaesthetic.domain.buddy.Moment
 import app.beaesthetic.domain.buddy.Outfit
 import app.beaesthetic.domain.buddy.Pose
+import app.beaesthetic.backup.BackupStatus
+import app.beaesthetic.domain.backup.BackupNotice
 import app.beaesthetic.domain.score.DayStatus
 import app.beaesthetic.domain.tasks.TaskIcon
 import app.beaesthetic.domain.text.PersianDigits
@@ -118,6 +120,7 @@ data class TodayActions(
     val openPlan: () -> Unit = {},
     val setAnytimeOpen: (Boolean) -> Unit = {},
     val addAnytime: () -> Unit = {},
+    val openBackup: () -> Unit = {},
 )
 
 @Composable
@@ -128,6 +131,7 @@ fun TodayRoute(
     onWriteLetter: (Boolean) -> Unit,
     onOpenWorkout: () -> Unit,
     onOpenPlan: () -> Unit,
+    onOpenBackup: () -> Unit,
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     // «یه چیز اضافه کن» opens the simple sheet on «هر وقت» in the part being looked at (D128).
@@ -151,6 +155,7 @@ fun TodayRoute(
             openPlan = onOpenPlan,
             setAnytimeOpen = viewModel::setAnytimeOpen,
             addAnytime = { adding = state?.selectedPart ?: Part.MORNING },
+            openBackup = onOpenBackup,
         ),
     )
     val s = state
@@ -242,6 +247,9 @@ fun TodayScreen(state: TodayUiState?, actions: TodayActions) {
             }
             state.banner?.let { banner ->
                 item(span = { GridItemSpan(maxLineSpan) }) { HealthBannerRow(banner, actions.fixReminders, Modifier.padding(top = 8.dp)) }
+            }
+            state.backup?.let { backup ->
+                item(span = { GridItemSpan(maxLineSpan) }) { BackupRow(backup, actions.openBackup, Modifier.padding(top = 8.dp)) }
             }
         }
     }
@@ -513,6 +521,32 @@ private fun HealthBannerRow(banner: HealthBanner, onFix: () -> Unit, modifier: M
             style = Ba.type.body, color = c.text1, modifier = Modifier.weight(1f),
         )
         Text(stringResource(R.string.banner_fix), style = Ba.type.label, color = c.accent)
+    }
+}
+
+/** A quiet row when the backup needs a look (SPEC §8): no folder yet, too old, or the last try failed. */
+@Composable
+private fun BackupRow(status: BackupStatus, onOpen: () -> Unit, modifier: Modifier = Modifier) {
+    val c = Ba.colors
+    val text = when {
+        status.notice == BackupNotice.NO_FOLDER -> stringResource(R.string.backup_no_folder)
+        status.notice == BackupNotice.FAILED -> stringResource(R.string.backup_failed)
+        status.daysSince == null -> stringResource(R.string.backup_none_yet)
+        else -> stringResource(R.string.backup_last_days, PersianDigits.format(status.daysSince))
+    }
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(10.dp),
+        modifier = modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(14.dp))
+            .background(c.surface)
+            .clickable(onClick = onOpen)
+            .padding(horizontal = 14.dp, vertical = 12.dp),
+    ) {
+        Icon(BaIcons.Cloud, null, tint = c.text2, modifier = Modifier.size(20.dp))
+        Text(text, style = Ba.type.body, color = c.text1, modifier = Modifier.weight(1f))
+        Text(stringResource(R.string.banner_backup_look), style = Ba.type.label, color = c.accent)
     }
 }
 
