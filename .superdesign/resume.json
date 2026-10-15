@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "targets": {
+    "today": {
+      "targetKind": "existing-ui",
+      "projectId": "a2a7d680-546e-4007-bbbe-32a5b3129a5d",
+      "baselineDraftId": "21b4ab8b-ad8b-498f-afa0-83d3de688136",
+      "activeDraftId": "54e16046-4692-45d7-9e87-564d0b87ba36",
+      "designSystemPath": ".superdesign/design-system.md",
+      "contextFiles": [
+        ".superdesign/design-system.md",
+        ".superdesign/init/theme.md:1:27"
+      ],
+      "fingerprints": {
+        ".superdesign/design-system.md": "670e8a724ac85dbe1c074f449a8acc2dd6f92ae1b27f7e294d4e04542e732a72",
+        ".superdesign/init/theme.md": "add3340fe810e78f9ae83c1a157e9077b12979afd66dd2f13fbb58587554dd01"
+      },
+      "drafts": {
+        "21b4ab8b-ad8b-498f-afa0-83d3de688136": {
+          "title": "today-v4 baseline (08:10, «فهرست» + «شیت», dark)",
+          "visualDirection": "baseline from docs/design/today-v4.html via .superdesign/replica_html_template/today.html",
+          "currentVersion": 1
+        },
+        "54e16046-4692-45d7-9e87-564d0b87ba36": {
+          "title": "A — Thumb-first checklist + day strip (selected)",
+          "visualDirection": "v4 refined: reminder row on top, B's four-part day strip instead of the ring, «۱ از ۱۴» chip by the date, in-page folded parts, FAB +, workout card without play",
+          "parentDraftId": "21b4ab8b-ad8b-498f-afa0-83d3de688136",
+          "currentVersion": 4
+        },
+        "3bc62722-29f4-4fa5-9926-cac5bce9cadd": {
+          "title": "B — Focus on the next thing",
+          "visualDirection": "4-segment day strip instead of ring, next task large with «انجام شد», rest as chips, + in header",
+          "parentDraftId": "21b4ab8b-ad8b-498f-afa0-83d3de688136",
+          "currentVersion": 3
+        },
+        "60e76e28-922f-4a59-90be-edb7aef2165b": {
+          "title": "C — Day as a timeline",
+          "visualDirection": "vertical timeline of four parts, current part expanded, small ring in header, FAB +",
+          "parentDraftId": "21b4ab8b-ad8b-498f-afa0-83d3de688136",
+          "currentVersion": 3
+        }
+      },
+      "updatedAt": "2026-10-15T15:29:50+00:00"
+    }
+  }
+}
