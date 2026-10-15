@@ -241,6 +241,12 @@ Proposed in the follow-up conversation; the user: "add all the top picks". All f
 | D134 | **Backup health is shown in three places from one rule:** the backup screen's status card, a line on the «پشتیبان» tile in Settings, and a quiet row at the bottom of Today (only when there is no reminder banner). It speaks up for no folder, a failed last try, or a last good backup more than 10 days old, in amber, never red. | SPEC §8; a lost folder permission must never fail silently. | Default |
 | D135 | **A restore without a usable folder still makes a safety copy,** into the app's private storage (the newest two kept). If any safety copy fails, nothing is replaced. The preview (B2) shows the date, app version, days logged, sessions, tasks and photos. | A new phone has no folder yet, and "never lose data" includes the data being replaced. | Default |
 
+## Dark theme follow-up (2026-10-15)
+
+| # | Decision | Why | Status |
+|---|---|---|---|
+| D136 | **Lighter dark theme ("slate").** The dark background goes from near-black `#0E1110` to `#1B201E`; surface `#252B29`, surface-2 `#2F3633`, border and gap `#3C4441`, text `#EEF1EF` / `#A1ABA7` / `#828C88`. The dark subtle fills (accent, amber, special) and grid levels 1–3 are lifted with it, mixed from the accent; the accents stay. The default special on-subtle becomes `#A3AAF2` to keep chip text ≥ 4.8:1. The launcher icon and «پیکر» keep their ink. | User feedback 2026-10-15: on the Poco the background was too dark and other elements didn't show. Picked from five options (`docs/design/dark-bg-options.html`). | Final |
+
 ## Superseded
 
 - Weekly focus sentence (Phase 2) → removed in D24.
@@ -270,3 +276,4 @@ Proposed in the follow-up conversation; the user: "add all the top picks". All f
 - The workout as a wide tile in its part of the day (D117) → the «تمرین امروز» card above the part switcher (D126).
 - «یک بار» as day pills for the next 4 weeks (D107) → a Jalali month calendar (D129).
 - One task editor with every field on one scroll (D107) → a simple sheet with «تنظیمات بیشتر» (D128).
+- The near-black dark background `#0E1110` (D21, D47) → "slate" `#1B201E` (D136).

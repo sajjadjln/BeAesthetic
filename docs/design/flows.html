@@ -14,9 +14,9 @@
 }
 :root[data-theme="light"] { --page-bg: #E9ECEA; --page-fg: #121614; --page-muted: #5C6662; --page-line: #CFD5D2; --page-acc: #1D8A55; color-scheme: light; }
 
-.m-dark { --bg:#0E1110; --sf:#151918; --sf2:#1C211F; --bd:#262C2A; --t1:#EDF0EE; --t2:#909A96; --t3:#6B7571; --on-acc:#0E1110;
-  --acc:#34C47A; --acc-sub:#0F2E1F; --acc-on:#5BD994; --w0:#262C2A; --w1:#114029; --w2:#176B43; --w3:#22A565; --w4:#5BD994;
-  --sp:#5560C9; --sp-sub:#1F2448; --sp-on:#8C95EA; --nt:#E8B04B; --nt-sub:#36280D; --frame:#2A302E; --scrim: rgba(0,0,0,.6); }
+.m-dark { --bg:#1B201E; --sf:#252B29; --sf2:#2F3633; --bd:#3C4441; --t1:#EEF1EF; --t2:#A1ABA7; --t3:#828C88; --on-acc:#0E1110;
+  --acc:#34C47A; --acc-sub:#29503C; --acc-on:#5BD994; --w0:#3C4441; --w1:#23513A; --w2:#28754E; --w3:#2FA066; --w4:#5BD994;
+  --sp:#5560C9; --sp-sub:#313953; --sp-on:#A3AAF2; --nt:#E8B04B; --nt-sub:#4C4630; --frame:#2A302E; --scrim: rgba(0,0,0,.6); }
 .m-light { --bg:#F6F7F6; --sf:#FFFFFF; --sf2:#EDF0EE; --bd:#DCE1DE; --t1:#0E1110; --t2:#5F6965; --t3:#8A948F; --on-acc:#FFFFFF;
   --acc:#1D8A55; --acc-sub:#E4F7EC; --acc-on:#176B43; --w0:#DCE1DE; --w1:#C4F0D6; --w2:#93E6B6; --w3:#22A565; --w4:#176B43;
   --sp:#8C95EA; --sp-sub:#D3D7F8; --sp-on:#3E479E; --nt:#B07610; --nt-sub:#FBEFD6; --frame:#C9D0CC; --scrim: rgba(14,17,16,.35); }
@@ -282,10 +282,10 @@ input[type="range"].seek::-moz-range-thumb { width: 22px; height: 22px; border-r
 .ministep span { min-width: 44px; text-align: center; font-weight: 700; font-variant-numeric: tabular-nums; }
 /* ---------- Accent colors (D47): green is the default (the .m-dark/.m-light tokens above) ---------- */
 /* The special-day color moves away from blue and violet; with orange, due/important turns yellow. */
-.m-dark.a-blue   { --acc:#4D9BF0; --acc-sub:#0F2440; --acc-on:#82BBFA; --w1:#112E52; --w2:#1A4D8A; --w3:#2F7AD6; --w4:#82BBFA; --sp:#9A66D4; --sp-sub:#2B1C42; --sp-on:#C6A2F0; }
-.m-dark.a-teal   { --acc:#2CC2B4; --acc-sub:#0C2E2B; --acc-on:#62DCCF; --w1:#0E3C38; --w2:#13675F; --w3:#1EA195; --w4:#62DCCF; }
-.m-dark.a-violet { --acc:#9B7BEA; --acc-sub:#241B3E; --acc-on:#C2AAFA; --w1:#2B2150; --w2:#46358A; --w3:#7458D0; --w4:#C2AAFA; --sp:#3A9FC2; --sp-sub:#0E2A33; --sp-on:#7CCBE4; }
-.m-dark.a-orange { --acc:#F28B3C; --acc-sub:#3A220F; --acc-on:#FFB27A; --w1:#3D2410; --w2:#6E3D16; --w3:#C2661F; --w4:#FFB27A; --nt:#E3D04E; --nt-sub:#302C0B; }
+.m-dark.a-blue   { --acc:#4D9BF0; --acc-sub:#2F4659; --acc-on:#82BBFA; --w1:#2A455D; --w2:#35608B; --w3:#4280C2; --w4:#82BBFA; --sp:#9A66D4; --sp-sub:#433A55; --sp-on:#C6A2F0; }
+.m-dark.a-teal   { --acc:#2CC2B4; --acc-sub:#274F4A; --acc-on:#62DCCF; --w1:#20514B; --w2:#24746C; --w3:#289E93; --w4:#62DCCF; }
+.m-dark.a-violet { --acc:#9B7BEA; --acc-sub:#413E57; --acc-on:#C2AAFA; --w1:#413B5B; --w2:#5E4F88; --w3:#7F67BD; --w4:#C2AAFA; --sp:#3A9FC2; --sp-sub:#2A4951; --sp-on:#7CCBE4; }
+.m-dark.a-orange { --acc:#F28B3C; --acc-sub:#56422E; --acc-on:#FFB27A; --w1:#5C4027; --w2:#8B582E; --w3:#C37335; --w4:#FFB27A; --nt:#E3D04E; --nt-sub:#4B4C30; }
 .m-light.a-blue   { --acc:#1F6BD0; --acc-sub:#E2EDFC; --acc-on:#1A56A8; --w1:#CDE0FA; --w2:#98C1F3; --w3:#3C86E0; --w4:#1A56A8; --sp:#B08BE6; --sp-sub:#EADCFA; --sp-on:#6A3DAE; }
 .m-light.a-teal   { --acc:#0E8379; --acc-sub:#DDF4F1; --acc-on:#0A665E; --w1:#C0ECE7; --w2:#8BDCD3; --w3:#1FA195; --w4:#0A665E; }
 .m-light.a-orange { --acc:#C2570F; --acc-sub:#FCEADB; --acc-on:#9A440C; --w1:#FBD9BE; --w2:#F6B485; --w3:#E07B2E; --w4:#9A440C; --nt:#776804; --nt-sub:#F6F0C6; }
@@ -324,12 +324,12 @@ input[type="range"].seek::-moz-range-thumb { width: 22px; height: 22px; border-r
 .brand { display:flex; align-items:center; gap:14px; }
 .brand small { font-size:15px; font-weight:600; color:var(--page-muted); letter-spacing:.04em; }
 .appicon { display:block; width:52px; height:52px; border-radius:30%; flex:none; }
-.splash { justify-content:center; align-items:center; background:#0E1110; }
+.splash { justify-content:center; align-items:center; background:#1B201E; }
 .splash .disc { width:160px; height:160px; border-radius:50%; overflow:hidden; }
 .splash .disc svg { width:100%; height:100%; display:block; }
 .splash .brandline { position:absolute; bottom:44px; inset-inline:0; display:grid; justify-items:center; gap:2px; }
 .splash .brandline b { font-size:22px; font-weight:800; color:#EDF0EE; }
-.splash .brandline span { font-size:12px; color:#6B7571; letter-spacing:.05em; direction:ltr; }
+.splash .brandline span { font-size:12px; color:#828C88; letter-spacing:.05em; direction:ltr; }
 .about { display:flex; align-items:center; gap:12px; margin-top:auto; padding:12px 4px 2px; border-top:1px solid var(--bd); }
 .about .appicon { width:40px; height:40px; }
 .about b { display:block; font-size:15px; }

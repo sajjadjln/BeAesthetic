@@ -33,15 +33,15 @@ The history of how we got here is in `docs/DECISIONS.md` (D21–D29, D46–D47).
 
 | Token | Dark | Light | Used for |
 |---|---|---|---|
-| bg | `#0E1110` | `#F6F7F6` | Screen background |
-| surface | `#151918` | `#FFFFFF` | Cards, tiles |
-| surface-2 | `#1C211F` | `#EDF0EE` | Inputs, secondary controls |
-| border | `#262C2A` | `#DCE1DE` | Dividers, outlines |
-| text-1 / text-2 / text-3 | `#EDF0EE` / `#909A96` / `#6B7571` | `#0E1110` / `#5F6965` / `#8A948F` | Text levels |
+| bg | `#1B201E` | `#F6F7F6` | Screen background |
+| surface | `#252B29` | `#FFFFFF` | Cards, tiles |
+| surface-2 | `#2F3633` | `#EDF0EE` | Inputs, secondary controls |
+| border | `#3C4441` | `#DCE1DE` | Dividers, outlines |
+| text-1 / text-2 / text-3 | `#EEF1EF` / `#A1ABA7` / `#828C88` | `#0E1110` / `#5F6965` / `#8A948F` | Text levels |
 | accent, accent-subtle, on-subtle, grid level 1…4 | see **Accent palettes** | | Primary buttons, done state, ring, done tiles, positive chips, dashboard squares, week dots |
-| grid level 0 | `#262C2A` | `#DCE1DE` | Gap (same in every accent) |
-| special / subtle / on-subtle | `#5560C9` / `#1F2448` / `#8C95EA` | `#8C95EA` / `#D3D7F8` / `#3E479E` | Special days, minimum day (blue and violet accents override it) |
-| amber / subtle | `#E8B04B` / `#36280D` | `#B07610` / `#FBEFD6` | Due and important (the orange accent overrides it) |
+| grid level 0 | `#3C4441` | `#DCE1DE` | Gap (same in every accent) |
+| special / subtle / on-subtle | `#5560C9` / `#313953` / `#A3AAF2` | `#8C95EA` / `#D3D7F8` / `#3E479E` | Special days, minimum day (blue and violet accents override it) |
+| amber / subtle | `#E8B04B` / `#4C4630` | `#B07610` / `#FBEFD6` | Due and important (the orange accent overrides it) |
 
 ### Accent palettes
 
@@ -49,13 +49,15 @@ Each cell: accent · accent-subtle · on-subtle · grid levels 1–4. Overrides 
 
 | Accent | Dark | Light |
 |---|---|---|
-| **سبز Green** (default) | `#34C47A` · `#0F2E1F` · `#5BD994` · `#114029` `#176B43` `#22A565` `#5BD994` | `#1D8A55` · `#E4F7EC` · `#176B43` · `#C4F0D6` `#93E6B6` `#22A565` `#176B43` |
-| **آبی Blue** | `#4D9BF0` · `#0F2440` · `#82BBFA` · `#112E52` `#1A4D8A` `#2F7AD6` `#82BBFA`; special `#9A66D4` / `#2B1C42` / `#C6A2F0` | `#1F6BD0` · `#E2EDFC` · `#1A56A8` · `#CDE0FA` `#98C1F3` `#3C86E0` `#1A56A8`; special `#B08BE6` / `#EADCFA` / `#6A3DAE` |
-| **فیروزه‌ای Turquoise** | `#2CC2B4` · `#0C2E2B` · `#62DCCF` · `#0E3C38` `#13675F` `#1EA195` `#62DCCF` | `#0E8379` · `#DDF4F1` · `#0A665E` · `#C0ECE7` `#8BDCD3` `#1FA195` `#0A665E` |
-| **بنفش Violet** | `#9B7BEA` · `#241B3E` · `#C2AAFA` · `#2B2150` `#46358A` `#7458D0` `#C2AAFA`; special `#3A9FC2` / `#0E2A33` / `#7CCBE4` | `#6644C8` · `#EDE7FC` · `#5233AA` · `#DCD1FA` `#B8A4F2` `#8466DE` `#5233AA`; special `#6CC0DC` / `#D4EEF6` / `#1D6A84` |
-| **نارنجی Orange** | `#F28B3C` · `#3A220F` · `#FFB27A` · `#3D2410` `#6E3D16` `#C2661F` `#FFB27A`; due/important `#E3D04E` / `#302C0B` | `#C2570F` · `#FCEADB` · `#9A440C` · `#FBD9BE` `#F6B485` `#E07B2E` `#9A440C`; due/important `#776804` / `#F6F0C6` |
+| **سبز Green** (default) | `#34C47A` · `#29503C` · `#5BD994` · `#23513A` `#28754E` `#2FA066` `#5BD994` | `#1D8A55` · `#E4F7EC` · `#176B43` · `#C4F0D6` `#93E6B6` `#22A565` `#176B43` |
+| **آبی Blue** | `#4D9BF0` · `#2F4659` · `#82BBFA` · `#2A455D` `#35608B` `#4280C2` `#82BBFA`; special `#9A66D4` / `#433A55` / `#C6A2F0` | `#1F6BD0` · `#E2EDFC` · `#1A56A8` · `#CDE0FA` `#98C1F3` `#3C86E0` `#1A56A8`; special `#B08BE6` / `#EADCFA` / `#6A3DAE` |
+| **فیروزه‌ای Turquoise** | `#2CC2B4` · `#274F4A` · `#62DCCF` · `#20514B` `#24746C` `#289E93` `#62DCCF` | `#0E8379` · `#DDF4F1` · `#0A665E` · `#C0ECE7` `#8BDCD3` `#1FA195` `#0A665E` |
+| **بنفش Violet** | `#9B7BEA` · `#413E57` · `#C2AAFA` · `#413B5B` `#5E4F88` `#7F67BD` `#C2AAFA`; special `#3A9FC2` / `#2A4951` / `#7CCBE4` | `#6644C8` · `#EDE7FC` · `#5233AA` · `#DCD1FA` `#B8A4F2` `#8466DE` `#5233AA`; special `#6CC0DC` / `#D4EEF6` / `#1D6A84` |
+| **نارنجی Orange** | `#F28B3C` · `#56422E` · `#FFB27A` · `#5C4027` `#8B582E` `#C37335` `#FFB27A`; due/important `#E3D04E` / `#4B4C30` | `#C2570F` · `#FCEADB` · `#9A440C` · `#FBD9BE` `#F6B485` `#E07B2E` `#9A440C`; due/important `#776804` / `#F6F0C6` |
 
 Contrast was checked: text on accent buttons ≥ 4.3:1 (bold 16 px), accent chip text ≥ 4.8:1, in every accent and mode.
+
+The dark background is "slate" (D136), lifted from near-black so cards, borders and empty squares read. In dark mode the subtle fills and grid levels 1–3 are mixed from the accent: subtle = 24 % accent over surface (special 26 %, amber 20 %), grid 1–3 = 30 / 52 / 78 % accent over bg. Options compared: `docs/design/dark-bg-options.html`.
 
 - **Spacing:** 4 · 8 · 12 · 16 · 24 · 32.
 - **Radius:** 6 (grid cells) · 12 (controls) · 16 (cards) · 20 (tiles) · 28 (sheets) · full.
