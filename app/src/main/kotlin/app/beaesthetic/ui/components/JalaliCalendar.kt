@@ -46,10 +46,18 @@ import java.time.LocalDate
  * Gregorian only, hence our own grid. Months run from today's to [monthsAhead] after it.
  */
 @Composable
-fun JalaliCalendar(selected: LocalDate?, today: LocalDate, onPick: (LocalDate) -> Unit, modifier: Modifier = Modifier, monthsAhead: Int = 12) {
+fun JalaliCalendar(
+    selected: LocalDate?,
+    today: LocalDate,
+    onPick: (LocalDate) -> Unit,
+    modifier: Modifier = Modifier,
+    monthsAhead: Int = 12,
+    /** The days that can be picked; by default today on (one-off tasks). A past reading passes Day 0..today. */
+    pickable: ClosedRange<LocalDate> = today..LocalDate.MAX,
+) {
     val c = Ba.colors
-    val first = JalaliMonth.of(minOf(today, selected ?: today))
-    val last = JalaliMonth.of(today).plus(monthsAhead)
+    val first = JalaliMonth.of(minOf(today, selected ?: today, pickable.start))
+    val last = if (pickable.endInclusive < today.plusYears(1)) JalaliMonth.of(pickable.endInclusive) else JalaliMonth.of(today).plus(monthsAhead)
     var month by remember { mutableStateOf(JalaliMonth.of(selected ?: today)) }
     val months = stringArrayResource(R.array.jalali_months)
     val weekdayLetters = stringArrayResource(R.array.weekdays_short)
@@ -78,7 +86,7 @@ fun JalaliCalendar(selected: LocalDate?, today: LocalDate, onPick: (LocalDate) -
         cells.chunked(7).forEach { week ->
             Row(Modifier.fillMaxWidth()) {
                 week.forEach { date ->
-                    Box(Modifier.weight(1f).height(44.dp), contentAlignment = Alignment.Center) { if (date != null) DayCell(date, selected, today, onPick) }
+                    Box(Modifier.weight(1f).height(44.dp), contentAlignment = Alignment.Center) { if (date != null) DayCell(date, selected, today, date in pickable, onPick) }
                 }
                 repeat(7 - week.size) { Box(Modifier.weight(1f)) }
             }
@@ -102,10 +110,10 @@ fun JalaliCalendar(selected: LocalDate?, today: LocalDate, onPick: (LocalDate) -
 }
 
 @Composable
-private fun DayCell(date: LocalDate, selected: LocalDate?, today: LocalDate, onPick: (LocalDate) -> Unit) {
+private fun DayCell(date: LocalDate, selected: LocalDate?, today: LocalDate, enabled: Boolean, onPick: (LocalDate) -> Unit) {
     val c = Ba.colors
     val isSelected = date == selected
-    val past = date < today
+    val past = !enabled
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier

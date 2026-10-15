@@ -11,6 +11,11 @@ import app.beaesthetic.data.db.LetterEntity
 import app.beaesthetic.data.db.RoundNumberEntity
 import app.beaesthetic.data.db.SettingsEntity
 import app.beaesthetic.data.repo.DayView
+import app.beaesthetic.data.repo.ProgressData
+import app.beaesthetic.domain.progress.CheckIns
+import app.beaesthetic.domain.progress.MetricKind
+import app.beaesthetic.domain.progress.Progress
+import app.beaesthetic.ui.progress.MetricCard
 import app.beaesthetic.domain.buddy.BuddyPicker
 import app.beaesthetic.domain.buddy.Moment
 import app.beaesthetic.domain.buddy.Outfit
@@ -100,6 +105,12 @@ sealed interface TodayCard {
     data class DaysShownUp(val days: Int, val outfit: Outfit) : TodayCard
 }
 
+/** Slice 7a: today's check-in (flows C1), or the Friday weigh-in row when weight is tracked. */
+sealed interface ProgressPrompt {
+    data class CheckIn(val idx: Int, val monthIndex: Int) : ProgressPrompt
+    data class WeighIn(val weight: MetricCard) : ProgressPrompt
+}
+
 data class BuddyUi(val pose: Pose, val outfit: Outfit, val moment: Moment, val lineIndex: Int, val count: Int, val total: Int, val part: Part)
 
 enum class HealthBanner { LATE, BLOCKED }
@@ -131,6 +142,7 @@ data class TodayUiState(
     val anytimeOpen: Boolean = false,
     /** The backup row under the tiles (SPEC §8); shown only when no reminder banner is. */
     val backup: BackupStatus? = null,
+    val progress: ProgressPrompt? = null,
 ) {
     val dayComplete: Boolean get() = total > 0 && done == total
 }
@@ -158,7 +170,10 @@ private data class Inputs(
     /** Every stored day since Day 0, for days shown up (D121). */
     val allDays: Map<LocalDate, DaySnapshot>,
     val unseenDays: List<RoundNumberEntity>,
+    val progress: ProgressData,
 )
+
+private data class Extra(val plans: List<WorkoutPlan>, val allDays: Map<LocalDate, DaySnapshot>, val unseen: List<RoundNumberEntity>, val progress: ProgressData)
 
 private fun SettingsEntity.calendar() = ProgramCalendar(programStartDate, programEndDate, rolloverHour)
 
@@ -212,8 +227,9 @@ class TodayViewModel(
                 container.workouts.observePlans(),
                 container.tasks.observeSnapshots(n.calendar.day0, n.date),
                 container.db.roundNumbers().observeUnseenDays(),
-            ) { planned, all, unseen -> Triple(planned, all, unseen) },
-        ) { day, snapshots, s, letters, (planned, all, unseen) -> Inputs(n, day, snapshots, s, letters, planned, all, unseen) }
+                container.progress.observe(),
+            ) { planned, all, unseen, progress -> Extra(planned, all, unseen, progress) },
+        ) { day, snapshots, s, letters, x -> Inputs(n, day, snapshots, s, letters, x.plans, x.allDays, x.unseen, x.progress) }
     }
 
     private val health = container.db.reminderLog()
@@ -427,7 +443,25 @@ class TodayViewModel(
             workout = workout,
             anytime = day.anytime.map { AnytimeUi(it.task.id, it.task.title, it.done, it.task.isImportant) },
             anytimeOpen = s.anytimeOpen,
+            progress = progressPrompt(date, calendar, input.progress),
         )
+    }
+
+    /** The check-in on its days (not Day 0, D101), else the weekly weigh-in on Friday. */
+    private fun progressPrompt(date: LocalDate, calendar: ProgramCalendar, data: ProgressData): ProgressPrompt? {
+        if (data.metrics.isEmpty()) return null
+        val open = CheckIns.open(date, CheckIns.schedule(calendar), data.checkIns.keys)
+        if (open != null) return ProgressPrompt.CheckIn(open.idx, Jalali.fromGregorian(open.date).month)
+        val weight = data.metrics.firstOrNull { it.kind == MetricKind.BODY } ?: return null
+        val readings = data.readings[weight.id].orEmpty()
+        if (!Progress.weighInDue(date, true, readings.map { it.date }, checkInOpen = false)) return null
+        return ProgressPrompt.WeighIn(MetricCard(weight, readings, Progress.sinceDay0(weight, readings), Progress.best(weight, readings)))
+    }
+
+    /** The Friday weigh-in from Today. */
+    fun recordWeight(metricId: Long, value: Double) {
+        val current = state.value ?: return
+        viewModelScope.launch { container.progress.record(metricId, current.date, value) }
     }
 
     /** Today's plan with its linked task, or the next plan on a rest day; null with no plan at all (D126). */

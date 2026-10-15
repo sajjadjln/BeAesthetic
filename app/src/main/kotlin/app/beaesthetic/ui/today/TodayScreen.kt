@@ -101,6 +101,7 @@ import app.beaesthetic.ui.theme.BaMotion
 import app.beaesthetic.ui.theme.PeykarTheme
 import app.beaesthetic.ui.theme.ThemeMode
 import app.beaesthetic.ui.theme.rememberHaptics
+import app.beaesthetic.ui.progress.WeighSheet
 import java.time.LocalDate
 import kotlin.math.hypot
 import kotlin.math.max
@@ -121,6 +122,8 @@ data class TodayActions(
     val setAnytimeOpen: (Boolean) -> Unit = {},
     val addAnytime: () -> Unit = {},
     val openBackup: () -> Unit = {},
+    val openCheckIn: (Int) -> Unit = {},
+    val weigh: () -> Unit = {},
 )
 
 @Composable
@@ -132,10 +135,12 @@ fun TodayRoute(
     onOpenWorkout: () -> Unit,
     onOpenPlan: () -> Unit,
     onOpenBackup: () -> Unit,
+    onOpenCheckIn: (Int) -> Unit,
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     // «یه چیز اضافه کن» opens the simple sheet on «هر وقت» in the part being looked at (D128).
     var adding by remember { mutableStateOf<Part?>(null) }
+    var weighing by remember { mutableStateOf(false) }
     LaunchedEffect(Unit) { viewModel.screenShown() }
     LifecycleEventEffect(Lifecycle.Event.ON_RESUME) { viewModel.refreshSystemState() }
     TodayScreen(
@@ -156,8 +161,14 @@ fun TodayRoute(
             setAnytimeOpen = viewModel::setAnytimeOpen,
             addAnytime = { adding = state?.selectedPart ?: Part.MORNING },
             openBackup = onOpenBackup,
+            openCheckIn = onOpenCheckIn,
+            weigh = { weighing = true },
         ),
     )
+    val weigh = (state?.progress as? ProgressPrompt.WeighIn)?.weight
+    if (weighing && weigh != null) {
+        WeighSheet(weigh, onSave = { v -> viewModel.recordWeight(weigh.metric.id, v); weighing = false }, onDismiss = { weighing = false })
+    }
     val s = state
     val part = adding
     if (s != null && part != null) {
@@ -219,6 +230,7 @@ fun TodayScreen(state: TodayUiState?, actions: TodayActions) {
             }
             state.cards.forEach { card -> item(span = { GridItemSpan(maxLineSpan) }) { CardFor(card, actions) } }
             state.buddy?.let { buddy -> item(span = { GridItemSpan(maxLineSpan) }) { BuddyRow(buddy, actions.tapBuddy) } }
+            state.progress?.let { prompt -> item(span = { GridItemSpan(maxLineSpan) }) { ProgressPromptRow(prompt, actions) } }
             // «تمرین امروز» sits above the part switcher, so it shows in every part (D126).
             if (!state.minimumMode) {
                 when (val w = state.workout) {
@@ -525,6 +537,38 @@ private fun HealthBannerRow(banner: HealthBanner, onFix: () -> Unit, modifier: M
 }
 
 /** A quiet row when the backup needs a look (SPEC §8): no folder yet, too old, or the last try failed. */
+/** C1: the check-in card on its days, on the special-day indigo surface; or the quiet Friday weigh-in row. */
+@Composable
+private fun ProgressPromptRow(prompt: ProgressPrompt, actions: TodayActions) {
+    val c = Ba.colors
+    val months = stringArrayResource(R.array.jalali_months)
+    when (prompt) {
+        is ProgressPrompt.CheckIn -> Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(10.dp),
+            modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp).clip(RoundedCornerShape(16.dp)).background(c.specialSubtle)
+                .clickable { actions.openCheckIn(prompt.idx) }.padding(start = 6.dp, end = 14.dp, top = 6.dp, bottom = 6.dp),
+        ) {
+            Piker(Pose.SELFIE, c.accent, Outfit.NONE, Modifier.width(64.dp))
+            Column(Modifier.weight(1f)) {
+                Text(stringResource(R.string.today_checkin_title, months[prompt.monthIndex - 1]), style = Ba.type.subtitle, color = c.onSpecialSubtle)
+                Text(stringResource(R.string.today_checkin_text), style = Ba.type.caption, color = c.text2)
+            }
+            Text(stringResource(R.string.today_checkin_start), style = Ba.type.label, color = c.onSpecialSubtle)
+        }
+        is ProgressPrompt.WeighIn -> Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(10.dp),
+            modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp).clip(RoundedCornerShape(14.dp)).background(c.surface)
+                .clickable(onClick = actions.weigh).padding(horizontal = 14.dp, vertical = 12.dp),
+        ) {
+            Icon(BaIcons.Scale, null, tint = c.text2, modifier = Modifier.size(20.dp))
+            Text(stringResource(R.string.today_weigh_text), style = Ba.type.body, color = c.text1, modifier = Modifier.weight(1f))
+            Text(stringResource(R.string.today_weigh_button), style = Ba.type.label, color = c.accent)
+        }
+    }
+}
+
 @Composable
 private fun BackupRow(status: BackupStatus, onOpen: () -> Unit, modifier: Modifier = Modifier) {
     val c = Ba.colors

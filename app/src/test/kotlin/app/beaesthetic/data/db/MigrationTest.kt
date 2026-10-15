@@ -144,6 +144,38 @@ class MigrationTest {
         }
     }
 
+    @Test
+    fun `6 to 7 keeps the workout log and settings and adds the empty progress tables`() {
+        helper.createDatabase(DB, 6).use { db ->
+            db.execSQL(
+                "INSERT INTO settings (id, programStartDate, programEndDate, installDate, rolloverHour, specialCapPerWeek, followUpMinutes, ritualTime, " +
+                    "alarmMode, accentColor, themeMode, showBuddy, onboardingDone, afterFinishMode, experimentFlags, firstLetterOfferDone, autostartConfirmed, recentsLockConfirmed, anytimeOpen, autoBackup) " +
+                    "VALUES (1, '2026-10-09', '2027-03-20', '2026-10-10', 4, 2, 45, 1140, 'ALARM_CLOCK', 'GREEN', 'SYSTEM', 1, 0, 'NONE', 0, 1, 1, 1, 0, 1)",
+            )
+            db.execSQL("INSERT INTO exercise (id, name, kind) VALUES (1, 'Pull-up', 'REPS')")
+            db.execSQL("INSERT INTO workout (id, weekday, name) VALUES (1, 0, 'Upper A')")
+            db.execSQL("INSERT INTO session (id, workoutId, date, startedAt) VALUES (1, 1, '2026-10-10', 1791660000000)")
+            db.execSQL("INSERT INTO set_log (sessionId, exerciseId, setIndex, value, effort, loggedAt) VALUES (1, 1, 0, 8, 8, 1791660000000)")
+        }
+
+        helper.runMigrationsAndValidate(DB, 7, true).use { db ->
+            db.query("SELECT value FROM set_log").use { c -> c.moveToFirst(); assertEquals(8, c.getInt(0)) }
+            db.query("SELECT autoBackup FROM settings").use { c -> c.moveToFirst(); assertEquals(1, c.getInt(0)) }
+            for (table in listOf("metric", "metric_entry", "check_in", "photo")) {
+                db.query("SELECT COUNT(*) FROM $table").use { c -> c.moveToFirst(); assertEquals(0, c.getInt(0)) }
+            }
+            // One reading a day per metric: the same day again replaces it.
+            db.execSQL("INSERT INTO metric (id, kind, name, unit, higherIsBetter, sortOrder) VALUES (1, 'BODY', 'وزن', 'KG', 0, 0)")
+            db.execSQL("INSERT INTO metric_entry (metricId, date, value) VALUES (1, '2026-10-09', 77.1)")
+            db.execSQL("INSERT OR REPLACE INTO metric_entry (metricId, date, value) VALUES (1, '2026-10-09', 76.9)")
+            db.query("SELECT COUNT(*), MAX(value) FROM metric_entry").use { c ->
+                c.moveToFirst()
+                assertEquals(1, c.getInt(0))
+                assertEquals(76.9, c.getDouble(1), 0.0001)
+            }
+        }
+    }
+
     private companion object {
         const val DB = "migration-test.db"
     }

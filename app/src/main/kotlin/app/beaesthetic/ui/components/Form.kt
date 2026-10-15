@@ -19,6 +19,7 @@ import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -61,7 +62,13 @@ fun ErrorLine(text: Int, scrollTo: Int = 0) {
 }
 
 @Composable
-fun InputBox(value: String, hint: String, onChange: (String) -> Unit) {
+fun InputBox(
+    value: String,
+    hint: String,
+    keyboard: KeyboardOptions = KeyboardOptions.Default,
+    onDone: (() -> Unit)? = null,
+    onChange: (String) -> Unit,
+) {
     val c = Ba.colors
     BasicTextField(
         value = value,
@@ -69,7 +76,8 @@ fun InputBox(value: String, hint: String, onChange: (String) -> Unit) {
         singleLine = true,
         textStyle = Ba.type.body.copy(color = c.text1),
         cursorBrush = SolidColor(c.accent),
-        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+        keyboardOptions = keyboard.copy(imeAction = ImeAction.Done),
+        keyboardActions = KeyboardActions(onDone = onDone?.let { { it() } }),
         modifier = Modifier.fillMaxWidth(),
         decorationBox = { inner ->
             Box(Modifier.fillMaxWidth().clip(RoundedCornerShape(12.dp)).background(c.surface2).padding(horizontal = 14.dp, vertical = 12.dp)) {

@@ -14,7 +14,7 @@ A backup is one zip file. It is meant to be read by the app on any phone, and la
 |---|---|
 | `manifest.json` | What the backup holds. Read first, before anything changes. |
 | `data.json` | Every table, row by row. **The source of truth for restore.** |
-| `photos/…` | The app's photos, same paths as in the app's `files/photos/` folder. Empty until slice 7. |
+| `photos/…` | The app's photos, same paths as in the app's `files/photos/` folder: `<checkIn>-<pose>.jpg` (slice 7a, schema 7). |
 | `db/beaesthetic.db` | A raw copy of the SQLite database, checkpointed first. An emergency fallback only; restore never reads it. |
 
 ## manifest.json

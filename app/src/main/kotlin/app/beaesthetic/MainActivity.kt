@@ -46,6 +46,11 @@ import app.beaesthetic.ui.components.BottomBar
 import app.beaesthetic.ui.components.Tab
 import app.beaesthetic.ui.dashboard.DashboardRoute
 import app.beaesthetic.ui.dashboard.DashboardViewModel
+import app.beaesthetic.ui.progress.CheckInRoute as CheckInScreenRoute
+import app.beaesthetic.ui.progress.CheckInViewModel
+import app.beaesthetic.ui.progress.MetricsRoute as MetricsScreenRoute
+import app.beaesthetic.ui.progress.ProgressRoute
+import app.beaesthetic.ui.progress.ProgressViewModel
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
@@ -83,6 +88,9 @@ import kotlinx.serialization.Serializable
 @Serializable object BackupRoute
 @Serializable object DashboardTab
 @Serializable object WorkoutRoute
+@Serializable object ProgressTab
+@Serializable object MetricsRoute
+@Serializable data class CheckInRoute(val idx: Int)
 
 class MainActivity : ComponentActivity() {
 
@@ -153,11 +161,29 @@ class MainActivity : ComponentActivity() {
                                 onOpenWorkout = { nav.navigate(WorkoutRoute) },
                                 onOpenPlan = { nav.navigate(PlanRoute) },
                                 onOpenBackup = { nav.navigate(BackupRoute) },
+                                onOpenCheckIn = { idx -> nav.navigate(CheckInRoute(idx)) },
                             )
                         }
                     }
                     composable<DashboardTab> {
                         WithTabs(Tab.DASHBOARD, nav) { DashboardRoute(viewModel { DashboardViewModel(container) }) }
+                    }
+                    composable<ProgressTab> {
+                        WithTabs(Tab.PROGRESS, nav) {
+                            ProgressRoute(
+                                viewModel { ProgressViewModel(container) },
+                                container.photos,
+                                onCheckIn = { idx -> nav.navigate(CheckInRoute(idx)) },
+                                onManage = { nav.navigate(MetricsRoute) },
+                            )
+                        }
+                    }
+                    composable<MetricsRoute> { MetricsScreenRoute(viewModel { ProgressViewModel(container) }, onBack = nav::popBackStack) }
+                    composable<CheckInRoute> { entry ->
+                        val idx = entry.toRoute<CheckInRoute>().idx
+                        // One check-in per visit: a new view model each time the screen opens.
+                        val checkIn: CheckInViewModel = viewModel(factory = viewModelFactory { initializer { CheckInViewModel(container, idx) } })
+                        CheckInScreenRoute(checkIn, container.photos, onClose = nav::popBackStack)
                     }
                     composable<SettingsRoute> {
                         SettingsScreen(container, DebugMenu.AVAILABLE, onBack = nav::popBackStack) { dest ->
@@ -212,6 +238,7 @@ class MainActivity : ComponentActivity() {
                 when (tab) {
                     Tab.TODAY -> nav.popBackStack(HomeRoute, inclusive = false)
                     Tab.DASHBOARD -> nav.navigate(DashboardTab) { popUpTo<HomeRoute>(); launchSingleTop = true }
+                    Tab.PROGRESS -> nav.navigate(ProgressTab) { popUpTo<HomeRoute>(); launchSingleTop = true }
                 }
             })
         }

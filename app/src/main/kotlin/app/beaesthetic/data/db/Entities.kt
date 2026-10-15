@@ -268,3 +268,52 @@ data class BackupRecordEntity(
     val ok: Boolean,
     val error: String? = null,
 )
+
+// v7 (slice 7a): progress (ARCHITECTURE §8, D100, D106, D73).
+
+/**
+ * Weight, a tape site or a strength test. Added by the user; the suggested ones carry a `Suggestions` key
+ * (D100). Removing one archives it, so a backup still restores its readings.
+ */
+@Entity(tableName = "metric")
+data class MetricEntity(
+    @PrimaryKey(autoGenerate = true) val id: Long = 0,
+    /** BODY, TAPE or STRENGTH. */
+    val kind: String,
+    val key: String? = null,
+    val name: String,
+    /** KG, CM, REPS or SECONDS. */
+    val unit: String,
+    val higherIsBetter: Boolean,
+    val sortOrder: Int = 0,
+    val archivedAt: Instant? = null,
+)
+
+/** One reading a day per metric: entering the same day again replaces it. `guess` = the test guess (D73). */
+@Entity(tableName = "metric_entry", indices = [Index(value = ["metricId", "date"], unique = true)])
+data class MetricEntryEntity(
+    @PrimaryKey(autoGenerate = true) val id: Long = 0,
+    val metricId: Long,
+    val date: LocalDate,
+    val value: Double,
+    val guess: Double? = null,
+    val note: String? = null,
+)
+
+/** A finished monthly check-in (D28): idx 0 = Day 0 … 6 = the finish line. [date] = the day it was done for. */
+@Entity(tableName = "check_in")
+data class CheckInEntity(
+    @PrimaryKey val idx: Int,
+    val date: LocalDate,
+    val doneAt: Instant? = null,
+)
+
+/** A check-in photo (ARCHITECTURE §10): `files/photos/<idx>-<pose>.jpg`. Taking it again replaces it. */
+@Entity(tableName = "photo", primaryKeys = ["checkInIdx", "pose"])
+data class PhotoEntity(
+    val checkInIdx: Int,
+    /** FRONT, SIDE or BACK. */
+    val pose: String,
+    val fileName: String,
+    val takenAt: Instant,
+)

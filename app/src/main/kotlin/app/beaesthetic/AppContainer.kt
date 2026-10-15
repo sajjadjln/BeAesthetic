@@ -3,6 +3,8 @@ package app.beaesthetic
 import android.content.Context
 import app.beaesthetic.backup.BackupService
 import app.beaesthetic.data.db.AppDatabase
+import app.beaesthetic.data.repo.PhotoStore
+import app.beaesthetic.data.repo.ProgressRepository
 import app.beaesthetic.data.repo.Seed
 import app.beaesthetic.data.repo.TaskRepository
 import app.beaesthetic.data.repo.WorkoutRepository
@@ -32,6 +34,8 @@ class AppContainer(context: Context) {
     val notifier = Notifier(appContext)
     val scheduler = AlarmScheduler(appContext, db, tasks, clock)
     val backup = BackupService(appContext, db, clock)
+    val photos = PhotoStore(appContext)
+    val progress = ProgressRepository(db, photos)
 
     private val readyLock = Mutex()
     @Volatile private var ready = false

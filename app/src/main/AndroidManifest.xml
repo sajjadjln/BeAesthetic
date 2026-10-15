@@ -36,6 +36,17 @@
             </intent-filter>
         </activity>
 
+        <!-- The system camera writes check-in photos into the app's cache through this (slice 7a). -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.files"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
         <receiver
             android:name=".reminders.ReminderReceiver"
             android:exported="false" />

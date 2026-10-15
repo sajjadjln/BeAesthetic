@@ -348,6 +348,58 @@ interface RoundNumberDao {
     suspend fun markDaysSeen(at: Instant)
 }
 
+@Dao
+interface ProgressDao {
+    @Query("SELECT * FROM metric WHERE archivedAt IS NULL ORDER BY sortOrder, id")
+    fun observeMetrics(): Flow<List<MetricEntity>>
+
+    @Query("SELECT * FROM metric WHERE archivedAt IS NULL ORDER BY sortOrder, id")
+    suspend fun metrics(): List<MetricEntity>
+
+    @Query("SELECT * FROM metric WHERE id = :id")
+    suspend fun metric(id: Long): MetricEntity?
+
+    @Query("SELECT COALESCE(MAX(sortOrder), -1) FROM metric")
+    suspend fun maxSortOrder(): Int
+
+    @Insert
+    suspend fun insertMetric(metric: MetricEntity): Long
+
+    @androidx.room.Update
+    suspend fun updateMetric(metric: MetricEntity)
+
+    @Query("UPDATE metric SET archivedAt = :at WHERE id = :id")
+    suspend fun archiveMetric(id: Long, at: Instant)
+
+    /** Readings of active metrics only (small: ~15 metrics × 30 readings). */
+    @Query("SELECT metric_entry.* FROM metric_entry JOIN metric ON metric.id = metric_entry.metricId WHERE metric.archivedAt IS NULL ORDER BY metric_entry.date")
+    fun observeEntries(): Flow<List<MetricEntryEntity>>
+
+    @Query("SELECT * FROM metric_entry WHERE metricId = :metricId AND date = :date")
+    suspend fun entry(metricId: Long, date: LocalDate): MetricEntryEntity?
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun upsertEntry(entry: MetricEntryEntity)
+
+    @Query("DELETE FROM metric_entry WHERE metricId = :metricId AND date = :date")
+    suspend fun deleteEntry(metricId: Long, date: LocalDate)
+
+    @Query("SELECT * FROM check_in")
+    fun observeCheckIns(): Flow<List<CheckInEntity>>
+
+    @Upsert
+    suspend fun upsertCheckIn(checkIn: CheckInEntity)
+
+    @Query("SELECT * FROM photo ORDER BY checkInIdx")
+    fun observePhotos(): Flow<List<PhotoEntity>>
+
+    @Upsert
+    suspend fun upsertPhoto(photo: PhotoEntity)
+
+    @Query("DELETE FROM photo WHERE checkInIdx = :idx AND pose = :pose")
+    suspend fun deletePhoto(idx: Int, pose: String)
+}
+
 @Database(
     entities = [
         TaskEntity::class,
@@ -365,10 +417,14 @@ interface RoundNumberDao {
         SetLogEntity::class,
         RoundNumberEntity::class,
         BackupRecordEntity::class,
+        MetricEntity::class,
+        MetricEntryEntity::class,
+        CheckInEntity::class,
+        PhotoEntity::class,
     ],
-    version = 6,
+    version = 7,
     exportSchema = true,
-    autoMigrations = [AutoMigration(from = 1, to = 2), AutoMigration(from = 2, to = 3), AutoMigration(from = 3, to = 4), AutoMigration(from = 4, to = 5), AutoMigration(from = 5, to = 6)],
+    autoMigrations = [AutoMigration(from = 1, to = 2), AutoMigration(from = 2, to = 3), AutoMigration(from = 3, to = 4), AutoMigration(from = 4, to = 5), AutoMigration(from = 5, to = 6), AutoMigration(from = 6, to = 7)],
 )
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
@@ -383,6 +439,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun workouts(): WorkoutDao
     abstract fun roundNumbers(): RoundNumberDao
     abstract fun backups(): BackupRecordDao
+    abstract fun progress(): ProgressDao
 
     companion object {
         const val NAME = "beaesthetic.db"

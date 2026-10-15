@@ -206,6 +206,10 @@ class BackupRoundTripTest {
         sql.execSQL("INSERT INTO round_number (key, reachedOn, seenAt) VALUES ('workouts:10', '2026-10-12', NULL)")
         sql.execSQL("INSERT INTO event (at, type, ref, valueMinutes) VALUES (1791660000000, 'APP_OPEN', NULL, NULL), (1791660100000, 'BUDDY_LINE', 'TICK:3', 4)")
         sql.execSQL("INSERT INTO reminder_log (key, kind, scheduledAt, firedAt, outcome) VALUES ('block:2026-10-10:MORNING', 'BLOCK', 1791640000000, 1791640003000, 'SHOWN')")
+        sql.execSQL("INSERT INTO metric (id, kind, key, name, unit, higherIsBetter, sortOrder, archivedAt) VALUES (1, 'BODY', 'weight', 'وزن', 'KG', 0, 0, NULL), (2, 'STRENGTH', NULL, 'اسکات یک‌پا', 'REPS', 1, 1, 1791900000000)")
+        sql.execSQL("INSERT INTO metric_entry (metricId, date, value, guess, note) VALUES (1, '2026-10-09', 77.1, NULL, NULL), (2, '2026-10-09', 6, 5, 'چپ ضعیف‌تر')")
+        sql.execSQL("INSERT INTO check_in (idx, date, doneAt) VALUES (0, '2026-10-09', 1791900000000)")
+        sql.execSQL("INSERT INTO photo (checkInIdx, pose, fileName, takenAt) VALUES (0, 'FRONT', '0-front.jpg', 1791900000000)")
         val empty = BackupArchive.tables(sql).filter { t -> sql.query("SELECT COUNT(*) FROM `$t`").use { it.moveToFirst(); it.getInt(0) == 0 } }
         assertEquals("every table has rows", emptyList<String>(), empty)
     }
