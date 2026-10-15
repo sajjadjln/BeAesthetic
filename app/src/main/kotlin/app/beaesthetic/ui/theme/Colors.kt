@@ -46,19 +46,19 @@ private data class AccentPalette(
 )
 
 private val darkPalettes = mapOf(
-    Accent.GREEN to AccentPalette(0xFF34C47A, 0xFF0F2E1F, 0xFF5BD994, listOf(0xFF114029, 0xFF176B43, 0xFF22A565, 0xFF5BD994)),
+    Accent.GREEN to AccentPalette(0xFF34C47A, 0xFF29503C, 0xFF5BD994, listOf(0xFF23513A, 0xFF28754E, 0xFF2FA066, 0xFF5BD994)),
     Accent.BLUE to AccentPalette(
-        0xFF4D9BF0, 0xFF0F2440, 0xFF82BBFA, listOf(0xFF112E52, 0xFF1A4D8A, 0xFF2F7AD6, 0xFF82BBFA),
-        special = Triple(0xFF9A66D4, 0xFF2B1C42, 0xFFC6A2F0),
+        0xFF4D9BF0, 0xFF2F4659, 0xFF82BBFA, listOf(0xFF2A455D, 0xFF35608B, 0xFF4280C2, 0xFF82BBFA),
+        special = Triple(0xFF9A66D4, 0xFF433A55, 0xFFC6A2F0),
     ),
-    Accent.TURQUOISE to AccentPalette(0xFF2CC2B4, 0xFF0C2E2B, 0xFF62DCCF, listOf(0xFF0E3C38, 0xFF13675F, 0xFF1EA195, 0xFF62DCCF)),
+    Accent.TURQUOISE to AccentPalette(0xFF2CC2B4, 0xFF274F4A, 0xFF62DCCF, listOf(0xFF20514B, 0xFF24746C, 0xFF289E93, 0xFF62DCCF)),
     Accent.VIOLET to AccentPalette(
-        0xFF9B7BEA, 0xFF241B3E, 0xFFC2AAFA, listOf(0xFF2B2150, 0xFF46358A, 0xFF7458D0, 0xFFC2AAFA),
-        special = Triple(0xFF3A9FC2, 0xFF0E2A33, 0xFF7CCBE4),
+        0xFF9B7BEA, 0xFF413E57, 0xFFC2AAFA, listOf(0xFF413B5B, 0xFF5E4F88, 0xFF7F67BD, 0xFFC2AAFA),
+        special = Triple(0xFF3A9FC2, 0xFF2A4951, 0xFF7CCBE4),
     ),
     Accent.ORANGE to AccentPalette(
-        0xFFF28B3C, 0xFF3A220F, 0xFFFFB27A, listOf(0xFF3D2410, 0xFF6E3D16, 0xFFC2661F, 0xFFFFB27A),
-        amber = 0xFFE3D04E to 0xFF302C0B,
+        0xFFF28B3C, 0xFF56422E, 0xFFFFB27A, listOf(0xFF5C4027, 0xFF8B582E, 0xFFC37335, 0xFFFFB27A),
+        amber = 0xFFE3D04E to 0xFF4B4C30,
     ),
 )
 
@@ -81,18 +81,18 @@ private val lightPalettes = mapOf(
 
 fun baColors(accent: Accent, dark: Boolean): BaColors {
     val p = (if (dark) darkPalettes else lightPalettes).getValue(accent)
-    val special = p.special ?: if (dark) Triple(0xFF5560C9, 0xFF1F2448, 0xFF8C95EA) else Triple(0xFF8C95EA, 0xFFD3D7F8, 0xFF3E479E)
-    val amber = p.amber ?: if (dark) 0xFFE8B04B to 0xFF36280D else 0xFFB07610 to 0xFFFBEFD6
-    val gap = if (dark) 0xFF262C2A else 0xFFDCE1DE
+    val special = p.special ?: if (dark) Triple(0xFF5560C9, 0xFF313953, 0xFFA3AAF2) else Triple(0xFF8C95EA, 0xFFD3D7F8, 0xFF3E479E)
+    val amber = p.amber ?: if (dark) 0xFFE8B04B to 0xFF4C4630 else 0xFFB07610 to 0xFFFBEFD6
+    val gap = if (dark) 0xFF3C4441 else 0xFFDCE1DE
     return BaColors(
         isDark = dark,
-        bg = Color(if (dark) 0xFF0E1110 else 0xFFF6F7F6),
-        surface = Color(if (dark) 0xFF151918 else 0xFFFFFFFF),
-        surface2 = Color(if (dark) 0xFF1C211F else 0xFFEDF0EE),
+        bg = Color(if (dark) 0xFF1B201E else 0xFFF6F7F6),
+        surface = Color(if (dark) 0xFF252B29 else 0xFFFFFFFF),
+        surface2 = Color(if (dark) 0xFF2F3633 else 0xFFEDF0EE),
         border = Color(gap),
-        text1 = Color(if (dark) 0xFFEDF0EE else 0xFF0E1110),
-        text2 = Color(if (dark) 0xFF909A96 else 0xFF5F6965),
-        text3 = Color(if (dark) 0xFF6B7571 else 0xFF8A948F),
+        text1 = Color(if (dark) 0xFFEEF1EF else 0xFF0E1110),
+        text2 = Color(if (dark) 0xFFA1ABA7 else 0xFF5F6965),
+        text3 = Color(if (dark) 0xFF828C88 else 0xFF8A948F),
         accent = Color(p.accent),
         accentSubtle = Color(p.subtle),
         onAccentSubtle = Color(p.onSubtle),
