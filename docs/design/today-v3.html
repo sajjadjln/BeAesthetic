@@ -1,0 +1,689 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>پیکر Today v3</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Estedad:wght@400;500;600;700;800&display=swap">
+<style>
+/* Layout: three Today phones on a quiet board, one shared sample day and one shared clock, notes under each phone.
+   Phone colors are the app's slate tokens (DESIGN.md, D136), green accent. Dark first. */
+:root {
+  --page-bg: #121614; --page-fg: #E6EAE8; --page-muted: #94A09B; --page-line: #2A312E; --page-chip: #1E2422; --page-acc: #5BD994;
+  --bg:#1B201E; --sf:#252B29; --sf2:#2F3633; --bd:#3C4441; --t1:#EEF1EF; --t2:#A1ABA7; --t3:#828C88; --on-acc:#0E1110;
+  --acc:#34C47A; --acc-sub:#29503C; --acc-on:#5BD994; --w0:#3C4441; --w1:#23513A; --w2:#28754E; --w3:#2FA066; --w4:#5BD994;
+  --sp:#5560C9; --sp-sub:#313953; --sp-on:#A3AAF2; --nt:#E8B04B; --nt-sub:#4C4630;
+  --frame:#323936; --scrim: rgba(0,0,0,.55); --shadow: rgba(0,0,0,.5);
+  --font-ui: "Estedad", "Vazirmatn", "Noto Sans Arabic", system-ui, sans-serif;
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --page-bg:#E7EBE9; --page-fg:#121614; --page-muted:#5A6560; --page-line:#CDD4D0; --page-chip:#F6F7F6; --page-acc:#1D8A55;
+    --bg:#F6F7F6; --sf:#FFFFFF; --sf2:#EDF0EE; --bd:#DCE1DE; --t1:#0E1110; --t2:#5F6965; --t3:#8A948F; --on-acc:#FFFFFF;
+    --acc:#1D8A55; --acc-sub:#E4F7EC; --acc-on:#176B43; --w0:#DCE1DE; --w1:#C4F0D6; --w2:#93E6B6; --w3:#22A565; --w4:#176B43;
+    --sp:#8C95EA; --sp-sub:#D3D7F8; --sp-on:#3E479E; --nt:#B07610; --nt-sub:#FBEFD6;
+    --frame:#C9D0CC; --scrim: rgba(14,17,16,.32); --shadow: rgba(20,30,25,.22);
+    color-scheme: light;
+  }
+}
+:root[data-theme="light"] {
+  --page-bg:#E7EBE9; --page-fg:#121614; --page-muted:#5A6560; --page-line:#CDD4D0; --page-chip:#F6F7F6; --page-acc:#1D8A55;
+  --bg:#F6F7F6; --sf:#FFFFFF; --sf2:#EDF0EE; --bd:#DCE1DE; --t1:#0E1110; --t2:#5F6965; --t3:#8A948F; --on-acc:#FFFFFF;
+  --acc:#1D8A55; --acc-sub:#E4F7EC; --acc-on:#176B43; --w0:#DCE1DE; --w1:#C4F0D6; --w2:#93E6B6; --w3:#22A565; --w4:#176B43;
+  --sp:#8C95EA; --sp-sub:#D3D7F8; --sp-on:#3E479E; --nt:#B07610; --nt-sub:#FBEFD6;
+  --frame:#C9D0CC; --scrim: rgba(14,17,16,.32); --shadow: rgba(20,30,25,.22);
+  color-scheme: light;
+}
+
+* { box-sizing: border-box; }
+body { background: var(--page-bg); color: var(--page-fg); font-family: var(--font-ui); margin: 0; }
+.wrap { max-width: 1240px; margin: 0 auto; padding-block: 32px 72px; padding-inline: 16px; }
+.intro { display: grid; gap: 10px; margin-bottom: 22px; max-width: 720px; }
+.intro h1 { font-size: 30px; font-weight: 800; margin: 0; text-wrap: balance; }
+.intro p { margin: 0; color: var(--page-muted); font-size: 15px; line-height: 1.7; }
+
+/* Clock control */
+.clock { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px;
+  background: var(--page-bg); padding-block: 12px; margin-bottom: 26px; border-bottom: 1px solid var(--page-line); }
+.clock .lbl { font-size: 13px; font-weight: 600; color: var(--page-muted); letter-spacing: .04em; text-transform: uppercase; }
+.clock .opts { display: flex; flex-wrap: wrap; gap: 6px; }
+.clock button { font: inherit; font-size: 14px; font-weight: 600; color: var(--page-fg); background: var(--page-chip); border: 1px solid var(--page-line);
+  border-radius: 999px; padding: 6px 14px; cursor: pointer; display: inline-flex; gap: 6px; align-items: center; }
+.clock button[aria-pressed="true"] { background: var(--page-acc); color: var(--on-acc); border-color: transparent; }
+.clock button:focus-visible { outline: 2px solid var(--page-acc); outline-offset: 2px; }
+.p { direction: rtl; unicode-bidi: isolate; }
+.clock .fa { font-family: var(--font-ui); direction: rtl; }
+.clock .hint { font-size: 13px; color: var(--page-muted); }
+
+.gallery { display: flex; flex-wrap: wrap; gap: 48px 32px; justify-content: center; align-items: flex-start; }
+figure { margin: 0; width: 360px; max-width: 100%; display: grid; gap: 14px; }
+figcaption { display: grid; gap: 8px; font-size: 14px; color: var(--page-muted); line-height: 1.6; }
+figcaption .name { display: flex; align-items: baseline; gap: 10px; color: var(--page-fg); }
+figcaption .name b { font-size: 18px; }
+figcaption .letter { font-size: 13px; font-weight: 800; border: 1.5px solid currentColor; border-radius: 8px; padding: 0 7px; }
+figcaption .rec { font-size: 12px; font-weight: 700; color: var(--page-acc); border: 1px solid var(--page-acc); border-radius: 999px; padding: 0 8px; }
+figcaption ul { margin: 0; padding-inline-start: 18px; display: grid; gap: 4px; }
+figcaption li b { color: var(--page-fg); font-weight: 600; }
+.minus { color: var(--page-muted); }
+
+.shared { margin-top: 64px; border-top: 1px solid var(--page-line); padding-top: 28px; display: grid; gap: 22px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+.shared h2 { grid-column: 1 / -1; margin: 0; font-size: 20px; font-weight: 800; }
+.shared section { display: grid; gap: 6px; align-content: start; }
+.shared h3 { margin: 0; font-size: 15px; font-weight: 700; }
+.shared p { margin: 0; font-size: 14px; color: var(--page-muted); line-height: 1.7; }
+
+/* ---------- Phone shell ---------- */
+.phone { position: relative; width: 360px; max-width: 100%; height: 780px; background: var(--bg); color: var(--t1); border-radius: 32px; overflow: hidden;
+  border: 1px solid var(--frame); box-shadow: 0 24px 60px -24px var(--shadow); font-family: var(--font-ui); font-size: 15px; line-height: 1.6;
+  display: flex; flex-direction: column; isolation: isolate; }
+:where(.phone) button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; text-align: start; }
+:where(.phone) button:focus-visible, :where(.phone) input:focus-visible { outline: 2px solid var(--acc); outline-offset: 2px; border-radius: 12px; }
+.status { display: flex; justify-content: space-between; padding: 12px 22px 0; font-size: 12px; font-weight: 600; color: var(--t2); flex: none; }
+.scroll { flex: 1; overflow-y: auto; overflow-x: hidden; scrollbar-width: none; }
+.scroll::-webkit-scrollbar { display: none; }
+.body { display: flex; flex-direction: column; gap: 14px; padding: 12px 16px 24px; }
+.i { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+.i.sm { width: 18px; height: 18px; } .i.xs { width: 14px; height: 14px; stroke-width: 2.6; } .i.lg { width: 30px; height: 30px; }
+.i.fill { fill: currentColor; stroke: none; }
+.row { display: flex; align-items: center; gap: 10px; }
+.grow { flex: 1; min-width: 0; }
+.c2 { color: var(--t2); } .c3 { color: var(--t3); } .cacc { color: var(--acc-on); }
+.chip { display: inline-flex; align-items: center; gap: 4px; border-radius: 999px; padding: 0 9px; font-size: 12px; font-weight: 600; white-space: nowrap; line-height: 1.9; flex: none; }
+.chip.acc { background: var(--acc-sub); color: var(--acc-on); }
+.chip.nt { background: var(--nt-sub); color: var(--nt); }
+.chip.neu { background: var(--sf2); color: var(--t2); }
+.num { font-variant-numeric: tabular-nums; }
+
+/* Nav: icons only, Today active */
+.nav { flex: none; height: 64px; display: flex; justify-content: space-around; align-items: center; padding: 0 16px 6px; border-top: 1px solid var(--bd); background: var(--bg); position: relative; z-index: 3; }
+.nav span { width: 60px; height: 44px; display: grid; place-items: center; color: var(--t3); position: relative; }
+.nav span.on { color: var(--t1); }
+.nav span.on::after { content: ""; position: absolute; bottom: 2px; left: 50%; width: 5px; height: 5px; margin-left: -2.5px; border-radius: 50%; background: var(--acc); }
+
+/* Header */
+.hdr { display: flex; align-items: center; gap: 6px; }
+.hdr .d1 { font-size: 24px; font-weight: 800; line-height: 1.35; }
+.hdr .d2 { font-size: 13px; color: var(--t2); }
+.round { width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; color: var(--t2); background: var(--sf); flex: none; }
+.round.acc { background: var(--acc); color: var(--on-acc); }
+
+/* Ring */
+.ring { position: relative; flex: none; }
+.ring svg { width: 100%; height: 100%; transform: rotate(-90deg); display: block; }
+.ring .trk { stroke: var(--sf2); }
+.ring .val { stroke: var(--acc); transition: stroke-dashoffset .35s cubic-bezier(.2,0,0,1); }
+.ring .mid { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; }
+.ring .big { font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums; }
+.ring .small { color: var(--t2); }
+.week { display: flex; gap: 8px; }
+.wd { width: 12px; height: 12px; border-radius: 50%; background: var(--w0); }
+.wd.l1 { background: var(--w1); } .wd.l2 { background: var(--w2); } .wd.l3 { background: var(--w3); } .wd.l4 { background: var(--w4); }
+.wd.today { box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--acc); }
+.wd.fu { background: transparent; box-shadow: inset 0 0 0 1.5px var(--bd); }
+
+/* Character */
+.buddy { flex: none; display: grid; place-items: center; }
+.buddy svg { width: 100%; height: 100%; display: block; }
+.bubble { position: relative; background: var(--sf2); border-radius: 14px; padding: 7px 12px; font-size: 13.5px; font-weight: 500; line-height: 1.6; }
+
+/* Workout card (D126) */
+.wk { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 18px; background: var(--sf); }
+.wk .ic { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; background: var(--sf2); color: var(--t2); flex: none; }
+.wk .t { font-size: 12px; color: var(--t2); }
+.wk .n { font-size: 16px; font-weight: 700; line-height: 1.4; }
+.wk .s { font-size: 12.5px; color: var(--t2); }
+.wk .play { width: 46px; height: 46px; border-radius: 50%; background: var(--acc); color: var(--on-acc); display: grid; place-items: center; flex: none; }
+.wk.done { background: var(--acc-sub); }
+.wk.done .ic { background: transparent; color: var(--acc-on); }
+.wk.done .s { color: var(--acc-on); }
+.ck { width: 28px; height: 28px; border-radius: 50%; box-shadow: inset 0 0 0 2px var(--bd); display: grid; place-items: center; flex: none; transition: background .2s; }
+.ck .i { opacity: 0; color: var(--on-acc); }
+.ck.on { background: var(--acc); box-shadow: none; }
+.ck.on .i { opacity: 1; }
+
+/* Section head */
+.sh { display: flex; align-items: center; gap: 8px; }
+.sh .ti { font-size: 17px; font-weight: 800; }
+.sh .pi { color: var(--acc-on); }
+.sh .cnt { margin-inline-start: auto; font-size: 13px; color: var(--t2); font-variant-numeric: tabular-nums; }
+
+/* Tiles (A) */
+.tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.tile { position: relative; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-between; gap: 12px; min-height: 96px; padding: 14px; border-radius: 20px; background: var(--sf); transition: background .2s; }
+.tile .ic { color: var(--t2); }
+.tile .lb { font-size: 15px; font-weight: 600; line-height: 1.45; }
+.tile .ok { position: absolute; top: 12px; inset-inline-end: 12px; width: 24px; height: 24px; border-radius: 50%; box-shadow: inset 0 0 0 2px var(--bd); display: grid; place-items: center; }
+.tile .ok .i { opacity: 0; color: var(--on-acc); }
+.tile .lbw { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
+.tile.imp, .tile.due { box-shadow: inset 0 0 0 1.5px var(--nt); }
+.tile.on { background: var(--acc-sub); box-shadow: none; }
+.tile.on .ic { color: var(--acc-on); }
+.tile.on .ok { background: var(--acc); box-shadow: none; }
+.tile.on .ok .i { opacity: 1; }
+.tile.on .tag { display: none; }
+
+/* Rows (lists) */
+.rows { display: flex; flex-direction: column; }
+.lrow { display: flex; align-items: center; gap: 12px; min-height: 52px; padding: 6px 0; width: 100%; }
+.lrow .ic { width: 36px; height: 36px; border-radius: 11px; display: grid; place-items: center; background: var(--sf2); color: var(--t2); flex: none; }
+.lrow .nm { flex: 1; min-width: 0; font-size: 15px; font-weight: 500; }
+.lrow.on .nm { color: var(--t3); }
+.lrow.on .ic { background: var(--acc-sub); color: var(--acc-on); }
+.lrow + .lrow { border-top: 1px solid var(--bd); }
+.rows.big .lrow { min-height: 62px; }
+.rows.big .lrow .ic { width: 42px; height: 42px; border-radius: 13px; }
+.rows.big .lrow .nm { font-size: 16px; font-weight: 600; }
+.rows.big .lrow.on .nm { font-weight: 500; }
+.lrow.imp .ic, .lrow.due .ic { box-shadow: inset 0 0 0 1.5px var(--nt); }
+.lrow.on.imp .ic, .lrow.on.due .ic { box-shadow: none; }
+.grp { display: flex; align-items: center; gap: 8px; padding: 14px 0 4px; font-size: 13px; font-weight: 700; color: var(--t2); }
+.grp .i { color: var(--t3); }
+.grp .cnt { margin-inline-start: auto; font-weight: 500; font-variant-numeric: tabular-nums; }
+.grp .now { color: var(--acc-on); }
+
+/* Accordion card */
+.acc { background: var(--sf); border-radius: 18px; }
+.acc-h { display: flex; align-items: center; gap: 10px; width: 100%; min-height: 56px; padding: 0 16px; }
+.acc-h .ti { font-size: 15px; font-weight: 700; flex: 1; }
+.acc-h .chev { color: var(--t3); transition: transform .25s cubic-bezier(.2,0,0,1); }
+.acc-h[aria-expanded="true"] .chev { transform: rotate(180deg); }
+.acc-b { padding: 0 16px 10px; }
+.mini { display: flex; gap: 3px; }
+.mini i { display: block; width: 14px; height: 6px; border-radius: 3px; background: var(--w0); position: relative; overflow: hidden; }
+.mini i b { position: absolute; inset-block: 0; inset-inline-start: 0; background: var(--acc); }
+
+/* Notes */
+.note { display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-radius: 16px; background: var(--acc-sub); color: var(--acc-on); font-weight: 600; font-size: 14.5px; }
+.nextline { display: flex; align-items: center; gap: 8px; font-size: 13.5px; color: var(--t2); padding: 2px 4px; }
+.nextline b { color: var(--t1); font-weight: 600; }
+
+/* FAB (A) */
+.fab { position: absolute; z-index: 2; bottom: 80px; inset-inline-end: 16px; height: 52px; padding: 0 18px 0 20px; border-radius: 18px; background: var(--acc); color: var(--on-acc);
+  display: flex; align-items: center; gap: 8px; font-weight: 700; box-shadow: 0 8px 24px -8px var(--shadow); }
+
+/* Bottom sheet (B) */
+.bs-scrim { position: absolute; inset: 0 0 64px 0; background: var(--scrim); z-index: 2; opacity: 0; pointer-events: none; transition: opacity .25s; }
+.bs-scrim.on { opacity: 1; pointer-events: auto; }
+.bs { position: absolute; inset-inline: 0; bottom: 64px; z-index: 3; background: var(--sf); border-radius: 26px 26px 0 0; box-shadow: 0 -10px 30px -12px var(--shadow);
+  height: 92px; transition: height .35s cubic-bezier(.2,0,0,1); display: flex; flex-direction: column; overflow: hidden; }
+.bs.open { height: 82%; }
+.bs .grab { width: 36px; height: 4px; border-radius: 2px; background: var(--bd); margin: 8px auto 2px; flex: none; }
+.bs-h { display: flex; align-items: center; gap: 12px; padding: 4px 16px 12px; flex: none; }
+.bs-h .tap { flex: 1; display: grid; gap: 4px; min-height: 52px; align-content: center; }
+.bs-h .ti { font-size: 15px; font-weight: 700; display: flex; gap: 8px; align-items: center; }
+.bs-b { flex: 1; overflow-y: auto; padding: 0 16px 16px; scrollbar-width: none; }
+.bs-b::-webkit-scrollbar { display: none; }
+
+/* Day strip + focus (C) */
+.strip { display: grid; gap: 8px; }
+.strip .top { display: flex; align-items: baseline; gap: 8px; }
+.strip .top .n { font-size: 22px; font-weight: 800; font-variant-numeric: tabular-nums; }
+.segs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; }
+.seg { display: grid; gap: 6px; position: relative; }
+.seg .bar { height: 10px; border-radius: 5px; background: var(--w0); position: relative; overflow: hidden; }
+.seg .bar b { position: absolute; inset-block: 0; inset-inline-start: 0; background: var(--acc); border-radius: 5px; transition: width .35s cubic-bezier(.2,0,0,1); }
+.seg .lb { display: flex; align-items: center; gap: 4px; font-size: 12px; color: var(--t3); }
+.seg.cur .lb { color: var(--t1); font-weight: 700; }
+.seg .pin { position: absolute; top: -5px; width: 3px; height: 20px; border-radius: 2px; background: var(--t1); box-shadow: 0 0 0 2px var(--bg); }
+.focus { background: var(--sf); border-radius: 22px; padding: 16px; display: grid; gap: 14px; }
+.focus .hd { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--t2); font-weight: 600; }
+.focus .hd .pi { color: var(--acc-on); }
+.focus .main { display: flex; align-items: center; gap: 14px; }
+.focus .main .ic { width: 56px; height: 56px; border-radius: 18px; background: var(--sf2); display: grid; place-items: center; color: var(--t1); flex: none; }
+.focus .main .nm { font-size: 21px; font-weight: 800; line-height: 1.35; }
+.focus .main .sub { font-size: 13px; color: var(--t2); }
+.focus .go { height: 54px; border-radius: 16px; background: var(--acc); color: var(--on-acc); font-weight: 700; font-size: 16px; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; text-align: center; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.tchip { display: inline-flex; align-items: center; gap: 6px; height: 40px; padding: 0 12px 0 14px; border-radius: 12px; background: var(--sf2); font-size: 14px; font-weight: 500; }
+.tchip .i { color: var(--t2); }
+.tchip.on { background: var(--acc-sub); color: var(--acc-on); }
+.tchip.on .i { color: var(--acc-on); }
+.tchip.imp, .tchip.due { box-shadow: inset 0 0 0 1.5px var(--nt); }
+.tchip.on.imp, .tchip.on.due { box-shadow: none; }
+.parts { display: grid; gap: 8px; }
+
+/* Add sheet (shared) */
+.add-scrim { position: absolute; inset: 0; background: var(--scrim); z-index: 8; }
+.add { position: absolute; inset-inline: 0; bottom: 0; z-index: 9; background: var(--sf); border-radius: 28px 28px 0 0; padding: 10px 16px 22px; display: grid; gap: 14px; box-shadow: 0 -10px 30px -12px var(--shadow); }
+.add .grab { width: 36px; height: 4px; border-radius: 2px; background: var(--bd); margin: 0 auto; }
+.add .ti { font-size: 18px; font-weight: 800; }
+.add input { font: inherit; font-size: 16px; color: var(--t1); background: var(--sf2); border: 0; border-radius: 14px; height: 52px; padding: 0 14px; width: 100%; }
+.add input::placeholder { color: var(--t3); }
+.add .k { font-size: 13px; font-weight: 600; color: var(--t2); }
+.pills { display: flex; flex-wrap: wrap; gap: 6px; }
+.pill { height: 38px; padding: 0 14px; border-radius: 999px; background: var(--sf2); font-size: 14px; font-weight: 500; display: inline-flex; align-items: center; }
+.pill[aria-pressed="true"] { background: var(--acc-sub); color: var(--acc-on); font-weight: 700; }
+.add .where { font-size: 13px; color: var(--t2); display: flex; gap: 6px; align-items: center; }
+.add .more { font-size: 14px; color: var(--acc-on); font-weight: 600; }
+.add .save { height: 52px; border-radius: 16px; background: var(--acc); color: var(--on-acc); font-weight: 700; font-size: 16px; width: 100%; text-align: center; }
+
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+@media (max-width: 420px) { .phone { height: 740px; } }
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+  <symbol id="i-home" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/></symbol>
+  <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></symbol>
+  <symbol id="i-chart" viewBox="0 0 24 24"><path d="M22 7 13.5 15.5 8.5 10.5 2 17"/><path d="M16 7h6v6"/></symbol>
+  <symbol id="i-cal" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="3"/><path d="M16 2v4M8 2v4M3 10h18"/></symbol>
+  <symbol id="i-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.6 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.830l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></symbol>
+  <symbol id="i-leaf" viewBox="0 0 24 24"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></symbol>
+  <symbol id="i-sunrise" viewBox="0 0 24 24"><path d="M12 2v6M4.93 10.93l1.41 1.41M2 18h2M20 18h2M19.07 10.93l-1.41 1.41M22 22H2M16 18a4 4 0 0 0-8 0M8 6l4-4 4 4"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></symbol>
+  <symbol id="i-sunset" viewBox="0 0 24 24"><path d="M12 10V2M4.93 10.93l1.41 1.41M2 18h2M20 18h2M19.07 10.93l-1.41 1.41M22 22H2M16 18a4 4 0 0 0-8 0M16 6l-4 4-4-4"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></symbol>
+  <symbol id="i-drop" viewBox="0 0 24 24"><path d="M12 2.7s6 6.3 6 11.3a6 6 0 0 1-12 0c0-5 6-11.3 6-11.3z"/><path d="M9.5 14.5a2.5 2.5 0 0 0 2.5 2.5"/></symbol>
+  <symbol id="i-tooth" viewBox="0 0 24 24"><path d="M7 3C5 3 3.5 4.8 3.5 7.2c0 3 1.5 4.3 2 7 .5 3 1 7 2.8 7 1.6 0 1.6-4.5 3.7-4.5s2.1 4.5 3.7 4.5c1.8 0 2.3-4 2.8-7 .5-2.7 2-4 2-7C20.5 4.8 19 3 17 3c-2 0-3 1-5 1S9 3 7 3z"/></symbol>
+  <symbol id="i-pill" viewBox="0 0 24 24"><path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"/><path d="m8.5 8.5 7 7"/></symbol>
+  <symbol id="i-egg" viewBox="0 0 24 24"><path d="M12 22c-4.4 0-7-3-7-7.5C5 9 8.5 2 12 2s7 7 7 12.5c0 4.5-2.6 7.5-7 7.5z"/></symbol>
+  <symbol id="i-dumbbell" viewBox="0 0 24 24"><path d="M6 7v10M18 7v10M3 9.5v5M21 9.5v5M6 12h12"/></symbol>
+  <symbol id="i-scissors" viewBox="0 0 24 24"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4 8.12 15.88M14.47 14.48 20 20M8.12 8.12 12 12"/></symbol>
+  <symbol id="i-apple" viewBox="0 0 24 24"><path d="M12 7c-2-1.5-7-1.5-7 4.5S8 21 10 21c1 0 1.3-.5 2-.5s1 .5 2 .5c2 0 5-3.5 5-9.5S14 5.5 12 7z"/><path d="M12 7c0-2 1-3.5 3-4"/></symbol>
+  <symbol id="i-shower" viewBox="0 0 24 24"><path d="M4 21V9a5 5 0 0 1 9-3"/><path d="M10 8h10"/><path d="M12 12v1M15 12v1M18 12v1M13.5 16v1M16.5 16v1M15 20v1"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-chev" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+  <symbol id="i-list" viewBox="0 0 24 24"><path d="M9 6h11M9 12h11M9 18h11"/><path d="m3 6 1.5 1.5L7 5M3 12l1.5 1.5L7 11M3 18l1.5 1.5L7 17"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></symbol>
+  <symbol id="i-dot" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/></symbol>
+  </defs>
+</svg>
+
+<div class="wrap">
+  <header class="intro">
+    <h1>Today, three ways</h1>
+    <p>All three show the tasks for the part of the day the phone's clock is in, with no switcher to tap. All three keep every task one tap away in a section that stays folded, and all three put <span class="p">«کار جدید»</span> on the first screen. They differ in how much the screen shows at once.</p>
+    <p>The phones work: tick tasks, open <span class="p">«همه‌ی کارها»</span>, and tap + to add a task. Change the clock below to see the screen follow the time of day. The sample day is Wednesday 29 Mehr, a training day.</p>
+  </header>
+
+  <div class="clock" role="group" aria-label="Clock on the phone">
+    <span class="lbl">Phone clock</span>
+    <div class="opts" id="clock-opts"></div>
+    <span class="hint" id="clock-hint"></span>
+  </div>
+
+  <div class="gallery">
+    <figure>
+      <div class="phone" dir="rtl" lang="fa" id="ph-a"></div>
+      <figcaption>
+        <div class="name"><span class="letter">A</span><b>Now card</b><span class="rec">Recommended</span></div>
+        <ul>
+          <li><b>Smallest change from today's app.</b> Same tiles and workout card; the part switcher is gone and a small ring takes the big ring's place, so the tasks sit higher.</li>
+          <li>«الان · صبح» with <span class="p">«تا ۱۳:۰۰»</span> says which part and until when. When it's done, the next part's tasks slide up so there's always a next step.</li>
+          <li><span class="p">«همه‌ی کارها»</span> is one folded card with a tiny bar per part. It opens in place.</li>
+          <li><span class="p">«کار جدید»</span> is a floating button, where the thumb already is.</li>
+          <li class="minus">Tiles take room: a part with 6+ tasks scrolls.</li>
+        </ul>
+      </figcaption>
+    </figure>
+
+    <figure>
+      <div class="phone" dir="rtl" lang="fa" id="ph-b"></div>
+      <figcaption>
+        <div class="name"><span class="letter">B</span><b>Bottom sheet</b></div>
+        <ul>
+          <li><b>The ring stays big and the list is the action.</b> Now's tasks are full-width rows: easy to read, easy to hit.</li>
+          <li><span class="p">«همه‌ی کارها»</span> lives in a sheet that peeks at the bottom. Tap it to pull it up over the screen; tap the dim area to put it back.</li>
+          <li>+ sits on the sheet's bar, so it's on every scroll position.</li>
+          <li class="minus">The peek bar always uses ~90 px, and sheets are one more thing to learn.</li>
+        </ul>
+      </figcaption>
+    </figure>
+
+    <figure>
+      <div class="phone" dir="rtl" lang="fa" id="ph-c"></div>
+      <figcaption>
+        <div class="name"><span class="letter">C</span><b>One thing at a time</b></div>
+        <ul>
+          <li><b>The screen answers "what now?" with one task.</b> A big card names the next one with a big <span class="p">«انجام شد»</span>; the rest of the part are small chips under it.</li>
+          <li>A day strip replaces the ring: four bars, morning on the right, a line where the clock is.</li>
+          <li>Each part is its own folded row under <span class="p">«همه‌ی کارها»</span>, so you open only the one you need.</li>
+          <li>+ is in the header next to the gear.</li>
+          <li class="minus">Most different from what you use now; ticking several at once means using the chips.</li>
+        </ul>
+      </figcaption>
+    </figure>
+  </div>
+
+  <div class="shared">
+    <h2>The same in all three</h2>
+    <section>
+      <h3>The clock picks the part</h3>
+      <p>The part comes from your reminder times, as the app already does for the reminders: morning until the midday reminder, and so on. Night runs until 04:00, when the day rolls over.</p>
+    </section>
+    <section>
+      <h3>Earlier tasks don't follow you</h3>
+      <p>At 14:30 an unticked morning task isn't shown in <span class="p">«الان»</span>. It's still in <span class="p">«همه‌ی کارها»</span> with its part, so you can tick it late. No list of what's left from earlier, no gray warnings.</p>
+    </section>
+    <section>
+      <h3>+ opens the simple sheet</h3>
+      <p>Name, then <span class="p">«کِی؟»</span> on <span class="p">«امروز»</span>, and the part is the one the clock is in (D128). <span class="p">«تنظیمات بیشتر»</span> still opens the full form.</p>
+    </section>
+    <section>
+      <h3>Unchanged</h3>
+      <p>The workout card, <span class="p">«هر وقت»</span> (now inside <span class="p">«همه»</span>), minimum day (the leaf), one-off cards and the health and backup rows, which sit at the bottom.</p>
+    </section>
+  </div>
+</div>
+
+<script src="piker.js"></script>
+<script>
+(function () {
+  "use strict";
+  var FA = "۰۱۲۳۴۵۶۷۸۹";
+  function fa(v) { return String(v).replace(/[0-9]/g, function (d) { return FA[d]; }); }
+  function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
+  function ic(name, cls) { return '<svg class="i ' + (cls || "") + '" aria-hidden="true"><use href="#i-' + name + '"/></svg>'; }
+
+  var PARTS = [
+    { name: "صبح", icon: "sunrise", from: "<bdi>۴:۰۰</bdi>", until: "<bdi>۱۳:۰۰</bdi>", start: 240, end: 780 },
+    { name: "ظهر", icon: "sun", from: "<bdi>۱۳:۰۰</bdi>", until: "<bdi>۱۹:۰۰</bdi>", start: 780, end: 1140 },
+    { name: "عصر", icon: "sunset", from: "<bdi>۱۹:۰۰</bdi>", until: "<bdi>۲۳:۰۰</bdi>", start: 1140, end: 1380 },
+    { name: "شب", icon: "moon", from: "<bdi>۲۳:۰۰</bdi>", until: "<bdi>۴:۰۰</bdi>", start: 1380, end: 1680 }
+  ];
+  var TASKS = [
+    { id: "water", name: "آب ناشتا", icon: "drop", part: 0 },
+    { id: "w", name: "تمرین", icon: "dumbbell", part: 0, workout: true },
+    { id: "brush1", name: "مسواک", icon: "tooth", part: 0 },
+    { id: "sun", name: "ضدآفتاب", icon: "sun", part: 0 },
+    { id: "vitd", name: "ویتامین D", icon: "pill", part: 0, imp: true },
+    { id: "lunch", name: "ناهار پروتئینی", icon: "egg", part: 1 },
+    { id: "snack", name: "میان‌وعده", icon: "apple", part: 1 },
+    { id: "omega", name: "امگا ۳", icon: "pill", part: 1 },
+    { id: "shower", name: "دوش", icon: "shower", part: 2 },
+    { id: "nails", name: "ناخن", icon: "scissors", part: 2, due: true },
+    { id: "water2", name: "آب ۲ لیتر", icon: "drop", part: 2 },
+    { id: "brush2", name: "مسواک شب", icon: "tooth", part: 3 },
+    { id: "skin", name: "اسکین‌کر شب", icon: "drop", part: 3 },
+    { id: "prep", name: "میان‌وعده‌ی فردا", icon: "apple", part: 3 },
+    { id: "hair", name: "نوبت آرایشگاه", icon: "check", anytime: true },
+    { id: "whey", name: "خرید پودر پروتئین", icon: "check", anytime: true }
+  ];
+  var PRESETS = [{ t: 490, label: "۰۸:۱۰" }, { t: 870, label: "۱۴:۳۰" }, { t: 1180, label: "۱۹:۴۰" }, { t: 1395, label: "۲۳:۱۵" }];
+
+  var S = { time: 490, preset: 0, add: null, addWhen: "today", aOpen: false, bOpen: false, cOpen: {}, seq: 0 };
+
+  function partAt(min) { if (min < 240) return 3; for (var i = 0; i < 4; i++) if (min >= PARTS[i].start && min < PARTS[i].end) return i; return 3; }
+  function cur() { return partAt(S.time); }
+  function seed() {
+    var p = cur();
+    TASKS.forEach(function (t) {
+      if (t.anytime) { t.done = false; return; }
+      if (t.part < p) t.done = t.id !== "sun";
+      else if (t.part === p) t.done = (t.id === "water" || t.id === "lunch" || t.id === "shower" || t.id === "brush2");
+      else t.done = false;
+    });
+  }
+  function day() { return TASKS.filter(function (t) { return !t.anytime; }); }
+  function inPart(p) { return day().filter(function (t) { return t.part === p; }); }
+  function doneOf(list) { return list.filter(function (t) { return t.done; }).length; }
+  function anytime() { return TASKS.filter(function (t) { return t.anytime; }); }
+  function byId(id) { for (var i = 0; i < TASKS.length; i++) if (TASKS[i].id === id) return TASKS[i]; }
+  function partDone(p) { var l = inPart(p); return l.length > 0 && doneOf(l) === l.length; }
+  function clock() { var m = S.time % 1440, h = Math.floor(m / 60), mm = m % 60; return fa((h < 10 ? "0" : "") + h + ":" + (mm < 10 ? "0" : "") + mm); }
+
+  function buddy() {
+    var p = cur(), all = day(), d = doneOf(all);
+    if (d === all.length) return { pose: "flex", say: "امروز کامل شد! دمت گرم" };
+    if (partDone(p)) return { pose: "cheer", say: PARTS[p].name + " رو ترکوندی!" };
+    if (p === 3) return { pose: "sleep", say: "یه کم دیگه، بعد خواب" };
+    if (p === 0 && doneOf(inPart(0)) <= 1) return { pose: "stretch", say: "صبح بخیر! بریم سراغش" };
+    return { pose: "thumbs", say: "دمت گرم، ادامه بده" };
+  }
+  function piker(pose) { return window.Piker ? window.Piker.svg({ pose: pose, color: getComputedStyle(document.documentElement).getPropertyValue("--acc").trim() || "#34C47A" }) : ""; }
+
+  /* ---------- shared bits ---------- */
+  function status() { return '<div class="status"><span class="num">' + clock() + '</span><span>۸۴٪</span></div>'; }
+  function nav() {
+    return '<div class="nav"><span class="on">' + ic("home") + '</span><span>' + ic("grid") + '</span><span>' + ic("chart") + '</span><span>' + ic("cal") + '</span></div>';
+  }
+  function header(extra) {
+    return '<div class="hdr"><div class="grow"><div class="d1">چهارشنبه</div><div class="d2">۲۹ مهر · هفته ۲ از ۲۳</div></div>' + (extra || "") +
+      '<button class="round" aria-label="روز حداقلی">' + ic("leaf") + '</button><button class="round" aria-label="تنظیمات">' + ic("gear") + '</button></div>';
+  }
+  function ring(size, stroke, big, small) {
+    var all = day(), d = doneOf(all), r = (size - stroke) / 2, c = 2 * Math.PI * r, off = c * (1 - d / all.length);
+    return '<div class="ring" style="width:' + size + 'px;height:' + size + 'px" role="img" aria-label="' + fa(d) + ' از ' + fa(all.length) + '">' +
+      '<svg viewBox="0 0 ' + size + ' ' + size + '"><circle class="trk" cx="' + size / 2 + '" cy="' + size / 2 + '" r="' + r + '" fill="none" stroke-width="' + stroke + '"/>' +
+      '<circle class="val" cx="' + size / 2 + '" cy="' + size / 2 + '" r="' + r + '" fill="none" stroke-width="' + stroke + '" stroke-linecap="round" stroke-dasharray="' + c + '" stroke-dashoffset="' + off + '"/></svg>' +
+      '<div class="mid"><div class="big" style="font-size:' + big + 'px">' + fa(d) + '</div><div class="small" style="font-size:' + small + 'px">از ' + fa(all.length) + '</div></div></div>';
+  }
+  function week() {
+    var lv = ["l4", "l3", "l4", "l2"], h = '<div class="week" aria-label="این هفته">';
+    for (var i = 0; i < 7; i++) h += '<span class="wd ' + (i < 4 ? lv[i] : i === 4 ? "today l" + Math.min(4, Math.ceil(doneOf(day()) / day().length * 4)) : "fu") + '"></span>';
+    return h + "</div>";
+  }
+  function workout() {
+    var w = byId("w");
+    return '<div class="wk' + (w.done ? " done" : "") + '"><span class="ic">' + ic("dumbbell") + '</span>' +
+      '<div class="grow"><div class="t">تمرین امروز</div><div class="n">Upper B</div><div class="s">' + (w.done ? "انجام شد" : "۵ حرکت، ۱۶ ست") + '</div></div>' +
+      '<button class="ck' + (w.done ? " on" : "") + '" data-tog="w" aria-pressed="' + !!w.done + '" aria-label="تیک تمرین">' + ic("check", "xs") + '</button>' +
+      '<button class="play" aria-label="شروع تمرین">' + ic("play", "fill") + '</button></div>';
+  }
+  function tag(t) {
+    if (t.due) return '<span class="chip nt">موعدش رسیده</span>';
+    if (t.imp) return '<span class="chip nt">مهم</span>';
+    return "";
+  }
+  function lrow(t, big) {
+    var cls = "lrow" + (t.done ? " on" : "") + (t.imp ? " imp" : "") + (t.due ? " due" : "");
+    return '<button class="' + cls + '" data-tog="' + t.id + '" aria-pressed="' + !!t.done + '"><span class="ic">' + ic(t.icon, big ? "" : "sm") + '</span>' +
+      '<span class="nm">' + esc(t.name) + '</span>' + (t.done ? "" : tag(t)) + '<span class="ck' + (t.done ? " on" : "") + '">' + ic("check", "xs") + '</span></button>';
+  }
+  function mini() {
+    var h = '<span class="mini" aria-hidden="true">';
+    for (var p = 0; p < 4; p++) { var l = inPart(p); h += '<i><b style="width:' + (l.length ? doneOf(l) / l.length * 100 : 0) + '%"></b></i>'; }
+    return h + "</span>";
+  }
+  function allGroups(withNow) {
+    var p = cur(), h = "";
+    for (var i = 0; i < 4; i++) {
+      var l = inPart(i);
+      h += '<div class="grp">' + ic(PARTS[i].icon, "sm") + '<span>' + PARTS[i].name + '</span>' + (withNow && i === p ? '<span class="now">· الان</span>' : "") +
+        '<span class="cnt">' + fa(doneOf(l)) + ' از ' + fa(l.length) + '</span></div><div class="rows">' + l.map(function (t) { return lrow(t); }).join("") + "</div>";
+    }
+    var a = anytime().filter(function (t) { return !t.gone; });
+    if (a.length) h += '<div class="grp">' + ic("list", "sm") + '<span>هر وقت</span><span class="cnt">' + fa(a.length) + '</span></div><div class="rows">' + a.map(function (t) { return lrow(t); }).join("") + "</div>";
+    return h;
+  }
+  function nextLine(p) {
+    if (p >= 3) return "";
+    var n = p + 1, l = inPart(n);
+    return '<div class="nextline">' + ic(PARTS[n].icon, "sm") + '<span>بعدی: <b>' + PARTS[n].name + '</b> از ' + PARTS[n].from + ' · ' + fa(l.length) + ' کار</span></div>';
+  }
+  function addSheet(id) {
+    if (S.add !== id) return "";
+    var p = cur(), when = S.addWhen;
+    var whereText = when === "anytime" ? "بدون روز، توی «هر وقت»" : when === "tomorrow" ? "فردا · " + PARTS[p].name : when === "daily" ? "هر روز · " + PARTS[p].name : "امروز · " + PARTS[p].name;
+    var opts = [["anytime", "هر وقت"], ["today", "امروز"], ["tomorrow", "فردا"], ["day", "یه روز…"], ["daily", "هر روز"]];
+    return '<div class="add-scrim" data-act="close-add"></div><div class="add" role="dialog" aria-label="کار جدید"><div class="grab"></div><div class="ti">کار جدید</div>' +
+      '<input id="add-name-' + id + '" type="text" placeholder="مثلاً: کرم دور چشم" autocomplete="off">' +
+      '<div class="k">کِی؟</div><div class="pills">' + opts.map(function (o) { return '<button class="pill" data-when="' + o[0] + '" aria-pressed="' + (when === o[0]) + '">' + o[1] + '</button>'; }).join("") + '</div>' +
+      '<div class="where">' + ic(when === "anytime" ? "list" : PARTS[p].icon, "sm") + '<span>' + whereText + '</span></div>' +
+      '<button class="more">تنظیمات بیشتر</button><button class="save" data-act="save-add">ذخیره</button></div>';
+  }
+
+  /* ---------- A: Now card ---------- */
+  function renderA() {
+    var p = cur(), b = buddy(), all = day();
+    var showP = p, h = "";
+    var now = inPart(p).filter(function (t) { return !t.workout; });
+    h += header();
+    h += '<div class="row" style="gap:14px">' + ring(76, 8, 26, 12) +
+      '<div class="grow" style="display:grid;gap:8px"><div class="row" style="gap:8px"><span class="buddy" style="width:56px;height:56px">' + piker(b.pose) + '</span><span class="bubble">' + b.say + '</span></div>' + week() + '</div></div>';
+    if (p === 0 || byId("w").done === false) h += workout();
+    h += '<section style="display:grid;gap:10px">';
+    if (partDone(p)) {
+      h += '<div class="note">' + ic("check", "sm") + '<span>' + (doneOf(all) === all.length ? "امروز کامل شد" : PARTS[p].name + " کامل شد") + '</span></div>';
+      if (p < 3 && doneOf(all) !== all.length) {
+        showP = p + 1;
+        now = inPart(showP).filter(function (t) { return !t.workout; });
+        h += '<div class="sh">' + ic(PARTS[showP].icon, "sm pi") + '<span class="ti">بعدی · ' + PARTS[showP].name + '</span><span class="chip neu">از ' + PARTS[showP].from + '</span><span class="cnt">' + fa(doneOf(inPart(showP))) + ' از ' + fa(inPart(showP).length) + '</span></div>';
+      } else now = [];
+    } else {
+      h += '<div class="sh">' + ic(PARTS[p].icon, "sm pi") + '<span class="ti">الان · ' + PARTS[p].name + '</span><span class="chip neu">تا ' + PARTS[p].until + '</span><span class="cnt">' + fa(doneOf(inPart(p))) + ' از ' + fa(inPart(p).length) + '</span></div>';
+    }
+    if (now.length) {
+      h += '<div class="tiles">' + now.map(function (t) {
+        var cls = "tile" + (t.done ? " on" : "") + (t.imp && !t.done ? " imp" : "") + (t.due && !t.done ? " due" : "");
+        return '<button class="' + cls + '" data-tog="' + t.id + '" aria-pressed="' + !!t.done + '"><span class="ic">' + ic(t.icon) + '</span><span class="lbw"><span class="lb">' + esc(t.name) + '</span>' + (t.done ? "" : tag(t)) + '</span><span class="ok">' + ic("check", "xs") + '</span></button>';
+      }).join("") + "</div>";
+    }
+    h += "</section>";
+    if (!partDone(p)) h += nextLine(p);
+    h += '<div class="acc"><button class="acc-h" data-act="a-all" aria-expanded="' + S.aOpen + '">' + ic("list", "sm") + '<span class="ti">همه‌ی کارها</span>' + mini() +
+      '<span class="c2 num" style="font-size:13px">' + fa(doneOf(all)) + ' از ' + fa(all.length) + '</span>' + ic("chev", "sm chev") + '</button>' +
+      (S.aOpen ? '<div class="acc-b">' + allGroups(true) + '</div>' : "") + '</div>';
+    h += '<div style="height:56px"></div>';
+    return status() + '<div class="scroll" data-scroll="a"><div class="body">' + h + '</div></div>' +
+      '<button class="fab" data-act="add" data-ph="a">' + ic("plus") + '<span>کار جدید</span></button>' + nav() + addSheet("a");
+  }
+
+  /* ---------- B: Bottom sheet ---------- */
+  function renderB() {
+    var p = cur(), b = buddy(), all = day(), h = "";
+    h += header();
+    h += '<div style="display:grid;justify-items:center;gap:12px">' + ring(132, 11, 44, 13) + week() + '</div>';
+    h += '<div class="row" style="gap:8px"><span class="buddy" style="width:56px;height:56px">' + piker(b.pose) + '</span><span class="bubble">' + b.say + '</span></div>';
+    if (p === 0 || !byId("w").done) h += workout();
+    var showP = p, label = "الان · " + PARTS[p].name, chip = "تا " + PARTS[p].until;
+    if (partDone(p)) {
+      h += '<div class="note">' + ic("check", "sm") + '<span>' + (doneOf(all) === all.length ? "امروز کامل شد" : PARTS[p].name + " کامل شد") + '</span></div>';
+      if (p < 3 && doneOf(all) !== all.length) { showP = p + 1; label = "بعدی · " + PARTS[showP].name; chip = "از " + PARTS[showP].from; } else showP = -1;
+    }
+    if (showP >= 0) {
+      var l = inPart(showP).filter(function (t) { return !t.workout; });
+      h += '<section style="display:grid;gap:4px"><div class="sh">' + ic(PARTS[showP].icon, "sm pi") + '<span class="ti">' + label + '</span><span class="chip neu">' + chip + '</span><span class="cnt">' + fa(doneOf(inPart(showP))) + ' از ' + fa(inPart(showP).length) + '</span></div>' +
+        '<div class="rows big">' + l.map(function (t) { return lrow(t, true); }).join("") + '</div></section>';
+      if (!partDone(p)) h += nextLine(p);
+    }
+    h += '<div style="height:96px"></div>';
+    var sheet = '<div class="bs-scrim' + (S.bOpen ? " on" : "") + '" data-act="b-all"></div>' +
+      '<div class="bs' + (S.bOpen ? " open" : "") + '"><div class="grab"></div><div class="bs-h">' +
+      '<button class="tap" data-act="b-all" aria-expanded="' + S.bOpen + '"><span class="ti">' + ic("list", "sm") + 'همه‌ی کارها <span class="c2 num" style="font-weight:500;font-size:13px">' + fa(doneOf(all)) + ' از ' + fa(all.length) + '</span></span>' + mini() + '</button>' +
+      '<button class="round acc" data-act="add" data-ph="b" aria-label="کار جدید">' + ic("plus") + '</button></div>' +
+      '<div class="bs-b">' + (S.bOpen ? allGroups(true) : "") + '</div></div>';
+    return status() + '<div class="scroll" data-scroll="b"><div class="body">' + h + '</div></div>' + sheet + nav() + addSheet("b");
+  }
+
+  /* ---------- C: One thing at a time ---------- */
+  function renderC() {
+    var p = cur(), b = buddy(), all = day(), h = "";
+    h += header('<button class="round acc" data-act="add" data-ph="c" aria-label="کار جدید">' + ic("plus") + '</button>');
+    // Day strip: morning on the right, time flows right → left.
+    var frac = Math.max(0, Math.min(1, ((S.time < 240 ? S.time + 1440 : S.time) - PARTS[p].start) / (PARTS[p].end - PARTS[p].start)));
+    h += '<div class="strip"><div class="top"><span class="n">' + fa(doneOf(all)) + ' از ' + fa(all.length) + '</span><span class="c2" style="font-size:13px">کار امروز</span>' +
+      '<span class="grow"></span><span class="buddy" style="width:48px;height:48px">' + piker(b.pose) + '</span></div><div class="segs">';
+    for (var i = 0; i < 4; i++) {
+      var l = inPart(i);
+      h += '<div class="seg' + (i === p ? " cur" : "") + '"><div class="bar"><b style="width:' + (l.length ? doneOf(l) / l.length * 100 : 0) + '%"></b></div>' +
+        (i === p ? '<span class="pin" style="inset-inline-start:calc(' + (frac * 100).toFixed(1) + '% - 1px)"></span>' : "") +
+        '<div class="lb">' + ic(PARTS[i].icon, "xs") + PARTS[i].name + '</div></div>';
+    }
+    h += '</div></div>';
+    h += '<div class="bubble" style="align-self:flex-start">' + b.say + '</div>';
+    if (p === 0 || !byId("w").done) h += workout();
+    // Focus card
+    var showP = p, list = inPart(p).filter(function (t) { return !t.workout; });
+    var open = list.filter(function (t) { return !t.done; });
+    if (!open.length && p < 3 && doneOf(all) !== all.length) { showP = p + 1; list = inPart(showP).filter(function (t) { return !t.workout; }); open = list.filter(function (t) { return !t.done; }); }
+    h += '<div class="focus">';
+    if (!open.length) {
+      h += '<div class="hd">' + ic("check", "sm pi") + '<span>' + (doneOf(all) === all.length ? "امروز کامل شد" : PARTS[p].name + " کامل شد") + '</span></div>' +
+        '<div class="c2" style="font-size:14px">کار دیگه‌ای برای الان نیست.</div>';
+    } else {
+      var f = open[0], rest = list.filter(function (t) { return t !== f; });
+      h += '<div class="hd">' + ic(PARTS[showP].icon, "sm pi") + '<span>' + (showP === p ? "الان · " + PARTS[p].name + " · تا " + PARTS[p].until : PARTS[p].name + " کامل شد · بعدی: " + PARTS[showP].name) + '</span>' +
+        '<span class="grow"></span><span class="num">' + fa(doneOf(inPart(showP))) + ' از ' + fa(inPart(showP).length) + '</span></div>' +
+        '<div class="main"><span class="ic">' + ic(f.icon, "lg") + '</span><div class="grow"><div class="nm">' + esc(f.name) + '</div>' +
+        (f.imp || f.due ? '<div style="margin-top:2px">' + tag(f) + '</div>' : '<div class="sub">' + (open.length > 1 ? "بعدش: " + esc(open[1].name) : "آخرین کار " + PARTS[showP].name) + '</div>') + '</div></div>' +
+        '<button class="go" data-tog="' + f.id + '">' + ic("check") + 'انجام شد</button>';
+      if (rest.length) {
+        h += '<div class="chips">' + rest.map(function (t) {
+          return '<button class="tchip' + (t.done ? " on" : "") + (t.imp ? " imp" : "") + (t.due ? " due" : "") + '" data-tog="' + t.id + '" aria-pressed="' + !!t.done + '">' + ic(t.done ? "check" : t.icon, "sm") + esc(t.name) + '</button>';
+        }).join("") + '</div>';
+      }
+    }
+    h += '</div>';
+    if (showP === p) h += nextLine(p);
+    // All, one folded row per part
+    h += '<div class="sh" style="margin-top:6px">' + ic("list", "sm") + '<span class="ti" style="font-size:15px">همه‌ی کارها</span></div><div class="parts">';
+    for (var k = 0; k < 4; k++) {
+      var pl = inPart(k), o = !!S.cOpen[k];
+      h += '<div class="acc"><button class="acc-h" data-act="c-part" data-k="' + k + '" aria-expanded="' + o + '">' + ic(PARTS[k].icon, "sm") + '<span class="ti">' + PARTS[k].name +
+        (k === p ? ' <span class="cacc" style="font-weight:600;font-size:13px">· الان</span>' : "") + '</span><span class="c2 num" style="font-size:13px">' + fa(doneOf(pl)) + ' از ' + fa(pl.length) + '</span>' + ic("chev", "sm chev") + '</button>' +
+        (o ? '<div class="acc-b"><div class="rows">' + pl.map(function (t) { return lrow(t); }).join("") + '</div></div>' : "") + '</div>';
+    }
+    var a = anytime().filter(function (t) { return !t.gone; }), ao = !!S.cOpen.any;
+    if (a.length) h += '<div class="acc"><button class="acc-h" data-act="c-part" data-k="any" aria-expanded="' + ao + '">' + ic("list", "sm") + '<span class="ti">هر وقت</span><span class="c2 num" style="font-size:13px">' + fa(a.length) + '</span>' + ic("chev", "sm chev") + '</button>' +
+      (ao ? '<div class="acc-b"><div class="rows">' + a.map(function (t) { return lrow(t); }).join("") + '</div></div>' : "") + '</div>';
+    h += '</div>';
+    return status() + '<div class="scroll" data-scroll="c"><div class="body">' + h + '</div></div>' + nav() + addSheet("c");
+  }
+
+  var R = { a: renderA, b: renderB, c: renderC };
+  function render(only) {
+    Object.keys(R).forEach(function (k) {
+      if (only && only !== k) return;
+      var el = document.getElementById("ph-" + k), sc = el.querySelector("[data-scroll]"), top = sc ? sc.scrollTop : 0;
+      var bs = el.querySelector(".bs-b"), bsTop = bs ? bs.scrollTop : 0;
+      el.innerHTML = R[k]();
+      var sc2 = el.querySelector("[data-scroll]"); if (sc2) sc2.scrollTop = top;
+      var bs2 = el.querySelector(".bs-b"); if (bs2) bs2.scrollTop = bsTop;
+    });
+    renderClock();
+  }
+
+  function renderClock() {
+    var box = document.getElementById("clock-opts");
+    box.innerHTML = PRESETS.map(function (p, i) {
+      return '<button data-preset="' + i + '" aria-pressed="' + (S.preset === i) + '"><span class="fa">' + p.label + '</span><span>' + ["morning", "afternoon", "evening", "night"][i] + '</span></button>';
+    }).join("") + '<button data-preset="now" aria-pressed="' + (S.preset === "now") + '">This device, now</button>';
+    document.getElementById("clock-hint").textContent = "Ticks reset to a likely state when the clock changes.";
+  }
+
+  document.addEventListener("click", function (e) {
+    var t = e.target.closest("[data-preset],[data-tog],[data-act],[data-when]");
+    if (!t) return;
+    var ph = t.closest(".phone");
+    if (t.dataset.preset != null) {
+      if (t.dataset.preset === "now") { var d = new Date(); S.time = d.getHours() * 60 + d.getMinutes(); S.preset = "now"; }
+      else { S.preset = +t.dataset.preset; S.time = PRESETS[S.preset].t; }
+      S.cOpen = {}; seed(); render(); return;
+    }
+    if (t.dataset.tog) {
+      var task = byId(t.dataset.tog); task.done = !task.done;
+      if (task.anytime && task.done) setTimeout(function () { if (task.done) { task.gone = true; render(); } }, 700);
+      render(); return;
+    }
+    if (t.dataset.when) { S.addWhen = t.dataset.when; var keep = document.getElementById("add-name-" + S.add); var v = keep ? keep.value : ""; render(S.add); var n = document.getElementById("add-name-" + S.add); if (n) { n.value = v; } return; }
+    switch (t.dataset.act) {
+      case "a-all": S.aOpen = !S.aOpen; render("a"); break;
+      case "b-all": S.bOpen = !S.bOpen; render("b"); break;
+      case "c-part": var k = t.dataset.k; S.cOpen[k] = !S.cOpen[k]; render("c"); break;
+      case "add":
+        S.add = t.dataset.ph; S.addWhen = "today"; render(S.add);
+        var inp = document.getElementById("add-name-" + S.add); if (inp) inp.focus({ preventScroll: true });
+        break;
+      case "close-add": var was = S.add; S.add = null; render(was); break;
+      case "save-add":
+        var input = document.getElementById("add-name-" + S.add), name = input && input.value.trim();
+        if (!name) { input.focus(); input.placeholder = "اسمش رو بنویس"; return; }
+        if (S.addWhen === "anytime") TASKS.push({ id: "n" + (++S.seq), name: name, icon: "check", anytime: true });
+        else if (S.addWhen === "today" || S.addWhen === "daily") TASKS.push({ id: "n" + (++S.seq), name: name, icon: "check", part: cur() });
+        S.add = null; render(); break;
+    }
+  });
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && S.add) { var was = S.add; S.add = null; render(was); }
+    if (e.key === "Enter" && S.add && e.target.id === "add-name-" + S.add) { e.preventDefault(); document.querySelector("#ph-" + S.add + " [data-act=save-add]").click(); }
+  });
+  var mq = window.matchMedia ? window.matchMedia("(prefers-color-scheme: dark)") : null;
+  if (mq && mq.addEventListener) mq.addEventListener("change", function () { render(); });
+
+  seed();
+  render();
+})();
+</script>

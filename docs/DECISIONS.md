@@ -246,6 +246,7 @@ Proposed in the follow-up conversation; the user: "add all the top picks". All f
 | # | Decision | Why | Status |
 |---|---|---|---|
 | D136 | **Lighter dark theme ("slate").** The dark background goes from near-black `#0E1110` to `#1B201E`; surface `#252B29`, surface-2 `#2F3633`, border and gap `#3C4441`, text `#EEF1EF` / `#A1ABA7` / `#828C88`. The dark subtle fills (accent, amber, special) and grid levels 1–3 are lifted with it, mixed from the accent; the accents stay. The default special on-subtle becomes `#A3AAF2` to keep chip text ≥ 4.8:1. The launcher icon and «پیکر» keep their ink. | User feedback 2026-10-15: on the Poco the background was too dark and other elements didn't show. Picked from five options (`docs/design/dark-bg-options.html`). | Final |
+| D137 | **Today redesign parked.** Two rounds of Today mockups were made on 2026-10-15: three options (`docs/design/today-v3.html`: A Now card, B bottom sheet, C one thing at a time) and a mix of the user's picks (`docs/design/today-v4.html`: A's top, a bigger «پیکر», «الان» picked by the clock as a plain checklist «فهرست», C's folded rows per part, and B's + on a bottom sheet «شیت»). The user leaned to the mix with «فهرست» + «شیت», then chose to keep the current Today (part switcher, tiles, big ring) until the app is finished and decide then. Nothing in the app or in `DESIGN.md` §01 changes. | User: finish the app on the current design first; the redesign is a decision for after. | Parked |
 
 ## Superseded
 

@@ -79,6 +79,7 @@ The program itself started on **2026-10-09 (Day 0)**. Week 1 began 2026-10-10. E
 
 ## Backlog (after MVP, from `SPEC.md` §3.2)
 
+- **Decide the Today redesign after the app is finished** (D137). Options in `docs/design/today-v3.html`, the leaning mix (clock picks the part, «فهرست» checklist, + and folded parts on a bottom sheet) in `docs/design/today-v4.html`. Until then Today stays as built.
 - Public release on Cafe Bazaar: a **future goal, after the program** (D49; `ARCHITECTURE.md` §15, `research/07`).
 - Optional GitHub Actions workflow that runs the tests on push.
 - Goals with progress bars inside Progress (milestones, D65, are the simple version in the MVP).

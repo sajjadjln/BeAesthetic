@@ -16,6 +16,7 @@ Published copy: https://claude.ai/artifact/BwuSiLCGAxV5fGR86MSmjH
 Kept for reference only:
 - `docs/design/screens-minimal.html`: minimal concept (https://claude.ai/artifact/SuxRScjnPrCJkpGEdogd7z)
 - `docs/design/screens-detailed.html`: detailed concept (round 2)
+- **Parked Today redesign (D137)**, to decide after the app is finished: `docs/design/today-v3.html` (three options, https://claude.ai/artifact/EthmyBPWGEFU4t8uhfcuPh) and `docs/design/today-v4.html` (the mix the user leaned to: «فهرست» + «شیت», https://claude.ai/artifact/DpEnb9FuzZgfKp9CNqUJX2). The current Today below stays until then.
 - Figma https://www.figma.com/design/1DzXN6iOhAa0PsnLDSjOAg: first design-system pass. **Out of date** (old names, old Today).
 
 The history of how we got here is in `docs/DECISIONS.md` (D21–D29, D46–D47).
