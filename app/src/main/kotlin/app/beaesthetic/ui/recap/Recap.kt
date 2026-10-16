@@ -47,7 +47,10 @@ import app.beaesthetic.data.repo.PhotoStore
 import app.beaesthetic.data.repo.Pose as PhotoPose
 import app.beaesthetic.domain.buddy.BuddyPicker
 import app.beaesthetic.domain.buddy.Pose
+import app.beaesthetic.domain.progress.AfterFinish
 import app.beaesthetic.domain.progress.Recaps
+import app.beaesthetic.domain.time.ProgramDates
+import androidx.room.withTransaction
 import app.beaesthetic.domain.progress.Trend
 import app.beaesthetic.domain.text.PersianDigits
 import app.beaesthetic.domain.time.Chapters
@@ -78,9 +81,21 @@ import kotlinx.coroutines.launch
 import java.time.temporal.ChronoUnit
 
 /** What only the recap needs beyond Progress and the dashboard: records so far, the sentence, the next chapter. */
-data class RecapExtra(val records: Int, val identity: String?, val nextChapterMonth: Int?, val weeksLeft: Int, val outfitChapter: Int)
+data class RecapExtra(
+    val records: Int,
+    val identity: String?,
+    val nextChapterMonth: Int?,
+    val weeksLeft: Int,
+    val outfitChapter: Int,
+    /** The finish card (F1): the finish date, the program's weeks and days. */
+    val endDate: java.time.LocalDate,
+    val totalWeeks: Int,
+    val totalDays: Int,
+    val nowruzNext: Boolean,
+    val chosen: AfterFinish,
+)
 
-class RecapViewModel(private val container: AppContainer) : ViewModel() {
+class RecapViewModel(private val container: AppContainer, private val finish: Boolean) : ViewModel() {
 
     val extra: StateFlow<RecapExtra?> = combine(
         container.db.settings().observe().filterNotNull(),
@@ -96,14 +111,62 @@ class RecapViewModel(private val container: AppContainer) : ViewModel() {
             nextChapterMonth = next?.months?.firstOrNull(),
             weeksLeft = ((ChronoUnit.DAYS.between(today, calendar.endDate) + 6) / 7).toInt().coerceAtLeast(0),
             outfitChapter = next?.number ?: 3,
+            endDate = calendar.endDate,
+            totalWeeks = calendar.totalWeeks,
+            totalDays = ChronoUnit.DAYS.between(calendar.day0, calendar.endDate).toInt(),
+            nowruzNext = app.beaesthetic.domain.time.Jalali.fromGregorian(calendar.endDate.plusDays(1)).let { it.month == 1 && it.day == 1 },
+            chosen = runCatching { AfterFinish.valueOf(s.afterFinishMode) }.getOrDefault(AfterFinish.NONE),
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
 
     init {
         viewModelScope.launch {
             container.ensureReady()
-            container.db.weeks().markRecapSeen(RecapEntity(Recaps.HALFWAY, container.clock.now()))
+            container.db.weeks().markRecapSeen(RecapEntity(if (finish) Recaps.FINISH else Recaps.HALFWAY, container.clock.now()))
             container.events.screen("recap")
+        }
+    }
+
+    /** «ادامه» (D61): routines go on, no chapters or week count. */
+    fun keepGoing(onDone: () -> Unit) {
+        viewModelScope.launch {
+            container.db.settings().setAfterFinishMode(AfterFinish.MAINTENANCE.name)
+            onDone()
+        }
+    }
+
+    /**
+     * «برنامه‌ی تازه» (D61, D145): a backup first, then new dates (today or the day after the finish, to the
+     * next Nowruz eve). Tasks, the workout plan, metrics, milestones and history stay; the old check-ins and
+     * photos move up out of the new schedule's way; both recaps and the first letter come back.
+     */
+    fun startNewProgram(onDone: () -> Unit) {
+        container.scope.launch {
+            container.backup.backUp(app.beaesthetic.domain.backup.BackupReason.AUTO)
+            val s = container.db.settings().get() ?: return@launch
+            val today = container.clock.programDate(s.rolloverHour)
+            val day0 = ProgramDates.newDay0(today, s.programEndDate)
+            val end = ProgramDates.defaultEnd(day0)
+            container.db.withTransaction {
+                val offset = Recaps.archiveOffset(container.db.progress().maxCheckInIdx())
+                if (offset > 0) {
+                    container.db.progress().shiftCheckIns(offset)
+                    container.db.progress().shiftPhotos(offset)
+                }
+                container.db.weeks().clearRecaps()
+                container.db.settings().upsert(
+                    s.copy(
+                        programStartDate = day0,
+                        programEndDate = end,
+                        halfwayDate = ProgramDates.yaldaWithin(day0, end),
+                        afterFinishMode = AfterFinish.NONE.name,
+                        firstLetterOfferDone = false,
+                        cardDismissedOn = null,
+                    ),
+                )
+            }
+            container.scheduler.reconcile("new-program")
+            kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) { onDone() }
         }
     }
 }
@@ -113,16 +176,26 @@ class RecapViewModel(private val container: AppContainer) : ViewModel() {
  * moves on, ✕ closes. Wins only: days shown up, Day 0 → now, totals, milestones reached, photos, the sentence.
  */
 @Composable
-fun RecapRoute(recap: RecapViewModel, progress: ProgressViewModel, dashboard: DashboardViewModel, photos: PhotoStore, onClose: () -> Unit) {
+fun RecapRoute(
+    recap: RecapViewModel,
+    progress: ProgressViewModel,
+    dashboard: DashboardViewModel,
+    photos: PhotoStore,
+    onClose: () -> Unit,
+    finish: Boolean = false,
+    startAtChoice: Boolean = false,
+) {
     val extra by recap.extra.collectAsStateWithLifecycle()
     val p by progress.state.collectAsStateWithLifecycle()
     val d by dashboard.state.collectAsStateWithLifecycle()
     val c = Ba.colors
-    var card by rememberSaveable { mutableIntStateOf(0) }
-    val count = 4
+    // The finish adds the finish-line card and the choice (F1, D61); the choice can be opened on its own.
+    val count = if (finish) 5 else 4
+    var card by rememberSaveable { mutableIntStateOf(if (finish && startAtChoice) count - 1 else 0) }
+    val lastIsChoice = finish
     Box(
         Modifier.fillMaxSize().background(c.bg).safeDrawingPadding()
-            .clickable(remember { MutableInteractionSource() }, indication = null) { if (card < count - 1) card++ else onClose() },
+            .clickable(remember { MutableInteractionSource() }, indication = null) { if (card < count - 1) card++ else if (!lastIsChoice) onClose() },
     ) {
         val e = extra
         val ps = p
@@ -146,11 +219,13 @@ fun RecapRoute(recap: RecapViewModel, progress: ProgressViewModel, dashboard: Da
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(vertical = 20.dp),
                 ) {
-                    when (i) {
-                        0 -> ShownUp(ds)
-                        1 -> Strength(ps, e)
-                        2 -> PhotosAndSentence(ps, e, photos)
-                        else -> SecondHalf(e, onClose)
+                    when {
+                        i == 0 -> ShownUp(ds, finish)
+                        i == 1 -> Strength(ps, e)
+                        i == 2 -> PhotosAndSentence(ps, e, photos)
+                        !finish -> SecondHalf(e, onClose)
+                        i == 3 -> FinishLine(e, ds)
+                        else -> Choice(e, onKeepGoing = { recap.keepGoing(onClose) }, onNewProgram = { recap.startNewProgram(onClose) })
                     }
                 }
             }
@@ -162,12 +237,12 @@ fun RecapRoute(recap: RecapViewModel, progress: ProgressViewModel, dashboard: Da
 }
 
 @Composable
-private fun ShownUp(d: DashboardUiState) {
+private fun ShownUp(d: DashboardUiState, finish: Boolean) {
     val c = Ba.colors
     Text(stringResource(R.string.recap_r1_title), style = Ba.type.headline, color = c.text1)
     Grid(d, onTap = {}, modifier = Modifier.fillMaxWidth())
     Text(
-        stringResource(R.string.recap_r1_body, PersianDigits.format(d.summary.shownUp)),
+        stringResource(if (finish) R.string.recap_f_r1_body else R.string.recap_r1_body, PersianDigits.format(d.summary.shownUp)),
         style = Ba.type.title,
         color = c.text1,
         textAlign = TextAlign.Center,
@@ -238,6 +313,42 @@ private fun PhotosAndSentence(p: ProgressUiState, e: RecapExtra, photos: PhotoSt
     e.identity?.let {
         Text("«$it»", style = Ba.type.title, color = c.text1, textAlign = TextAlign.Center)
         Text(stringResource(R.string.recap_r3_own), style = Ba.type.caption, color = c.text3)
+    }
+}
+
+/** F1: the finish line. The whole program line, «پیکر» with the sprout. No confetti. */
+@Composable
+private fun FinishLine(e: RecapExtra, d: DashboardUiState) {
+    val c = Ba.colors
+    val j = app.beaesthetic.domain.time.Jalali.fromGregorian(e.endDate)
+    Text(stringResource(R.string.recap_f_date, jalaliDayMonth(e.endDate), PersianDigits.format(j.year)), style = Ba.type.label, color = c.text2)
+    Piker(Pose.FINISH, c.accent, app.beaesthetic.domain.buddy.Outfit.SPROUT, Modifier.width(170.dp))
+    Text(stringResource(R.string.recap_f_weeks, PersianDigits.format(e.totalWeeks)), style = Ba.type.headline, color = c.text1, textAlign = TextAlign.Center)
+    Text(stringResource(R.string.recap_f_days, PersianDigits.format(d.summary.shownUp)), style = Ba.type.display, color = c.accent)
+    Text(
+        stringResource(if (e.nowruzNext) R.string.recap_f_days_body_nowruz else R.string.recap_f_days_body, PersianDigits.format(e.totalDays)),
+        style = Ba.type.body,
+        color = c.text2,
+        textAlign = TextAlign.Center,
+    )
+}
+
+/** D61: what comes after. Both keep every task, the plan and the history. */
+@Composable
+private fun Choice(e: RecapExtra, onKeepGoing: () -> Unit, onNewProgram: () -> Unit) {
+    val c = Ba.colors
+    Text(stringResource(R.string.recap_choice_title), style = Ba.type.headline, color = c.text1)
+    Column(
+        Modifier.fillMaxWidth().clip(RoundedCornerShape(16.dp)).background(c.surface).clickable(onClick = onKeepGoing).padding(16.dp),
+    ) {
+        Text(stringResource(R.string.recap_choice_keep), style = Ba.type.subtitle, color = c.text1)
+        Text(stringResource(R.string.recap_choice_keep_body), style = Ba.type.caption, color = c.text2)
+    }
+    Column(
+        Modifier.fillMaxWidth().clip(RoundedCornerShape(16.dp)).background(c.accentSubtle).clickable(onClick = onNewProgram).padding(16.dp),
+    ) {
+        Text(stringResource(R.string.recap_choice_new), style = Ba.type.subtitle, color = c.onAccentSubtle)
+        Text(stringResource(R.string.recap_choice_new_body), style = Ba.type.caption, color = c.onAccentSubtle)
     }
 }
 

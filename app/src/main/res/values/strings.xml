@@ -830,4 +830,24 @@
     <string name="fade_restore_body">این هفته شلوغ بود. یه یادآور کوچیک کمک می‌کنه دوباره راه بیفته.</string>
     <string name="fade_restore_yes">آره، روشن</string>
     <string name="fade_no">نه، بمونه</string>
+
+    <!-- Slice 10c: the finish recap and what comes after (D52, D61, flows F1). -->
+    <string name="recap_f_r1_body">از روز صفر تا خط پایان، %1$s روز اومدی.</string>
+    <string name="recap_f_date">%1$s %2$s · خط پایان</string>
+    <string name="recap_f_weeks">%1$s هفته! تو انجامش دادی.</string>
+    <string name="recap_f_days">%1$s روز</string>
+    <string name="recap_f_days_body">از %1$s روز، اومدی.</string>
+    <string name="recap_f_days_body_nowruz">از %1$s روز، اومدی. فردا نوروزه.</string>
+    <string name="recap_choice_title">بعدش چی؟</string>
+    <string name="recap_choice_keep">ادامه</string>
+    <string name="recap_choice_keep_body">کارهای هر روزت ادامه دارن، تمرین اختیاری. بدون فصل و شمارش هفته.</string>
+    <string name="recap_choice_new">برنامه‌ی تازه</string>
+    <string name="recap_choice_new_body">یه دور تازه تا نوروز بعد. کارها، برنامه‌ی تمرین و همه‌ی تاریخچه می‌مونن؛ قبلش یه پشتیبان گرفته می‌شه.</string>
+    <string name="today_finish_title">خط پایان! مرور کل مسیر</string>
+    <string name="today_finish_body">ببین از روز صفر تا اینجا چی ساختی.</string>
+    <string name="today_choice_title">بعد از خط پایان</string>
+    <string name="today_choice_body">ادامه بدیم یا یه برنامه‌ی تازه؟</string>
+    <string name="today_line_after">%1$s · بعد از خط پایان</string>
+    <string name="today_line_maintenance">%1$s · نگه‌داری</string>
+    <string name="progress_finish_row">مرور کل مسیر</string>
 </resources>

@@ -82,6 +82,7 @@ fun ProgressRoute(
     onBackfill: (LocalDate) -> Unit,
     onReveal: (Int) -> Unit,
     onRecap: () -> Unit = {},
+    onFinish: () -> Unit = {},
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     var milestone by remember { mutableStateOf<MilestoneView?>(null) }
@@ -95,6 +96,7 @@ fun ProgressRoute(
             backfill = { backfilling = true },
             reveal = onReveal,
             recap = onRecap,
+            finish = onFinish,
         ),
     )
     val s = state ?: return
@@ -119,6 +121,7 @@ data class ProgressExtras(
     val backfill: () -> Unit = {},
     val reveal: (Int) -> Unit = {},
     val recap: () -> Unit = {},
+    val finish: () -> Unit = {},
 )
 
 // ---------------------------------------------------------------- 03 Progress
@@ -150,6 +153,13 @@ fun ProgressScreen(
             if (!s.day0Done) Day0Card(s.day0) { onCheckIn(0) } else s.next?.let { CheckInCard(it, s.today, s.nextOpen, s.isFinish) { onCheckIn(it.idx) } }
 
             ProgramLineCard(s.line)
+            if (s.finishAvailable) {
+                ListRow(onClick = extras.finish) {
+                    Icon(BaIcons.Flag, null, tint = Ba.colors.accent, modifier = Modifier.size(20.dp))
+                    Text(stringResource(R.string.progress_finish_row), style = Ba.type.body, color = Ba.colors.text1, modifier = Modifier.weight(1f).padding(start = 10.dp))
+                    Icon(BaIcons.ChevronForward, null, tint = Ba.colors.text3, modifier = Modifier.size(18.dp))
+                }
+            }
             if (s.recapAvailable) {
                 ListRow(onClick = extras.recap) {
                     Icon(BaIcons.Flag, null, tint = Ba.colors.accent, modifier = Modifier.size(20.dp))

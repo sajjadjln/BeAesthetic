@@ -48,6 +48,7 @@ import app.beaesthetic.domain.week.FadeOffer
 import app.beaesthetic.domain.week.ReminderFade
 import app.beaesthetic.data.repo.toDomain
 import app.beaesthetic.domain.progress.Recaps
+import app.beaesthetic.domain.progress.AfterFinish
 import app.beaesthetic.domain.workout.WorkoutPlan
 import app.beaesthetic.reminders.AlarmScheduler.Companion.toLogRow
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -95,6 +96,9 @@ data class AnytimeUi(val taskId: Long, val title: String, val done: Boolean, val
 sealed interface HeaderTail {
     data class InChapter(val monthIndex: Int) : HeaderTail
     data class Counting(val countdown: Countdown) : HeaderTail
+
+    /** After the finish day (D61): «بعد از خط پایان», or «نگه‌داری» once that was chosen. */
+    data class After(val maintenance: Boolean) : HeaderTail
 }
 
 /**
@@ -156,6 +160,10 @@ data class TodayUiState(
     val recap: Boolean = false,
     /** The reminder fade offer (D57), filled in from [TodayViewModel.fadeOffer]. */
     val fade: FadeOffer? = null,
+    /** From 29 Esfand until opened: the finish recap card (D52). */
+    val finishRecap: Boolean = false,
+    /** Once the finish recap was seen and nothing chosen: «بعد از خط پایان» (D61). */
+    val afterChoice: Boolean = false,
 ) {
     val dayComplete: Boolean get() = total > 0 && done == total
 }
@@ -172,6 +180,7 @@ private data class TodaySettings(
     val healthSeenAt: Instant?,
     val anytimeOpen: Boolean,
     val halfwayDate: LocalDate?,
+    val afterFinishMode: String,
 )
 
 private data class Inputs(
@@ -187,12 +196,14 @@ private data class Inputs(
     val progress: ProgressData,
     val ritualsDone: Set<LocalDate>,
     val snack: String?,
-    val recapSeen: Boolean,
+    val recapsSeen: Set<String>,
 )
 
-private data class Extra(val plans: List<WorkoutPlan>, val allDays: Map<LocalDate, DaySnapshot>, val unseen: List<RoundNumberEntity>, val progress: ProgressData, val week: Triple<Set<LocalDate>, String?, Boolean>)
+private data class Extra(val plans: List<WorkoutPlan>, val allDays: Map<LocalDate, DaySnapshot>, val unseen: List<RoundNumberEntity>, val progress: ProgressData, val week: Triple<Set<LocalDate>, String?, Set<String>>)
 
 private fun SettingsEntity.calendar() = ProgramCalendar(programStartDate, programEndDate, rolloverHour)
+
+private fun afterMode(name: String) = runCatching { AfterFinish.valueOf(name) }.getOrDefault(AfterFinish.NONE)
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class TodayViewModel(
@@ -230,7 +241,7 @@ class TodayViewModel(
         .onEach { pickedPart.value = null }
 
     private val todaySettings = settings
-        .map { TodaySettings(it.installDate, it.showBuddy, it.firstLetterOfferDone, it.cardDismissedOn, it.healthSeenAt, it.anytimeOpen, it.halfwayDate) }
+        .map { TodaySettings(it.installDate, it.showBuddy, it.firstLetterOfferDone, it.cardDismissedOn, it.healthSeenAt, it.anytimeOpen, it.halfwayDate, it.afterFinishMode) }
         .distinctUntilChanged()
 
     private val inputs: Flow<Inputs> = now.flatMapLatest { n ->
@@ -245,7 +256,7 @@ class TodayViewModel(
                 container.tasks.observeSnapshots(n.calendar.day0, n.date),
                 container.db.roundNumbers().observeUnseenDays(),
                 container.progress.observe(),
-                combine(container.db.weeks().observeDone(), container.db.weeks().observeSnack(n.date), container.db.weeks().observeRecapsSeen()) { done, snack, seen -> Triple(done.toSet(), snack?.text, Recaps.HALFWAY in seen) },
+                combine(container.db.weeks().observeDone(), container.db.weeks().observeSnack(n.date), container.db.weeks().observeRecapsSeen()) { done, snack, seen -> Triple(done.toSet(), snack?.text, seen.toSet()) },
             ) { planned, all, unseen, progress, week -> Extra(planned, all, unseen, progress, week) },
         ) { day, snapshots, s, letters, x -> Inputs(n, day, snapshots, s, letters, x.plans, x.allDays, x.unseen, x.progress, x.week.first, x.week.second, x.week.third) }
     }
@@ -483,7 +494,8 @@ class TodayViewModel(
             jalali = Jalali.fromGregorian(date),
             week = calendar.weekNumber(date),
             totalWeeks = calendar.totalWeeks,
-            headerTail = Chapters.countdown(calendar, date)?.let { HeaderTail.Counting(it) }
+            headerTail = if (date > calendar.endDate) HeaderTail.After(afterMode(s.afterFinishMode) == AfterFinish.MAINTENANCE)
+            else Chapters.countdown(calendar, date)?.let { HeaderTail.Counting(it) }
                 ?: chapter?.let { HeaderTail.InChapter(Jalali.fromGregorian(date).month) },
             selectedPart = selected,
             minimumMode = day.minimumMode,
@@ -504,7 +516,11 @@ class TodayViewModel(
             progress = progressPrompt(date, calendar, input.progress),
             ritualWeek = Ritual.open(date, calendar, input.ritualsDone)?.let(calendar::weekNumber),
             snack = input.snack?.takeIf { it.isNotBlank() },
-            recap = Recaps.cardOpen(date, Recaps.halfway(s.halfwayDate, calendar), calendar, input.recapSeen),
+            // The halfway card gives way once the finish card is up; the halfway recap stays on Progress.
+            recap = Recaps.cardOpen(date, Recaps.halfway(s.halfwayDate, calendar), calendar, Recaps.HALFWAY in input.recapsSeen) &&
+                !Recaps.finishCardOpen(date, calendar, Recaps.FINISH in input.recapsSeen),
+            finishRecap = Recaps.finishCardOpen(date, calendar, Recaps.FINISH in input.recapsSeen),
+            afterChoice = Recaps.choiceOpen(date, calendar, Recaps.FINISH in input.recapsSeen, afterMode(s.afterFinishMode)),
         )
     }
 

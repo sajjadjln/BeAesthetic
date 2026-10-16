@@ -98,7 +98,7 @@ import kotlinx.serialization.Serializable
 @Serializable object WorkoutRoute
 @Serializable object ProgressTab
 @Serializable object WeekTab
-@Serializable object RecapRoute
+@Serializable data class RecapRoute(val finish: Boolean = false, val choice: Boolean = false)
 @Serializable object OnboardingRoute
 @Serializable object MetricsRoute
 @Serializable data class CheckInRoute(val idx: Int)
@@ -186,7 +186,8 @@ class MainActivity : ComponentActivity() {
                                 onOpenBackup = { nav.navigate(BackupRoute) },
                                 onOpenCheckIn = { idx -> nav.navigate(CheckInRoute(idx)) },
                                 onOpenWeek = { nav.navigate(WeekTab) { popUpTo<HomeRoute>(); launchSingleTop = true } },
-                                onOpenRecap = { nav.navigate(RecapRoute) },
+                                onOpenRecap = { nav.navigate(RecapRoute()) },
+                                onOpenFinish = { choice -> nav.navigate(RecapRoute(finish = true, choice = choice)) },
                             )
                         }
                     }
@@ -202,7 +203,8 @@ class MainActivity : ComponentActivity() {
                                 onManage = { nav.navigate(MetricsRoute) },
                                 onBackfill = { d -> nav.navigate(BackfillRoute(d.toEpochDay())) },
                                 onReveal = { idx -> nav.navigate(RevealRoute(idx)) },
-                                onRecap = { nav.navigate(RecapRoute) },
+                                onRecap = { nav.navigate(RecapRoute()) },
+                                onFinish = { nav.navigate(RecapRoute(finish = true)) },
                             )
                         }
                     }
@@ -215,13 +217,16 @@ class MainActivity : ComponentActivity() {
                             onFinished = { nav.navigate(HomeRoute) { popUpTo<OnboardingRoute> { inclusive = true } } },
                         )
                     }
-                    composable<RecapRoute> {
+                    composable<RecapRoute> { entry ->
+                        val route = entry.toRoute<RecapRoute>()
                         RecapScreenRoute(
-                            viewModel { RecapViewModel(container) },
+                            viewModel { RecapViewModel(container, route.finish) },
                             viewModel { ProgressViewModel(container) },
                             viewModel { DashboardViewModel(container) },
                             container.photos,
                             onClose = nav::popBackStack,
+                            finish = route.finish,
+                            startAtChoice = route.choice,
                         )
                     }
                     composable<WeekTab> {

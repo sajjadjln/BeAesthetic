@@ -51,6 +51,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Path
@@ -127,6 +128,9 @@ data class TodayActions(
     val weigh: () -> Unit = {},
     val openWeek: () -> Unit = {},
     val openRecap: () -> Unit = {},
+    val openFinish: (choice: Boolean) -> Unit = {},
+    /** «+ کار جدید» (today-v3/v4 A, D146): the simple sheet on «امروز» in the part being looked at. */
+    val addTask: () -> Unit = {},
     val acceptFade: () -> Unit = {},
     val declineFade: () -> Unit = {},
 )
@@ -143,11 +147,12 @@ fun TodayRoute(
     onOpenCheckIn: (Int) -> Unit,
     onOpenWeek: () -> Unit,
     onOpenRecap: () -> Unit,
+    onOpenFinish: (choice: Boolean) -> Unit,
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val fade by viewModel.fadeOffer.collectAsStateWithLifecycle()
     // «یه چیز اضافه کن» opens the simple sheet on «هر وقت» in the part being looked at (D128).
-    var adding by remember { mutableStateOf<Part?>(null) }
+    var adding by remember { mutableStateOf<Pair<Part, RepeatKind>?>(null) }
     var weighing by remember { mutableStateOf(false) }
     LaunchedEffect(Unit) { viewModel.screenShown() }
     LifecycleEventEffect(Lifecycle.Event.ON_RESUME) { viewModel.refreshSystemState() }
@@ -167,12 +172,14 @@ fun TodayRoute(
             dismissDaysShownUp = viewModel::dismissDaysShownUp,
             openPlan = onOpenPlan,
             setAnytimeOpen = viewModel::setAnytimeOpen,
-            addAnytime = { adding = state?.selectedPart ?: Part.MORNING },
+            addAnytime = { adding = (state?.selectedPart ?: Part.MORNING) to RepeatKind.ANYTIME },
+            addTask = { adding = (state?.selectedPart ?: Part.MORNING) to RepeatKind.ONCE },
             openBackup = onOpenBackup,
             openCheckIn = onOpenCheckIn,
             weigh = { weighing = true },
             openWeek = onOpenWeek,
             openRecap = onOpenRecap,
+            openFinish = onOpenFinish,
             acceptFade = viewModel::acceptFade,
             declineFade = viewModel::declineFade,
         ),
@@ -182,11 +189,11 @@ fun TodayRoute(
         WeighSheet(weigh, onSave = { v -> viewModel.recordWeight(weigh.metric.id, v); weighing = false }, onDismiss = { weighing = false })
     }
     val s = state
-    val part = adding
-    if (s != null && part != null) {
+    val add = adding
+    if (s != null && add != null) {
         val tasks by viewModel.editorTasks.collectAsStateWithLifecycle()
         TaskEditorSheet(
-            editing = Editing.New(part, RepeatKind.ANYTIME),
+            editing = Editing.New(add.first, add.second),
             today = s.date,
             allTasks = tasks,
             onDismiss = { adding = null },
@@ -223,7 +230,7 @@ fun TodayScreen(state: TodayUiState?, actions: TodayActions) {
         }
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
-            contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 14.dp, bottom = 24.dp),
+            contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 14.dp, bottom = 88.dp),
             horizontalArrangement = Arrangement.spacedBy(10.dp),
             verticalArrangement = Arrangement.spacedBy(10.dp),
         ) {
@@ -244,6 +251,12 @@ fun TodayScreen(state: TodayUiState?, actions: TodayActions) {
             state.buddy?.let { buddy -> item(span = { GridItemSpan(maxLineSpan) }) { BuddyRow(buddy, actions.tapBuddy) } }
             state.progress?.let { prompt -> item(span = { GridItemSpan(maxLineSpan) }) { ProgressPromptRow(prompt, actions) } }
             if (state.recap) item(span = { GridItemSpan(maxLineSpan) }) { RecapRow(actions.openRecap) }
+            if (state.finishRecap) item(span = { GridItemSpan(maxLineSpan) }) {
+                RecapRow({ actions.openFinish(false) }, R.string.today_finish_title, R.string.today_finish_body, Pose.FINISH)
+            }
+            if (state.afterChoice) item(span = { GridItemSpan(maxLineSpan) }) {
+                RecapRow({ actions.openFinish(true) }, R.string.today_choice_title, R.string.today_choice_body, Pose.THINK)
+            }
             state.fade?.let { offer -> item(span = { GridItemSpan(maxLineSpan) }) { FadeCard(offer, actions) } }
             state.ritualWeek?.let { week -> item(span = { GridItemSpan(maxLineSpan) }) { RitualRow(week, actions.openWeek) } }
             state.snack?.let { note -> item(span = { GridItemSpan(maxLineSpan) }) { SnackRow(note) } }
@@ -280,6 +293,27 @@ fun TodayScreen(state: TodayUiState?, actions: TodayActions) {
                 item(span = { GridItemSpan(maxLineSpan) }) { BackupRow(backup, actions.openBackup, Modifier.padding(top = 8.dp)) }
             }
         }
+        // «+ کار جدید» (today-v3/v4 A): where the thumb already is; bottom End = the left edge in RTL.
+        if (!state.minimumMode) NewTaskFab(actions.addTask, Modifier.align(Alignment.BottomEnd).padding(16.dp))
+    }
+}
+
+@Composable
+private fun NewTaskFab(onClick: () -> Unit, modifier: Modifier = Modifier) {
+    val c = Ba.colors
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        modifier = modifier
+            .shadow(8.dp, RoundedCornerShape(18.dp))
+            .clip(RoundedCornerShape(18.dp))
+            .background(c.accent)
+            .clickable(role = androidx.compose.ui.semantics.Role.Button, onClick = onClick)
+            .height(52.dp)
+            .padding(start = 18.dp, end = 20.dp),
+    ) {
+        Icon(BaIcons.Plus, null, tint = c.onAccent, modifier = Modifier.size(22.dp))
+        Text(stringResource(R.string.tasks_new), style = Ba.type.label, color = c.onAccent)
     }
 }
 
@@ -304,6 +338,7 @@ private fun Header(state: TodayUiState, actions: TodayActions) {
             }
             stringResource(R.string.today_line_countdown, dayMonth, week, total, text)
         }
+        tail is HeaderTail.After -> stringResource(if (tail.maintenance) R.string.today_line_maintenance else R.string.today_line_after, dayMonth)
         tail is HeaderTail.InChapter -> stringResource(R.string.today_line_chapter, dayMonth, week, total, months[tail.monthIndex - 1])
         else -> stringResource(R.string.today_line_week, dayMonth, week, total)
     }
@@ -606,7 +641,12 @@ private fun RitualRow(week: Int, onOpen: () -> Unit) {
 
 /** Yalda (D52): the halfway recap, until it's opened. «پیکر» holds the Hafez book. */
 @Composable
-private fun RecapRow(onOpen: () -> Unit) {
+private fun RecapRow(
+    onOpen: () -> Unit,
+    title: Int = R.string.today_recap_title,
+    body: Int = R.string.today_recap_body,
+    pose: Pose = Pose.READ,
+) {
     val c = Ba.colors
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -614,10 +654,10 @@ private fun RecapRow(onOpen: () -> Unit) {
         modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp).clip(RoundedCornerShape(16.dp)).background(c.accentSubtle)
             .clickable(onClick = onOpen).padding(start = 6.dp, end = 14.dp, top = 6.dp, bottom = 6.dp),
     ) {
-        Piker(Pose.READ, c.accent, Outfit.NONE, Modifier.width(64.dp))
+        Piker(pose, c.accent, Outfit.NONE, Modifier.width(64.dp))
         Column(Modifier.weight(1f)) {
-            Text(stringResource(R.string.today_recap_title), style = Ba.type.subtitle, color = c.onAccentSubtle)
-            Text(stringResource(R.string.today_recap_body), style = Ba.type.caption, color = c.text2)
+            Text(stringResource(title), style = Ba.type.subtitle, color = c.onAccentSubtle)
+            Text(stringResource(body), style = Ba.type.caption, color = c.text2)
         }
         Icon(BaIcons.ChevronForward, null, tint = c.onAccentSubtle, modifier = Modifier.size(20.dp))
     }

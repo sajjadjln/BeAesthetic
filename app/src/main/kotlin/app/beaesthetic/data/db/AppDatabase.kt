@@ -181,6 +181,9 @@ interface SettingsDao {
     @Query("UPDATE settings SET backupTreeUri = :uri WHERE id = 1")
     suspend fun setBackupTreeUri(uri: String?)
 
+    @Query("UPDATE settings SET afterFinishMode = :mode WHERE id = 1")
+    suspend fun setAfterFinishMode(mode: String)
+
     @Query("UPDATE settings SET onboardingDone = :done WHERE id = 1")
     suspend fun setOnboardingDone(done: Boolean)
 
@@ -367,6 +370,16 @@ interface RoundNumberDao {
 
 @Dao
 interface ProgressDao {
+    @Query("SELECT MAX(idx) FROM check_in")
+    suspend fun maxCheckInIdx(): Int?
+
+    /** A new program (D145): the old check-ins and photos move up by [offset] and stay as history. */
+    @Query("UPDATE check_in SET idx = idx + :offset")
+    suspend fun shiftCheckIns(offset: Int)
+
+    @Query("UPDATE photo SET checkInIdx = checkInIdx + :offset")
+    suspend fun shiftPhotos(offset: Int)
+
     @Query("SELECT * FROM metric WHERE archivedAt IS NULL ORDER BY sortOrder, id")
     fun observeMetrics(): Flow<List<MetricEntity>>
 
@@ -460,6 +473,9 @@ interface WeekDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun markRecapSeen(recap: RecapEntity)
+
+    @Query("DELETE FROM recap")
+    suspend fun clearRecaps()
 }
 
 @Database(

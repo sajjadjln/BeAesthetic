@@ -68,6 +68,8 @@ data class ProgressUiState(
     val backfillDays: List<LocalDate> = emptyList(),
     /** From Yalda on, the halfway recap can be opened again from here (D52). */
     val recapAvailable: Boolean = false,
+    /** From the finish day on, the finish recap can be opened again from here. */
+    val finishAvailable: Boolean = false,
 )
 
 /** What Progress needs from the workout log (slice 7b). */
@@ -124,6 +126,7 @@ class ProgressViewModel(private val container: AppContainer) : ViewModel() {
                 data.milestones.map { m -> Milestones.view(m, data.metrics.firstOrNull { it.id == m.metricId }, data.readings[m.metricId].orEmpty()) },
             ),
             metrics = data.metrics,
+            finishAvailable = today >= s.programEndDate,
             recapAvailable = app.beaesthetic.domain.progress.Recaps.let { it.available(today, it.halfway(s.halfwayDate, s.calendar())) },
             backfillDays = Backfill.days(s.calendar(), today, w.plans.filter { it.items.isNotEmpty() }.map { it.weekday }.toSet()),
         )

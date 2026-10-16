@@ -42,4 +42,21 @@ class RecapsTest {
         assertTrue(all >= 1)
         assertEquals(all, Recaps.records(sets + LoggedSet(3, d2.plusDays(1), 1, 0, 3, null, 8), d2))
     }
+
+    @Test
+    fun `the finish card shows from 29 Esfand until seen, then the choice until made`() {
+        val end = LocalDate.of(2027, 3, 20)
+        assertFalse(Recaps.finishCardOpen(end.minusDays(1), calendar, seen = false))
+        assertTrue(Recaps.finishCardOpen(end, calendar, seen = false))
+        assertFalse(Recaps.choiceOpen(end, calendar, finishSeen = false, mode = AfterFinish.NONE))
+        assertTrue(Recaps.choiceOpen(end.plusDays(3), calendar, finishSeen = true, mode = AfterFinish.NONE))
+        assertFalse(Recaps.choiceOpen(end.plusDays(3), calendar, finishSeen = true, mode = AfterFinish.MAINTENANCE))
+    }
+
+    @Test
+    fun `old check-ins move up by a hundred per program`() {
+        assertEquals(0, Recaps.archiveOffset(null))
+        assertEquals(100, Recaps.archiveOffset(6))
+        assertEquals(200, Recaps.archiveOffset(106))
+    }
 }
