@@ -179,4 +179,16 @@ class ReminderPlannerTest {
         val plan = ReminderPlanner.plan(PlannerInput(now, zone, slots, 4, now, tasks = listOf(item)))
         assertTrue(plan.none { it.kind == AlarmKind.TASK || it.kind == AlarmKind.FOLLOW_UP })
     }
+
+    @Test
+    fun `the ritual rings on Friday at its time until that week's review is done`() {
+        val now = at(2026, 10, 16, 5, 0) // Friday early morning
+        val input = PlannerInput(now, zone, slots, 4, now, ritualMinute = 19 * 60)
+        val ritual = ReminderPlanner.plan(input).filter { it.kind == AlarmKind.RITUAL }
+        assertEquals(listOf("ritual:2026-10-16"), ritual.map { it.key })
+        assertEquals(at(2026, 10, 16, 19, 0), ritual.single().at)
+        val done = input.copy(ritualsDone = setOf(LocalDate.of(2026, 10, 10)))
+        assertTrue(ReminderPlanner.plan(done).none { it.kind == AlarmKind.RITUAL })
+        assertTrue(ReminderPlanner.plan(input.copy(ritualMinute = null)).none { it.kind == AlarmKind.RITUAL })
+    }
 }

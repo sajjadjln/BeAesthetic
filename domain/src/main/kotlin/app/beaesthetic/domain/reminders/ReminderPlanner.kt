@@ -41,6 +41,10 @@ data class PlannerInput(
     val tasks: List<Task> = emptyList(),
     /** Completion dates per task id; only "every N days" and one-off tasks need them, to know what shows. */
     val completions: Map<Long, Collection<LocalDate>> = emptyMap(),
+    /** The Friday ritual's time (minute of day), or null for none (SPEC §7.1). */
+    val ritualMinute: Int? = null,
+    /** Weeks (their Saturdays) whose ritual is done: their Friday rings no more. */
+    val ritualsDone: Set<LocalDate> = emptySet(),
 )
 
 object ReminderPlanner {
@@ -79,6 +83,13 @@ object ReminderPlanner {
                     add(PlannedAlarm(followUpKey(date, slot.part), followAt, AlarmKind.FOLLOW_UP, date, slot.part))
                 }
             }
+            // The ritual (M8): Fridays only, while that week's review is still open. Never on a skipped Saturday.
+            val ritual = input.ritualMinute
+            if (ritual != null && date.dayOfWeek == java.time.DayOfWeek.FRIDAY && ProgramCalendar.weekStart(date) !in input.ritualsDone) {
+                val calendarDate = if (ritual < input.rolloverHour * 60) date.plusDays(1) else date
+                val at = LocalDateTime.of(calendarDate, LocalTime.of(ritual / 60, ritual % 60)).atZone(input.zone).toInstant()
+                add(PlannedAlarm(ritualKey(date), at, AlarmKind.RITUAL, date))
+            }
             // A task's own alarm (D25, D130); it is skipped at fire time if already done.
             for (task in input.tasks) {
                 val alarm = task.alarm ?: continue
@@ -114,6 +125,7 @@ object ReminderPlanner {
     fun blockKey(date: LocalDate, part: Part): String = "block:$date:$part"
     fun followUpKey(date: LocalDate, part: Part): String = "follow:$date:$part"
     fun taskKey(taskId: Long, date: LocalDate): String = "task:$taskId:$date"
+    fun ritualKey(date: LocalDate): String = "ritual:$date"
 }
 
 /** One line of a block notification: a pending task and its «بعد از…» cue. */

@@ -112,6 +112,22 @@ class Notifier(appContext: Context) {
         manager.notify(HEALTH_NOTIFICATION_ID, notification)
     }
 
+    /** The Friday ritual (M8): one quiet line that opens the Week tab. No "you missed" wording, ever. */
+    @Suppress("MissingPermission")
+    fun showRitual(key: String) {
+        val intent = Intent(context, MainActivity::class.java)
+            .setData("peykar://week/$key".toUri())
+            .addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            .putExtra(MainActivity.EXTRA_REF, key)
+            .putExtra(MainActivity.EXTRA_OPEN, MainActivity.OPEN_WEEK)
+        val notification = base(CHANNEL_RITUAL)
+            .setContentTitle(context.getString(R.string.notif_ritual_title))
+            .setContentText(context.getString(R.string.notif_ritual_body))
+            .setContentIntent(PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT))
+            .build()
+        manager.notify(RITUAL_NOTIFICATION_ID, notification)
+    }
+
     /** A block notification goes away once everything in it is done. */
     fun cancelBlock(part: Part) = manager.cancel(blockNotificationId(part))
 
@@ -175,6 +191,7 @@ class Notifier(appContext: Context) {
 
         private const val TEST_NOTIFICATION_ID = 900
         private const val HEALTH_NOTIFICATION_ID = 901
+        private const val RITUAL_NOTIFICATION_ID = 902
         private const val FOLLOW_UP_ID_BASE = 10_000
         private const val TASK_ID_BASE = 20_000
 

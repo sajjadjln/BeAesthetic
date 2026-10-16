@@ -28,13 +28,13 @@ class BackupRulesTest {
     }
 
     @Test
-    fun `the automatic backup runs on Fridays, after a week, or when there is none`() {
+    fun `the automatic backup runs after a week or when there is none, not just because it's Friday`() {
         val wednesday = LocalDateTime.of(2026, 10, 14, 9, 0)
         val friday = LocalDateTime.of(2026, 10, 16, 9, 0)
         assertTrue(BackupRules.autoDue(true, true, null, wednesday))
         assertFalse(BackupRules.autoDue(true, true, wednesday.minusDays(6), wednesday))
         assertTrue(BackupRules.autoDue(true, true, wednesday.minusDays(7), wednesday))
-        assertTrue(BackupRules.autoDue(true, true, wednesday, friday))
+        assertFalse(BackupRules.autoDue(true, true, wednesday, friday))
         assertFalse(BackupRules.autoDue(true, true, friday.minusHours(1), friday))
         assertFalse(BackupRules.autoDue(false, true, null, friday))
         assertFalse(BackupRules.autoDue(true, false, null, friday))

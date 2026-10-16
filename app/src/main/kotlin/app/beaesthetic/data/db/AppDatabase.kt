@@ -422,6 +422,30 @@ interface ProgressDao {
     suspend fun deleteMilestone(id: Long)
 }
 
+@Dao
+interface WeekDao {
+    @Query("SELECT weekStart FROM week_plan WHERE ritualDoneAt IS NOT NULL")
+    fun observeDone(): Flow<List<LocalDate>>
+
+    @Query("SELECT weekStart FROM week_plan WHERE ritualDoneAt IS NOT NULL")
+    suspend fun done(): List<LocalDate>
+
+    @Upsert
+    suspend fun upsert(plan: WeekPlanEntity)
+
+    @Query("SELECT * FROM snack_note WHERE date BETWEEN :from AND :to")
+    fun observeSnacks(from: LocalDate, to: LocalDate): Flow<List<SnackNoteEntity>>
+
+    @Query("SELECT * FROM snack_note WHERE date = :date")
+    fun observeSnack(date: LocalDate): Flow<SnackNoteEntity?>
+
+    @Upsert
+    suspend fun upsertSnack(note: SnackNoteEntity)
+
+    @Query("DELETE FROM snack_note WHERE date = :date")
+    suspend fun deleteSnack(date: LocalDate)
+}
+
 @Database(
     entities = [
         TaskEntity::class,
@@ -444,10 +468,12 @@ interface ProgressDao {
         CheckInEntity::class,
         PhotoEntity::class,
         MilestoneEntity::class,
+        WeekPlanEntity::class,
+        SnackNoteEntity::class,
     ],
-    version = 8,
+    version = 9,
     exportSchema = true,
-    autoMigrations = [AutoMigration(from = 1, to = 2), AutoMigration(from = 2, to = 3), AutoMigration(from = 3, to = 4), AutoMigration(from = 4, to = 5), AutoMigration(from = 5, to = 6), AutoMigration(from = 6, to = 7), AutoMigration(from = 7, to = 8)],
+    autoMigrations = [AutoMigration(from = 1, to = 2), AutoMigration(from = 2, to = 3), AutoMigration(from = 3, to = 4), AutoMigration(from = 4, to = 5), AutoMigration(from = 5, to = 6), AutoMigration(from = 6, to = 7), AutoMigration(from = 7, to = 8), AutoMigration(from = 8, to = 9)],
 )
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
@@ -463,6 +489,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun roundNumbers(): RoundNumberDao
     abstract fun backups(): BackupRecordDao
     abstract fun progress(): ProgressDao
+    abstract fun weeks(): WeekDao
 
     companion object {
         const val NAME = "beaesthetic.db"

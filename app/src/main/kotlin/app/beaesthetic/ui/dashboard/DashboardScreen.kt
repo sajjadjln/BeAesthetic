@@ -241,7 +241,7 @@ private fun Grid(s: DashboardUiState, onTap: (LocalDate) -> Unit, modifier: Modi
     }
 }
 
-private fun DrawScope.square(status: DayStatus, topLeft: Offset, side: Float, c: BaColors, alpha: Float) {
+internal fun DrawScope.square(status: DayStatus, topLeft: Offset, side: Float, c: BaColors, alpha: Float) {
     val radius = CornerRadius(side * 0.22f)
     when (status) {
         is DayStatus.Level -> drawRoundRect(c.grid[status.level.coerceIn(0, 4)].copy(alpha = alpha), topLeft, Size(side, side), radius)

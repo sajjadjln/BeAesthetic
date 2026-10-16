@@ -77,6 +77,7 @@ import app.beaesthetic.domain.backup.BackupNotice
 import app.beaesthetic.domain.score.DayStatus
 import app.beaesthetic.domain.tasks.TaskIcon
 import app.beaesthetic.domain.text.PersianDigits
+import androidx.compose.runtime.saveable.rememberSaveable
 import app.beaesthetic.domain.time.Jalali
 import app.beaesthetic.domain.time.Part
 import app.beaesthetic.domain.time.Weekdays
@@ -124,6 +125,7 @@ data class TodayActions(
     val openBackup: () -> Unit = {},
     val openCheckIn: (Int) -> Unit = {},
     val weigh: () -> Unit = {},
+    val openWeek: () -> Unit = {},
 )
 
 @Composable
@@ -136,6 +138,7 @@ fun TodayRoute(
     onOpenPlan: () -> Unit,
     onOpenBackup: () -> Unit,
     onOpenCheckIn: (Int) -> Unit,
+    onOpenWeek: () -> Unit,
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     // «یه چیز اضافه کن» opens the simple sheet on «هر وقت» in the part being looked at (D128).
@@ -163,6 +166,7 @@ fun TodayRoute(
             openBackup = onOpenBackup,
             openCheckIn = onOpenCheckIn,
             weigh = { weighing = true },
+            openWeek = onOpenWeek,
         ),
     )
     val weigh = (state?.progress as? ProgressPrompt.WeighIn)?.weight
@@ -231,6 +235,8 @@ fun TodayScreen(state: TodayUiState?, actions: TodayActions) {
             state.cards.forEach { card -> item(span = { GridItemSpan(maxLineSpan) }) { CardFor(card, actions) } }
             state.buddy?.let { buddy -> item(span = { GridItemSpan(maxLineSpan) }) { BuddyRow(buddy, actions.tapBuddy) } }
             state.progress?.let { prompt -> item(span = { GridItemSpan(maxLineSpan) }) { ProgressPromptRow(prompt, actions) } }
+            state.ritualWeek?.let { week -> item(span = { GridItemSpan(maxLineSpan) }) { RitualRow(week, actions.openWeek) } }
+            state.snack?.let { note -> item(span = { GridItemSpan(maxLineSpan) }) { SnackRow(note) } }
             // «تمرین امروز» sits above the part switcher, so it shows in every part (D126).
             if (!state.minimumMode) {
                 when (val w = state.workout) {
@@ -566,6 +572,44 @@ private fun ProgressPromptRow(prompt: ProgressPrompt, actions: TodayActions) {
             Text(stringResource(R.string.today_weigh_text), style = Ba.type.body, color = c.text1, modifier = Modifier.weight(1f))
             Text(stringResource(R.string.today_weigh_button), style = Ba.type.label, color = c.accent)
         }
+    }
+}
+
+/** «مرور هفته N آماده‌ست» on Friday, or the Saturday after (M8, D140). Opens the Week tab. */
+@Composable
+private fun RitualRow(week: Int, onOpen: () -> Unit) {
+    val c = Ba.colors
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(10.dp),
+        modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp).clip(RoundedCornerShape(16.dp)).background(c.accentSubtle)
+            .clickable(onClick = onOpen).padding(start = 6.dp, end = 14.dp, top = 6.dp, bottom = 6.dp),
+    ) {
+        Piker(Pose.CHEER, c.accent, Outfit.NONE, Modifier.width(64.dp))
+        Column(Modifier.weight(1f)) {
+            Text(stringResource(R.string.today_ritual_title, PersianDigits.format(week)), style = Ba.type.subtitle, color = c.onAccentSubtle)
+            Text(stringResource(R.string.today_ritual_body), style = Ba.type.caption, color = c.text2)
+        }
+        Icon(BaIcons.ChevronForward, null, tint = c.onAccentSubtle, modifier = Modifier.size(20.dp))
+    }
+}
+
+/** Today's snack note (from the Friday plan): folded to one line, a tap opens the whole note. */
+@Composable
+private fun SnackRow(note: String) {
+    val c = Ba.colors
+    var open by rememberSaveable { mutableStateOf(false) }
+    Column(
+        Modifier.fillMaxWidth().padding(vertical = 4.dp).clip(RoundedCornerShape(14.dp)).background(c.surface)
+            .clickable { open = !open }.padding(horizontal = 14.dp, vertical = 12.dp),
+    ) {
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+            Icon(BaIcons.Apple, null, tint = c.text2, modifier = Modifier.size(20.dp))
+            Text(stringResource(R.string.today_snack_title), style = Ba.type.body, color = c.text1, modifier = Modifier.weight(1f))
+            Icon(if (open) BaIcons.ChevronDown else BaIcons.ChevronForward, null, tint = c.text3, modifier = Modifier.size(18.dp))
+        }
+        if (open) Text(note, style = Ba.type.body, color = c.text2, modifier = Modifier.padding(top = 8.dp))
+        else Text(note.lineSequence().first(), style = Ba.type.caption, color = c.text3, maxLines = 1, overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis, modifier = Modifier.padding(top = 4.dp))
     }
 }
 

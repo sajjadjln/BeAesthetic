@@ -329,3 +329,17 @@ data class MilestoneEntity(
     val reachedOn: LocalDate? = null,
     val sortOrder: Int = 0,
 )
+
+/** v9 (slice 8): a week (its Saturday) whose Friday ritual is done (M8, D140). No row = not done; never shown as missed. */
+@Entity(tableName = "week_plan")
+data class WeekPlanEntity(
+    @PrimaryKey val weekStart: LocalDate,
+    val ritualDoneAt: Instant? = null,
+)
+
+/** v9 (slice 8): a day's snack note from the Friday plan (M8): free text, can hold a whole recipe. */
+@Entity(tableName = "snack_note")
+data class SnackNoteEntity(
+    @PrimaryKey val date: LocalDate,
+    val text: String,
+)

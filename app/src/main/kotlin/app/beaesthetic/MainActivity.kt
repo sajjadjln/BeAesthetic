@@ -73,6 +73,9 @@ import app.beaesthetic.ui.theme.PeykarTheme
 import app.beaesthetic.ui.theme.ThemeMode
 import app.beaesthetic.ui.today.TodayRoute
 import app.beaesthetic.ui.today.TodayViewModel
+import app.beaesthetic.ui.week.WeekRoute
+import app.beaesthetic.ui.week.WeekViewModel
+import app.beaesthetic.ui.week.linesRes
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 
@@ -90,6 +93,7 @@ import kotlinx.serialization.Serializable
 @Serializable object DashboardTab
 @Serializable object WorkoutRoute
 @Serializable object ProgressTab
+@Serializable object WeekTab
 @Serializable object MetricsRoute
 @Serializable data class CheckInRoute(val idx: Int)
 @Serializable data class RevealRoute(val idx: Int)
@@ -141,7 +145,10 @@ class MainActivity : ComponentActivity() {
             }
             val nav = rememberNavController()
             DisposableEffect(nav) {
-                if (intent?.getStringExtra(EXTRA_OPEN) == OPEN_PHONE) nav.navigate(PhoneRoute)
+                when (intent?.getStringExtra(EXTRA_OPEN)) {
+                    OPEN_PHONE -> nav.navigate(PhoneRoute)
+                    OPEN_WEEK -> nav.navigate(WeekTab) { popUpTo<HomeRoute>(); launchSingleTop = true }
+                }
                 val listener = Consumer<Intent> { handleIntent(it, nav) }
                 addOnNewIntentListener(listener)
                 onDispose { removeOnNewIntentListener(listener) }
@@ -165,6 +172,7 @@ class MainActivity : ComponentActivity() {
                                 onOpenPlan = { nav.navigate(PlanRoute) },
                                 onOpenBackup = { nav.navigate(BackupRoute) },
                                 onOpenCheckIn = { idx -> nav.navigate(CheckInRoute(idx)) },
+                                onOpenWeek = { nav.navigate(WeekTab) { popUpTo<HomeRoute>(); launchSingleTop = true } },
                             )
                         }
                     }
@@ -181,6 +189,11 @@ class MainActivity : ComponentActivity() {
                                 onBackfill = { d -> nav.navigate(BackfillRoute(d.toEpochDay())) },
                                 onReveal = { idx -> nav.navigate(RevealRoute(idx)) },
                             )
+                        }
+                    }
+                    composable<WeekTab> {
+                        WithTabs(Tab.WEEK, nav) {
+                            WeekRoute(viewModel { WeekViewModel(container) { win -> resources.getStringArray(win.linesRes()).size } })
                         }
                     }
                     composable<MetricsRoute> { MetricsScreenRoute(viewModel { ProgressViewModel(container) }, onBack = nav::popBackStack) }
@@ -254,6 +267,7 @@ class MainActivity : ComponentActivity() {
                     Tab.TODAY -> nav.popBackStack(HomeRoute, inclusive = false)
                     Tab.DASHBOARD -> nav.navigate(DashboardTab) { popUpTo<HomeRoute>(); launchSingleTop = true }
                     Tab.PROGRESS -> nav.navigate(ProgressTab) { popUpTo<HomeRoute>(); launchSingleTop = true }
+                    Tab.WEEK -> nav.navigate(WeekTab) { popUpTo<HomeRoute>(); launchSingleTop = true }
                 }
             })
         }
@@ -265,7 +279,11 @@ class MainActivity : ComponentActivity() {
         intent.getStringExtra(EXTRA_PART)?.let { name -> runCatching { Part.valueOf(name) }.getOrNull()?.let(today::selectPart) }
         intent.getStringExtra(EXTRA_REF)?.let { key -> lifecycleScope.launch { container.events.notificationTapped(key) } }
         if (nav != null) {
-            if (intent.getStringExtra(EXTRA_OPEN) == OPEN_PHONE) nav.navigate(PhoneRoute) else if (intent.hasExtra(EXTRA_PART)) nav.popBackStack(HomeRoute, inclusive = false)
+            when {
+                intent.getStringExtra(EXTRA_OPEN) == OPEN_PHONE -> nav.navigate(PhoneRoute)
+                intent.getStringExtra(EXTRA_OPEN) == OPEN_WEEK -> nav.navigate(WeekTab) { popUpTo<HomeRoute>(); launchSingleTop = true }
+                intent.hasExtra(EXTRA_PART) -> nav.popBackStack(HomeRoute, inclusive = false)
+            }
         }
     }
 
@@ -274,5 +292,6 @@ class MainActivity : ComponentActivity() {
         const val EXTRA_REF = "ref"
         const val EXTRA_OPEN = "open"
         const val OPEN_PHONE = "phone"
+        const val OPEN_WEEK = "week"
     }
 }

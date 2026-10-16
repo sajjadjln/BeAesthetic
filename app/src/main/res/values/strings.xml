@@ -735,4 +735,62 @@
     <string name="camera_shoot">عکس</string>
     <string name="camera_no_permission">برای دوربین داخل اپ اجازه‌ی دوربین لازمه. می‌تونی از دوربین گوشی یا گالری استفاده کنی.</string>
     <string name="photo_ghost_camera">با شبح</string>
+
+    <!-- Slice 8: the Week tab and the Friday ritual (M8, D140). Wins only; nothing is ever called missed. -->
+    <string name="tab_week">هفته</string>
+    <string name="week_title">هفته</string>
+    <string name="week_review_title">مرور هفته %1$s</string>
+    <string name="week_steps_review">مرور</string>
+    <string name="week_steps_plan">برنامه</string>
+    <string name="week_shown_up">%1$s روز حضور</string>
+    <string name="week_comebacks">%1$s بار برگشتی</string>
+    <string name="week_records">%1$s رکورد</string>
+    <string name="week_workouts">%1$s تمرین</string>
+    <string name="week_best_routines">بهترین روتین‌ها</string>
+    <string name="week_start">شروع هفته %1$s</string>
+    <string name="week_close_last">بستن هفته‌ی آخر</string>
+    <string name="week_plan_optional">برنامه‌ی هفته %1$s · اختیاری</string>
+    <string name="week_plan_title">برنامه‌ی هفته %1$s</string>
+    <string name="week_range">%1$s تا %2$s</string>
+    <string name="week_special_days">روزهای ویژه</string>
+    <string name="week_reserves">%1$s روز ذخیره</string>
+    <string name="week_reserves_none">ذخیره‌ی این هفته استفاده شد</string>
+    <string name="week_special_help">سفر، مریضی یا استراحت. اون روز از امتیاز هفته بیرون می‌مونه.</string>
+    <string name="week_special_clear">برداشتن</string>
+    <string name="week_snacks">میان‌وعده‌ها</string>
+    <string name="week_snack_hint">چی آماده کنی؟ (می‌تونه یه دستور کامل باشه)</string>
+    <string name="week_identity_title">من کسی‌ام که…</string>
+    <string name="week_identity_ask">یه جمله درباره‌ی آدمی که داری می‌سازی. یه بار می‌نویسی و هر جمعه اینجاست.</string>
+    <string name="week_identity_hint">مثلاً: من کسی‌ام که به خودش می‌رسه، حتی تو روزای شلوغ.</string>
+    <string name="week_identity_edit">ویرایش جمله</string>
+    <string name="week_next_ritual">مرور هفته: جمعه %1$s</string>
+    <string name="week_done_title">هفته %1$s شروع شد</string>
+    <string name="week_done_body">مرور ثبت شد و پشتیبان هفتگی داره گرفته می‌شه.</string>
+    <string name="week_done_body_no_folder">مرور ثبت شد.</string>
+    <string name="week_day_label">%1$s %2$s</string>
+    <string name="today_ritual_title">مرور هفته %1$s آماده‌ست</string>
+    <string name="today_ritual_body">یه دقیقه: مرور، بعد شروع هفته‌ی بعد.</string>
+    <string name="today_snack_title">میان‌وعده‌ی امروز</string>
+    <string name="notif_ritual_title">مرور هفته آماده‌ست</string>
+    <string name="notif_ritual_body">یه دقیقه وقت می‌بره. برنامه‌ی هفته‌ی بعد اختیاریه.</string>
+    <string-array name="week_win_records">
+        <item>رکورد زدی! این هفته قوی‌تر از قبل بودی.</item>
+        <item>رکورد جدید. بدنت داره جواب می‌ده.</item>
+    </string-array>
+    <string-array name="week_win_comebacks">
+        <item>برگشتنت از همه چی مهم‌تره. دمت گرم.</item>
+        <item>هر بار برگشتی. این یعنی ادامه‌دار.</item>
+    </string-array>
+    <string-array name="week_win_routines">
+        <item>روتین‌هات دارن جا می‌افتن. خفنه.</item>
+        <item>کارهای هر روزت محکم شدن. ادامه بده.</item>
+    </string-array>
+    <string-array name="week_win_workouts">
+        <item>تمرین‌هاتو رفتی. بازوها خبر دارن.</item>
+        <item>هر جلسه یه آجر. این هفته هم ساختی.</item>
+    </string-array>
+    <string-array name="week_win_showed_up">
+        <item>اومدی و ثبت کردی. همین پایه‌ست.</item>
+        <item>یه هفته‌ی دیگه کنار هم. بزن بریم.</item>
+    </string-array>
 </resources>

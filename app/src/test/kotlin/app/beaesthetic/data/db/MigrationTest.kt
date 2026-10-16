@@ -190,6 +190,20 @@ class MigrationTest {
         }
     }
 
+    @Test
+    fun `8 to 9 keeps days and settings and adds the empty week plan and snack tables`() {
+        helper.createDatabase(DB, 8).use { db ->
+            db.execSQL("INSERT INTO day (date, special, minimumMode, dueCount, doneCount, floorDone) VALUES ('2026-10-15', 'OFF', 0, 4, 2, 0)")
+            db.execSQL("INSERT INTO milestone (id, title, sortOrder) VALUES (1, '۱۰ بارفیکس', 0)")
+        }
+        helper.runMigrationsAndValidate(DB, 9, true).use { db ->
+            db.query("SELECT special, doneCount FROM day").use { c -> c.moveToFirst(); assertEquals("OFF", c.getString(0)); assertEquals(2, c.getInt(1)) }
+            db.query("SELECT title FROM milestone").use { c -> c.moveToFirst(); assertEquals("۱۰ بارفیکس", c.getString(0)) }
+            db.query("SELECT COUNT(*) FROM week_plan").use { c -> c.moveToFirst(); assertEquals(0, c.getInt(0)) }
+            db.query("SELECT COUNT(*) FROM snack_note").use { c -> c.moveToFirst(); assertEquals(0, c.getInt(0)) }
+        }
+    }
+
     private companion object {
         const val DB = "migration-test.db"
     }

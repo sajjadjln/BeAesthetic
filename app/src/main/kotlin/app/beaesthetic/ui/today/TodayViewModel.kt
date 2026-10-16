@@ -43,6 +43,7 @@ import app.beaesthetic.domain.time.Part
 import app.beaesthetic.domain.time.ProgramCalendar
 import app.beaesthetic.domain.time.Weekdays
 import app.beaesthetic.domain.workout.RoundNumbers
+import app.beaesthetic.domain.week.Ritual
 import app.beaesthetic.domain.workout.WorkoutPlan
 import app.beaesthetic.reminders.AlarmScheduler.Companion.toLogRow
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -143,6 +144,10 @@ data class TodayUiState(
     /** The backup row under the tiles (SPEC §8); shown only when no reminder banner is. */
     val backup: BackupStatus? = null,
     val progress: ProgressPrompt? = null,
+    /** On Friday (or the Saturday after) while the ritual is open: the week it reviews (M8, D140). */
+    val ritualWeek: Int? = null,
+    /** Today's snack note from the Friday plan, as a quiet folded row. */
+    val snack: String? = null,
 ) {
     val dayComplete: Boolean get() = total > 0 && done == total
 }
@@ -171,9 +176,11 @@ private data class Inputs(
     val allDays: Map<LocalDate, DaySnapshot>,
     val unseenDays: List<RoundNumberEntity>,
     val progress: ProgressData,
+    val ritualsDone: Set<LocalDate>,
+    val snack: String?,
 )
 
-private data class Extra(val plans: List<WorkoutPlan>, val allDays: Map<LocalDate, DaySnapshot>, val unseen: List<RoundNumberEntity>, val progress: ProgressData)
+private data class Extra(val plans: List<WorkoutPlan>, val allDays: Map<LocalDate, DaySnapshot>, val unseen: List<RoundNumberEntity>, val progress: ProgressData, val week: Pair<Set<LocalDate>, String?>)
 
 private fun SettingsEntity.calendar() = ProgramCalendar(programStartDate, programEndDate, rolloverHour)
 
@@ -228,8 +235,9 @@ class TodayViewModel(
                 container.tasks.observeSnapshots(n.calendar.day0, n.date),
                 container.db.roundNumbers().observeUnseenDays(),
                 container.progress.observe(),
-            ) { planned, all, unseen, progress -> Extra(planned, all, unseen, progress) },
-        ) { day, snapshots, s, letters, x -> Inputs(n, day, snapshots, s, letters, x.plans, x.allDays, x.unseen, x.progress) }
+                combine(container.db.weeks().observeDone(), container.db.weeks().observeSnack(n.date)) { done, snack -> done.toSet() to snack?.text },
+            ) { planned, all, unseen, progress, week -> Extra(planned, all, unseen, progress, week) },
+        ) { day, snapshots, s, letters, x -> Inputs(n, day, snapshots, s, letters, x.plans, x.allDays, x.unseen, x.progress, x.week.first, x.week.second) }
     }
 
     private val health = container.db.reminderLog()
@@ -444,6 +452,8 @@ class TodayViewModel(
             anytime = day.anytime.map { AnytimeUi(it.task.id, it.task.title, it.done, it.task.isImportant) },
             anytimeOpen = s.anytimeOpen,
             progress = progressPrompt(date, calendar, input.progress),
+            ritualWeek = Ritual.open(date, calendar, input.ritualsDone)?.let(calendar::weekNumber),
+            snack = input.snack?.takeIf { it.isNotBlank() },
         )
     }
 

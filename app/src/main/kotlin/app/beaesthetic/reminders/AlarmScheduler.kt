@@ -62,6 +62,8 @@ class AlarmScheduler(
                 followUpMinutes = settings.followUpMinutes,
                 tasks = taskList,
                 completions = completions,
+                ritualMinute = settings.ritualTime,
+                ritualsDone = db.weeks().done().toSet(),
             ),
         )
         val planned = plan.associateBy { it.key }

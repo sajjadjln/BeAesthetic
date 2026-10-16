@@ -274,7 +274,7 @@ db/beaesthetic.db raw database copy, an emergency fallback only
 
 **Folder:** chosen once with the system folder picker (Storage Access Framework); the app keeps a persistable permission. The user points it at a folder that **Syncthing-Fork** syncs to the PC. (The official Syncthing Android app was discontinued in late 2024; Syncthing-Fork continues it.)
 
-**When:** at the end of the Friday ritual, after each check-in, from Settings by hand, and, as a safety net, on app open if the last backup is more than 7 days old. Until the ritual exists (slice 8), also on app open on a Friday (D133). The automatic backup runs as a WorkManager job; a manual one runs in the app's scope. Either way, leaving the screen doesn't cut one off.
+**When:** at the end of the Friday ritual, after each check-in, from Settings by hand, and, as a safety net, on app open if the last backup is more than 7 days old. Since slice 8 the weekly one runs when the ritual finishes (D140). The automatic backup runs as a WorkManager job; a manual one runs in the app's scope. Either way, leaving the screen doesn't cut one off.
 
 ### Restore
 

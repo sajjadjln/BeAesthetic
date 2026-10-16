@@ -1,7 +1,6 @@
 package app.beaesthetic.domain.backup
 
 import app.beaesthetic.domain.time.Jalali
-import java.time.DayOfWeek
 import java.time.Duration
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -48,14 +47,12 @@ object BackupRules {
 
     /**
      * The automatic backup on app open (D133): when switched on and a folder is chosen, if there is no backup
-     * yet, the last one is [AUTO_DAYS] or more days old, or it's Friday (the ritual's day, until slice 8) and
-     * none was made today.
+     * yet or the last one is [AUTO_DAYS] or more days old. The weekly one runs when the Friday ritual ends (D140).
      */
     fun autoDue(enabled: Boolean, hasFolder: Boolean, lastOk: LocalDateTime?, now: LocalDateTime): Boolean {
         if (!enabled || !hasFolder) return false
         if (lastOk == null) return true
-        if (Duration.between(lastOk, now).toDays() >= AUTO_DAYS) return true
-        return now.dayOfWeek == DayOfWeek.FRIDAY && lastOk.toLocalDate() != now.toLocalDate()
+        return Duration.between(lastOk, now).toDays() >= AUTO_DAYS
     }
 
     /** The notice for Today and Settings. A failed last try comes first: it means the folder needs a look. */

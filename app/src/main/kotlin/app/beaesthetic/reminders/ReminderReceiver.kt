@@ -15,6 +15,7 @@ import app.beaesthetic.domain.reminders.PartOfDay
 import app.beaesthetic.domain.reminders.ReminderSlot
 import app.beaesthetic.domain.time.Part
 import app.beaesthetic.domain.time.ProgramCalendar
+import app.beaesthetic.domain.week.Ritual
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 
@@ -52,7 +53,23 @@ class ReminderReceiver : BroadcastReceiver() {
                 .let { it.copy(id = db.reminderLog().insert(it)) }
         val notifier = container.notifier
 
-        val outcome = if (kind == AlarmKind.TEST) {
+        val outcome = if (kind == AlarmKind.RITUAL) {
+            // Shown only while that week's review is still open; done means nothing to say.
+            val settings = db.settings().get()!!
+            val date = LocalDate.parse(intent.getStringExtra(EXTRA_DATE))
+            val today = ProgramCalendar.programDate(container.clock.localNow(), settings.rolloverHour)
+            val calendar = ProgramCalendar(settings.programStartDate, settings.programEndDate, settings.rolloverHour)
+            when {
+                today != date -> ReminderOutcome.SKIPPED_LATE
+                Ritual.open(today, calendar, db.weeks().done().toSet()) == null -> ReminderOutcome.SKIPPED_EMPTY
+                !notifier.canNotify() -> ReminderOutcome.NOTIFICATIONS_OFF
+                else -> {
+                    notifier.showRitual(key)
+                    container.events.notificationShown(key)
+                    ReminderOutcome.SHOWN
+                }
+            }
+        } else if (kind == AlarmKind.TEST) {
             if (notifier.canNotify()) {
                 notifier.showTest(key)
                 ReminderOutcome.SHOWN

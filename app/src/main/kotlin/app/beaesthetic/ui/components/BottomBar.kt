@@ -28,11 +28,12 @@ import androidx.compose.ui.unit.dp
 import app.beaesthetic.R
 import app.beaesthetic.ui.theme.Ba
 
-/** The bottom tabs (DESIGN: icons only, RTL from the right). Only built tabs show (D123); Week joins later. */
+/** The bottom tabs (DESIGN: icons only, RTL from the right). Today · Dashboard · Progress · Week (SPEC §4). */
 enum class Tab(val icon: ImageVector, val label: Int) {
     TODAY(BaIcons.CheckCircle, R.string.tab_today),
     DASHBOARD(BaIcons.Grid, R.string.tab_dashboard),
     PROGRESS(BaIcons.Trend, R.string.tab_progress),
+    WEEK(BaIcons.Calendar, R.string.tab_week),
 }
 
 @Composable
