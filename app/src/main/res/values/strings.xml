@@ -793,4 +793,24 @@
         <item>اومدی و ثبت کردی. همین پایه‌ست.</item>
         <item>یه هفته‌ی دیگه کنار هم. بزن بریم.</item>
     </string-array>
+
+    <!-- Slice 8b: the halfway recap (D52, flows R1–R3). Wins only; gaps are never counted out loud. -->
+    <string name="recap_tap_next">بزن برای بعدی</string>
+    <string name="recap_close">بستن</string>
+    <string name="recap_r1_title">نیمه‌ی راه</string>
+    <string name="recap_r1_body">از روز صفر تا یلدا، %1$s روز اومدی.</string>
+    <string name="recap_r1_special">%1$s روز ویژه هم داشتی. اونا هم جزو برنامه‌ان.</string>
+    <string name="recap_r2_title">از روز صفر تا امروز</string>
+    <string name="recap_records">رکورد</string>
+    <string name="recap_reached">رسیدی: %1$s</string>
+    <string name="recap_r2_empty">عددها از چک‌این‌ها و تمرین‌ها می‌آن. نیمه‌ی دوم جای پرشدنشونه.</string>
+    <string name="recap_r3_title">روز صفر و حالا</string>
+    <string name="recap_r3_own">جمله‌ی خودت</string>
+    <string name="recap_r3_no_photos">عکس‌های روز صفر و آخرین چک‌این اینجا کنار هم میان.</string>
+    <string name="recap_r4_title">نیمه‌ی دوم</string>
+    <string name="recap_r4_body">حالا نوبت فصل %1$s. %2$s هفته تا نوروز.</string>
+    <string name="recap_r4_done">بزن بریم</string>
+    <string name="today_recap_title">یلدا مبارک! مرور نیمه‌ی راه</string>
+    <string name="today_recap_body">نصف راهو اومدی. ببین چی ساختی.</string>
+    <string name="progress_recap_row">مرور نیمه‌ی راه</string>
 </resources>

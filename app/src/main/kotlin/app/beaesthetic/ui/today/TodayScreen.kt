@@ -126,6 +126,7 @@ data class TodayActions(
     val openCheckIn: (Int) -> Unit = {},
     val weigh: () -> Unit = {},
     val openWeek: () -> Unit = {},
+    val openRecap: () -> Unit = {},
 )
 
 @Composable
@@ -139,6 +140,7 @@ fun TodayRoute(
     onOpenBackup: () -> Unit,
     onOpenCheckIn: (Int) -> Unit,
     onOpenWeek: () -> Unit,
+    onOpenRecap: () -> Unit,
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     // «یه چیز اضافه کن» opens the simple sheet on «هر وقت» in the part being looked at (D128).
@@ -167,6 +169,7 @@ fun TodayRoute(
             openCheckIn = onOpenCheckIn,
             weigh = { weighing = true },
             openWeek = onOpenWeek,
+            openRecap = onOpenRecap,
         ),
     )
     val weigh = (state?.progress as? ProgressPrompt.WeighIn)?.weight
@@ -235,6 +238,7 @@ fun TodayScreen(state: TodayUiState?, actions: TodayActions) {
             state.cards.forEach { card -> item(span = { GridItemSpan(maxLineSpan) }) { CardFor(card, actions) } }
             state.buddy?.let { buddy -> item(span = { GridItemSpan(maxLineSpan) }) { BuddyRow(buddy, actions.tapBuddy) } }
             state.progress?.let { prompt -> item(span = { GridItemSpan(maxLineSpan) }) { ProgressPromptRow(prompt, actions) } }
+            if (state.recap) item(span = { GridItemSpan(maxLineSpan) }) { RecapRow(actions.openRecap) }
             state.ritualWeek?.let { week -> item(span = { GridItemSpan(maxLineSpan) }) { RitualRow(week, actions.openWeek) } }
             state.snack?.let { note -> item(span = { GridItemSpan(maxLineSpan) }) { SnackRow(note) } }
             // «تمرین امروز» sits above the part switcher, so it shows in every part (D126).
@@ -589,6 +593,25 @@ private fun RitualRow(week: Int, onOpen: () -> Unit) {
         Column(Modifier.weight(1f)) {
             Text(stringResource(R.string.today_ritual_title, PersianDigits.format(week)), style = Ba.type.subtitle, color = c.onAccentSubtle)
             Text(stringResource(R.string.today_ritual_body), style = Ba.type.caption, color = c.text2)
+        }
+        Icon(BaIcons.ChevronForward, null, tint = c.onAccentSubtle, modifier = Modifier.size(20.dp))
+    }
+}
+
+/** Yalda (D52): the halfway recap, until it's opened. «پیکر» holds the Hafez book. */
+@Composable
+private fun RecapRow(onOpen: () -> Unit) {
+    val c = Ba.colors
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(10.dp),
+        modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp).clip(RoundedCornerShape(16.dp)).background(c.accentSubtle)
+            .clickable(onClick = onOpen).padding(start = 6.dp, end = 14.dp, top = 6.dp, bottom = 6.dp),
+    ) {
+        Piker(Pose.READ, c.accent, Outfit.NONE, Modifier.width(64.dp))
+        Column(Modifier.weight(1f)) {
+            Text(stringResource(R.string.today_recap_title), style = Ba.type.subtitle, color = c.onAccentSubtle)
+            Text(stringResource(R.string.today_recap_body), style = Ba.type.caption, color = c.text2)
         }
         Icon(BaIcons.ChevronForward, null, tint = c.onAccentSubtle, modifier = Modifier.size(20.dp))
     }

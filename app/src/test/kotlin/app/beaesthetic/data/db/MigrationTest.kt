@@ -204,6 +204,17 @@ class MigrationTest {
         }
     }
 
+    @Test
+    fun `9 to 10 keeps the ritual weeks and adds the empty recap table`() {
+        helper.createDatabase(DB, 9).use { db ->
+            db.execSQL("INSERT INTO week_plan (weekStart, ritualDoneAt) VALUES ('2026-10-10', 1791990000000)")
+        }
+        helper.runMigrationsAndValidate(DB, 10, true).use { db ->
+            db.query("SELECT weekStart FROM week_plan").use { c -> c.moveToFirst(); assertEquals("2026-10-10", c.getString(0)) }
+            db.query("SELECT COUNT(*) FROM recap").use { c -> c.moveToFirst(); assertEquals(0, c.getInt(0)) }
+        }
+    }
+
     private companion object {
         const val DB = "migration-test.db"
     }

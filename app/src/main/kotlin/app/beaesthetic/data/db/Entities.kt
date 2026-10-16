@@ -343,3 +343,10 @@ data class SnackNoteEntity(
     @PrimaryKey val date: LocalDate,
     val text: String,
 )
+
+/** v10 (slice 8b): a recap (HALFWAY, later FINISH) the user has seen (D52). The content is computed. */
+@Entity(tableName = "recap")
+data class RecapEntity(
+    @PrimaryKey val key: String,
+    val seenAt: Instant,
+)

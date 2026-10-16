@@ -74,6 +74,8 @@ import app.beaesthetic.ui.theme.ThemeMode
 import app.beaesthetic.ui.today.TodayRoute
 import app.beaesthetic.ui.today.TodayViewModel
 import app.beaesthetic.ui.week.WeekRoute
+import app.beaesthetic.ui.recap.RecapRoute as RecapScreenRoute
+import app.beaesthetic.ui.recap.RecapViewModel
 import app.beaesthetic.ui.week.WeekViewModel
 import app.beaesthetic.ui.week.linesRes
 import kotlinx.coroutines.launch
@@ -94,6 +96,7 @@ import kotlinx.serialization.Serializable
 @Serializable object WorkoutRoute
 @Serializable object ProgressTab
 @Serializable object WeekTab
+@Serializable object RecapRoute
 @Serializable object MetricsRoute
 @Serializable data class CheckInRoute(val idx: Int)
 @Serializable data class RevealRoute(val idx: Int)
@@ -173,6 +176,7 @@ class MainActivity : ComponentActivity() {
                                 onOpenBackup = { nav.navigate(BackupRoute) },
                                 onOpenCheckIn = { idx -> nav.navigate(CheckInRoute(idx)) },
                                 onOpenWeek = { nav.navigate(WeekTab) { popUpTo<HomeRoute>(); launchSingleTop = true } },
+                                onOpenRecap = { nav.navigate(RecapRoute) },
                             )
                         }
                     }
@@ -188,8 +192,18 @@ class MainActivity : ComponentActivity() {
                                 onManage = { nav.navigate(MetricsRoute) },
                                 onBackfill = { d -> nav.navigate(BackfillRoute(d.toEpochDay())) },
                                 onReveal = { idx -> nav.navigate(RevealRoute(idx)) },
+                                onRecap = { nav.navigate(RecapRoute) },
                             )
                         }
+                    }
+                    composable<RecapRoute> {
+                        RecapScreenRoute(
+                            viewModel { RecapViewModel(container) },
+                            viewModel { ProgressViewModel(container) },
+                            viewModel { DashboardViewModel(container) },
+                            container.photos,
+                            onClose = nav::popBackStack,
+                        )
                     }
                     composable<WeekTab> {
                         WithTabs(Tab.WEEK, nav) {

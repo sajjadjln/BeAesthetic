@@ -66,6 +66,8 @@ data class ProgressUiState(
     val metrics: List<Metric> = emptyList(),
     /** Past plan days a session can be backfilled for (Day 0 to yesterday). */
     val backfillDays: List<LocalDate> = emptyList(),
+    /** From Yalda on, the halfway recap can be opened again from here (D52). */
+    val recapAvailable: Boolean = false,
 )
 
 /** What Progress needs from the workout log (slice 7b). */
@@ -122,6 +124,7 @@ class ProgressViewModel(private val container: AppContainer) : ViewModel() {
                 data.milestones.map { m -> Milestones.view(m, data.metrics.firstOrNull { it.id == m.metricId }, data.readings[m.metricId].orEmpty()) },
             ),
             metrics = data.metrics,
+            recapAvailable = app.beaesthetic.domain.progress.Recaps.let { it.available(today, it.halfway(s.halfwayDate, s.calendar())) },
             backfillDays = Backfill.days(s.calendar(), today, w.plans.filter { it.items.isNotEmpty() }.map { it.weekday }.toSet()),
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)

@@ -44,6 +44,7 @@ import app.beaesthetic.domain.time.ProgramCalendar
 import app.beaesthetic.domain.time.Weekdays
 import app.beaesthetic.domain.workout.RoundNumbers
 import app.beaesthetic.domain.week.Ritual
+import app.beaesthetic.domain.progress.Recaps
 import app.beaesthetic.domain.workout.WorkoutPlan
 import app.beaesthetic.reminders.AlarmScheduler.Companion.toLogRow
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -148,6 +149,8 @@ data class TodayUiState(
     val ritualWeek: Int? = null,
     /** Today's snack note from the Friday plan, as a quiet folded row. */
     val snack: String? = null,
+    /** From Yalda until opened: the halfway recap card (D52). */
+    val recap: Boolean = false,
 ) {
     val dayComplete: Boolean get() = total > 0 && done == total
 }
@@ -163,6 +166,7 @@ private data class TodaySettings(
     val cardDismissedOn: LocalDate?,
     val healthSeenAt: Instant?,
     val anytimeOpen: Boolean,
+    val halfwayDate: LocalDate?,
 )
 
 private data class Inputs(
@@ -178,9 +182,10 @@ private data class Inputs(
     val progress: ProgressData,
     val ritualsDone: Set<LocalDate>,
     val snack: String?,
+    val recapSeen: Boolean,
 )
 
-private data class Extra(val plans: List<WorkoutPlan>, val allDays: Map<LocalDate, DaySnapshot>, val unseen: List<RoundNumberEntity>, val progress: ProgressData, val week: Pair<Set<LocalDate>, String?>)
+private data class Extra(val plans: List<WorkoutPlan>, val allDays: Map<LocalDate, DaySnapshot>, val unseen: List<RoundNumberEntity>, val progress: ProgressData, val week: Triple<Set<LocalDate>, String?, Boolean>)
 
 private fun SettingsEntity.calendar() = ProgramCalendar(programStartDate, programEndDate, rolloverHour)
 
@@ -220,7 +225,7 @@ class TodayViewModel(
         .onEach { pickedPart.value = null }
 
     private val todaySettings = settings
-        .map { TodaySettings(it.installDate, it.showBuddy, it.firstLetterOfferDone, it.cardDismissedOn, it.healthSeenAt, it.anytimeOpen) }
+        .map { TodaySettings(it.installDate, it.showBuddy, it.firstLetterOfferDone, it.cardDismissedOn, it.healthSeenAt, it.anytimeOpen, it.halfwayDate) }
         .distinctUntilChanged()
 
     private val inputs: Flow<Inputs> = now.flatMapLatest { n ->
@@ -235,9 +240,9 @@ class TodayViewModel(
                 container.tasks.observeSnapshots(n.calendar.day0, n.date),
                 container.db.roundNumbers().observeUnseenDays(),
                 container.progress.observe(),
-                combine(container.db.weeks().observeDone(), container.db.weeks().observeSnack(n.date)) { done, snack -> done.toSet() to snack?.text },
+                combine(container.db.weeks().observeDone(), container.db.weeks().observeSnack(n.date), container.db.weeks().observeRecapsSeen()) { done, snack, seen -> Triple(done.toSet(), snack?.text, Recaps.HALFWAY in seen) },
             ) { planned, all, unseen, progress, week -> Extra(planned, all, unseen, progress, week) },
-        ) { day, snapshots, s, letters, x -> Inputs(n, day, snapshots, s, letters, x.plans, x.allDays, x.unseen, x.progress, x.week.first, x.week.second) }
+        ) { day, snapshots, s, letters, x -> Inputs(n, day, snapshots, s, letters, x.plans, x.allDays, x.unseen, x.progress, x.week.first, x.week.second, x.week.third) }
     }
 
     private val health = container.db.reminderLog()
@@ -454,6 +459,7 @@ class TodayViewModel(
             progress = progressPrompt(date, calendar, input.progress),
             ritualWeek = Ritual.open(date, calendar, input.ritualsDone)?.let(calendar::weekNumber),
             snack = input.snack?.takeIf { it.isNotBlank() },
+            recap = Recaps.cardOpen(date, Recaps.halfway(s.halfwayDate, calendar), calendar, input.recapSeen),
         )
     }
 

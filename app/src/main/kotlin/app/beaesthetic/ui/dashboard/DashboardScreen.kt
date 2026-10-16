@@ -160,7 +160,7 @@ private fun Stat(value: String, label: String, modifier: Modifier = Modifier, sp
  * fills the squares in week by week (~0.4 s) and today's ring glows once (D76).
  */
 @Composable
-private fun Grid(s: DashboardUiState, onTap: (LocalDate) -> Unit, modifier: Modifier = Modifier) {
+internal fun Grid(s: DashboardUiState, onTap: (LocalDate) -> Unit, modifier: Modifier = Modifier) {
     val c = Ba.colors
     val cols = s.columns.size
     val fill = remember { Animatable(if (s.animate) 0f else 1f) }

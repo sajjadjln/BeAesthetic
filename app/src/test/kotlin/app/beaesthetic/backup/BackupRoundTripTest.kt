@@ -213,6 +213,7 @@ class BackupRoundTripTest {
         sql.execSQL("INSERT INTO milestone (id, title, metricId, target, reachedOn, sortOrder) VALUES (1, '۱۰ بارفیکس', 1, 10.0, NULL, 0), (2, 'دماوند', NULL, NULL, '2026-11-01', 1)")
         sql.execSQL("INSERT INTO week_plan (weekStart, ritualDoneAt) VALUES ('2026-10-10', 1791990000000)")
         sql.execSQL("INSERT INTO snack_note (date, text) VALUES ('2026-10-18', 'ماست و گردو\nموز')")
+        sql.execSQL("INSERT INTO recap (key, seenAt) VALUES ('HALFWAY', 1797800000000)")
         val empty = BackupArchive.tables(sql).filter { t -> sql.query("SELECT COUNT(*) FROM `$t`").use { it.moveToFirst(); it.getInt(0) == 0 } }
         assertEquals("every table has rows", emptyList<String>(), empty)
     }

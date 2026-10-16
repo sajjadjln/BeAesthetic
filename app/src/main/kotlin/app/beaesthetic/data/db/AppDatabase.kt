@@ -444,6 +444,12 @@ interface WeekDao {
 
     @Query("DELETE FROM snack_note WHERE date = :date")
     suspend fun deleteSnack(date: LocalDate)
+
+    @Query("SELECT key FROM recap")
+    fun observeRecapsSeen(): Flow<List<String>>
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun markRecapSeen(recap: RecapEntity)
 }
 
 @Database(
@@ -470,10 +476,11 @@ interface WeekDao {
         MilestoneEntity::class,
         WeekPlanEntity::class,
         SnackNoteEntity::class,
+        RecapEntity::class,
     ],
-    version = 9,
+    version = 10,
     exportSchema = true,
-    autoMigrations = [AutoMigration(from = 1, to = 2), AutoMigration(from = 2, to = 3), AutoMigration(from = 3, to = 4), AutoMigration(from = 4, to = 5), AutoMigration(from = 5, to = 6), AutoMigration(from = 6, to = 7), AutoMigration(from = 7, to = 8), AutoMigration(from = 8, to = 9)],
+    autoMigrations = [AutoMigration(from = 1, to = 2), AutoMigration(from = 2, to = 3), AutoMigration(from = 3, to = 4), AutoMigration(from = 4, to = 5), AutoMigration(from = 5, to = 6), AutoMigration(from = 6, to = 7), AutoMigration(from = 7, to = 8), AutoMigration(from = 8, to = 9), AutoMigration(from = 9, to = 10)],
 )
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
