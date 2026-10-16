@@ -50,7 +50,7 @@ class BackupRoundTripTest {
     fun setUp() {
         dir = File(context.cacheDir, "backup-test").apply { deleteRecursively(); mkdirs() }
         db = Room.databaseBuilder(context, AppDatabase::class.java, File(dir, "test.db").path).allowMainThreadQueries().build()
-        runBlocking { Seed.ensure(db, context, LocalDate.of(2026, 10, 10), Instant.parse("2026-10-10T06:00:00Z")) }
+        runBlocking { Seed.ensure(db, LocalDate.of(2026, 10, 10), Instant.parse("2026-10-10T06:00:00Z")) }
         fillEveryTable()
     }
 
@@ -195,6 +195,8 @@ class BackupRoundTripTest {
     /** Real-looking rows in every table the seed leaves empty, with NULLs, REALs and Persian text. */
     private fun fillEveryTable() {
         sql.execSQL("UPDATE settings SET accentColor = 'BLUE', identitySentence = 'من کسی‌ام که سر قولش می‌مونه'")
+        // The seed adds no tasks since slice 9 (D142): the fixture brings its own.
+        sql.execSQL("INSERT INTO task (id, title, icon, part, repeat, weekdays, startDate, isImportant, inMinimumDay, action, alarmWeekdays, alarmEnabled, anchor, sortOrder, createdAt) VALUES (1, 'مسواک', 'TOOTH', 'MORNING', 'DAILY', 0, '2026-10-10', 0, 1, 'NONE', 0, 0, 'بعد از صبحانه', 0, 1791600000000), (2, 'تمرین', 'DUMBBELL', 'EVENING', 'WEEKDAYS', 21, '2026-10-10', 1, 0, 'WORKOUT', 0, 0, NULL, 0, 1791600000000)")
         sql.execSQL("INSERT INTO completion (taskId, date, completedAt) VALUES (1, '2026-10-10', 1791660000000), (2, '2026-10-11', 1791746400000)")
         sql.execSQL("INSERT INTO day (date, special, minimumMode, dueCount, doneCount, floorDone) VALUES ('2026-10-10', NULL, 0, 16, 9, 1), ('2026-10-11', 'TRAVEL', 1, 4, 4, 1)")
         sql.execSQL("INSERT INTO letter (writtenOn, writtenAt, opensOn, text, openedAt, isFirst) VALUES ('2026-10-10', 1791660000000, '2027-03-20', 'سلام پیکرِ آینده', NULL, 1)")

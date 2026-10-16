@@ -119,6 +119,8 @@ class BackupService(private val context: Context, private val db: AppDatabase, p
                 }
                 BackupArchive.restore(db.openHelper.writableDatabase, preview.file, photosDir, schema) { block -> db.runInTransaction(block) }
                 preview.file.delete()
+                // A restored app is set up: a fresh phone restoring from the hello screen skips onboarding.
+                db.settings().setOnboardingDone(true)
             }
         }
     }

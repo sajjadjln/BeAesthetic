@@ -174,6 +174,9 @@ interface SettingsDao {
     @Query("UPDATE settings SET backupTreeUri = :uri WHERE id = 1")
     suspend fun setBackupTreeUri(uri: String?)
 
+    @Query("UPDATE settings SET onboardingDone = :done WHERE id = 1")
+    suspend fun setOnboardingDone(done: Boolean)
+
     @Query("UPDATE settings SET autoBackup = :on WHERE id = 1")
     suspend fun setAutoBackup(on: Boolean)
 

@@ -46,7 +46,7 @@ class AppContainer(context: Context) {
         readyLock.withLock {
             if (ready) return
             val installDate = ProgramCalendar.programDate(clock.localNow(), ProgramCalendar.DEFAULT_ROLLOVER_HOUR)
-            Seed.ensure(db, PersianLocale.wrap(appContext), installDate, clock.now())
+            Seed.ensure(db, installDate, clock.now())
             ready = true
         }
     }

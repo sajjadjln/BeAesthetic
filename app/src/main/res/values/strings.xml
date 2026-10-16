@@ -813,4 +813,33 @@
     <string name="today_recap_title">یلدا مبارک! مرور نیمه‌ی راه</string>
     <string name="today_recap_body">نصف راهو اومدی. ببین چی ساختی.</string>
     <string name="progress_recap_row">مرور نیمه‌ی راه</string>
+
+    <!-- Slice 9: onboarding (flows O1–O5, D142). -->
+    <string name="onb_hello_title">سلام! من پیکرم.</string>
+    <string name="onb_hello_body">رفیق تمرینت تا نوروز. هر روز می‌گم چی کار کنی، یادت می‌ندازم و پیشرفتتو نشونت می‌دم. همه چی رو همین گوشی می‌مونه.</string>
+    <string name="onb_start">شروع</string>
+    <string name="onb_restore">بازگردانی از پشتیبان</string>
+    <string name="onb_restore_help">گوشی تازه‌ست؟ فایل پشتیبانتو انتخاب کن تا همه چی برگرده.</string>
+    <string name="onb_next">بعدی</string>
+    <string name="onb_later">بعداً</string>
+    <string name="onb_dates_title">مسیر</string>
+    <string name="onb_dates_body">از روز صفر تا خط پایان. هر ماه یه فصل تازه‌ست.</string>
+    <string name="onb_day0">روز صفر</string>
+    <string name="onb_finish">خط پایان</string>
+    <string name="onb_dates_summary">%1$s هفته · %2$s فصل</string>
+    <string name="onb_reminders_title">یادآورها</string>
+    <string name="onb_reminders_body">هر بخش روز یه یادآور داره. ساعت‌ها رو با روزت تنظیم کن؛ بعداً هم از تنظیمات عوض می‌شن.</string>
+    <string name="onb_reminders_edit">تنظیم ساعت‌ها</string>
+    <string name="onb_notifications">اجازه‌ی اعلان</string>
+    <string name="onb_notifications_on">اعلان‌ها روشنه</string>
+    <string name="onb_phone_title">گوشی</string>
+    <string name="onb_phone_body">شیائومی‌ها اپ‌ها رو می‌خوابونن. این چند تا تنظیم مطمئن می‌کنه هیچ یادآوری گم نشه.</string>
+    <string name="onb_phone_open">تنظیم گوشی</string>
+    <string name="onb_backup_title">پشتیبان</string>
+    <string name="onb_backup_body">یه پوشه انتخاب کن تا هر هفته خودکار پشتیبان بگیرم. اپ اینترنت نداره؛ چیزی از گوشیت بیرون نمی‌ره.</string>
+    <string name="onb_backup_open">انتخاب پوشه</string>
+    <string name="onb_done_title">آماده‌ایم!</string>
+    <string name="onb_done_body">کارهاتو از دکمه‌ی «یه چیز اضافه کن» بساز، برنامه‌ی تمرینو از تنظیمات وارد کن و روز صفرتو تو پیشرفت ثبت کن.</string>
+    <string name="onb_done_go">بریم سراغ امروز</string>
+    <string name="onb_step">%1$s از %2$s</string>
 </resources>

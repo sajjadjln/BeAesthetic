@@ -74,6 +74,8 @@ import app.beaesthetic.ui.theme.ThemeMode
 import app.beaesthetic.ui.today.TodayRoute
 import app.beaesthetic.ui.today.TodayViewModel
 import app.beaesthetic.ui.week.WeekRoute
+import app.beaesthetic.ui.onboarding.OnboardingScreen
+import androidx.compose.runtime.remember
 import app.beaesthetic.ui.recap.RecapRoute as RecapScreenRoute
 import app.beaesthetic.ui.recap.RecapViewModel
 import app.beaesthetic.ui.week.WeekViewModel
@@ -97,6 +99,7 @@ import kotlinx.serialization.Serializable
 @Serializable object ProgressTab
 @Serializable object WeekTab
 @Serializable object RecapRoute
+@Serializable object OnboardingRoute
 @Serializable object MetricsRoute
 @Serializable data class CheckInRoute(val idx: Int)
 @Serializable data class RevealRoute(val idx: Int)
@@ -125,12 +128,8 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         if (savedInstanceState == null) handleIntent(intent, null)
-        // Onboarding (slice 9) will ask with an explanation; until then, ask on first start.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
-            ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED
-        ) {
-            askNotifications.launch(Manifest.permission.POST_NOTIFICATIONS)
-        }
+        // The first run seeds the settings row the start route waits for (onboarding has no Today view model).
+        lifecycleScope.launch { container.ensureReady() }
 
         setContent {
             val settings by container.db.settings().observe().collectAsStateWithLifecycle(null)
@@ -146,6 +145,17 @@ class MainActivity : ComponentActivity() {
                 val style = if (dark) SystemBarStyle.dark(Color.TRANSPARENT) else SystemBarStyle.light(Color.TRANSPARENT, Color.TRANSPARENT)
                 enableEdgeToEdge(statusBarStyle = style, navigationBarStyle = style)
             }
+            // Onboarding asks for notifications with the reason on screen (D142); an onboarded install that
+            // lost the permission is asked again on start.
+            val onboarded = settings?.onboardingDone ?: return@setContent
+            LaunchedEffect(onboarded) {
+                if (onboarded && Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+                    ContextCompat.checkSelfPermission(this@MainActivity, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED
+                ) {
+                    askNotifications.launch(Manifest.permission.POST_NOTIFICATIONS)
+                }
+            }
+            val start: Any = remember { if (onboarded) HomeRoute else OnboardingRoute }
             val nav = rememberNavController()
             DisposableEffect(nav) {
                 when (intent?.getStringExtra(EXTRA_OPEN)) {
@@ -159,7 +169,7 @@ class MainActivity : ComponentActivity() {
             PeykarTheme(accent, mode) {
                 NavHost(
                     nav,
-                    startDestination = HomeRoute,
+                    startDestination = start,
                     // Fade-through between screens (D76); "Remove animations" makes it instant.
                     enterTransition = { fadeIn(tween(BaMotion.MEDIUM)) },
                     exitTransition = { fadeOut(tween(BaMotion.SHORT)) },
@@ -195,6 +205,15 @@ class MainActivity : ComponentActivity() {
                                 onRecap = { nav.navigate(RecapRoute) },
                             )
                         }
+                    }
+                    composable<OnboardingRoute> {
+                        OnboardingScreen(
+                            container,
+                            onOpenReminders = { nav.navigate(RemindersRoute) },
+                            onOpenPhone = { nav.navigate(PhoneRoute) },
+                            onOpenBackup = { nav.navigate(BackupRoute) },
+                            onFinished = { nav.navigate(HomeRoute) { popUpTo<OnboardingRoute> { inclusive = true } } },
+                        )
                     }
                     composable<RecapRoute> {
                         RecapScreenRoute(

@@ -351,7 +351,7 @@ Each slice ends with an installable APK, a short demo note, and a pause for feed
 
 The slices before 8b must leave room to hit 19 Dec. If they slip, build 8b before slice 8.
 
-Onboarding is last: the user is the only user for now and is already set up by the dev seed. Slice 9 removes the seed: a fresh install starts empty (D100).
+Onboarding is last: the user is the only user for now and is already set up by the dev seed. Slice 9 removed the task seed: a fresh install starts empty (D100, D142).
 
 Every slice also runs the accessibility checklist (§11, D68).
 
