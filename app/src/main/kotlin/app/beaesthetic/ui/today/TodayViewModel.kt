@@ -44,6 +44,9 @@ import app.beaesthetic.domain.time.ProgramCalendar
 import app.beaesthetic.domain.time.Weekdays
 import app.beaesthetic.domain.workout.RoundNumbers
 import app.beaesthetic.domain.week.Ritual
+import app.beaesthetic.domain.week.FadeOffer
+import app.beaesthetic.domain.week.ReminderFade
+import app.beaesthetic.data.repo.toDomain
 import app.beaesthetic.domain.progress.Recaps
 import app.beaesthetic.domain.workout.WorkoutPlan
 import app.beaesthetic.reminders.AlarmScheduler.Companion.toLogRow
@@ -151,6 +154,8 @@ data class TodayUiState(
     val snack: String? = null,
     /** From Yalda until opened: the halfway recap card (D52). */
     val recap: Boolean = false,
+    /** The reminder fade offer (D57), filled in from [TodayViewModel.fadeOffer]. */
+    val fade: FadeOffer? = null,
 ) {
     val dayComplete: Boolean get() = total > 0 && done == total
 }
@@ -282,6 +287,46 @@ class TodayViewModel(
     /** Opens or closes the «هر وقت» card; remembered (D127). */
     fun setAnytimeOpen(open: Boolean) {
         viewModelScope.launch { container.db.settings().setAnytimeOpen(open) }
+    }
+
+    /**
+     * The reminder fade offer (D57): one card, from week 8. Read apart from the main state, since it walks
+     * every task's history; it changes at most a few times a day.
+     */
+    val fadeOffer: StateFlow<FadeOffer?> = combine(
+        container.db.tasks().observeActive(),
+        container.db.completions().observeAll(),
+        settings.map { it.calendar() to it.rolloverHour }.distinctUntilChanged(),
+        container.clock.minuteTicks().map { it.toLocalDate() }.distinctUntilChanged(),
+    ) { rows, completions, (calendar, rollover), _ ->
+        val today = container.clock.programDate(rollover)
+        ReminderFade.offer(
+            week = calendar.weekNumber(today),
+            today = today,
+            now = container.clock.now(),
+            tasks = rows.map { it.toDomain() },
+            completions = completions.groupBy({ it.taskId }, { it.date }),
+            offeredAt = rows.associate { it.id to it.fadeOfferedAt },
+        )
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
+
+    /** «آره»: silence (or bring back) the offered task's block reminders, and plan again. */
+    fun acceptFade() {
+        val offer = fadeOffer.value ?: return
+        viewModelScope.launch {
+            val now = container.clock.now()
+            when (offer) {
+                is FadeOffer.Silence -> container.db.tasks().setFade(offer.task.id, silencedAt = now, offeredAt = null)
+                is FadeOffer.Restore -> container.db.tasks().setFade(offer.task.id, silencedAt = null, offeredAt = now)
+            }
+            container.scheduler.reconcile("fade")
+        }
+    }
+
+    /** «نه، بمونه»: a silence offer never comes back for this task; a restore offer not for a week. */
+    fun declineFade() {
+        val offer = fadeOffer.value ?: return
+        viewModelScope.launch { container.db.tasks().setFadeOffered(offer.task.id, container.clock.now()) }
     }
 
     /** Every active task, for the editor's suggestions when a task is added from Today. */

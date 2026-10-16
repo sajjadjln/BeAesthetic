@@ -11,7 +11,7 @@ _Last updated: 2026-10-16 (slice 8)_
 | 3. Design | ✅ **Approved 2026-10-10** (round 3, `docs/design/screens.html`); font and accents decided the same day (D47). |
 | 4. Architecture | ✅ **Approved 2026-10-10** (`docs/ARCHITECTURE.md`, D31–D45). |
 | Research | ✅ **Done 2026-10-10** (`research/`, start with `research/FINAL-REPORT.md`). All recommendations accepted except sharing (D48–D69). |
-| 5. Build | ⏳ **In progress.** Slices 1–9 built (2026-10-16). The MVP is complete; the widget is in (10a). Next: the reminder fade offer (from ~week 8), then the finish recap + after-the-finish mode (by ~week 18). |
+| 5. Build | ⏳ **In progress.** Slices 1–9 built (2026-10-16). The MVP is complete; the widget (10a) and the reminder fade offer (10b) are in. Next: the finish recap + after-the-finish mode (by ~week 18, late Feb 2027). |
 
 The program itself started on **2026-10-09 (Day 0)**. Week 1 began 2026-10-10. Every week without the app is a week without reminders, so keep moving.
 
@@ -29,6 +29,7 @@ The program itself started on **2026-10-09 (Day 0)**. Week 1 began 2026-10-10. E
 
 ## Next steps
 
+0. **Slice 10b is built (2026-10-16, 0.10.1, D144).** The reminder fade offer: from week 8, a routine that has stuck gets «جا افتاده! یادآورش خاموش شه؟»; a silenced one that slipped this week gets «یادآورش برگرده؟». Domain tests cover strength over time, the week-8 start, once-only silence offers and weekly restore offers. Checked on an emulator with the clock at week 9 and 8 weeks of ticks: the card showed, «آره، خاموش» set the task silenced and the card went away. **Not checked:** the restore card on a device.
 0. **Slice 10a is built (2026-10-16, 0.10.0, D143).** The Today widget (long-press the home screen → Widgets → «پیکر»): today's count, the open tasks of this part (or the next one), one tap ticks. And the hard-coded data is gone: no preview samples, no seed strings, no fixed program dates (fresh installs default to today → next Nowruz eve). Checked on an emulator: placed the widget, it read right to left on an English phone, «بعدی: عصر» listed the evening tasks, two taps ticked them and it redrew to «ظهر تموم شد». **Not checked on the Poco:** HyperOS launchers sometimes delay widget updates. **For the user:** install 0.10.0 and add the widget.
 0. **Slice 9 is built (2026-10-16, 0.9.0, D142).** Lean onboarding: hello (or restore) → dates → reminders + notification permission → phone → backup → done. Fresh installs start empty (no seeded tasks); your phone is marked onboarded on update and goes straight to Today. Checked on an emulator: the update kept Today; a wiped app showed the flow from hello to an empty Today. **Not checked:** restoring a zip from the hello screen. **For the user:** install 0.9.0 (nothing changes on your phone).
 0. **Slice 8b is built (2026-10-16, 0.8.1, D141).** The halfway recap: 4 story cards (days shown up on the grid; Day 0 → now, totals, records, milestones; photos and the identity sentence; «نیمه‌ی دوم» with Dey's outfit). A Today card from Yalda until it's opened; a row on Progress after that. Database v10 with a tested migration; domain tests for the dates and the record count. Checked on an emulator with the clock set to 30 Azar: the card, all 4 cards, the Dey outfit. **Not checked:** card 3 with real photos (the emulator has no 2nd photo set). The 19 Dec deadline is met.

@@ -47,6 +47,13 @@ interface TaskDao {
     @Query("SELECT * FROM task WHERE id = :id")
     suspend fun get(id: Long): TaskEntity?
 
+    /** D57: [silencedAt] null turns the task's block reminders back on; [offeredAt] records the answer. */
+    @Query("UPDATE task SET remindersSilencedAt = :silencedAt, fadeOfferedAt = :offeredAt WHERE id = :id")
+    suspend fun setFade(id: Long, silencedAt: Instant?, offeredAt: Instant?)
+
+    @Query("UPDATE task SET fadeOfferedAt = :at WHERE id = :id")
+    suspend fun setFadeOffered(id: Long, at: Instant)
+
     @Query("UPDATE task SET alarmEnabled = :enabled WHERE id = :id")
     suspend fun setAlarmEnabled(id: Long, enabled: Boolean)
 }

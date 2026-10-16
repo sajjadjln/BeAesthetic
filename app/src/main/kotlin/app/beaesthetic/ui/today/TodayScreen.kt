@@ -76,6 +76,7 @@ import app.beaesthetic.domain.backup.BackupNotice
 import app.beaesthetic.domain.score.DayStatus
 import app.beaesthetic.domain.tasks.TaskIcon
 import app.beaesthetic.domain.text.PersianDigits
+import app.beaesthetic.domain.week.FadeOffer
 import androidx.compose.runtime.saveable.rememberSaveable
 import app.beaesthetic.domain.time.Jalali
 import app.beaesthetic.domain.time.Part
@@ -126,6 +127,8 @@ data class TodayActions(
     val weigh: () -> Unit = {},
     val openWeek: () -> Unit = {},
     val openRecap: () -> Unit = {},
+    val acceptFade: () -> Unit = {},
+    val declineFade: () -> Unit = {},
 )
 
 @Composable
@@ -142,13 +145,14 @@ fun TodayRoute(
     onOpenRecap: () -> Unit,
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val fade by viewModel.fadeOffer.collectAsStateWithLifecycle()
     // «یه چیز اضافه کن» opens the simple sheet on «هر وقت» in the part being looked at (D128).
     var adding by remember { mutableStateOf<Part?>(null) }
     var weighing by remember { mutableStateOf(false) }
     LaunchedEffect(Unit) { viewModel.screenShown() }
     LifecycleEventEffect(Lifecycle.Event.ON_RESUME) { viewModel.refreshSystemState() }
     TodayScreen(
-        state,
+        state?.copy(fade = fade),
         TodayActions(
             selectPart = viewModel::selectPart,
             toggle = viewModel::toggle,
@@ -169,6 +173,8 @@ fun TodayRoute(
             weigh = { weighing = true },
             openWeek = onOpenWeek,
             openRecap = onOpenRecap,
+            acceptFade = viewModel::acceptFade,
+            declineFade = viewModel::declineFade,
         ),
     )
     val weigh = (state?.progress as? ProgressPrompt.WeighIn)?.weight
@@ -238,6 +244,7 @@ fun TodayScreen(state: TodayUiState?, actions: TodayActions) {
             state.buddy?.let { buddy -> item(span = { GridItemSpan(maxLineSpan) }) { BuddyRow(buddy, actions.tapBuddy) } }
             state.progress?.let { prompt -> item(span = { GridItemSpan(maxLineSpan) }) { ProgressPromptRow(prompt, actions) } }
             if (state.recap) item(span = { GridItemSpan(maxLineSpan) }) { RecapRow(actions.openRecap) }
+            state.fade?.let { offer -> item(span = { GridItemSpan(maxLineSpan) }) { FadeCard(offer, actions) } }
             state.ritualWeek?.let { week -> item(span = { GridItemSpan(maxLineSpan) }) { RitualRow(week, actions.openWeek) } }
             state.snack?.let { note -> item(span = { GridItemSpan(maxLineSpan) }) { SnackRow(note) } }
             // «تمرین امروز» sits above the part switcher, so it shows in every part (D126).
@@ -613,6 +620,35 @@ private fun RecapRow(onOpen: () -> Unit) {
             Text(stringResource(R.string.today_recap_body), style = Ba.type.caption, color = c.text2)
         }
         Icon(BaIcons.ChevronForward, null, tint = c.onAccentSubtle, modifier = Modifier.size(20.dp))
+    }
+}
+
+/**
+ * D57: «یادآور «آب» رو خاموش کنیم؟» for a routine that stuck, or «برگرده؟» for a silenced one that slipped.
+ * Never framed as a failure: the restore is offered as help, and «نه» is always fine.
+ */
+@Composable
+private fun FadeCard(offer: FadeOffer, actions: TodayActions) {
+    val c = Ba.colors
+    val silence = offer is FadeOffer.Silence
+    Column(
+        Modifier.fillMaxWidth().padding(vertical = 4.dp).clip(RoundedCornerShape(16.dp)).background(c.surface).padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+            Icon(BaIcons.Bell, null, tint = c.accent, modifier = Modifier.size(22.dp))
+            Text(
+                stringResource(if (silence) R.string.fade_silence_title else R.string.fade_restore_title, offer.task.title),
+                style = Ba.type.subtitle,
+                color = c.text1,
+                modifier = Modifier.weight(1f),
+            )
+        }
+        Text(stringResource(if (silence) R.string.fade_silence_body else R.string.fade_restore_body), style = Ba.type.caption, color = c.text2)
+        Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+            PrimaryButton(stringResource(if (silence) R.string.fade_silence_yes else R.string.fade_restore_yes), actions.acceptFade, Modifier.weight(1f), height = 44.dp)
+            SecondaryButton(stringResource(R.string.fade_no), actions.declineFade, Modifier.weight(1f), height = 44.dp)
+        }
     }
 }
 

@@ -821,4 +821,13 @@
     <string name="widget_part_done">%1$s تموم شد. دمت گرم.</string>
     <string name="widget_next_part">بعدی: %1$s</string>
     <string name="widget_more">و %1$s تای دیگه</string>
+
+    <!-- Slice 10b: the reminder fade offer (D57). Never a failure frame. -->
+    <string name="fade_silence_title">«%1$s» دیگه جا افتاده!</string>
+    <string name="fade_silence_body">چند هفته‌ست مرتب انجامش می‌دی. یادآورش خاموش شه؟ تو امروز و امتیاز می‌مونه، فقط اعلانش نمیاد.</string>
+    <string name="fade_silence_yes">آره، خاموش</string>
+    <string name="fade_restore_title">یادآور «%1$s» برگرده؟</string>
+    <string name="fade_restore_body">این هفته شلوغ بود. یه یادآور کوچیک کمک می‌کنه دوباره راه بیفته.</string>
+    <string name="fade_restore_yes">آره، روشن</string>
+    <string name="fade_no">نه، بمونه</string>
 </resources>
