@@ -4,6 +4,7 @@ import androidx.room.withTransaction
 import app.beaesthetic.data.db.AppDatabase
 import app.beaesthetic.data.db.ReminderSlotEntity
 import app.beaesthetic.data.db.SettingsEntity
+import app.beaesthetic.domain.time.Jalali
 import app.beaesthetic.domain.time.Part
 import app.beaesthetic.domain.time.Profile
 import java.time.Instant
@@ -15,9 +16,21 @@ import java.time.LocalDate
  */
 object Seed {
 
-    val PROGRAM_START: LocalDate = LocalDate.of(2026, 10, 9) // Day 0, 17 Mehr 1405
-    val PROGRAM_END: LocalDate = LocalDate.of(2027, 3, 20) // 29 Esfand 1405
-    val HALFWAY: LocalDate = LocalDate.of(2026, 12, 21) // Yalda, 30 Azar
+    /**
+     * Default dates for a fresh install, edited in onboarding: Day 0 is the install day, the finish is the eve
+     * of the next Nowruz at least 8 weeks away. Nothing personal is hard-coded (D49, D143).
+     */
+    fun defaultEnd(day0: LocalDate): LocalDate {
+        var year = Jalali.fromGregorian(day0).year + 1
+        while (Jalali.toGregorian(year, 1, 1).minusDays(1) < day0.plusWeeks(8)) year++
+        return Jalali.toGregorian(year, 1, 1).minusDays(1)
+    }
+
+    /** Yalda (30 Azar) is the halfway day when it falls inside the program, else the midpoint is used. */
+    fun yaldaWithin(day0: LocalDate, end: LocalDate): LocalDate? =
+        listOf(Jalali.fromGregorian(day0).year, Jalali.fromGregorian(day0).year + 1)
+            .map { Jalali.toGregorian(it, 9, 30) }
+            .firstOrNull { it > day0 && it < end }
 
     /** Seeds once. Returns false if the database already had settings. */
     suspend fun ensure(db: AppDatabase, installDate: LocalDate, now: Instant): Boolean =
@@ -29,10 +42,10 @@ object Seed {
             }
             db.settings().upsert(
                 SettingsEntity(
-                    programStartDate = PROGRAM_START,
-                    programEndDate = PROGRAM_END,
+                    programStartDate = installDate,
+                    programEndDate = defaultEnd(installDate),
                     installDate = installDate,
-                    halfwayDate = HALFWAY,
+                    halfwayDate = yaldaWithin(installDate, defaultEnd(installDate)),
                     lastOpenedAt = now,
                 ),
             )

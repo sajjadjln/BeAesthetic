@@ -50,7 +50,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -438,21 +437,3 @@ private fun specialName(kind: SpecialKind): String = stringResource(
         SpecialKind.OFF -> R.string.special_off
     },
 )
-
-@Preview(locale = "fa", showBackground = true, widthDp = 380, heightDp = 900)
-@Composable
-private fun DashboardPreview() {
-    val calendar = ProgramCalendar(LocalDate.of(2026, 10, 9), LocalDate.of(2027, 3, 20))
-    val install = LocalDate.of(2026, 10, 10)
-    val today = LocalDate.of(2026, 11, 9)
-    val snapshots = (0L until ChronoUnit.DAYS.between(install, today)).associate { i ->
-        install.plusDays(i) to DaySnapshot(DayCounts(10, ((i * 7) % 11).toInt().coerceAtMost(10), false), special = i == 12L)
-    }
-    val state = DashboardUiState(
-        today, calendar, Dashboard.summary(today, install, calendar, snapshots),
-        Dashboard.dayOf(calendar, today).first, Dashboard.dayOf(calendar, today).second,
-        Dashboard.columns(calendar).map { start -> start to (0L..6L).map { Dashboard.cell(start.plusDays(it), calendar, today, install, snapshots) } },
-        Dashboard.weeks(calendar, today, install, snapshots), animate = false,
-    )
-    PeykarTheme(mode = ThemeMode.DARK) { DashboardScreen(state, null, DashboardActions()) }
-}

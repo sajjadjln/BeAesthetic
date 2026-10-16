@@ -35,6 +35,7 @@ class App : Application() {
                 container.events.prune()
                 container.scheduler.reconcile("app-open")
                 container.backup.autoIfDue()
+                app.beaesthetic.widget.TodayWidget.refresh(this@App)
             }
         }
     }

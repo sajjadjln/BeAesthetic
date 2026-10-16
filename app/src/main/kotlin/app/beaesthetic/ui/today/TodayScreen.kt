@@ -62,7 +62,6 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
@@ -950,29 +949,5 @@ private fun CheckCircle(done: Boolean, modifier: Modifier = Modifier) {
         modifier = modifier.clip(CircleShape).background(bg).then(if (done) Modifier else Modifier.border(2.dp, colors.border, CircleShape)),
     ) {
         if (done) Icon(BaIcons.Check, null, tint = colors.onAccent, modifier = Modifier.fillMaxSize(0.6f))
-    }
-}
-
-@Preview(locale = "fa", showBackground = true, widthDp = 380, heightDp = 900)
-@Composable
-private fun TodayPreview() {
-    val date = LocalDate.of(2026, 11, 9)
-    val tiles = mapOf(
-        Part.MORNING to listOf(
-            TileUi(1, "مسواک", TaskIcon.TOOTH, done = true, important = false, due = false),
-            TileUi(2, "پوست", TaskIcon.DROP, done = true, important = true, due = false),
-            TileUi(3, "کراتین", TaskIcon.PILL, done = false, important = false, due = false),
-            TileUi(5, "ناخن", TaskIcon.SCISSORS, done = false, important = false, due = true),
-        ),
-    )
-    PeykarTheme(mode = ThemeMode.DARK) {
-        TodayScreen(
-            TodayUiState(
-                date, Jalali.fromGregorian(date), 5, 23, HeaderTail.InChapter(8), Part.MORNING, false, tiles, emptyList(), emptySet(), 2, 12,
-                listOf(DayStatus.Level(4), DayStatus.Level(2), DayStatus.Level(1), DayStatus.Future, DayStatus.Future, DayStatus.Future, DayStatus.Future), 2,
-                emptyList(), BuddyUi(Pose.THUMBS, Outfit.NONE, Moment.TICK, 0, 2, 12, Part.MORNING), HealthBanner.LATE,
-            ),
-            TodayActions(),
-        )
     }
 }

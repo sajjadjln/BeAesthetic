@@ -55,37 +55,6 @@
     <string name="notif_test_title">یادآورها کار می‌کنن</string>
     <string name="notif_test_text">این یه یادآور آزمایشیه.</string>
 
-    <!-- Seed tasks (SPEC §5). Tile labels stay one or two words. -->
-    <string name="seed_brush">مسواک</string>
-    <string name="seed_skincare">پوست</string>
-    <string name="seed_creatine">کراتین</string>
-    <string name="seed_protein">پروتئین</string>
-    <string name="seed_weigh_in">وزن</string>
-    <string name="seed_hike">کوه</string>
-    <string name="seed_vitamin_d">ویتامین D</string>
-    <string name="seed_workout">تمرین</string>
-    <string name="seed_shower">دوش</string>
-    <string name="seed_shampoo">شامپو</string>
-    <string name="seed_nails">ناخن</string>
-    <string name="seed_beard">ریش</string>
-    <string name="seed_haircut">اصلاح مو</string>
-    <string name="seed_min_pushups">۱۰ شنا</string>
-    <string name="seed_snack">میان‌وعده</string>
-
-    <!-- Seed anchors «بعد از…» (D55) -->
-    <string name="anchor_after_breakfast">بعد از صبحانه</string>
-    <string name="anchor_after_brushing">بعد از مسواک</string>
-    <string name="anchor_with_breakfast">با صبحانه</string>
-    <string name="anchor_before_breakfast">قبل از صبحانه</string>
-    <string name="anchor_with_lunch">با ناهار</string>
-    <string name="anchor_with_dinner">با شام</string>
-    <string name="anchor_after_workout">بعد از تمرین</string>
-    <string name="anchor_in_shower">توی دوش</string>
-    <string name="anchor_after_shower">بعد از دوش</string>
-    <string name="anchor_before_shower">قبل از دوش</string>
-    <string name="anchor_before_bed">قبل از خواب</string>
-    <string name="anchor_after_dinner">بعد از شام</string>
-
     <!-- Notifications, slice 2 -->
     <string name="channel_task_alarms">زنگ کارها</string>
     <string name="notif_follow_up_text">هنوز وقتش هست.</string>
@@ -842,4 +811,14 @@
     <string name="onb_done_body">کارهاتو از دکمه‌ی «یه چیز اضافه کن» بساز، برنامه‌ی تمرینو از تنظیمات وارد کن و روز صفرتو تو پیشرفت ثبت کن.</string>
     <string name="onb_done_go">بریم سراغ امروز</string>
     <string name="onb_step">%1$s از %2$s</string>
+
+    <!-- Slice 10: the Today widget (D67, D143). -->
+    <string name="widget_label">امروز پیکر</string>
+    <string name="widget_description">کارهای این بخش روز، با یه تیک.</string>
+    <string name="widget_count">%1$s از %2$s</string>
+    <string name="widget_empty">هنوز کاری نساختی. از اپ اضافه کن.</string>
+    <string name="widget_day_done">امروز کامل شد!</string>
+    <string name="widget_part_done">%1$s تموم شد. دمت گرم.</string>
+    <string name="widget_next_part">بعدی: %1$s</string>
+    <string name="widget_more">و %1$s تای دیگه</string>
 </resources>

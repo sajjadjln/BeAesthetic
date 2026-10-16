@@ -113,6 +113,8 @@ class ReminderReceiver : BroadcastReceiver() {
             }
         }
         db.reminderLog().setFired(row.id, now, outcome)
+        // A block fires when its part starts: the widget moves to that part.
+        if (kind == AlarmKind.BLOCK) app.beaesthetic.widget.TodayWidget.refresh(container.app)
         Log.d(TAG, "fired $key → $outcome")
     }
 

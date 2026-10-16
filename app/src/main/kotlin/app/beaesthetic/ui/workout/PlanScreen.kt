@@ -84,7 +84,6 @@ import app.beaesthetic.ui.settings.Segmented
 import app.beaesthetic.ui.theme.Ba
 import app.beaesthetic.ui.theme.PeykarTheme
 import app.beaesthetic.ui.theme.ThemeMode
-import androidx.compose.ui.tooling.preview.Preview
 import kotlinx.coroutines.delay
 
 private sealed interface EditingItem {
@@ -457,14 +456,4 @@ private fun SwitchRow(title: Int, help: Int, checked: Boolean, onChange: (Boolea
         }
         BaSwitch(checked, onChange, stringResource(title))
     }
-}
-
-@Preview(locale = "fa", showBackground = true, widthDp = 380, heightDp = 800)
-@Composable
-private fun PlanPreview() {
-    val squat = Exercise(1, "اسکات بلغاری", ExerciseKind.REPS)
-    val wallSit = Exercise(2, "اسکات دیوار", ExerciseKind.SECONDS)
-    val monday = WorkoutPlan(2, "پایین‌تنه", listOf(PlanItem(wallSit, 3, 30, 45), PlanItem(squat, 3, 8, 12, kg = 6.0, perSide = true, targetEffort = 8, restSeconds = 120)))
-    val plans = (0..6).map { if (it == 2) monday else WorkoutPlan(it, "", emptyList()) }
-    PeykarTheme(mode = ThemeMode.DARK) { PlanScreen(PlanUiState(plans, listOf(squat, wallSit), emptyMap(), 2), onBack = {}, actions = PlanActions()) }
 }

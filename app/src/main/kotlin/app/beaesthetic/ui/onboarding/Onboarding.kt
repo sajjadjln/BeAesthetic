@@ -129,9 +129,8 @@ fun OnboardingScreen(
                     Title(R.string.onb_dates_title, R.string.onb_dates_body)
                     Dates(s.programStartDate, s.programEndDate, container.clock.programDate(s.rolloverHour)) { start, end ->
                         scope.launch {
-                            // Yalda stays the halfway day only for the default dates; other dates use the midpoint.
-                            val halfway = if (start == Seed.PROGRAM_START && end == Seed.PROGRAM_END) Seed.HALFWAY else null
-                            container.db.settings().upsert(s.copy(programStartDate = start, programEndDate = end, halfwayDate = halfway))
+                            // Yalda is the halfway day when it falls inside the dates; otherwise the midpoint is used.
+                            container.db.settings().upsert(s.copy(programStartDate = start, programEndDate = end, halfwayDate = Seed.yaldaWithin(start, end)))
                         }
                     }
                     PrimaryButton(stringResource(R.string.onb_next), { next() }, Modifier.fillMaxWidth())

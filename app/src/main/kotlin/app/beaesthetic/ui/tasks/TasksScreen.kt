@@ -54,7 +54,6 @@ import app.beaesthetic.ui.settings.Segmented
 import app.beaesthetic.ui.theme.Ba
 import app.beaesthetic.ui.theme.PeykarTheme
 import app.beaesthetic.ui.theme.ThemeMode
-import androidx.compose.ui.tooling.preview.Preview
 import java.time.LocalDate
 
 // ---------------------------------------------------------------- 07 Tasks
@@ -139,19 +138,6 @@ fun TasksScreen(state: TasksUiState?, onBack: () -> Unit, onSave: (TaskForm, Tas
             },
         )
     }
-}
-
-@Preview(locale = "fa", showBackground = true, widthDp = 380, heightDp = 800)
-@Composable
-private fun TasksPreview() {
-    val today = LocalDate.of(2026, 10, 12)
-    val tasks = listOf(
-        Task(1, "مسواک", TaskIcon.TOOTH, Part.MORNING, Repeat.Daily, today, inMinimumDay = true),
-        Task(2, "کراتین", TaskIcon.PILL, Part.MORNING, Repeat.Daily, today, alarm = app.beaesthetic.domain.tasks.TaskAlarm(9 * 60, 127, true)),
-        Task(3, "ناخن", TaskIcon.SCISSORS, Part.EVENING, Repeat.EveryNDays(7), today),
-        Task(4, "خرید", TaskIcon.APPLE, Part.MIDDAY, Repeat.Once(today.plusDays(1)), today, isImportant = true),
-    )
-    PeykarTheme(mode = ThemeMode.DARK) { TasksScreen(TasksUiState(today, tasks, emptyMap()), onBack = {}, onSave = { _, _ -> }, onDelete = {}) }
 }
 
 @Composable

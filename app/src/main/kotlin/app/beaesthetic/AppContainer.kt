@@ -14,6 +14,7 @@ import app.beaesthetic.domain.time.ProgramCalendar
 import app.beaesthetic.events.EventLog
 import app.beaesthetic.reminders.AlarmScheduler
 import app.beaesthetic.reminders.Notifier
+import app.beaesthetic.widget.TodayWidget
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -24,6 +25,9 @@ import java.time.LocalDate
 /** Manual DI (D33): every long-lived object, built once in [App]. Receivers and workers read `app.container`. */
 class AppContainer(context: Context) {
     private val appContext = context.applicationContext
+
+    /** The application context, for widget refreshes from receivers. */
+    val app: Context get() = appContext
 
     val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
     val clock = ProgramClock()
@@ -51,8 +55,9 @@ class AppContainer(context: Context) {
         }
     }
 
-    /** A block notification goes away once its part has nothing pending. */
+    /** After a tick anywhere: a block notification goes away once its part has nothing pending, and the widget redraws. */
     suspend fun cancelEmptyBlocks(date: LocalDate) {
+        TodayWidget.refresh(appContext)
         val day = tasks.day(date)
         Part.entries
             .filter { BlockContent.lines(it, day.items, day.minimumMode).isEmpty() }
