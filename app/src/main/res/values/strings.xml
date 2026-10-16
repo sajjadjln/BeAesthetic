@@ -701,4 +701,37 @@
     <string name="today_checkin_start">شروع</string>
     <string name="today_weigh_text">وزن این هفته رو ثبت کن</string>
     <string name="today_weigh_button">ثبت</string>
+
+    <!-- Slice 7b -->
+    <string name="line_title">مسیر</string>
+    <string name="line_end">نوروز</string>
+    <string name="totals_title">از روز صفر تا امروز</string>
+    <string name="totals_workouts">تمرین</string>
+    <string name="totals_minutes">دقیقه %1$s</string>
+    <string name="ladders_title">نردبان‌ها</string>
+    <string name="milestones_title">هدف‌ها</string>
+    <string name="milestone_add">یه هدف تازه</string>
+    <string name="milestone_new">هدف تازه</string>
+    <string name="milestone_title_label">چی؟</string>
+    <string name="milestone_title_hint">مثلاً اولین ۱۰ بارفیکس</string>
+    <string name="milestone_title_empty">اسم هدف رو بنویس؛ اگه به یه عدد وصله، مقدارش رو هم.</string>
+    <string name="milestone_metric">خودکار با یه عدد؟</string>
+    <string name="milestone_by_hand">خودم تیک می‌زنم</string>
+    <string name="milestone_target">مقدار هدف</string>
+    <string name="milestone_progress">بهترین %1$s · هدف %2$s</string>
+    <string name="backfill_row">ثبت تمرین‌های گذشته</string>
+    <string name="backfill_title">کدوم روز؟</string>
+    <string name="backfill_help">روزهایی که برنامه داشتن، از روز صفر تا دیروز. ست‌ها توی رکوردها و جمع‌ها حساب می‌شن؛ تیک روز عوض نمی‌شه.</string>
+    <string name="reveal_title">رونمایی</string>
+    <string name="reveal_day0">روز صفر</string>
+    <string name="reveal_last">ماه قبل</string>
+    <string name="reveal_today">این بار</string>
+    <string name="reveal_drag">خط وسط رو بکش</string>
+    <string name="camera_ghost">شبح %1$s</string>
+    <string name="camera_match">خودت رو با شبح جفت کن</string>
+    <string name="camera_timer">۱۰ث</string>
+    <string name="camera_flip">چرخش دوربین</string>
+    <string name="camera_shoot">عکس</string>
+    <string name="camera_no_permission">برای دوربین داخل اپ اجازه‌ی دوربین لازمه. می‌تونی از دوربین گوشی یا گالری استفاده کنی.</string>
+    <string name="photo_ghost_camera">با شبح</string>
 </resources>

@@ -210,6 +210,7 @@ class BackupRoundTripTest {
         sql.execSQL("INSERT INTO metric_entry (metricId, date, value, guess, note) VALUES (1, '2026-10-09', 77.1, NULL, NULL), (2, '2026-10-09', 6, 5, 'چپ ضعیف‌تر')")
         sql.execSQL("INSERT INTO check_in (idx, date, doneAt) VALUES (0, '2026-10-09', 1791900000000)")
         sql.execSQL("INSERT INTO photo (checkInIdx, pose, fileName, takenAt) VALUES (0, 'FRONT', '0-front.jpg', 1791900000000)")
+        sql.execSQL("INSERT INTO milestone (id, title, metricId, target, reachedOn, sortOrder) VALUES (1, '۱۰ بارفیکس', 1, 10.0, NULL, 0), (2, 'دماوند', NULL, NULL, '2026-11-01', 1)")
         val empty = BackupArchive.tables(sql).filter { t -> sql.query("SELECT COUNT(*) FROM `$t`").use { it.moveToFirst(); it.getInt(0) == 0 } }
         assertEquals("every table has rows", emptyList<String>(), empty)
     }

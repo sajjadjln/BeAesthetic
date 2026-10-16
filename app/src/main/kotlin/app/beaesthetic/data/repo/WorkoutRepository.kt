@@ -145,19 +145,24 @@ class WorkoutRepository(private val db: AppDatabase, private val tasks: TaskRepo
     }
 
     /** Every set of [exerciseIds], all time, with their session dates. */
+    fun observeAllSets(): Flow<List<LoggedSet>> = dao.observeAllSets().map { rows -> rows.map { it.toDomain() } }
+
     fun observeSets(exerciseIds: List<Long>): Flow<List<SetWithDate>> = dao.observeSets(exerciseIds)
 
     /**
      * Logs one set (replacing it if it was logged before) and ticks the day's workout task (D115). The
      * session is created with its first set. Returns the session id.
      */
-    suspend fun logSet(weekday: Int, date: LocalDate, sessionId: Long?, exerciseId: Long, setIndex: Int, value: Int, kg: Double?, effort: Int, now: Instant): Long =
+    suspend fun logSet(weekday: Int, date: LocalDate, sessionId: Long?, exerciseId: Long, setIndex: Int, value: Int, kg: Double?, effort: Int, now: Instant, tickTask: Boolean = true): Long =
         db.withTransaction {
             val id = sessionId ?: existingSession(weekday, date) ?: dao.insertSession(SessionEntity(workoutId = workoutId(weekday), date = date, startedAt = now))
             dao.upsertSet(SetLogEntity(id, exerciseId, setIndex, value, kg, effort, now))
-            tasks.day(date).items
-                .filter { it.task.action == TaskAction.WORKOUT && !it.done }
-                .forEach { tasks.complete(it.task.id, date, now) }
+            // A backfilled past session (slice 7b) only adds sets: it never writes a day's ticks.
+            if (tickTask) {
+                tasks.day(date).items
+                    .filter { it.task.action == TaskAction.WORKOUT && !it.done }
+                    .forEach { tasks.complete(it.task.id, date, now) }
+            }
             noteWorkoutRoundNumbers(date)
             id
         }

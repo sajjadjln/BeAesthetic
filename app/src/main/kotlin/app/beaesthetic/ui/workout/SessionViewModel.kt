@@ -106,7 +106,12 @@ private data class Library(val exercises: Map<Long, Exercise>, val links: Map<Lo
 
 /** The workout session (screens.html 04, D103, D115, D116). Every set is saved the moment ✓ is tapped. */
 @OptIn(ExperimentalCoroutinesApi::class)
-class SessionViewModel(private val container: AppContainer, private val summaryLines: Int) : ViewModel() {
+class SessionViewModel(
+    private val container: AppContainer,
+    private val summaryLines: Int,
+    /** A past day to log (workout backfill, slice 7b): sets only, no task tick, no reminders touched. */
+    private val backfill: LocalDate? = null,
+) : ViewModel() {
 
     private val setup = MutableStateFlow<Setup?>(null)
     private val sessionId = MutableStateFlow<Long?>(null)
@@ -154,7 +159,7 @@ class SessionViewModel(private val container: AppContainer, private val summaryL
         viewModelScope.launch {
             container.ensureReady()
             val settings = container.db.settings().get() ?: return@launch
-            val date = container.clock.programDate(settings.rolloverHour)
+            val date = backfill ?: container.clock.programDate(settings.rolloverHour)
             val weekday = Weekdays.index(date.dayOfWeek)
             sessionId.value = container.workouts.existingSession(weekday, date)
             val chapter = Chapters.at(ProgramCalendar(settings.programStartDate, settings.programEndDate, settings.rolloverHour), date)
@@ -289,10 +294,12 @@ class SessionViewModel(private val container: AppContainer, private val summaryL
             val earlier = all.filter { it.exerciseId == s.item.exercise.id && !(it.sessionId == sid && it.setIndex == s.setIndex) }
             val record = WorkoutRules.isRecord(d.value, d.kg, earlier)
             val settings = container.db.settings().get()
-            val id = container.workouts.logSet(setup.weekday, setup.date, sid, s.item.exercise.id, s.setIndex, d.value, d.kg, d.effort, container.clock.now())
+            val id = container.workouts.logSet(setup.weekday, setup.date, sid, s.item.exercise.id, s.setIndex, d.value, d.kg, d.effort, container.clock.now(), tickTask = backfill == null)
             sessionId.value = id
-            if (settings != null) container.events.firstTickIfNeeded(setup.date, settings.rolloverHour)
-            container.cancelEmptyBlocks(setup.date)
+            if (backfill == null) {
+                if (settings != null) container.events.firstTickIfNeeded(setup.date, settings.rolloverHour)
+                container.cancelEmptyBlocks(setup.date)
+            }
             if (record) _records.tryEmit(s.item.exercise.id to s.setIndex)
             advance(s, record)
         }

@@ -176,6 +176,20 @@ class MigrationTest {
         }
     }
 
+    @Test
+    fun `7 to 8 keeps the readings and adds the empty milestone table`() {
+        helper.createDatabase(DB, 7).use { db ->
+            db.execSQL("INSERT INTO metric (id, kind, name, unit, higherIsBetter, sortOrder) VALUES (1, 'STRENGTH', 'بارفیکس', 'REPS', 1, 0)")
+            db.execSQL("INSERT INTO metric_entry (metricId, date, value, guess) VALUES (1, '2026-10-09', 8, 7)")
+            db.execSQL("INSERT INTO photo (checkInIdx, pose, fileName, takenAt) VALUES (0, 'FRONT', '0-front.jpg', 1791900000000)")
+        }
+        helper.runMigrationsAndValidate(DB, 8, true).use { db ->
+            db.query("SELECT value, guess FROM metric_entry").use { c -> c.moveToFirst(); assertEquals(8.0, c.getDouble(0), 0.0); assertEquals(7.0, c.getDouble(1), 0.0) }
+            db.query("SELECT fileName FROM photo").use { c -> c.moveToFirst(); assertEquals("0-front.jpg", c.getString(0)) }
+            db.query("SELECT COUNT(*) FROM milestone").use { c -> c.moveToFirst(); assertEquals(0, c.getInt(0)) }
+        }
+    }
+
     private companion object {
         const val DB = "migration-test.db"
     }

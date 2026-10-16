@@ -70,9 +70,12 @@ fun InputBox(
     onChange: (String) -> Unit,
 ) {
     val c = Ba.colors
+    // Number fields show Persian digits as they're typed (D87); the parser reads both.
+    val numeric = keyboard.keyboardType == androidx.compose.ui.text.input.KeyboardType.Decimal ||
+        keyboard.keyboardType == androidx.compose.ui.text.input.KeyboardType.Number
     BasicTextField(
         value = value,
-        onValueChange = onChange,
+        onValueChange = { onChange(if (numeric) app.beaesthetic.domain.progress.DecimalInput.display(it) else it) },
         singleLine = true,
         textStyle = Ba.type.body.copy(color = c.text1),
         cursorBrush = SolidColor(c.accent),

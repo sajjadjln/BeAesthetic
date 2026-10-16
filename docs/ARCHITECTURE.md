@@ -224,7 +224,7 @@ Physical schema for `SPEC.md` §9, updated for D25–D28. Dates are ISO `LocalDa
 | `reminder_slot` | profile (NORMAL·FRIDAY), part, time, enabled | |
 | `reminder_log` | id, key, kind, scheduledAt, firedAt?, outcome | §7.5 |
 | `backup_record` | id, at, fileName, sizeBytes, photoCount, ok, error? | |
-| `milestone` | id, title, metricId?, target?, reachedAt?, sortOrder | D65. Linked to a metric when it has one (e.g. pull-ups ≥ 10); otherwise ticked by hand. |
+| `milestone` | id, title, metricId?, target?, reachedOn?, sortOrder | D65. Linked to a metric when it has one (e.g. pull-ups ≥ 10); otherwise ticked by hand. |
 | `event` | id, at, type (APP_OPEN·SCREEN·NOTIF_SHOWN·NOTIF_TAP·FIRST_TICK), ref?, valueMinutes? | D59. Local usage log. `ref` = screen name or reminder key. Rows older than 180 days are deleted. Included in backups. |
 | `recap` | key (HALFWAY·FINISH), seenAt? | D52. The content is computed; only "seen" is stored. |
 | `letter` | id, writtenOn, writtenAt, opensOn, text, openedAt?, isFirst | D72. Added in schema v2 (slice 2). The UI refuses to show `text` before `opensOn`. Included in backups. |
@@ -343,7 +343,7 @@ Each slice ends with an installable APK, a short demo note, and a pause for feed
 | 5 | Dashboard (grid with «قبل از اپ» cells, week rows, day detail) | The whole program is visible |
 | 5b | Fixes after the first days of use (D126–D130): «تمرین امروز» card on Today + rest-day row, «هر وقت» items (new repeat kind, folded card, never counted), simple new-task sheet with «تنظیمات بیشتر», Jalali calendar for one-off days, alarm that follows the repeat | The workout opens from Today in any part, and a shopping item is added with a name and one tap |
 | 6 | Backup and restore | The round-trip test passes on the phone, and Syncthing picks up the zip |
-| 7 | **7a** (D138, built 0.7.0): metrics + readings (v7: `metric`, `metric_entry`, `check_in`, `photo`), Day 0 baseline, check-in with system-camera/gallery photos, Progress tab, Today check-in card and Friday weigh-in. **7b**: progress (ladders, lifetime totals), monthly check-in with the **ghost-overlay camera** and the **reveal** with a compare slider (before ~11 Dec), strength tests with the guess, baseline entry with past dates + workout backfill, program line, milestones | Day 0 data is entered and the first deltas show |
+| 7 | **7a** (D138, built 0.7.0): metrics + readings (v7: `metric`, `metric_entry`, `check_in`, `photo`), Day 0 baseline, check-in with system-camera/gallery photos, Progress tab, Today check-in card and Friday weigh-in. **7b** (D139, built 0.7.1): v8 `milestone`, CameraX ghost camera, reveal slider, ladders, totals, program line, backfill. Originally: progress (ladders, lifetime totals), monthly check-in with the **ghost-overlay camera** and the **reveal** with a compare slider (before ~11 Dec), strength tests with the guess, baseline entry with past dates + workout backfill, program line, milestones | Day 0 data is entered and the first deltas show |
 | 8 | Friday review and plan (short path, comebacks, best routines, reserves wording, identity sentence, special days, snack notes, weekly backup) | The first real ritual is done in the app |
 | 8b | **Halfway recap**. **Deadline: 19 Dec 2026** (numbers-only version if time is short) | The recap opens on Yalda |
 | 9 | Onboarding | A fresh install walks through setup |

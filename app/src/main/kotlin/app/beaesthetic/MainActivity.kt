@@ -50,6 +50,7 @@ import app.beaesthetic.ui.progress.CheckInRoute as CheckInScreenRoute
 import app.beaesthetic.ui.progress.CheckInViewModel
 import app.beaesthetic.ui.progress.MetricsRoute as MetricsScreenRoute
 import app.beaesthetic.ui.progress.ProgressRoute
+import app.beaesthetic.ui.progress.RevealRoute as RevealScreenRoute
 import app.beaesthetic.ui.progress.ProgressViewModel
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -91,6 +92,8 @@ import kotlinx.serialization.Serializable
 @Serializable object ProgressTab
 @Serializable object MetricsRoute
 @Serializable data class CheckInRoute(val idx: Int)
+@Serializable data class RevealRoute(val idx: Int)
+@Serializable data class BackfillRoute(val epochDay: Long)
 
 class MainActivity : ComponentActivity() {
 
@@ -175,6 +178,8 @@ class MainActivity : ComponentActivity() {
                                 container.photos,
                                 onCheckIn = { idx -> nav.navigate(CheckInRoute(idx)) },
                                 onManage = { nav.navigate(MetricsRoute) },
+                                onBackfill = { d -> nav.navigate(BackfillRoute(d.toEpochDay())) },
+                                onReveal = { idx -> nav.navigate(RevealRoute(idx)) },
                             )
                         }
                     }
@@ -184,6 +189,16 @@ class MainActivity : ComponentActivity() {
                         // One check-in per visit: a new view model each time the screen opens.
                         val checkIn: CheckInViewModel = viewModel(factory = viewModelFactory { initializer { CheckInViewModel(container, idx) } })
                         CheckInScreenRoute(checkIn, container.photos, onClose = nav::popBackStack)
+                    }
+                    composable<RevealRoute> { entry ->
+                        RevealScreenRoute(viewModel { ProgressViewModel(container) }, container.photos, entry.toRoute<RevealRoute>().idx, onBack = nav::popBackStack)
+                    }
+                    composable<BackfillRoute> { entry ->
+                        val day = java.time.LocalDate.ofEpochDay(entry.toRoute<BackfillRoute>().epochDay)
+                        val session: SessionViewModel = viewModel(factory = viewModelFactory {
+                            initializer { SessionViewModel(container, resources.getStringArray(R.array.buddy_workout_done).size, backfill = day) }
+                        })
+                        SessionScreen(session, onClose = nav::popBackStack, onOpenPlan = { nav.navigate(PlanRoute) })
                     }
                     composable<SettingsRoute> {
                         SettingsScreen(container, DebugMenu.AVAILABLE, onBack = nav::popBackStack) { dest ->

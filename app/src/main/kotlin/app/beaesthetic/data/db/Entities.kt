@@ -317,3 +317,15 @@ data class PhotoEntity(
     val fileName: String,
     val takenAt: Instant,
 )
+
+/** v8 (slice 7b): a real-world milestone (D65). Linked to a metric with a target, or ticked by hand. */
+@Entity(tableName = "milestone")
+data class MilestoneEntity(
+    @PrimaryKey(autoGenerate = true) val id: Long = 0,
+    val title: String,
+    val metricId: Long? = null,
+    val target: Double? = null,
+    /** A hand-ticked milestone's day; linked ones compute theirs from readings. */
+    val reachedOn: LocalDate? = null,
+    val sortOrder: Int = 0,
+)

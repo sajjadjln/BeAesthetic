@@ -148,5 +148,7 @@ class ProgressTest {
         assertNull(DecimalInput.parse("1.2.3"))
         assertNull(DecimalInput.parse("-3"))
         assertNull(DecimalInput.parse("abc"))
+        assertEquals("۷۶٫۸", DecimalInput.display("76.8"))
+        assertEquals(76.8, DecimalInput.parse(DecimalInput.display("76,8")))
     }
 }

@@ -5,6 +5,8 @@ import app.beaesthetic.data.db.AppDatabase
 import app.beaesthetic.data.db.CheckInEntity
 import app.beaesthetic.data.db.MetricEntity
 import app.beaesthetic.data.db.MetricEntryEntity
+import app.beaesthetic.data.db.MilestoneEntity
+import app.beaesthetic.domain.progress.Milestone
 import app.beaesthetic.data.db.PhotoEntity
 import app.beaesthetic.domain.progress.Metric
 import app.beaesthetic.domain.progress.MetricKind
@@ -27,6 +29,7 @@ data class ProgressData(
     val checkIns: Map<Int, CheckInEntity>,
     /** Photos by check-in, then pose. */
     val photos: Map<Int, Map<Pose, PhotoEntity>>,
+    val milestones: List<Milestone> = emptyList(),
 )
 
 /** Metrics, readings, check-ins and photos (slice 7a). */
@@ -39,7 +42,8 @@ class ProgressRepository(private val db: AppDatabase, private val photos: PhotoS
         dao.observeEntries(),
         dao.observeCheckIns(),
         dao.observePhotos(),
-    ) { metrics, entries, checkIns, photoRows ->
+        dao.observeMilestones(),
+    ) { metrics, entries, checkIns, photoRows, milestones ->
         ProgressData(
             metrics = metrics.map { it.toDomain() },
             readings = entries.groupBy({ it.metricId }, { Reading(it.date, it.value, it.guess) }),
@@ -47,6 +51,7 @@ class ProgressRepository(private val db: AppDatabase, private val photos: PhotoS
             photos = photoRows.groupBy { it.checkInIdx }.mapValues { (_, rows) ->
                 rows.mapNotNull { row -> runCatching { Pose.valueOf(row.pose) }.getOrNull()?.let { it to row } }.toMap()
             },
+            milestones = milestones.map { Milestone(it.id, it.title, it.metricId, it.target, it.reachedOn) },
         )
     }
 
@@ -93,6 +98,14 @@ class ProgressRepository(private val db: AppDatabase, private val photos: PhotoS
         dao.deletePhoto(idx, pose.name)
         photos.delete("$idx-${pose.name.lowercase()}.jpg")
     }
+
+    /** A new milestone ([id] null) or an edit; the tick of a hand milestone is kept unless [reachedOn] says. */
+    suspend fun saveMilestone(id: Long?, title: String, metricId: Long?, target: Double?, reachedOn: LocalDate?) {
+        val order = if (id == null) dao.maxMilestoneOrder() + 1 else 0
+        dao.upsertMilestone(MilestoneEntity(id ?: 0, title, metricId, target, reachedOn, order))
+    }
+
+    suspend fun deleteMilestone(id: Long) = dao.deleteMilestone(id)
 
     suspend fun finishCheckIn(idx: Int, date: LocalDate, now: Instant) = db.withTransaction {
         dao.upsertCheckIn(CheckInEntity(idx, date, now))

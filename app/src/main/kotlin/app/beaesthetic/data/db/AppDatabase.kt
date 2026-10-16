@@ -321,6 +321,13 @@ interface WorkoutDao {
     )
     suspend fun allSets(): List<SetWithDate>
 
+    /** The same, observed: Progress's ladders and totals (slice 7b). */
+    @Query(
+        "SELECT set_log.sessionId, set_log.exerciseId, set_log.setIndex, set_log.value, set_log.kg, set_log.effort, set_log.loggedAt, session.date " +
+            "FROM set_log JOIN session ON session.id = set_log.sessionId",
+    )
+    fun observeAllSets(): Flow<List<SetWithDate>>
+
     @Query("SELECT * FROM workout_exercise WHERE workoutId = :workoutId AND exerciseId = :exerciseId")
     suspend fun item(workoutId: Long, exerciseId: Long): WorkoutExerciseEntity?
 
@@ -398,6 +405,18 @@ interface ProgressDao {
 
     @Query("DELETE FROM photo WHERE checkInIdx = :idx AND pose = :pose")
     suspend fun deletePhoto(idx: Int, pose: String)
+
+    @Query("SELECT * FROM milestone ORDER BY sortOrder, id")
+    fun observeMilestones(): Flow<List<MilestoneEntity>>
+
+    @Query("SELECT COALESCE(MAX(sortOrder), -1) FROM milestone")
+    suspend fun maxMilestoneOrder(): Int
+
+    @Upsert
+    suspend fun upsertMilestone(m: MilestoneEntity)
+
+    @Query("DELETE FROM milestone WHERE id = :id")
+    suspend fun deleteMilestone(id: Long)
 }
 
 @Database(
@@ -421,10 +440,11 @@ interface ProgressDao {
         MetricEntryEntity::class,
         CheckInEntity::class,
         PhotoEntity::class,
+        MilestoneEntity::class,
     ],
-    version = 7,
+    version = 8,
     exportSchema = true,
-    autoMigrations = [AutoMigration(from = 1, to = 2), AutoMigration(from = 2, to = 3), AutoMigration(from = 3, to = 4), AutoMigration(from = 4, to = 5), AutoMigration(from = 5, to = 6), AutoMigration(from = 6, to = 7)],
+    autoMigrations = [AutoMigration(from = 1, to = 2), AutoMigration(from = 2, to = 3), AutoMigration(from = 3, to = 4), AutoMigration(from = 4, to = 5), AutoMigration(from = 5, to = 6), AutoMigration(from = 6, to = 7), AutoMigration(from = 7, to = 8)],
 )
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {

@@ -45,7 +45,13 @@ data class CheckInUiState(
     /** Readings of every metric with this check-in's values in, for the done screen. */
     val all: List<Pair<Metric, List<Reading>>>,
     val photoFailed: Boolean = false,
-)
+    /** Every check-in's photos, for the ghost (last earlier photo of a pose) and the reveal. */
+    val photoRows: List<PhotoRow> = emptyList(),
+) {
+    /** The ghost for [pose]: the latest earlier check-in's photo, with that check-in's index. */
+    fun ghost(pose: Pose): Pair<Int, String>? =
+        photoRows.filter { it.checkIn.idx < idx }.lastOrNull { pose in it.photos }?.let { it.checkIn.idx to it.photos.getValue(pose) }
+}
 
 /** The monthly check-in (flows C1–C3, S2) and the Day 0 baseline (idx 0). One view model per visit. */
 class CheckInViewModel(private val container: AppContainer, private val idx: Int) : ViewModel() {
@@ -55,6 +61,7 @@ class CheckInViewModel(private val container: AppContainer, private val idx: Int
     private val step = MutableStateFlow<CheckInStep?>(null)
     private val photoFailed = MutableStateFlow(false)
     private val date = MutableStateFlow<LocalDate?>(null)
+    private val schedule = MutableStateFlow<List<app.beaesthetic.domain.progress.CheckIn>>(emptyList())
 
     val state: StateFlow<CheckInUiState?> = combine(
         container.progress.observe(),
@@ -93,6 +100,7 @@ class CheckInViewModel(private val container: AppContainer, private val idx: Int
             day0Photos = data.photos[0].orEmpty().mapValues { it.value.fileName },
             all = data.metrics.map { it to data.readings[it.id].orEmpty() },
             photoFailed = failed,
+            photoRows = schedule.value.mapNotNull { c -> data.photos[c.idx]?.takeIf { it.isNotEmpty() }?.let { PhotoRow(c, it.mapValues { (_, p) -> p.fileName }) } },
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
 
@@ -100,8 +108,9 @@ class CheckInViewModel(private val container: AppContainer, private val idx: Int
         viewModelScope.launch {
             container.ensureReady()
             val s = container.db.settings().observe().filterNotNull().first()
-            val schedule = CheckIns.schedule(s.calendar())
-            date.value = if (idx == 0) schedule.first().date else container.clock.programDate(s.rolloverHour)
+            val all = CheckIns.schedule(s.calendar())
+            schedule.value = all
+            date.value = if (idx == 0) all.first().date else container.clock.programDate(s.rolloverHour)
             container.events.screen(if (idx == 0) "checkin-day0" else "checkin")
         }
     }

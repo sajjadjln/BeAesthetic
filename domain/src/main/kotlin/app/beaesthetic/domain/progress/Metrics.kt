@@ -118,6 +118,13 @@ object Suggestions {
 
 object DecimalInput {
     /**
+     * What a number field shows while typing: Persian digits and «٫». A Latin «.» or digits keep their own
+     * direction in an RTL field and show jumbled («.8» for «8.»), so they are converted as they are typed.
+     */
+    fun display(text: String): String =
+        app.beaesthetic.domain.text.PersianDigits.format(text).replace('.', '٫').replace(',', '٫').replace('/', '٫')
+
+    /**
      * Reads «۷۶٫۸», «76.8», «76,8» or «۷۶/۸» (a common Persian keyboard slip). Null for anything else,
      * a negative number, or more than one decimal place's worth of junk.
      */

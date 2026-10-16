@@ -214,6 +214,18 @@ private fun PhotosStep(s: CheckInUiState, photos: PhotoStore, vm: CheckInViewMod
     var shooting by rememberSaveable { mutableStateOf<Pose?>(null) }
     var cameraUri by rememberSaveable { mutableStateOf<Uri?>(null) }
     var picking by rememberSaveable { mutableStateOf<Pose?>(null) }
+    var ghosting by rememberSaveable { mutableStateOf<Pose?>(null) }
+    val months = stringArrayResource(R.array.jalali_months)
+    ghosting?.let { pose ->
+        val ghost = s.ghost(pose)
+        val label = ghost?.let { (gi, _) -> s.photoRows.first { it.checkIn.idx == gi }.checkIn.let { if (it.isDay0) stringResource(R.string.reveal_day0) else months[Jalali.fromGregorian(it.date).month - 1] } }
+        androidx.compose.ui.window.Dialog(
+            onDismissRequest = { ghosting = null },
+            properties = androidx.compose.ui.window.DialogProperties(usePlatformDefaultWidth = false, decorFitsSystemWindows = false),
+        ) {
+            GhostCamera(photos, stringResource(poseName(pose)), ghost?.second, label, onShot = { uri -> vm.savePhoto(pose, uri); ghosting = null }, onClose = { ghosting = null })
+        }
+    }
     val camera = rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) { ok ->
         val pose = shooting
         val uri = cameraUri
@@ -237,8 +249,10 @@ private fun PhotosStep(s: CheckInUiState, photos: PhotoStore, vm: CheckInViewMod
                 PhotoThumb(photos, s.photos[pose], stringResource(R.string.cd_photo, name, ""), Modifier.width(84.dp).aspectRatio(3f / 4f))
                 Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     Text(name, style = Ba.type.subtitle, color = c.text1)
+                    // The ghost camera first (D64); the phone's camera and the gallery stay as fallbacks.
+                    PrimaryButton(stringResource(R.string.photo_ghost_camera), icon = BaIcons.Camera, height = 40.dp, onClick = { ghosting = pose })
                     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        PrimaryButton(stringResource(R.string.photo_camera), icon = BaIcons.Camera, height = 40.dp, onClick = {
+                        SecondaryButton(stringResource(R.string.photo_camera), height = 40.dp, onClick = {
                             val file = photos.cameraTarget()
                             val uri = FileProvider.getUriForFile(context, context.packageName + ".files", file)
                             shooting = pose
@@ -273,15 +287,9 @@ private fun DoneStep(s: CheckInUiState, photos: PhotoStore) {
         }
         Text(stringResource(line), style = Ba.type.subtitle, color = c.text1, textAlign = TextAlign.Center)
     }
-    if (s.idx > 0 && s.day0Photos.isNotEmpty() && s.photos.isNotEmpty()) {
-        Text(stringResource(R.string.checkin_compare), style = Ba.type.label, color = c.text2)
-        Pose.entries.filter { it in s.photos && it in s.day0Photos }.forEach { pose ->
-            val name = stringResource(poseName(pose))
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                PhotoThumb(photos, s.day0Photos[pose], stringResource(R.string.cd_photo, name, stringResource(R.string.progress_day0_title)), Modifier.weight(1f).aspectRatio(3f / 4f), maxEdge = 1080)
-                PhotoThumb(photos, s.photos[pose], stringResource(R.string.cd_photo, name, ""), Modifier.weight(1f).aspectRatio(3f / 4f), maxEdge = 1080)
-            }
-        }
+    // The reveal (D75): this check-in's photos against Day 0 (or last month) with the slider.
+    if (s.idx > 0 && s.photos.isNotEmpty() && s.photoRows.any { it.checkIn.idx < s.idx }) {
+        RevealContent(photos, s.photoRows, s.idx)
     }
     if (hasHistory) {
         BaCard {

@@ -48,6 +48,7 @@ import app.beaesthetic.domain.buddy.Outfit
 import app.beaesthetic.domain.progress.CheckIn
 import app.beaesthetic.domain.progress.CheckIns
 import app.beaesthetic.domain.progress.DecimalInput
+import app.beaesthetic.domain.progress.MilestoneView
 import app.beaesthetic.domain.progress.Progress
 import app.beaesthetic.domain.progress.Trend
 import app.beaesthetic.domain.text.PersianDigits
@@ -72,10 +73,49 @@ import app.beaesthetic.domain.buddy.Pose as BuddyPose
 import java.time.LocalDate
 
 @Composable
-fun ProgressRoute(viewModel: ProgressViewModel, photos: PhotoStore, onCheckIn: (Int) -> Unit, onManage: () -> Unit) {
+fun ProgressRoute(
+    viewModel: ProgressViewModel,
+    photos: PhotoStore,
+    onCheckIn: (Int) -> Unit,
+    onManage: () -> Unit,
+    onBackfill: (LocalDate) -> Unit,
+    onReveal: (Int) -> Unit,
+) {
     val state by viewModel.state.collectAsStateWithLifecycle()
-    ProgressScreen(state, photos, onCheckIn, onManage, viewModel::record, viewModel::deleteReading)
+    var milestone by remember { mutableStateOf<MilestoneView?>(null) }
+    var addingMilestone by remember { mutableStateOf(false) }
+    var backfilling by remember { mutableStateOf(false) }
+    ProgressScreen(
+        state, photos, onCheckIn, onManage, viewModel::record, viewModel::deleteReading,
+        extras = ProgressExtras(
+            toggleMilestone = viewModel::toggleMilestone,
+            editMilestone = { v -> if (v == null) addingMilestone = true else milestone = v },
+            backfill = { backfilling = true },
+            reveal = onReveal,
+        ),
+    )
+    val s = state ?: return
+    if (addingMilestone || milestone != null) {
+        val editing = milestone
+        MilestoneSheet(
+            editing, s.metrics,
+            onSave = { title, metricId, target ->
+                viewModel.saveMilestone(editing?.milestone?.id, title, metricId, target, editing?.milestone?.reachedOn.takeIf { metricId == null })
+                milestone = null; addingMilestone = false
+            },
+            onDelete = editing?.let { e -> { viewModel.deleteMilestone(e.milestone.id); milestone = null } },
+            onDismiss = { milestone = null; addingMilestone = false },
+        )
+    }
+    if (backfilling) BackfillSheet(s.backfillDays, onPick = { d -> backfilling = false; onBackfill(d) }, onDismiss = { backfilling = false })
 }
+
+data class ProgressExtras(
+    val toggleMilestone: (MilestoneView) -> Unit = {},
+    val editMilestone: (MilestoneView?) -> Unit = {},
+    val backfill: () -> Unit = {},
+    val reveal: (Int) -> Unit = {},
+)
 
 // ---------------------------------------------------------------- 03 Progress
 
@@ -87,6 +127,7 @@ fun ProgressScreen(
     onManage: () -> Unit,
     onRecord: (Long, LocalDate, Double) -> Unit,
     onDelete: (Long, LocalDate) -> Unit,
+    extras: ProgressExtras = ProgressExtras(),
 ) {
     val c = Ba.colors
     var openMetric by rememberSaveable { mutableStateOf<Long?>(null) }
@@ -104,6 +145,8 @@ fun ProgressScreen(
             }
             if (!s.day0Done) Day0Card(s.day0) { onCheckIn(0) } else s.next?.let { CheckInCard(it, s.today, s.nextOpen, s.isFinish) { onCheckIn(it.idx) } }
 
+            ProgramLineCard(s.line)
+
             s.weight?.let { WeightCard(it, onOpen = { openMetric = it.metric.id }, onAdd = { weighing = true }) }
 
             if (s.others.isNotEmpty()) {
@@ -116,6 +159,10 @@ fun ProgressScreen(
                 }
             }
 
+            TotalsCard(s.totals)
+            LaddersCard(s.ladders)
+            MilestonesCard(s.milestones, s.metrics, extras.toggleMilestone, extras.editMilestone)
+
             if (s.photoRows.isNotEmpty()) {
                 Row(verticalAlignment = Alignment.Bottom) {
                     SectionTitle(stringResource(R.string.progress_photos), Modifier.weight(1f))
@@ -126,12 +173,19 @@ fun ProgressScreen(
                 }
                 BaCard {
                     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                        s.photoRows.reversed().forEach { PhotoRowView(it, photos) }
+                        s.photoRows.reversed().forEach { row -> PhotoRowView(row, photos, Modifier.clickable { extras.reveal(row.checkIn.idx) }) }
                     }
                 }
             }
 
             BaCard(padding = androidx.compose.foundation.layout.PaddingValues(0.dp)) {
+                if (s.backfillDays.isNotEmpty()) {
+                    ListRow(onClick = extras.backfill) {
+                        Icon(BaIcons.Dumbbell, null, tint = c.text2, modifier = Modifier.size(22.dp))
+                        Text(stringResource(R.string.backfill_row), style = Ba.type.subtitle, color = c.text1, modifier = Modifier.weight(1f))
+                        Icon(BaIcons.ChevronForward, null, tint = c.text3, modifier = Modifier.size(20.dp))
+                    }
+                }
                 ListRow(onClick = onManage) {
                     Icon(BaIcons.Ruler, null, tint = c.text2, modifier = Modifier.size(22.dp))
                     Text(stringResource(R.string.progress_manage), style = Ba.type.subtitle, color = c.text1, modifier = Modifier.weight(1f))
@@ -253,10 +307,10 @@ private fun StatCard(card: MetricCard, modifier: Modifier, onOpen: () -> Unit) {
 }
 
 @Composable
-private fun PhotoRowView(row: PhotoRow, photos: PhotoStore) {
+private fun PhotoRowView(row: PhotoRow, photos: PhotoStore, modifier: Modifier = Modifier) {
     val c = Ba.colors
     val months = stringArrayResource(R.array.jalali_months)
-    Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+    Column(verticalArrangement = Arrangement.spacedBy(6.dp), modifier = modifier) {
         val label = if (row.checkIn.isDay0) stringResource(R.string.progress_day0_title) else months[Jalali.fromGregorian(row.checkIn.date).month - 1]
         Text(label + " · " + jalaliDayMonth(row.checkIn.date), style = Ba.type.label, color = c.text2)
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {

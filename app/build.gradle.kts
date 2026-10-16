@@ -20,8 +20,8 @@ android {
         minSdk = 26
         targetSdk = 36
         // versionName = 0.<slice>.<fix> until the MVP is complete; versionCode = major × 10000 + minor × 100 + patch.
-        versionCode = 700
-        versionName = "0.7.0"
+        versionCode = 701
+        versionName = "0.7.1"
     }
 
     // The release key lives outside the repo (ARCHITECTURE §13). Its passwords never go in a file the
@@ -121,6 +121,10 @@ dependencies {
     implementation(libs.androidx.work.runtime)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.kotlinx.serialization.json)
+    // The ghost-overlay camera (D64, slice 7b). AndroidX only: no Google Play Services.
+    implementation(libs.androidx.camera.camera2)
+    implementation(libs.androidx.camera.lifecycle)
+    implementation(libs.androidx.camera.view)
 
     testImplementation(libs.junit4)
     testImplementation(libs.robolectric)
