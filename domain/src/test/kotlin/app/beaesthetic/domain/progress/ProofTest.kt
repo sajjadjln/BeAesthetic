@@ -75,4 +75,27 @@ class ProofTest {
         // Plans on Saturday (0) and Friday (6). 15 Oct is a Thursday.
         assertEquals(listOf(d(10, 10), d(10, 9)), Backfill.days(calendar, d(10, 15), setOf(0, 6)))
     }
+
+    @Test
+    fun `day 0 has nothing to reveal against, so it opens no reveal`() {
+        assertNull(Reveals.against(0, listOf(0)))
+        assertNull(Reveals.against(0, listOf(0, 1), againstLast = true))
+    }
+
+    @Test
+    fun `a check-in reveals against day 0, or last month when asked`() {
+        assertEquals(0, Reveals.against(2, listOf(0, 1, 2)))
+        assertEquals(1, Reveals.against(2, listOf(0, 1, 2), againstLast = true))
+        // Only Day 0 is earlier: «ماه قبل» falls back to it, and there's no choice to offer.
+        assertEquals(0, Reveals.against(1, listOf(0, 1), againstLast = true))
+        assertEquals(false, Reveals.canChoose(1, listOf(0, 1)))
+        assertEquals(true, Reveals.canChoose(2, listOf(0, 1, 2)))
+    }
+
+    @Test
+    fun `without day 0 photos the last earlier set is used, and a first set has none`() {
+        assertEquals(1, Reveals.against(3, listOf(1, 3)))
+        assertNull(Reveals.against(1, listOf(1)))
+        assertEquals(false, Reveals.canChoose(3, listOf(1, 3)))
+    }
 }

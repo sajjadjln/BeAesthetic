@@ -99,9 +99,9 @@ class ProgressRepository(private val db: AppDatabase, private val photos: PhotoS
         photos.delete("$idx-${pose.name.lowercase()}.jpg")
     }
 
-    /** A new milestone ([id] null) or an edit; the tick of a hand milestone is kept unless [reachedOn] says. */
-    suspend fun saveMilestone(id: Long?, title: String, metricId: Long?, target: Double?, reachedOn: LocalDate?) {
-        val order = if (id == null) dao.maxMilestoneOrder() + 1 else 0
+    /** A new milestone ([id] null) goes last; an edit keeps its place. The tick of a hand one is [reachedOn]. */
+    suspend fun saveMilestone(id: Long?, title: String, metricId: Long?, target: Double?, reachedOn: LocalDate?) = db.withTransaction {
+        val order = id?.let { dao.milestone(it)?.sortOrder } ?: (dao.maxMilestoneOrder() + 1)
         dao.upsertMilestone(MilestoneEntity(id ?: 0, title, metricId, target, reachedOn, order))
     }
 

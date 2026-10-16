@@ -46,6 +46,7 @@ import app.beaesthetic.domain.buddy.Outfit
 import app.beaesthetic.domain.progress.DecimalInput
 import app.beaesthetic.domain.progress.GuessOutcome
 import app.beaesthetic.domain.progress.Progress
+import app.beaesthetic.domain.progress.Reveals
 import app.beaesthetic.domain.progress.Trend
 import app.beaesthetic.domain.text.PersianDigits
 import app.beaesthetic.domain.time.Jalali
@@ -92,9 +93,14 @@ fun CheckInRoute(viewModel: CheckInViewModel, photos: PhotoStore, onClose: () ->
                 }
             }
             val last = s.step == CheckInStep.DONE
+            val waiting = s.step == CheckInStep.PHOTOS && s.savingPhoto
+            if (waiting) {
+                Text(stringResource(R.string.photo_saving), style = Ba.type.caption, color = c.text3, textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth().padding(top = 8.dp))
+            }
             PrimaryButton(
                 stringResource(if (last) R.string.checkin_finish else R.string.next),
-                onClick = { if (last) { viewModel.finish(); onClose() } else viewModel.next() },
+                onClick = { if (last) onClose() else viewModel.next() },
+                enabled = !waiting,
                 modifier = Modifier.fillMaxWidth().padding(16.dp),
             )
         }
@@ -288,7 +294,7 @@ private fun DoneStep(s: CheckInUiState, photos: PhotoStore) {
         Text(stringResource(line), style = Ba.type.subtitle, color = c.text1, textAlign = TextAlign.Center)
     }
     // The reveal (D75): this check-in's photos against Day 0 (or last month) with the slider.
-    if (s.idx > 0 && s.photos.isNotEmpty() && s.photoRows.any { it.checkIn.idx < s.idx }) {
+    if (s.photos.isNotEmpty() && Reveals.against(s.idx, s.photoRows.map { it.checkIn.idx }) != null) {
         RevealContent(photos, s.photoRows, s.idx)
     }
     if (hasHistory) {

@@ -686,6 +686,7 @@
     <string name="pose_back">پشت</string>
     <string name="photo_camera">دوربین</string>
     <string name="photo_gallery">گالری</string>
+    <string name="photo_saving">عکس داره ذخیره می‌شه…</string>
     <string name="photo_failed">این عکس باز نشد. یکی دیگه رو امتحان کن.</string>
     <string name="next">بعدی</string>
     <string name="checkin_finish">تموم</string>

@@ -45,6 +45,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.beaesthetic.R
 import app.beaesthetic.data.repo.PhotoStore
 import app.beaesthetic.data.repo.Pose
+import app.beaesthetic.domain.progress.Reveals
 import app.beaesthetic.domain.time.Jalali
 import app.beaesthetic.ui.components.PickPill
 import app.beaesthetic.ui.components.TopBar
@@ -98,14 +99,15 @@ fun RevealContent(photos: PhotoStore, rows: List<PhotoRow>, idx: Int) {
     val c = Ba.colors
     val months = stringArrayResource(R.array.jalali_months)
     val current = rows.firstOrNull { it.checkIn.idx == idx } ?: return
-    val day0 = rows.firstOrNull { it.checkIn.isDay0 }
-    val last = rows.lastOrNull { it.checkIn.idx < idx && !it.checkIn.isDay0 }
+    val withPhotos = rows.map { it.checkIn.idx }
     var againstLast by remember { mutableStateOf(false) }
-    val against = if (againstLast && last != null) last else day0 ?: last
+    // Nothing earlier (Day 0 itself): no reveal, rather than a photo compared with itself.
+    val againstIdx = Reveals.against(idx, withPhotos, againstLast) ?: return
+    val against = rows.firstOrNull { it.checkIn.idx == againstIdx }
     val poses = Pose.entries.filter { it in current.photos }
     var pose by remember { mutableStateOf(poses.firstOrNull() ?: Pose.FRONT) }
     Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-        if (day0 != null && last != null && day0 !== current) {
+        if (Reveals.canChoose(idx, withPhotos)) {
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 PickPill(stringResource(R.string.reveal_day0), !againstLast) { againstLast = false }
                 PickPill(stringResource(R.string.reveal_last), againstLast) { againstLast = true }

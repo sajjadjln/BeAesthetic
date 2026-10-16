@@ -412,6 +412,9 @@ interface ProgressDao {
     @Query("SELECT COALESCE(MAX(sortOrder), -1) FROM milestone")
     suspend fun maxMilestoneOrder(): Int
 
+    @Query("SELECT * FROM milestone WHERE id = :id")
+    suspend fun milestone(id: Long): MilestoneEntity?
+
     @Upsert
     suspend fun upsertMilestone(m: MilestoneEntity)
 

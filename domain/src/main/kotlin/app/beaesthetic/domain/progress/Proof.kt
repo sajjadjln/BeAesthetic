@@ -102,3 +102,22 @@ object Backfill {
             .filter { app.beaesthetic.domain.time.Weekdays.index(it.dayOfWeek) in plannedWeekdays }
             .toList()
 }
+
+/** The reveal (D75): which earlier check-in a check-in's photos are compared with. Indexes as in [CheckIn]. */
+object Reveals {
+
+    /**
+     * Day 0 by default, the last earlier check-in when [againstLast]; null when no earlier check-in has
+     * photos (Day 0 itself, or a first set taken later), so there's nothing to compare and no reveal.
+     */
+    fun against(idx: Int, withPhotos: Collection<Int>, againstLast: Boolean = false): Int? {
+        val earlier = withPhotos.filter { it < idx }
+        if (earlier.isEmpty()) return null
+        val last = earlier.max()
+        return if (againstLast || 0 !in earlier) last else 0
+    }
+
+    /** «روز صفر» and «ماه قبل» are both offered only when they differ: Day 0 and a later earlier check-in. */
+    fun canChoose(idx: Int, withPhotos: Collection<Int>): Boolean =
+        0 in withPhotos && withPhotos.any { it in 1 until idx }
+}

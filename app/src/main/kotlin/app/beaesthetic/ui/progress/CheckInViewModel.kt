@@ -20,6 +20,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 
@@ -45,6 +46,8 @@ data class CheckInUiState(
     /** Readings of every metric with this check-in's values in, for the done screen. */
     val all: List<Pair<Metric, List<Reading>>>,
     val photoFailed: Boolean = false,
+    /** A photo is still being copied in; «بعدی» waits for it so the check-in never closes without it. */
+    val savingPhoto: Boolean = false,
     /** Every check-in's photos, for the ghost (last earlier photo of a pose) and the reveal. */
     val photoRows: List<PhotoRow> = emptyList(),
 ) {
@@ -60,14 +63,15 @@ class CheckInViewModel(private val container: AppContainer, private val idx: Int
     private val guesses = MutableStateFlow<Map<Long, String>>(emptyMap())
     private val step = MutableStateFlow<CheckInStep?>(null)
     private val photoFailed = MutableStateFlow(false)
+    private val savingPhotos = MutableStateFlow(0)
     private val date = MutableStateFlow<LocalDate?>(null)
     private val schedule = MutableStateFlow<List<app.beaesthetic.domain.progress.CheckIn>>(emptyList())
 
     val state: StateFlow<CheckInUiState?> = combine(
         container.progress.observe(),
         date.filterNotNull(),
-        combine(drafts, guesses, step, photoFailed) { d, g, s, f -> Quad(d, g, s, f) },
-    ) { data, day, (d, g, s, failed) ->
+        combine(drafts, guesses, step, photoFailed, savingPhotos) { d, g, s, f, n -> Typed(d, g, s, f, n > 0) },
+    ) { data, day, (d, g, s, failed, saving) ->
         fun item(m: Metric): CheckInMetric {
             val all = data.readings[m.id].orEmpty()
             val earlier = all.filter { it.date < day }
@@ -100,6 +104,7 @@ class CheckInViewModel(private val container: AppContainer, private val idx: Int
             day0Photos = data.photos[0].orEmpty().mapValues { it.value.fileName },
             all = data.metrics.map { it to data.readings[it.id].orEmpty() },
             photoFailed = failed,
+            savingPhoto = saving,
             photoRows = schedule.value.mapNotNull { c -> data.photos[c.idx]?.takeIf { it.isNotEmpty() }?.let { PhotoRow(c, it.mapValues { (_, p) -> p.fileName }) } },
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
@@ -126,12 +131,17 @@ class CheckInViewModel(private val container: AppContainer, private val idx: Int
     /** Saves the step's numbers (blank ones are skipped) and moves on. */
     fun next() {
         val s = state.value ?: return
+        if (s.step == CheckInStep.PHOTOS && s.savingPhoto) return
         viewModelScope.launch {
             when (s.step) {
                 CheckInStep.WEIGHT -> s.weight?.let { save(listOf(it), s.date) }
                 CheckInStep.TAPE -> save(s.tape, s.date)
                 CheckInStep.TESTS -> save(s.tests, s.date)
-                CheckInStep.PHOTOS -> container.progress.finishCheckIn(idx, s.date, container.clock.now())
+                CheckInStep.PHOTOS -> {
+                    container.progress.finishCheckIn(idx, s.date, container.clock.now())
+                    // A backup runs after every check-in (flows C5), however the done screen is left; no folder means none.
+                    container.scope.launch { container.backup.backUp(BackupReason.AUTO) }
+                }
                 CheckInStep.DONE -> Unit
             }
             val i = s.steps.indexOf(s.step)
@@ -152,21 +162,25 @@ class CheckInViewModel(private val container: AppContainer, private val idx: Int
         setValue(w.metric.id, plain(value))
     }
 
+    /**
+     * Copies a photo in on the app's scope, not this screen's: closing the check-in right after the last shot
+     * must not cancel the save between the file and its row.
+     */
     fun savePhoto(pose: Pose, uri: Uri) {
-        viewModelScope.launch {
-            photoFailed.value = false
-            runCatching { container.progress.savePhoto(idx, pose, uri, container.clock.now()) }
-                .onFailure { photoFailed.value = true }
+        photoFailed.value = false
+        savingPhotos.update { it + 1 }
+        container.scope.launch {
+            try {
+                runCatching { container.progress.savePhoto(idx, pose, uri, container.clock.now()) }
+                    .onFailure { photoFailed.value = true }
+            } finally {
+                savingPhotos.update { it - 1 }
+            }
         }
     }
 
     fun deletePhoto(pose: Pose) {
         viewModelScope.launch { container.progress.deletePhoto(idx, pose) }
-    }
-
-    /** «تموم»: a backup runs after the check-in (flows C5), in the background; no folder means none. */
-    fun finish() {
-        container.scope.launch { container.backup.backUp(BackupReason.AUTO) }
     }
 
     private suspend fun save(items: List<CheckInMetric>, day: LocalDate) {
@@ -177,7 +191,13 @@ class CheckInViewModel(private val container: AppContainer, private val idx: Int
         }
     }
 
-    private data class Quad<A, B, C, D>(val a: A, val b: B, val c: C, val d: D)
+    private data class Typed(
+        val drafts: Map<Long, String>,
+        val guesses: Map<Long, String>,
+        val step: CheckInStep?,
+        val photoFailed: Boolean,
+        val saving: Boolean,
+    )
 
     private companion object {
         /** A value as it shows in a field: «۷۶٫۸», «۱۲». [DecimalInput] reads it back. */

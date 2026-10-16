@@ -20,8 +20,8 @@ android {
         minSdk = 26
         targetSdk = 36
         // versionName = 0.<slice>.<fix> until the MVP is complete; versionCode = major × 10000 + minor × 100 + patch.
-        versionCode = 701
-        versionName = "0.7.1"
+        versionCode = 702
+        versionName = "0.7.2"
     }
 
     // The release key lives outside the repo (ARCHITECTURE §13). Its passwords never go in a file the

@@ -50,6 +50,7 @@ import app.beaesthetic.domain.progress.CheckIns
 import app.beaesthetic.domain.progress.DecimalInput
 import app.beaesthetic.domain.progress.MilestoneView
 import app.beaesthetic.domain.progress.Progress
+import app.beaesthetic.domain.progress.Reveals
 import app.beaesthetic.domain.progress.Trend
 import app.beaesthetic.domain.text.PersianDigits
 import app.beaesthetic.domain.time.Jalali
@@ -173,7 +174,12 @@ fun ProgressScreen(
                 }
                 BaCard {
                     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                        s.photoRows.reversed().forEach { row -> PhotoRowView(row, photos, Modifier.clickable { extras.reveal(row.checkIn.idx) }) }
+                        val withPhotos = s.photoRows.map { it.checkIn.idx }
+                        s.photoRows.reversed().forEach { row ->
+                            // Only a row with an earlier set to compare against opens the reveal (not Day 0).
+                            val reveal = Reveals.against(row.checkIn.idx, withPhotos) != null
+                            PhotoRowView(row, photos, if (reveal) Modifier.clickable { extras.reveal(row.checkIn.idx) } else Modifier)
+                        }
                     }
                 }
             }
