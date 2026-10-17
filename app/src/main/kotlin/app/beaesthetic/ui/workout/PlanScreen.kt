@@ -18,6 +18,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -47,6 +48,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.res.stringArrayResource
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
@@ -80,6 +82,7 @@ import app.beaesthetic.ui.components.SecondaryButton
 import app.beaesthetic.ui.components.StepButton
 import app.beaesthetic.ui.components.Stepper
 import app.beaesthetic.ui.components.TopBar
+import app.beaesthetic.ui.components.sheetScroll
 import app.beaesthetic.ui.settings.Segmented
 import app.beaesthetic.ui.theme.Ba
 import app.beaesthetic.ui.theme.PeykarTheme
@@ -201,6 +204,7 @@ private fun DayPicker(plans: List<WorkoutPlan>, selected: Int, onPick: (Int) -> 
 @Composable
 private fun WorkoutName(plan: WorkoutPlan, onSave: (String) -> Unit) {
     val c = Ba.colors
+    val focus = LocalFocusManager.current
     var text by remember(plan.weekday) { mutableStateOf(plan.name) }
     LaunchedEffect(plan.weekday, text) {
         if (text == plan.name) return@LaunchedEffect
@@ -214,6 +218,8 @@ private fun WorkoutName(plan: WorkoutPlan, onSave: (String) -> Unit) {
         textStyle = Ba.type.headline.copy(color = c.text1),
         cursorBrush = SolidColor(c.accent),
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+        // «تایید» on the keyboard ends the edit: the field lets go of focus and the keyboard closes.
+        keyboardActions = KeyboardActions(onDone = { focus.clearFocus() }),
         modifier = Modifier.fillMaxWidth(),
         decorationBox = { inner ->
             Box {
@@ -345,7 +351,7 @@ private fun ExerciseSheet(
     ModalBottomSheet(onDismissRequest = onDismiss, sheetState = sheet, containerColor = c.surface) {
         Column(
             verticalArrangement = Arrangement.spacedBy(16.dp),
-            modifier = Modifier.fillMaxWidth().verticalScroll(scroll).padding(start = 16.dp, end = 16.dp, bottom = 24.dp),
+            modifier = Modifier.fillMaxWidth().sheetScroll(scroll).padding(start = 16.dp, end = 16.dp, bottom = 24.dp),
         ) {
             Text(stringResource(if (original == null) R.string.ex_editor_new else R.string.ex_editor_edit), style = Ba.type.title, color = c.text1)
 

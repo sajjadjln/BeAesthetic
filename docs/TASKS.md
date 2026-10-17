@@ -1,6 +1,6 @@
 # Tasks and status
 
-_Last updated: 2026-10-16 (slice 8)_
+_Last updated: 2026-10-17 (friends' feedback, 0.10.4)_
 
 ## Where we are
 
@@ -29,6 +29,7 @@ The program itself started on **2026-10-09 (Day 0)**. Week 1 began 2026-10-10. E
 
 ## Next steps
 
+0. **Friends' feedback (2026-10-17, 0.10.4, D147).** Screens and tabs slide (one fixed bar); the parts of the day swipe, with the indicator following the finger; onboarding has back and bottom buttons and slides; «گوشی» is «رسیدن یادآورها» with clearer permission names and «۷ روز اخیر»; the test reminder shows only until a real one has arrived; Today shows «برنامه‌ی تمرینت رو بساز» while there's no plan; end screens (workout summary, check-in done, onboarding, recap cards) center their content with the buttons at the bottom; sheets no longer close on a fling to the top; «تایید» on the keyboard ends the edit. **For the user:** install 0.10.4 and send it to your friends again.
 0. **«+ کار جدید» on Today (2026-10-16, 0.10.3, D146).** The floating button from the Today redesign, bottom-left; it opens the simple sheet on «امروز». Checked on an emulator.
 0. **Slice 10c is built (2026-10-16, 0.10.2, D145).** The finish recap (the halfway story + the finish line) and «بعدش چی؟»: «ادامه» (maintenance) or «برنامه‌ی تازه» (new dates to the next Nowruz eve; everything else kept). Domain tests for the finish and choice windows, the archive offset and the new dates. Checked on an emulator at 29 Esfand: the card, the 5 cards, and «برنامه‌ی تازه» set Day 0 to 1 Farvardin 1406, the finish to 29 Esfand 1406, Yalda halfway and cleared the recaps. **Not checked:** «ادامه» on a device, and a new program with real photos (they move to check-in 100+).
 0. **Slice 10b is built (2026-10-16, 0.10.1, D144).** The reminder fade offer: from week 8, a routine that has stuck gets «جا افتاده! یادآورش خاموش شه؟»; a silenced one that slipped this week gets «یادآورش برگرده؟». Domain tests cover strength over time, the week-8 start, once-only silence offers and weekly restore offers. Checked on an emulator with the clock at week 9 and 8 weeks of ticks: the card showed, «آره، خاموش» set the task silenced and the card went away. **Not checked:** the restore card on a device.

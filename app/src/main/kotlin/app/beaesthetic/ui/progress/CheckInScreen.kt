@@ -55,6 +55,7 @@ import app.beaesthetic.ui.components.BaIcons
 import app.beaesthetic.ui.components.Chip
 import app.beaesthetic.ui.components.ChipKind
 import app.beaesthetic.ui.components.InputBox
+import app.beaesthetic.ui.components.EndLayout
 import app.beaesthetic.ui.components.PrimaryButton
 import app.beaesthetic.ui.components.SecondaryButton
 import app.beaesthetic.ui.components.TopBar
@@ -79,7 +80,13 @@ fun CheckInRoute(viewModel: CheckInViewModel, photos: PhotoStore, onClose: () ->
                 stringResource(R.string.checkin_title, months[Jalali.fromGregorian(s.date).month - 1])
             }
             TopBar(title, onClose, stringResource(R.string.cd_close), icon = BaIcons.X)
-            if (s.step != CheckInStep.DONE) StepDots(s.steps.filter { it != CheckInStep.DONE }, s.step)
+            if (s.step == CheckInStep.DONE) {
+                EndLayout(Modifier.weight(1f), buttons = { PrimaryButton(stringResource(R.string.checkin_finish), onClick = onClose, modifier = Modifier.fillMaxWidth()) }) {
+                    DoneStep(s, photos)
+                }
+                return@Column
+            }
+            StepDots(s.steps.filter { it != CheckInStep.DONE }, s.step)
             Column(
                 verticalArrangement = Arrangement.spacedBy(14.dp),
                 modifier = Modifier.weight(1f).fillMaxWidth().verticalScroll(rememberScrollState()).padding(horizontal = 16.dp, vertical = 12.dp),
@@ -89,17 +96,16 @@ fun CheckInRoute(viewModel: CheckInViewModel, photos: PhotoStore, onClose: () ->
                     CheckInStep.TAPE -> TapeStep(s, viewModel)
                     CheckInStep.TESTS -> TestsStep(s, viewModel)
                     CheckInStep.PHOTOS -> PhotosStep(s, photos, viewModel)
-                    CheckInStep.DONE -> DoneStep(s, photos)
+                    CheckInStep.DONE -> Unit
                 }
             }
-            val last = s.step == CheckInStep.DONE
             val waiting = s.step == CheckInStep.PHOTOS && s.savingPhoto
             if (waiting) {
                 Text(stringResource(R.string.photo_saving), style = Ba.type.caption, color = c.text3, textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth().padding(top = 8.dp))
             }
             PrimaryButton(
-                stringResource(if (last) R.string.checkin_finish else R.string.next),
-                onClick = { if (last) onClose() else viewModel.next() },
+                stringResource(R.string.next),
+                onClick = { viewModel.next() },
                 enabled = !waiting,
                 modifier = Modifier.fillMaxWidth().padding(16.dp),
             )

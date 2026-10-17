@@ -107,6 +107,17 @@ import app.beaesthetic.ui.progress.WeighSheet
 import java.time.LocalDate
 import kotlin.math.hypot
 import kotlin.math.max
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerState
+import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.runtime.key
+import androidx.compose.runtime.snapshotFlow
+import androidx.compose.ui.layout.layout
+import androidx.compose.ui.unit.IntOffset
+import kotlin.math.roundToInt
 
 data class TodayActions(
     val selectPart: (Part) -> Unit = {},
@@ -228,6 +239,12 @@ fun TodayScreen(state: TodayUiState?, actions: TodayActions) {
         } else {
             state.tiles[state.selectedPart].orEmpty()
         }
+        // The parts of the day are pages (D147): swipe the tiles, or tap the switcher; both move the other.
+        val pager = rememberPagerState(initialPage = state.selectedPart.ordinal) { Part.entries.size }
+        LaunchedEffect(pager) { snapshotFlow { pager.settledPage }.collect { actions.selectPart(Part.entries[it]) } }
+        LaunchedEffect(state.selectedPart) {
+            if (pager.currentPage != state.selectedPart.ordinal) pager.animateScrollToPage(state.selectedPart.ordinal)
+        }
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
             contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 14.dp, bottom = 88.dp),
@@ -267,20 +284,27 @@ fun TodayScreen(state: TodayUiState?, actions: TodayActions) {
                         WorkoutCard(w, actions.openWorkout, w.taskId?.let { id -> { actions.toggle(id) } })
                     }
                     is WorkoutCardUi.Rest -> item(span = { GridItemSpan(maxLineSpan) }) { RestRow(w, actions.openPlan) }
+                    WorkoutCardUi.NoPlan -> item(span = { GridItemSpan(maxLineSpan) }) { NoPlanRow(actions.openPlan) }
                     null -> Unit
                 }
             }
             if (!state.minimumMode) {
                 item(span = { GridItemSpan(maxLineSpan) }) {
-                    PartSwitcher(state.selectedPart, state.completeParts, actions.selectPart, Modifier.padding(vertical = 6.dp))
+                    PartSwitcher(
+                        Part.entries[pager.currentPage],
+                        { pager.currentPage + pager.currentPageOffsetFraction },
+                        state.completeParts,
+                        actions.selectPart,
+                        Modifier.padding(vertical = 6.dp),
+                    )
                 }
-            }
-            if (tiles.isEmpty()) {
-                item(span = { GridItemSpan(maxLineSpan) }) {
-                    Text(stringResource(R.string.today_part_empty), style = Ba.type.body, color = colors.text3, modifier = Modifier.padding(vertical = 24.dp))
+                item(span = { GridItemSpan(maxLineSpan) }) { PartPager(state, pager, actions) }
+            } else {
+                if (tiles.isEmpty()) {
+                    item(span = { GridItemSpan(maxLineSpan) }) { EmptyPart() }
                 }
+                items(tiles, key = { it.taskId }) { tile -> TaskTile(tile, onToggle = { actions.toggle(tile.taskId) }) }
             }
-            items(tiles, key = { it.taskId }) { tile -> TaskTile(tile, onToggle = { actions.toggle(tile.taskId) }) }
             if (!state.minimumMode && state.anytime.isNotEmpty()) {
                 item(span = { GridItemSpan(maxLineSpan) }) {
                     AnytimeCard(state.anytime, state.anytimeOpen, actions, Modifier.padding(top = 6.dp))
@@ -736,8 +760,12 @@ private fun BackupRow(status: BackupStatus, onOpen: () -> Unit, modifier: Modifi
     }
 }
 
+/**
+ * The parts of the day: one tile each, Morning on the right. The indicator follows [position] (the pager's
+ * page plus how far it has been dragged), so it slides with the finger and settles with the page (D76, D147).
+ */
 @Composable
-private fun PartSwitcher(selected: Part, complete: Set<Part>, onSelect: (Part) -> Unit, modifier: Modifier = Modifier) {
+private fun PartSwitcher(selected: Part, position: () -> Float, complete: Set<Part>, onSelect: (Part) -> Unit, modifier: Modifier = Modifier) {
     val colors = Ba.colors
     val names = mapOf(
         Part.MORNING to stringResource(R.string.part_morning),
@@ -745,33 +773,88 @@ private fun PartSwitcher(selected: Part, complete: Set<Part>, onSelect: (Part) -
         Part.EVENING to stringResource(R.string.part_evening),
         Part.NIGHT to stringResource(R.string.part_night),
     )
-    Row(
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
+    val gap = 8.dp
+    BoxWithConstraints(
         modifier = modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(18.dp))
             .background(colors.surface)
-            .padding(6.dp)
-            .selectableGroup(),
+            .padding(6.dp),
     ) {
-        for (part in Part.entries) {
-            val isSelected = part == selected
-            val bg by animateColorAsState(if (isSelected) colors.surface2 else colors.surface, tween(BaMotion.SHORT, easing = BaMotion.Standard), label = "partBg")
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier
-                    .weight(1f)
-                    .height(44.dp)
-                    .clip(RoundedCornerShape(13.dp))
-                    .background(bg)
-                    .selectable(selected = isSelected, role = Role.Tab, onClick = { onSelect(part) })
-                    .semantics { contentDescription = names.getValue(part) },
-            ) {
-                Icon(BaIcons.of(part), contentDescription = null, tint = if (isSelected) colors.text1 else colors.text3, modifier = Modifier.size(24.dp))
-                PartDot(part in complete, Modifier.align(Alignment.BottomCenter).padding(bottom = 5.dp))
+        val cell = (maxWidth - gap * (Part.entries.size - 1)) / Part.entries.size
+        // offset {} follows the layout direction, so a positive step moves toward the left in RTL.
+        Box(
+            Modifier
+                .offset { IntOffset((position() * (cell + gap).toPx()).roundToInt(), 0) }
+                .width(cell)
+                .height(44.dp)
+                .clip(RoundedCornerShape(13.dp))
+                .background(colors.surface2),
+        )
+        Row(horizontalArrangement = Arrangement.spacedBy(gap), modifier = Modifier.fillMaxWidth().selectableGroup()) {
+            for (part in Part.entries) {
+                val isSelected = part == selected
+                val tint by animateColorAsState(if (isSelected) colors.text1 else colors.text3, tween(BaMotion.SHORT, easing = BaMotion.Standard), label = "partTint")
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier
+                        .weight(1f)
+                        .height(44.dp)
+                        .clip(RoundedCornerShape(13.dp))
+                        .selectable(selected = isSelected, role = Role.Tab, onClick = { onSelect(part) })
+                        .semantics { contentDescription = names.getValue(part) },
+                ) {
+                    Icon(BaIcons.of(part), contentDescription = null, tint = tint, modifier = Modifier.size(24.dp))
+                    PartDot(part in complete, Modifier.align(Alignment.BottomCenter).padding(bottom = 5.dp))
+                }
             }
         }
     }
+}
+
+/**
+ * The tiles of each part as a page. The pager reaches the screen edges (past the list's 16 dp padding), so a
+ * page slides off the screen rather than vanishing at the padding. Time flows right → left: the next part
+ * is to the left, the same side as in the switcher.
+ */
+@Composable
+private fun PartPager(state: TodayUiState, pager: PagerState, actions: TodayActions) {
+    val bleed = 16.dp
+    HorizontalPager(
+        pager,
+        contentPadding = PaddingValues(horizontal = bleed),
+        pageSpacing = bleed,
+        verticalAlignment = Alignment.Top,
+        key = { it },
+        modifier = Modifier.layout { measurable, constraints ->
+            val extra = (bleed * 2).roundToPx()
+            val placeable = measurable.measure(constraints.copy(minWidth = constraints.minWidth + extra, maxWidth = constraints.maxWidth + extra))
+            layout(placeable.width - extra, placeable.height) { placeable.place(-extra / 2, 0) }
+        },
+    ) { page ->
+        val tiles = state.tiles[Part.entries[page]].orEmpty()
+        if (tiles.isEmpty()) {
+            EmptyPart()
+        } else {
+            Column(verticalArrangement = Arrangement.spacedBy(10.dp), modifier = Modifier.fillMaxWidth()) {
+                tiles.chunked(2).forEach { row ->
+                    Row(horizontalArrangement = Arrangement.spacedBy(10.dp), modifier = Modifier.fillMaxWidth()) {
+                        row.forEach { tile ->
+                            Box(Modifier.weight(1f), propagateMinConstraints = true) {
+                                key(tile.taskId) { TaskTile(tile, onToggle = { actions.toggle(tile.taskId) }) }
+                            }
+                        }
+                        if (row.size == 1) Spacer(Modifier.weight(1f))
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun EmptyPart() {
+    Text(stringResource(R.string.today_part_empty), style = Ba.type.body, color = Ba.colors.text3, modifier = Modifier.fillMaxWidth().padding(vertical = 24.dp))
 }
 
 /** A finished part's dot pops in (D76). */
@@ -952,6 +1035,31 @@ private fun RestRow(rest: WorkoutCardUi.Rest, onOpenPlan: () -> Unit) {
     ) {
         Icon(BaIcons.Dumbbell, null, tint = colors.text2, modifier = Modifier.size(20.dp))
         Text(text, style = Ba.type.body, color = colors.text2, modifier = Modifier.weight(1f))
+        Icon(BaIcons.ChevronForward, null, tint = colors.text3, modifier = Modifier.size(18.dp))
+    }
+}
+
+/** No plan yet: the way into the plan editor, until a day has a move (D147). */
+@Composable
+private fun NoPlanRow(onOpenPlan: () -> Unit) {
+    val colors = Ba.colors
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(16.dp))
+            .background(colors.surface)
+            .clickable(role = Role.Button, onClickLabel = stringResource(R.string.cd_open_plan), onClick = onOpenPlan)
+            .padding(horizontal = 14.dp, vertical = 12.dp),
+    ) {
+        Box(Modifier.size(36.dp).clip(CircleShape).background(colors.accentSubtle), contentAlignment = Alignment.Center) {
+            Icon(BaIcons.Dumbbell, null, tint = colors.onAccentSubtle, modifier = Modifier.size(20.dp))
+        }
+        Column(Modifier.weight(1f)) {
+            Text(stringResource(R.string.today_no_plan_title), style = Ba.type.subtitle, color = colors.text1)
+            Text(stringResource(R.string.today_no_plan_body), style = Ba.type.caption, color = colors.text2)
+        }
         Icon(BaIcons.ChevronForward, null, tint = colors.text3, modifier = Modifier.size(18.dp))
     }
 }

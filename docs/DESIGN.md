@@ -74,6 +74,8 @@ The dark background is "slate" (D136), lifted from near-black so cards, borders 
 | Label | 13 / Medium |
 | Caption | 12 / Regular |
 
+**End screens (D147).** A screen that ends something (the workout summary «تمرین تموم شد», the check-in's done step, onboarding steps, recap cards) centers its content (character, numbers, photos) vertically and pins the buttons to the bottom, main button last. Content taller than the screen scrolls above the buttons.
+
 ## Motion (D76)
 
 **Calm by default, generous at the moments that matter.** Motion only confirms something the user did or shows progress. Demo: `docs/design/motion.html` (https://claude.ai/artifact/SdjkRYt5z13an56aZ99huE).
@@ -110,12 +112,12 @@ Where motion is used:
 |---|---|---|
 | Everyday | Tile tick | Accent fill spreads from the touch point, check draws itself, tile dips to 96% and springs back, light vibration. Untick drains back, no vibration. |
 | Everyday | Day ring | Arc springs to its new value; the center number rolls. |
-| Everyday | Part-of-day switcher | Indicator slides; tiles of a later part enter from the left (time flows right → left). |
+| Everyday | Part-of-day switcher | The parts are swipe pages (D147): the tiles follow the finger, a later part comes in from the left (time flows right → left), and the indicator tracks the drag and settles with the page. A tap slides there too. |
 | Everyday | Part of the day finished | Its dot pops; the ring glows once. |
 | Everyday | Minimum day | Leaf turns; non-floor tiles fade and fold; the rest settle into place. |
 | Everyday | Week dots | Today's dot fills to its new level. |
 | Everyday | Workout tile → session | The tile expands into the session screen (shared element). |
-| Everyday | Sheets, tabs | Standard spring sheets, fade-through between tabs. |
+| Everyday | Sheets, tabs, screens | Standard spring sheets. Screens slide (D147): a pushed screen comes in from the left (forward in RTL), the one under it moves a quarter; back reverses it. Tabs slide in the bar's order under a fixed bar; the bar slides away under pushed screens. Onboarding steps slide. |
 | Moment | 100% day | Ring closes, a shimmer runs around it once, number grows, «امروز کامل شد» fades in, medium vibration. Once a day. |
 | Moment | Set logged | The number flies into its set circle; the next set comes into focus. |
 | Moment | «رکورد» | Burst on the set circle, the chip springs in, record vibration. |
@@ -261,7 +263,7 @@ Same as 01 with light tokens.
 
 Published: https://claude.ai/artifact/An8XmUuGo4cWrbHHhWMkom. Every screen that wasn't in `screens.html`, same tokens and character.
 
-- **Onboarding (O1–O8):** سلام → مسیر (Day 0 and finish dates, the 5 chapters) → یادآورها (block times, normal/Friday, bedtime) → گوشی (5 reliability rows + test notification) → پشتیبان (folder, auto backup) → روز صفر (weight, 5 tape sites, strength tests, 3 photos from the gallery, optional workout backfill) → برنامه (paste the plan, preview what was understood) → جمله و هدف‌ها (identity sentence, 5–8 milestone chips). A dot row shows the step.
+- **Onboarding (O1–O8):** سلام → مسیر (Day 0 and finish dates, the 5 chapters) → یادآورها (block times, normal/Friday, bedtime) → رسیدن یادآورها (5 reliability rows; the test reminder only until a real one arrives, D147) → پشتیبان (folder, auto backup) → روز صفر (weight, 5 tape sites, strength tests, 3 photos from the gallery, optional workout backfill) → برنامه (paste the plan, preview what was understood) → جمله و هدف‌ها (identity sentence, 5–8 milestone chips). A dot row shows the step.
 - **Notifications (N1):** block reminder (count, first names, anchors), the important follow-up with «انجام شد», a task's own alarm, the check-in morning. Neutral words; the white sticker silhouette as the icon; no character.
 - **گوشی in Settings (N2):** this week's reminder health (one bar per reminder; late ones shorter and neutral), the same 5-row checklist, the test button, and the quiet «یه یادآور دیر رسید · درستش کن» banner Today shows.
 - **Check-in (C1–C5):** the indigo check-in card on Today with «پیکر» (selfie) → weight stepper (±0.1, pre-filled) → 5 tape sites with where to measure, pre-filled → camera with last month's ghost outline, a 10 s timer and the consistency checklist → reveal with a drag divider (Day 0 / last month, front / side / back), deltas in the accent, weight neutral.

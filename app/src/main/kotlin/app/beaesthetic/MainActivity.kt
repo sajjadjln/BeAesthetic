@@ -13,22 +13,31 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.unit.IntOffset
 import androidx.core.content.ContextCompat
 import androidx.core.util.Consumer
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
+import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import app.beaesthetic.debug.DebugMenu
@@ -42,6 +51,7 @@ import app.beaesthetic.ui.settings.SettingsDestination
 import app.beaesthetic.ui.settings.SettingsScreen
 import app.beaesthetic.ui.tasks.TasksRoute as TasksScreenRoute
 import app.beaesthetic.ui.tasks.TasksViewModel
+import app.beaesthetic.ui.components.BOTTOM_BAR_HEIGHT
 import app.beaesthetic.ui.components.BottomBar
 import app.beaesthetic.ui.components.Tab
 import app.beaesthetic.ui.dashboard.DashboardRoute
@@ -58,6 +68,8 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import app.beaesthetic.ui.workout.PlanRoute as PlanScreenRoute
@@ -166,16 +178,23 @@ class MainActivity : ComponentActivity() {
                 addOnNewIntentListener(listener)
                 onDispose { removeOnNewIntentListener(listener) }
             }
+            val current by nav.currentBackStackEntryAsState()
+            val tab = current?.let(::tabOf)
             PeykarTheme(accent, mode) {
+              Box(Modifier.fillMaxSize()) {
                 NavHost(
                     nav,
                     startDestination = start,
-                    // Fade-through between screens (D76); "Remove animations" makes it instant.
-                    enterTransition = { fadeIn(tween(BaMotion.MEDIUM)) },
-                    exitTransition = { fadeOut(tween(BaMotion.SHORT)) },
+                    modifier = Modifier.fillMaxSize(),
+                    // Screens slide (D147): forward comes in from the left in RTL and back slides it out again;
+                    // tabs slide in their order under the fixed bar. "Remove animations" makes it instant.
+                    enterTransition = { slideIntoContainer(direction(initialState, targetState, pop = false), slide) },
+                    exitTransition = { slideOutOfContainer(direction(initialState, targetState, pop = false), slide, behind(initialState, targetState)) },
+                    popEnterTransition = { slideIntoContainer(direction(initialState, targetState, pop = true), slide, behind(targetState, initialState)) },
+                    popExitTransition = { slideOutOfContainer(direction(initialState, targetState, pop = true), slide) },
                 ) {
                     composable<HomeRoute> {
-                        WithTabs(Tab.TODAY, nav) {
+                        WithTabs {
                             TodayRoute(
                                 today,
                                 onOpenSettings = { nav.navigate(SettingsRoute) },
@@ -192,10 +211,10 @@ class MainActivity : ComponentActivity() {
                         }
                     }
                     composable<DashboardTab> {
-                        WithTabs(Tab.DASHBOARD, nav) { DashboardRoute(viewModel { DashboardViewModel(container) }) }
+                        WithTabs { DashboardRoute(viewModel { DashboardViewModel(container) }) }
                     }
                     composable<ProgressTab> {
-                        WithTabs(Tab.PROGRESS, nav) {
+                        WithTabs {
                             ProgressRoute(
                                 viewModel { ProgressViewModel(container) },
                                 container.photos,
@@ -230,7 +249,7 @@ class MainActivity : ComponentActivity() {
                         )
                     }
                     composable<WeekTab> {
-                        WithTabs(Tab.WEEK, nav) {
+                        WithTabs {
                             WeekRoute(viewModel { WeekViewModel(container) { win -> resources.getStringArray(win.linesRes()).size } })
                         }
                     }
@@ -287,28 +306,72 @@ class MainActivity : ComponentActivity() {
                     }
                     composable<DebugRoute> { DebugMenu.Screen(container, onClose = nav::popBackStack) }
                 }
+                // One bar for every tab: it stays put while the tabs slide, and slides away under pushed screens.
+                AnimatedVisibility(
+                    visible = tab != null,
+                    enter = slideInVertically(tween(BaMotion.MEDIUM, easing = BaMotion.Standard)) { it },
+                    exit = slideOutVertically(tween(BaMotion.MEDIUM, easing = BaMotion.Standard)) { it },
+                    modifier = Modifier.align(Alignment.BottomCenter),
+                ) {
+                    var shown by remember { mutableStateOf(Tab.TODAY) }
+                    if (tab != null) shown = tab
+                    BottomBar(shown, onSelect = { selectTab(it, shown, nav) })
+                }
+              }
             }
         }
     }
 
+    private val slide = tween<IntOffset>(BaMotion.MEDIUM, easing = BaMotion.Standard)
+
+    /** Which tab a back stack entry is, or null for a pushed screen. */
+    private fun tabOf(entry: NavBackStackEntry): Tab? = entry.destination.let { d ->
+        when {
+            d.hasRoute<HomeRoute>() -> Tab.TODAY
+            d.hasRoute<DashboardTab>() -> Tab.DASHBOARD
+            d.hasRoute<ProgressTab>() -> Tab.PROGRESS
+            d.hasRoute<WeekTab>() -> Tab.WEEK
+            else -> null
+        }
+    }
+
     /**
-     * A tab screen with the bottom bar under it. The bar takes the navigation-bar inset, so the screen above
-     * doesn't pad for it again. Tabs don't stack: Today is the root, the others sit one step above it.
+     * Forward slides toward the start (in RTL: in from the left), back toward the end. Between two tabs the
+     * direction follows the bar's order, whichever way the back stack moved.
+     */
+    private fun direction(from: NavBackStackEntry, to: NavBackStackEntry, pop: Boolean): AnimatedContentTransitionScope.SlideDirection {
+        val a = tabOf(from)
+        val b = tabOf(to)
+        val forward = if (a != null && b != null) b.ordinal > a.ordinal else !pop
+        return if (forward) AnimatedContentTransitionScope.SlideDirection.Start else AnimatedContentTransitionScope.SlideDirection.End
+    }
+
+    /** The screen left behind under a pushed one moves a quarter of the way; tabs move all the way. */
+    private fun behind(under: NavBackStackEntry, over: NavBackStackEntry): (Int) -> Int =
+        if (tabOf(under) != null && tabOf(over) != null) { w -> w } else { w -> w / 4 }
+
+    private fun selectTab(tab: Tab, selected: Tab, nav: NavHostController) {
+        if (tab == selected) return
+        when (tab) {
+            Tab.TODAY -> nav.popBackStack(HomeRoute, inclusive = false)
+            Tab.DASHBOARD -> nav.navigate(DashboardTab) { popUpTo<HomeRoute>(); launchSingleTop = true }
+            Tab.PROGRESS -> nav.navigate(ProgressTab) { popUpTo<HomeRoute>(); launchSingleTop = true }
+            Tab.WEEK -> nav.navigate(WeekTab) { popUpTo<HomeRoute>(); launchSingleTop = true }
+        }
+    }
+
+    /**
+     * A tab screen. The bar is drawn over the bottom of the screen (outside the NavHost, so it doesn't slide
+     * with the tab); the screen keeps clear of it and doesn't pad for the navigation bar again.
      */
     @Composable
-    private fun WithTabs(selected: Tab, nav: NavHostController, content: @Composable () -> Unit) {
-        Column(Modifier.fillMaxSize()) {
-            Box(Modifier.weight(1f).consumeWindowInsets(WindowInsets.navigationBars)) { content() }
-            BottomBar(selected, onSelect = { tab ->
-                if (tab == selected) return@BottomBar
-                when (tab) {
-                    Tab.TODAY -> nav.popBackStack(HomeRoute, inclusive = false)
-                    Tab.DASHBOARD -> nav.navigate(DashboardTab) { popUpTo<HomeRoute>(); launchSingleTop = true }
-                    Tab.PROGRESS -> nav.navigate(ProgressTab) { popUpTo<HomeRoute>(); launchSingleTop = true }
-                    Tab.WEEK -> nav.navigate(WeekTab) { popUpTo<HomeRoute>(); launchSingleTop = true }
-                }
-            })
-        }
+    private fun WithTabs(content: @Composable () -> Unit) {
+        Box(
+            Modifier.fillMaxSize()
+                .navigationBarsPadding()
+                .padding(bottom = BOTTOM_BAR_HEIGHT)
+                .consumeWindowInsets(WindowInsets.navigationBars),
+        ) { content() }
     }
 
     /** A tapped notification opens Today on its part of the day, or the phone screen for a health warning. */

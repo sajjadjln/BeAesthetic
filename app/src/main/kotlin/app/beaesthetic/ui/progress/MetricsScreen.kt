@@ -47,6 +47,7 @@ import app.beaesthetic.ui.components.PrimaryButton
 import app.beaesthetic.ui.components.SecondaryButton
 import app.beaesthetic.ui.components.SectionTitle
 import app.beaesthetic.ui.components.TopBar
+import app.beaesthetic.ui.components.sheetScroll
 import app.beaesthetic.ui.theme.Ba
 
 private sealed interface MetricEditing {
@@ -143,7 +144,7 @@ private fun MetricForm(
     ModalBottomSheet(onDismissRequest = onDismiss, sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true), containerColor = c.surface) {
         Column(
             verticalArrangement = Arrangement.spacedBy(16.dp),
-            modifier = Modifier.fillMaxWidth().verticalScroll(rememberScrollState()).padding(start = 16.dp, end = 16.dp, bottom = 24.dp),
+            modifier = Modifier.fillMaxWidth().sheetScroll(rememberScrollState()).padding(start = 16.dp, end = 16.dp, bottom = 24.dp),
         ) {
             Text(stringResource(if (existing == null) R.string.metric_form_new else R.string.metric_form_edit), style = Ba.type.title, color = c.text1)
             if (problem > 0) ErrorLine(R.string.metric_name_empty, problem)

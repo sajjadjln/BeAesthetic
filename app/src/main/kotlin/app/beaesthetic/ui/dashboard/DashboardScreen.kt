@@ -69,6 +69,7 @@ import app.beaesthetic.ui.components.Chip
 import app.beaesthetic.ui.components.ChipKind
 import app.beaesthetic.ui.components.PickPill
 import app.beaesthetic.ui.components.SectionTitle
+import app.beaesthetic.ui.components.sheetScroll
 import app.beaesthetic.ui.jalaliDayMonth
 import app.beaesthetic.ui.theme.Ba
 import app.beaesthetic.ui.theme.BaColors
@@ -343,7 +344,7 @@ private fun DaySheet(d: DayDetail, actions: DashboardActions) {
     ModalBottomSheet(onDismissRequest = actions.closeDetail, sheetState = sheet, containerColor = c.surface) {
         Column(
             verticalArrangement = Arrangement.spacedBy(12.dp),
-            modifier = Modifier.fillMaxWidth().verticalScroll(rememberScrollState()).padding(start = 16.dp, end = 16.dp, bottom = 24.dp),
+            modifier = Modifier.fillMaxWidth().sheetScroll(rememberScrollState()).padding(start = 16.dp, end = 16.dp, bottom = 24.dp),
         ) {
             // «دیروز · دوشنبه ۱۸ آبان», then «۹ نوامبر ۲۰۲۶ · هفته ۵».
             val relative = when (d.date) {

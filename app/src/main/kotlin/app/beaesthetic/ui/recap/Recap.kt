@@ -60,6 +60,7 @@ import app.beaesthetic.ui.components.BaIcons
 import app.beaesthetic.ui.components.Chip
 import app.beaesthetic.ui.components.ChipKind
 import app.beaesthetic.ui.components.PrimaryButton
+import app.beaesthetic.ui.components.EndLayout
 import app.beaesthetic.ui.components.buddy.Piker
 import app.beaesthetic.ui.dashboard.DashboardUiState
 import app.beaesthetic.ui.dashboard.DashboardViewModel
@@ -214,16 +215,17 @@ fun RecapRoute(
                 )
             }
             AnimatedContent(card, label = "recap", modifier = Modifier.weight(1f).fillMaxWidth()) { i ->
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterVertically),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(vertical = 20.dp),
+                // The last halfway card ends the recap: its button sits at the bottom (D147).
+                val closing = !finish && i == count - 1
+                EndLayout(
+                    horizontalPadding = 0.dp,
+                    buttons = if (closing) { -> PrimaryButton(stringResource(R.string.recap_r4_done), onClose, Modifier.fillMaxWidth()) } else null,
                 ) {
                     when {
                         i == 0 -> ShownUp(ds, finish)
                         i == 1 -> Strength(ps, e)
                         i == 2 -> PhotosAndSentence(ps, e, photos)
-                        !finish -> SecondHalf(e, onClose)
+                        !finish -> SecondHalf(e)
                         i == 3 -> FinishLine(e, ds)
                         else -> Choice(e, onKeepGoing = { recap.keepGoing(onClose) }, onNewProgram = { recap.startNewProgram(onClose) })
                     }
@@ -353,12 +355,11 @@ private fun Choice(e: RecapExtra, onKeepGoing: () -> Unit, onNewProgram: () -> U
 }
 
 @Composable
-private fun SecondHalf(e: RecapExtra, onClose: () -> Unit) {
+private fun SecondHalf(e: RecapExtra) {
     val c = Ba.colors
     val months = stringArrayResource(R.array.jalali_months)
     Piker(Pose.CHEER, c.accent, BuddyPicker.outfit(e.outfitChapter), Modifier.width(170.dp))
     Text(stringResource(R.string.recap_r4_title), style = Ba.type.headline, color = c.text1)
     val month = e.nextChapterMonth?.let { months.getOrNull(it - 1) } ?: months[9]
     Text(stringResource(R.string.recap_r4_body, month, PersianDigits.format(e.weeksLeft)), style = Ba.type.title, color = c.text1, textAlign = TextAlign.Center)
-    PrimaryButton(stringResource(R.string.recap_r4_done), onClose, Modifier.fillMaxWidth())
 }

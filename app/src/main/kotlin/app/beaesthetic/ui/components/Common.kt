@@ -3,11 +3,15 @@ package app.beaesthetic.ui.components
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
@@ -21,6 +25,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
@@ -31,6 +36,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.composed
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
@@ -40,11 +46,15 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.scale
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
+import androidx.compose.ui.input.nestedscroll.NestedScrollSource
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
 import app.beaesthetic.domain.score.DayStatus
 import app.beaesthetic.ui.theme.Ba
@@ -246,6 +256,69 @@ fun DayDot(status: DayStatus, isToday: Boolean, modifier: Modifier = Modifier, s
                     style = Stroke(1.5.dp.toPx(), pathEffect = if (dashed) PathEffect.dashPathEffect(floatArrayOf(2.dp.toPx(), 2.dp.toPx())) else null),
                 )
             }
+        }
+    }
+}
+
+/**
+ * The scroll of a sheet's content. A gesture that scrolled the content never carries on into the sheet:
+ * scrolling back up in one long drag or fling stops at the top instead of pulling the sheet down and closing
+ * it (friends' feedback, D147). A drag that starts with the content already at the top still closes it.
+ */
+fun Modifier.sheetScroll(state: ScrollState): Modifier = composed {
+    val keepOpen = remember { KeepSheetOpen() }
+    nestedScroll(keepOpen).verticalScroll(state)
+}
+
+private class KeepSheetOpen : NestedScrollConnection {
+    /** The current gesture has moved the content; cleared when the gesture ends (every drag ends in a fling). */
+    private var scrolled = false
+
+    override fun onPostScroll(consumed: Offset, available: Offset, source: NestedScrollSource): Offset {
+        if (consumed.y != 0f) scrolled = true
+        return if (scrolled || source == NestedScrollSource.SideEffect) available else Offset.Zero
+    }
+
+    override suspend fun onPostFling(consumed: Velocity, available: Velocity): Velocity {
+        val keep = scrolled
+        scrolled = false
+        return if (keep) available else Velocity.Zero
+    }
+}
+
+/**
+ * The end of something (a workout, a check-in, an onboarding step, a recap card): the content sits in the
+ * middle of the screen and the buttons at the bottom, in thumb reach, the main one last (friends' feedback,
+ * D147). Content taller than the screen scrolls above the buttons.
+ */
+@Composable
+fun EndLayout(
+    modifier: Modifier = Modifier,
+    horizontalPadding: Dp = 16.dp,
+    buttons: (@Composable ColumnScope.() -> Unit)? = null,
+    content: @Composable ColumnScope.() -> Unit,
+) {
+    Column(modifier.fillMaxSize()) {
+        BoxWithConstraints(Modifier.weight(1f).fillMaxWidth()) {
+            val viewport = maxHeight
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(14.dp, Alignment.CenterVertically),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .verticalScroll(rememberScrollState())
+                    .heightIn(min = viewport)
+                    .padding(horizontal = horizontalPadding, vertical = 12.dp),
+                content = content,
+            )
+        }
+        if (buttons != null) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(10.dp),
+                modifier = Modifier.fillMaxWidth().padding(start = horizontalPadding, end = horizontalPadding, top = 8.dp, bottom = 16.dp),
+                content = buttons,
+            )
         }
     }
 }

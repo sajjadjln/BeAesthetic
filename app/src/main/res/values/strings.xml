@@ -189,7 +189,7 @@
     <string name="settings_workout">برنامه تمرین</string>
     <string name="settings_backup">پشتیبان</string>
     <string name="settings_appearance">ظاهر</string>
-    <string name="settings_phone">گوشی</string>
+    <string name="settings_phone">رسیدن یادآورها</string>
     <string name="settings_version">نسخه %1$s · BeAesthetic</string>
 
     <!-- Reminders (09) -->
@@ -210,24 +210,25 @@
     <string name="test_blocked">زنگ زد، ولی اعلان‌ها بسته‌ان.</string>
 
     <!-- Phone setup (N2) -->
-    <string name="phone_title">گوشی</string>
-    <string name="phone_this_week">این هفته</string>
+    <string name="phone_title">رسیدن یادآورها</string>
+    <string name="phone_this_week">۷ روز اخیر</string>
+    <string name="phone_week_help">چند تا از یادآورهای ۷ روز اخیر سر وقت رسیدن.</string>
     <string name="phone_on_time">%1$s از %2$s به‌موقع</string>
     <string name="phone_nothing_yet">هنوز یادآوری نرسیده.</string>
     <string name="phone_late_detail">یکی %1$s دقیقه دیر رسید: %2$s، %3$s. احتمالاً صرفه‌جویی باتری.</string>
     <string name="phone_missed_detail">یکی نرسید: %1$s، %2$s. احتمالاً گوشی اپ رو بسته.</string>
     <string name="phone_blocked_detail">یکی زنگ زد ولی اعلان‌ها بسته بودن: %1$s، %2$s.</string>
     <string name="phone_all_good">همه به‌موقع رسیدن.</string>
-    <string name="row_notifications">اعلان‌ها</string>
-    <string name="row_exact">زنگ دقیق</string>
-    <string name="row_autostart">اجرای خودکار</string>
-    <string name="row_battery">باتری: بدون محدودیت</string>
-    <string name="row_recents">قفل در اپ‌های اخیر</string>
+    <string name="row_notifications">اجازه‌ی اعلان</string>
+    <string name="row_exact">یادآور سر دقیقه</string>
+    <string name="row_autostart">شروع با روشن شدن گوشی</string>
+    <string name="row_battery">باتری، پیکر رو نبنده</string>
+    <string name="row_recents">قفل توی اپ‌های اخیر</string>
     <string name="row_notifications_help">اعلان‌های پیکر روشن باشه.</string>
-    <string name="row_exact_help">«زنگ‌ها و یادآورها»: یادآور سر دقیقه برسه.</string>
-    <string name="row_autostart_help">گوشی بعد از روشن شدن، پیکر رو راه بندازه.</string>
+    <string name="row_exact_help">توی تنظیمات اسمش «زنگ‌ها و یادآورها»ست.</string>
+    <string name="row_autostart_help">بعد از خاموش‌روشن، یادآورها دوباره راه بیفتن. توی تنظیمات اسمش «اجرای خودکار»ه.</string>
     <string name="row_autostart_help_unknown">گوشی وضعیتش رو نمی‌گه؛ بعد از روشن کردن ازت می‌پرسم.</string>
-    <string name="row_battery_help">گوشی پیکر رو برای صرفه‌جویی نبنده.</string>
+    <string name="row_battery_help">صرفه‌جویی باتری پیکر رو نبنده. توی تنظیمات: باتری ← «بدون محدودیت».</string>
     <string name="row_battery_help_xiaomi">اول «اجازه بده»، بعد توی صرفه‌جویی باتری «بدون محدودیت».</string>
     <string name="row_recents_help">«پاک کردن همه» پیکر رو نبنده.</string>
     <string name="ask_autostart_title">اجرای خودکار</string>
@@ -238,7 +239,7 @@
     <string name="ask_yes_recents">قفلش کردم</string>
     <string name="ask_not_yet">هنوز نه</string>
     <string name="open">باز کن</string>
-    <string name="test_notification">اعلان آزمایشی</string>
+    <string name="test_notification">یه یادآور امتحانی (۱ دقیقه بعد)</string>
 
     <!-- Appearance (06b) -->
     <string name="appearance_title">ظاهر</string>
@@ -335,6 +336,8 @@
     <!-- 10 Workout plan editor (D105, D114) -->
     <string name="plan_name_hint">اسم تمرین، مثلاً «بالاتنه A»</string>
     <string name="plan_new_exercise">حرکت جدید</string>
+    <string name="today_no_plan_title">برنامه‌ی تمرینت رو بساز</string>
+    <string name="today_no_plan_body">روزها و حرکت‌هات رو یه بار بنویس؛ هر روز تمرینش همین‌جا میاد.</string>
     <string name="plan_empty_title">این روز تمرینی نداره</string>
     <string name="plan_empty_text">با «حرکت جدید» برنامه‌ی این روز رو بساز. روزی که حرکتی نداره روز استراحته.</string>
     <string name="plan_drag_help">برای جابه‌جایی، دستگیره رو نگه دار و بکش</string>
@@ -801,7 +804,7 @@
     <string name="onb_reminders_edit">تنظیم ساعت‌ها</string>
     <string name="onb_notifications">اجازه‌ی اعلان</string>
     <string name="onb_notifications_on">اعلان‌ها روشنه</string>
-    <string name="onb_phone_title">گوشی</string>
+    <string name="onb_phone_title">رسیدن یادآورها</string>
     <string name="onb_phone_body">شیائومی‌ها اپ‌ها رو می‌خوابونن. این چند تا تنظیم مطمئن می‌کنه هیچ یادآوری گم نشه.</string>
     <string name="onb_phone_open">تنظیم گوشی</string>
     <string name="onb_backup_title">پشتیبان</string>

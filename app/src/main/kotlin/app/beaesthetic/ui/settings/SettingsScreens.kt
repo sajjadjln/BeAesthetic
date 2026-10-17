@@ -120,6 +120,15 @@ private fun rememberRemindersOk(container: AppContainer): Boolean {
     return ReminderHealth.attention(health, settings?.healthSeenAt, systemOk) == Attention.NONE
 }
 
+/**
+ * The test reminder is for the first day, before any real one has had a chance to arrive. Once one has, the
+ * health card says more than a test would, so the button goes (friends' feedback, D147).
+ */
+@Composable
+private fun rememberNoRealReminderYet(container: AppContainer): Boolean =
+    remember { container.db.reminderLog().observeSince(Instant.now() - ReminderHealth.WINDOW).map { rows -> ReminderHealth.check(rows.map { it.toLogRow() }, container.clock.now()).checked == 0 } }
+        .collectAsStateWithLifecycle(false).value
+
 @Composable
 private fun HealthLine(ok: Boolean, action: (@Composable () -> Unit)? = null) {
     val c = Ba.colors
@@ -231,11 +240,12 @@ fun RemindersScreen(container: AppContainer, onBack: () -> Unit) {
     }
 
     SettingsPage(stringResource(R.string.reminders_title), onBack) {
-        HealthLine(remindersOk) {
+        val offerTest = rememberNoRealReminderYet(container)
+        HealthLine(remindersOk, if (!offerTest) null else { ->
             Box(Modifier.clip(RoundedCornerShape(50)).clickable { scope.launch { testKey = container.scheduler.scheduleTest(Duration.ofMinutes(1)) } }) {
                 Chip(stringResource(R.string.reminders_test), ChipKind.ACCENT)
             }
-        }
+        })
         testKey?.let { TestStatus(container, it) }
         Segmented(
             options = listOf(stringResource(R.string.profile_normal), stringResource(R.string.profile_friday)),
@@ -420,6 +430,7 @@ fun PhoneScreen(container: AppContainer, onBack: () -> Unit) {
                     Chip(stringResource(R.string.phone_on_time, PersianDigits.format(health.onTime), PersianDigits.format(health.checked)), if (health.ok) ChipKind.ACCENT else ChipKind.NEUTRAL)
                 }
             }
+            Text(stringResource(R.string.phone_week_help), style = Ba.type.caption, color = c.text3, modifier = Modifier.padding(top = 2.dp))
             HealthBars(logRows, health, now, Modifier.padding(vertical = 10.dp))
             Text(healthDetail(health), style = Ba.type.caption, color = c.text2)
         }
@@ -464,12 +475,14 @@ fun PhoneScreen(container: AppContainer, onBack: () -> Unit) {
                 dismissButton = { TextButton(onClick = { confirm(which, false); ask = null }) { Text(stringResource(R.string.ask_not_yet), color = c2.text2) } },
             )
         }
-        SecondaryButton(
-            stringResource(R.string.test_notification),
-            onClick = { scope.launch { testKey = container.scheduler.scheduleTest(Duration.ofMinutes(1)) } },
-            icon = BaIcons.Bell,
-            modifier = Modifier.fillMaxWidth(),
-        )
+        if (health.checked == 0 || testKey != null) {
+            SecondaryButton(
+                stringResource(R.string.test_notification),
+                onClick = { scope.launch { testKey = container.scheduler.scheduleTest(Duration.ofMinutes(1)) } },
+                icon = BaIcons.Bell,
+                modifier = Modifier.fillMaxWidth(),
+            )
+        }
         testKey?.let { TestStatus(container, it) }
     }
 }

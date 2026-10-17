@@ -3,6 +3,18 @@ package app.beaesthetic.ui.onboarding
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Build
+import androidx.activity.compose.BackHandler
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.unit.IntOffset
+import app.beaesthetic.ui.theme.BaMotion
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
@@ -53,6 +65,7 @@ import app.beaesthetic.domain.time.Chapters
 import app.beaesthetic.domain.time.ProgramCalendar
 import app.beaesthetic.ui.components.BaCard
 import app.beaesthetic.ui.components.BaIcons
+import app.beaesthetic.ui.components.EndLayout
 import app.beaesthetic.ui.components.JalaliCalendar
 import app.beaesthetic.ui.components.PrimaryButton
 import app.beaesthetic.ui.components.SecondaryButton
@@ -96,68 +109,100 @@ fun OnboardingScreen(
         }
     }
 
-    Box(Modifier.fillMaxSize().background(c.bg).safeDrawingPadding()) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(14.dp),
-            modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(horizontal = 16.dp, vertical = 20.dp),
+    val back = { stepIndex = (stepIndex - 1).coerceAtLeast(0) }
+    BackHandler(enabled = stepIndex > 0) { back() }
+
+    Column(Modifier.fillMaxSize().background(c.bg).safeDrawingPadding()) {
+        // Back and the progress bar stay put; only the step under them slides.
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            modifier = Modifier.fillMaxWidth().height(56.dp).padding(horizontal = 8.dp),
         ) {
-            if (step != Step.HELLO) {
-                Row(horizontalArrangement = Arrangement.spacedBy(4.dp), modifier = Modifier.fillMaxWidth()) {
+            if (stepIndex > 0) {
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier.size(48.dp).clip(CircleShape).clickable(role = Role.Button, onClick = back),
+                ) {
+                    Icon(BaIcons.Back, stringResource(R.string.cd_back), tint = c.text1, modifier = Modifier.size(24.dp))
+                }
+                Row(horizontalArrangement = Arrangement.spacedBy(4.dp), modifier = Modifier.weight(1f).padding(end = 8.dp)) {
                     (1 until Step.entries.size).forEach { i ->
-                        Box(Modifier.weight(1f).height(4.dp).clip(RoundedCornerShape(2.dp)).background(if (i <= stepIndex) c.accent else c.surface2))
+                        val fill by animateColorAsState(if (i <= stepIndex) c.accent else c.surface2, tween(BaMotion.MEDIUM), label = "step")
+                        Box(Modifier.weight(1f).height(4.dp).clip(RoundedCornerShape(2.dp)).background(fill))
                     }
                 }
             }
-            val pose = when (step) {
-                Step.HELLO -> Pose.WAVE
-                Step.DATES -> Pose.POINT
-                Step.REMINDERS, Step.PHONE -> Pose.THUMBS
-                Step.BACKUP -> Pose.THINK
-                Step.DONE -> Pose.CHEER
-            }
-            Piker(pose, c.accent, Outfit.NONE, Modifier.width(if (step == Step.HELLO) 180.dp else 120.dp).padding(top = 12.dp))
-            val next = { stepIndex = (stepIndex + 1).coerceAtMost(Step.entries.lastIndex) }
-            when (step) {
-                Step.HELLO -> {
-                    Title(R.string.onb_hello_title, R.string.onb_hello_body)
-                    PrimaryButton(stringResource(R.string.onb_start), { next() }, Modifier.fillMaxWidth())
-                    SecondaryButton(stringResource(R.string.onb_restore), onOpenBackup, Modifier.fillMaxWidth(), icon = BaIcons.Download)
-                    Text(stringResource(R.string.onb_restore_help), style = Ba.type.caption, color = c.text3, textAlign = TextAlign.Center)
+        }
+        val next = { stepIndex = (stepIndex + 1).coerceAtMost(Step.entries.lastIndex) }
+        AnimatedContent(
+            step,
+            transitionSpec = {
+                // Forward slides toward the start (in from the left in RTL), back the other way.
+                val dir = if (targetState > initialState) AnimatedContentTransitionScope.SlideDirection.Start else AnimatedContentTransitionScope.SlideDirection.End
+                val spec = tween<IntOffset>(BaMotion.MEDIUM, easing = BaMotion.Standard)
+                (slideIntoContainer(dir, spec) + fadeIn(tween(BaMotion.MEDIUM))) togetherWith
+                    (slideOutOfContainer(dir, spec) { it / 3 } + fadeOut(tween(BaMotion.SHORT)))
+            },
+            label = "onboarding",
+            modifier = Modifier.weight(1f).fillMaxWidth(),
+        ) { st ->
+            // The content in the middle, the step's buttons at the bottom in thumb reach, main one last (D147).
+            EndLayout(
+                buttons = {
+                    when (st) {
+                        Step.HELLO -> {
+                            Text(stringResource(R.string.onb_restore_help), style = Ba.type.caption, color = c.text3, textAlign = TextAlign.Center)
+                            SecondaryButton(stringResource(R.string.onb_restore), onOpenBackup, Modifier.fillMaxWidth(), icon = BaIcons.Download)
+                            PrimaryButton(stringResource(R.string.onb_start), { next() }, Modifier.fillMaxWidth())
+                        }
+                        Step.DATES -> PrimaryButton(stringResource(R.string.onb_next), { next() }, Modifier.fillMaxWidth())
+                        Step.REMINDERS -> {
+                            SecondaryButton(stringResource(R.string.onb_reminders_edit), onOpenReminders, Modifier.fillMaxWidth(), icon = BaIcons.Bell)
+                            PrimaryButton(stringResource(R.string.onb_next), { next() }, Modifier.fillMaxWidth())
+                        }
+                        Step.PHONE -> {
+                            SecondaryButton(stringResource(R.string.onb_phone_open), onOpenPhone, Modifier.fillMaxWidth(), icon = BaIcons.Phone)
+                            PrimaryButton(stringResource(R.string.onb_next), { next() }, Modifier.fillMaxWidth())
+                        }
+                        Step.BACKUP -> if (s.backupTreeUri == null) {
+                            SecondaryButton(stringResource(R.string.onb_backup_open), onOpenBackup, Modifier.fillMaxWidth(), icon = BaIcons.Folder)
+                            PrimaryButton(stringResource(R.string.onb_later), { next() }, Modifier.fillMaxWidth())
+                        } else {
+                            PrimaryButton(stringResource(R.string.onb_next), { next() }, Modifier.fillMaxWidth())
+                        }
+                        Step.DONE -> PrimaryButton(stringResource(R.string.onb_done_go), { finish() }, Modifier.fillMaxWidth())
+                    }
+                },
+            ) {
+                val pose = when (st) {
+                    Step.HELLO -> Pose.WAVE
+                    Step.DATES -> Pose.POINT
+                    Step.REMINDERS, Step.PHONE -> Pose.THUMBS
+                    Step.BACKUP -> Pose.THINK
+                    Step.DONE -> Pose.CHEER
                 }
-                Step.DATES -> {
-                    Title(R.string.onb_dates_title, R.string.onb_dates_body)
-                    Dates(s.programStartDate, s.programEndDate, container.clock.programDate(s.rolloverHour)) { start, end ->
-                        scope.launch {
-                            // Yalda is the halfway day when it falls inside the dates; otherwise the midpoint is used.
-                            container.db.settings().upsert(s.copy(programStartDate = start, programEndDate = end, halfwayDate = Seed.yaldaWithin(start, end)))
+                Piker(pose, c.accent, Outfit.NONE, Modifier.width(if (st == Step.HELLO) 180.dp else 120.dp))
+                when (st) {
+                    Step.HELLO -> {
+                        Title(R.string.onb_hello_title, R.string.onb_hello_body)
+                    }
+                    Step.DATES -> {
+                        Title(R.string.onb_dates_title, R.string.onb_dates_body)
+                        Dates(s.programStartDate, s.programEndDate, container.clock.programDate(s.rolloverHour)) { start, end ->
+                            scope.launch {
+                                // Yalda is the halfway day when it falls inside the dates; otherwise the midpoint is used.
+                                container.db.settings().upsert(s.copy(programStartDate = start, programEndDate = end, halfwayDate = Seed.yaldaWithin(start, end)))
+                            }
                         }
                     }
-                    PrimaryButton(stringResource(R.string.onb_next), { next() }, Modifier.fillMaxWidth())
-                }
-                Step.REMINDERS -> {
-                    Title(R.string.onb_reminders_title, R.string.onb_reminders_body)
-                    Notifications()
-                    SecondaryButton(stringResource(R.string.onb_reminders_edit), onOpenReminders, Modifier.fillMaxWidth(), icon = BaIcons.Bell)
-                    PrimaryButton(stringResource(R.string.onb_next), { next() }, Modifier.fillMaxWidth())
-                }
-                Step.PHONE -> {
-                    Title(R.string.onb_phone_title, R.string.onb_phone_body)
-                    SecondaryButton(stringResource(R.string.onb_phone_open), onOpenPhone, Modifier.fillMaxWidth(), icon = BaIcons.Phone)
-                    PrimaryButton(stringResource(R.string.onb_next), { next() }, Modifier.fillMaxWidth())
-                }
-                Step.BACKUP -> {
-                    Title(R.string.onb_backup_title, R.string.onb_backup_body)
-                    if (s.backupTreeUri == null) {
-                        SecondaryButton(stringResource(R.string.onb_backup_open), onOpenBackup, Modifier.fillMaxWidth(), icon = BaIcons.Folder)
-                        PrimaryButton(stringResource(R.string.onb_later), { next() }, Modifier.fillMaxWidth())
-                    } else {
-                        PrimaryButton(stringResource(R.string.onb_next), { next() }, Modifier.fillMaxWidth())
+                    Step.REMINDERS -> {
+                        Title(R.string.onb_reminders_title, R.string.onb_reminders_body)
+                        Notifications()
                     }
-                }
-                Step.DONE -> {
-                    Title(R.string.onb_done_title, R.string.onb_done_body)
-                    PrimaryButton(stringResource(R.string.onb_done_go), { finish() }, Modifier.fillMaxWidth())
+                    Step.PHONE -> Title(R.string.onb_phone_title, R.string.onb_phone_body)
+                    Step.BACKUP -> Title(R.string.onb_backup_title, R.string.onb_backup_body)
+                    Step.DONE -> Title(R.string.onb_done_title, R.string.onb_done_body)
                 }
             }
         }

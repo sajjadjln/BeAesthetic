@@ -35,6 +35,7 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import app.beaesthetic.R
 import app.beaesthetic.ui.theme.Ba
@@ -70,6 +71,7 @@ fun InputBox(
     onChange: (String) -> Unit,
 ) {
     val c = Ba.colors
+    val focus = LocalFocusManager.current
     // Number fields show Persian digits as they're typed (D87); the parser reads both.
     val numeric = keyboard.keyboardType == androidx.compose.ui.text.input.KeyboardType.Decimal ||
         keyboard.keyboardType == androidx.compose.ui.text.input.KeyboardType.Number
@@ -80,7 +82,8 @@ fun InputBox(
         textStyle = Ba.type.body.copy(color = c.text1),
         cursorBrush = SolidColor(c.accent),
         keyboardOptions = keyboard.copy(imeAction = ImeAction.Done),
-        keyboardActions = KeyboardActions(onDone = onDone?.let { { it() } }),
+        // Without its own action, «تایید» ends the edit: focus goes and the keyboard closes.
+        keyboardActions = KeyboardActions(onDone = { onDone?.invoke() ?: focus.clearFocus() }),
         modifier = Modifier.fillMaxWidth(),
         decorationBox = { inner ->
             Box(Modifier.fillMaxWidth().clip(RoundedCornerShape(12.dp)).background(c.surface2).padding(horizontal = 14.dp, vertical = 12.dp)) {

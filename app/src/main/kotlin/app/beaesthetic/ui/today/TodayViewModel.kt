@@ -87,6 +87,9 @@ sealed interface WorkoutCardUi {
 
     /** No plan today: the next one, [weekday] (Saturday = 0) [daysAway] days from today. */
     data class Rest(val name: String, val weekday: Int, val daysAway: Int) : WorkoutCardUi
+
+    /** No plan on any day yet: a row that opens the plan editor, so it's found without Settings (D147). */
+    data object NoPlan : WorkoutCardUi
 }
 
 /** One «هر وقت» item (D127). A done one stays, ticked, until the day ends. */
@@ -544,7 +547,7 @@ class TodayViewModel(
     /** Today's plan with its linked task, or the next plan on a rest day; null with no plan at all (D126). */
     private fun workoutCard(date: LocalDate, plans: List<WorkoutPlan>, visible: List<DayItem>): WorkoutCardUi? {
         val planned = plans.filter { it.items.isNotEmpty() }.associateBy { it.weekday }
-        if (planned.isEmpty()) return null
+        if (planned.isEmpty()) return WorkoutCardUi.NoPlan
         val today = Weekdays.index(date.dayOfWeek)
         planned[today]?.let { plan ->
             val linked = visible.firstOrNull { it.task.action == TaskAction.WORKOUT }

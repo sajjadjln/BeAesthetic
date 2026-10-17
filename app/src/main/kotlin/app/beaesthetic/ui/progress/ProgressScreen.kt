@@ -67,6 +67,7 @@ import app.beaesthetic.ui.components.PrimaryButton
 import app.beaesthetic.ui.components.SecondaryButton
 import app.beaesthetic.ui.components.SectionTitle
 import app.beaesthetic.ui.components.StepButton
+import app.beaesthetic.ui.components.sheetScroll
 import app.beaesthetic.ui.components.buddy.Piker
 import app.beaesthetic.ui.jalaliDayMonth
 import app.beaesthetic.ui.theme.Ba
@@ -369,7 +370,7 @@ private fun MetricSheet(
     ModalBottomSheet(onDismissRequest = onDismiss, sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true), containerColor = c.surface) {
         Column(
             verticalArrangement = Arrangement.spacedBy(12.dp),
-            modifier = Modifier.fillMaxWidth().verticalScroll(rememberScrollState()).padding(start = 16.dp, end = 16.dp, bottom = 24.dp),
+            modifier = Modifier.fillMaxWidth().sheetScroll(rememberScrollState()).padding(start = 16.dp, end = 16.dp, bottom = 24.dp),
         ) {
             Text(card.metric.name, style = Ba.type.title, color = c.text1)
             if (card.readings.size > 1) LineChart(card.readings, Modifier.fillMaxWidth().height(120.dp))

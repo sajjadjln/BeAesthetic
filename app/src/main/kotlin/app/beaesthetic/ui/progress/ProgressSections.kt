@@ -66,6 +66,7 @@ import app.beaesthetic.ui.components.PickPill
 import app.beaesthetic.ui.components.PrimaryButton
 import app.beaesthetic.ui.components.SecondaryButton
 import app.beaesthetic.ui.components.SectionTitle
+import app.beaesthetic.ui.components.sheetScroll
 import app.beaesthetic.ui.jalaliDayMonth
 import app.beaesthetic.ui.theme.Ba
 import java.time.LocalDate
@@ -216,7 +217,7 @@ fun MilestoneSheet(
     ModalBottomSheet(onDismissRequest = onDismiss, sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true), containerColor = c.surface) {
         Column(
             verticalArrangement = Arrangement.spacedBy(16.dp),
-            modifier = Modifier.fillMaxWidth().verticalScroll(rememberScrollState()).padding(start = 16.dp, end = 16.dp, bottom = 24.dp),
+            modifier = Modifier.fillMaxWidth().sheetScroll(rememberScrollState()).padding(start = 16.dp, end = 16.dp, bottom = 24.dp),
         ) {
             Text(stringResource(if (m == null) R.string.milestone_new else R.string.metric_form_edit), style = Ba.type.title, color = c.text1)
             if (problem > 0) ErrorLine(R.string.milestone_title_empty, problem)
@@ -253,7 +254,7 @@ fun BackfillSheet(days: List<LocalDate>, onPick: (LocalDate) -> Unit, onDismiss:
     ModalBottomSheet(onDismissRequest = onDismiss, sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true), containerColor = c.surface) {
         Column(
             verticalArrangement = Arrangement.spacedBy(12.dp),
-            modifier = Modifier.fillMaxWidth().verticalScroll(rememberScrollState()).padding(start = 16.dp, end = 16.dp, bottom = 24.dp),
+            modifier = Modifier.fillMaxWidth().sheetScroll(rememberScrollState()).padding(start = 16.dp, end = 16.dp, bottom = 24.dp),
         ) {
             Text(stringResource(R.string.backfill_title), style = Ba.type.title, color = c.text1)
             Text(stringResource(R.string.backfill_help), style = Ba.type.caption, color = c.text2)

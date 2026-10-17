@@ -36,6 +36,9 @@ enum class Tab(val icon: ImageVector, val label: Int) {
     WEEK(BaIcons.Calendar, R.string.tab_week),
 }
 
+/** The bar's own height, above the navigation-bar inset; tab screens keep this much clear at the bottom. */
+val BOTTOM_BAR_HEIGHT = 61.dp
+
 @Composable
 fun BottomBar(selected: Tab, onSelect: (Tab) -> Unit, modifier: Modifier = Modifier) {
     val c = Ba.colors

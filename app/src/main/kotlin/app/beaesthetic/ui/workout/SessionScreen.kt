@@ -60,6 +60,7 @@ import app.beaesthetic.domain.workout.Offer
 import app.beaesthetic.domain.workout.RoundNumbers
 import app.beaesthetic.domain.workout.WorkoutRules
 import app.beaesthetic.ui.components.BaIcons
+import app.beaesthetic.ui.components.EndLayout
 import app.beaesthetic.ui.components.PrimaryButton
 import app.beaesthetic.ui.components.SecondaryButton
 import app.beaesthetic.ui.components.buddy.AnimatedPiker
@@ -370,12 +371,13 @@ private fun Summary(s: SessionUi.Summary, onDone: () -> Unit, onResume: () -> Un
     val haptics = rememberHaptics()
     // A round number is a moment (D76): a medium buzz once, when the summary first shows it.
     LaunchedEffect(s.rounds.isNotEmpty()) { if (s.rounds.isNotEmpty()) haptics.medium() }
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(14.dp),
-        modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(16.dp),
+    EndLayout(
+        buttons = {
+            SecondaryButton(stringResource(R.string.summary_continue), onClick = onResume, modifier = Modifier.fillMaxWidth())
+            PrimaryButton(stringResource(R.string.session_finish), onClick = onDone, modifier = Modifier.fillMaxWidth())
+        },
     ) {
-        AnimatedPiker(Pose.CHEER, c.accent, s.outfit, Modifier.padding(top = 24.dp).size(170.dp))
+        AnimatedPiker(Pose.CHEER, c.accent, s.outfit, Modifier.size(170.dp))
         Text(lines[s.lineIndex % lines.size], style = Ba.type.subtitle, color = c.text2, textAlign = TextAlign.Center)
         Text(stringResource(if (s.allDone) R.string.summary_title else R.string.summary_partial), style = Ba.type.headline, color = c.text1)
         val counts = buildList {
@@ -397,8 +399,6 @@ private fun Summary(s: SessionUi.Summary, onDone: () -> Unit, onResume: () -> Un
                 }
             }
         }
-        PrimaryButton(stringResource(R.string.session_finish), onClick = onDone, modifier = Modifier.fillMaxWidth())
-        SecondaryButton(stringResource(R.string.summary_continue), onClick = onResume, modifier = Modifier.fillMaxWidth())
     }
 }
 
