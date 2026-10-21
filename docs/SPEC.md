@@ -339,7 +339,7 @@ A backup runs before the migration.
 
 ## 11. Localization
 
-Unchanged: Persian only, RTL, Persian digits, Jalali first with Gregorian second, weeks start Saturday (D87). Copy uses informal «تو». The research's Persian wording is a starting point and should be read aloud for tone before it ships (R§8).
+**English and Persian** (D174, replaces D87). Persian: RTL, Persian digits, Jalali first with Gregorian second. English: LTR, Latin digits, Gregorian first with Jalali second (a setting swaps them). The language follows the phone, with a switch in Settings (D176). Weeks start Saturday in both **[DEFAULT]**. Copy uses informal «تو». The research's Persian wording is a starting point and should be read aloud for tone before it ships (R§8).
 
 ## 12. Open items
 

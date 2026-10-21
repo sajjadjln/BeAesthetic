@@ -18,7 +18,7 @@ Read `CLAUDE.md`, `docs/TASKS.md`, `docs/DECISIONS.md` (D148–D171) and `docs/S
 ## 2. Constraints that don't move
 
 - No shame mechanics: nothing red, no streaks that reset, no lists of misses, no guilt wording. These go into the components and the review checklist.
-- Persian only, RTL, Persian digits, Jalali first. Plugin strings come with the plugin, in Persian.
+- The app is in English and Persian (D174). Plugins follow the app's language, direction and digits, keep all text in string files and ship at least one language (D175).
 - Offline first: an installed plugin works with no connection, forever.
 - Never lose data: plugin data is in the app's database and in every backup and restore. Uninstalling a plugin asks before deleting its data, and offers to keep it.
 - No Google Play Services, Firebase, analytics or crash SDKs. The runtime library must pass the banned-dependency check.
@@ -34,7 +34,7 @@ Read `CLAUDE.md`, `docs/TASKS.md`, `docs/DECISIONS.md` (D148–D171) and `docs/S
 5. Ask the user the open questions in §5 (3–5 at a time, the recommended option first).
 
 ### P1. The contract (`:plugin-api`, pure Kotlin)
-- **Manifest:** id (reverse domain), version (semver), `minHostApi`, Persian name and description, icon, author, the goal types it fits, permissions, size.
+- **Manifest:** id (reverse domain), version (semver), `minHostApi`, name and description per language, the languages it supports, icon, author, the goal types it fits, permissions, size.
 - **Extension points** (where a plugin can appear):
   - steps added to the goal flow (for example «برنامه‌ی تمرین» after step ④);
   - the goal's daily actions (become normal tasks);
@@ -52,7 +52,7 @@ Read `CLAUDE.md`, `docs/TASKS.md`, `docs/DECISIONS.md` (D148–D171) and `docs/S
 - Pick the engine in a spike. Candidates: **Zipline** (Cash App; Kotlin/JS on QuickJS; Kotlin interfaces across the bridge; signed manifests; can load from local files), a plain QuickJS binding, or a JSON UI schema with no code at all. Judge them on: APK size, startup time on the Poco, how contracts are expressed, sandboxing, code signing, maintenance, no Google dependencies.
 - **Two UI levels (D172).**
   - ① **Host components:** a plugin returns a UI tree; the host draws it with its own Compose components (tile, card, chip, band, path, stepper, counter, chart, list row, sheet, button, seek bar, photo slot). Tokens and accents come from `DESIGN.md`. The rules hold by construction.
-  - ② **The plugin's own UI:** likely a sandboxed WebView with the app's design kit (CSS, Estedad, theme tokens, light/dark), with no network and a message bridge to the host API only. The minimum standard is in the contract as testable rules: RTL and Persian digits, host theme tokens (no hard-coded colors), system back, accessibility basics, data only through the host API, and the product rules (checked in review).
+  - ② **The plugin's own UI:** likely a sandboxed WebView with the app's design kit (CSS, Estedad, theme tokens, light/dark), with no network and a message bridge to the host API only. The minimum standard is in the contract as testable rules: the app's language, direction and digits (D175), host theme tokens (no hard-coded colors), system back, accessibility basics, data only through the host API, and the product rules (checked in review).
 - **Storage:** a plugin-scoped document store in Room (plugin id, collection, key, JSON, schema version), with the plugin's own migrations run by the host. Included in `data.json` (`BACKUP_FORMAT.md`) and in restore.
 - Limits: CPU time per call, memory, storage size. A plugin that crashes or times out is paused with a calm message and never takes the app down.
 
@@ -74,17 +74,17 @@ Read `CLAUDE.md`, `docs/TASKS.md`, `docs/DECISIONS.md` (D148–D171) and `docs/S
 - The store never receives the user's data. Requests carry only plugin ids, versions and the host API level.
 
 ### P5. The store backend (separate repository, .NET, hosted in Iran)
-- Catalog: plugins, versions, Persian descriptions, screenshots, ratings later.
+- Catalog: plugins, versions, descriptions in English and Persian, supported languages, screenshots, ratings later.
 - Developer accounts and submissions (upload a package with its manifest and source).
 - The review queue for the user: approve or send back with notes, following the checklist.
 - Signing approved versions with the store's private key (kept off the web server).
-- The web pages shown in the WebView: Persian, RTL, the app's look, light and dark.
+- The web pages shown in the WebView: in the app's language and direction, the app's look, light and dark.
 - No analytics on users. Download counts only.
 
 ### P6. Developer docs and SDK
 - A Persian and English guide: how a plugin works, the contract, the components, the permissions, the design and copy rules, coding standards, testing.
 - A starter project and a local test harness (run a plugin against a fake host on a laptop).
-- The **review checklist**: no red, no streaks, no guilt copy, no lists of misses; Persian strings; only host components; declared permissions match use; data migrations are present and tested; size and performance limits; no hidden network or tracking.
+- The **review checklist**: no red, no streaks, no guilt copy, no lists of misses; strings in resource files for every language it claims; only host components; declared permissions match use; data migrations are present and tested; size and performance limits; no hidden network or tracking.
 - A packaging tool that builds the package and its manifest for submission.
 
 ## 4. What done looks like

@@ -23,9 +23,13 @@ Answered 2026-10-21: a new name later (D158), the character as images and GIFs w
 3. **The monthly chapter review**, also without a month screen. Recommended: the same way, a note on the wall at a chapter's end, opening the review flow.
 4. **Dashboard:** keep it to the day's to-do items only (as now), or add a row per goal?
 
+### English and Persian (D174, D176)
+
+Decided 2026-10-22: follow the phone's language with a Settings switch; Gregorian first in English (swap option), Jalali first in Persian; check Estedad's Latin glyphs before pairing a Latin font; both languages from v1.0, with one slice to translate the existing screens.
+
 ### Plugin platform (its own session)
 
-**The full brief is `docs/tasks/plugin-platform.md`.** Start a new session from it. Decided 2026-10-22: a sandboxed runtime with the app's components (D166), only `:store` may use the network (D167), the workout plugin built in and off by default (D168), free at first (D169), a .NET store backend hosted in Iran (D170), the store screen as a WebView (D171). v1.0 sets the contract and ships the workout as the first plugin; the store and outside plugins come after v1.0. The first session does the architecture (P0) and a runtime spike, then asks the user the brief's open questions.
+**The full brief is `docs/tasks/plugin-platform.md`.** A research prompt for a separate Opus session (is a VS Code-style platform achievable, can code stay native) is `docs/tasks/plugin-research-prompt.md`. Start a new session from it. Decided 2026-10-22: a sandboxed runtime with the app's components (D166), only `:store` may use the network (D167), the workout plugin built in and off by default (D168), free at first (D169), a .NET store backend hosted in Iran (D170), the store screen as a WebView (D171). v1.0 sets the contract and ships the workout as the first plugin; the store and outside plugins come after v1.0. The first session does the architecture (P0) and a runtime spike, then asks the user the brief's open questions.
 
 ## Where we are (v0.x, the workout program)
 

@@ -24,7 +24,7 @@ If these files disagree, the order of trust is: `DECISIONS.md` (newest entry win
 - Lives in **Iran**: Google Play Services, Firebase push and some APIs are unreliable. The app must not depend on them.
 - Phone: **Poco X4 5G on HyperOS** (Xiaomi). It must work on any Android phone, but this phone is the reliability target.
 - Plans to publish the app on **Cafe Bazaar**, and possibly **Google Play**, in the future (D49, D173). For now it's only for them. Don't add release scope to the MVP; just don't hard-code anything personal.
-- Works in Persian and English. The app is **Persian only (RTL)**. An English version, if it ever comes, is a separate build, not a language switch (D87).
+- Works in Persian and English. **The app is in both English and Persian** (D174, which reverses D87): Persian is RTL with Persian digits, English is LTR with Latin digits.
 - Their English is informal and sometimes has typos. Read for intent, and confirm when a message is truly ambiguous.
 - Known weak points the app must work against: quits when bored, when change isn't visible fast, or when there's no clear goal; routines slip (skincare, brushing, nails, snack prep).
 
@@ -46,12 +46,12 @@ If these files disagree, the order of trust is: `DECISIONS.md` (newest entry win
 
 ## Conventions
 
-- **Language:** Persian only, RTL, Persian digits (D87). All UI strings still live in resources and are never hard-coded, so a separate English build stays possible.
+- **Language:** English and Persian (D174). All UI strings live in resources (`values/` and `values-fa/`), never hard-coded. Layouts must work in both directions; use start/end, never left/right. Plugins follow the app's language and direction (D175). The language follows the phone with a Settings switch; English dates are Gregorian first (D176).
 - **Dates:** stored as Gregorian `LocalDate`. Jalali is presentation only, shown first with Gregorian second. The week starts **Saturday**. The day rolls over at **04:00**.
 - **Time direction:** in RTL, time flows right → left (dashboard grid and charts).
 - **Colors:** the accent = done/progress. The user picks it (green by default, or blue, turquoise, violet, orange). Amber = due or important (written as «موعدش رسیده» / «مهم»), yellow with the orange accent; indigo = special day (sick, travel, off), shifted for blue/violet; gray = gap. Palettes in `DESIGN.md`.
 - **Font:** Estedad only, bundled in the APK.
-- **Docs:** written in plain English, short sentences. UI copy is in Persian.
+- **Docs:** written in plain English, short sentences. UI copy is written in both languages.
 
 ## Repository and environment notes
 
