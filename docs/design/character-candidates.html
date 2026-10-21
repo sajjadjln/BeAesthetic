@@ -57,7 +57,7 @@ dd { margin:0; min-width:0; }
 q { quotes:"«" "»"; font-weight:600; }
 
 /* moments: one card per moment, both candidates in it */
-.moments { display:grid; grid-template-columns:repeat(auto-fill, minmax(320px, 1fr)); gap:14px; }
+.moments { display:grid; grid-template-columns:repeat(auto-fill, minmax(min(100%, 420px), 1fr)); gap:14px; }
 .mo { background:var(--card); border:1px solid var(--line); border-radius:20px; padding:14px; display:grid; gap:10px; align-content:start; }
 .mo header { display:grid; gap:2px; }
 .mo header b { font-size:15px; }
@@ -96,21 +96,27 @@ td:first-child { color:var(--muted); width:20%; }
 .take p { margin:0; font-size:14.5px; line-height:1.75; color:var(--muted); max-width:72ch; }
 .take p strong { color:var(--page-fg); font-weight:600; }
 
-.pop { animation:pop .34s cubic-bezier(.34,1.56,.64,1); }
-@keyframes pop { 0% { transform:scale(.9); } 100% { transform:scale(1); } }
-@media (prefers-reduced-motion: reduce) { .pop { animation:none; } }
+.fade { animation:fade .45s ease-out; }
+@keyframes fade { 0% { opacity:.35; } 100% { opacity:1; } }
+@media (prefers-reduced-motion: reduce) { .fade { animation:none; } }
+
+.mo .pair .fig { max-width:220px; }
+.round1 { display:grid; grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); gap:10px; }
+.round1 > div { background:var(--app-bg); border-radius:14px; padding:10px; }
+.round1 .fig { max-width:140px; margin:0 auto; }
+.stage .fig.wide { width:min(320px, 90%); }
 </style>
 
 <main class="wrap">
   <header class="intro">
-    <h1><span lang="fa">هدهد یا پیر؟</span><small>Hoopoe or Old Magician</small></h1>
-    <p>The app is becoming a goal app for any goal: training, studying, a language, a habit. <b>Both candidates are drawn in the current <span lang="fa">«پیکر»</span> sticker style</b> (ink outline, white die-cut border, soft shadow, slight tilt), so the only difference is who they are. They do the same six moments with the same rules: no sad faces, no guilt, praise only for what you did.</p>
+    <h1><span lang="fa">هدهد یا پیر؟</span><small>Round 2: grown-up</small></h1>
+    <p>Round 1 was too happy, childish and cartoonish. <b>Round 2 draws them as real-looking illustrations:</b> natural proportions, real colors, soft light from the upper left, calm faces, no sticker border. They also move less: a grown-up character shows feeling through small things (the hoopoe's crest and head, the old man's staff and eyes), never by jumping around. The lines are calmer too.</p>
   </header>
 
   <div class="bar" role="toolbar" aria-label="Accent">
     <span class="lbl">Accent</span>
     <span id="acc" style="display:contents"></span>
-    <span class="note">The hoopoe wears it as a scarf; the magician as his hat and robe.</span>
+    <span class="note">The hoopoe's branch sprouts in it; the magician's staff glows in it.</span>
   </div>
 
   <section class="sec">
@@ -118,31 +124,31 @@ td:first-child { color:var(--muted); width:20%; }
     <div class="meet">
       <article class="cand">
         <div class="stage" lang="fa">
-          <button class="fig" data-who="hoopoe" data-hero aria-label="هدهد؛ بزن تا ژست عوض کنه"></button>
-          <div class="say" data-say="hoopoe">سلام! امروز کدوم قدم رو برداریم؟</div>
+          <button class="fig wide" data-who="hoopoe" data-hero aria-label="هدهد؛ بزن تا حالتش عوض بشه"></button>
+          <div class="say" data-say="hoopoe">راه از همین قدم شروع می‌شه.</div>
         </div>
         <div class="body">
           <h3><span lang="fa">هدهد</span><span>The hoopoe</span></h3>
           <dl>
-            <dt>Who</dt><dd>The guide from Attar's <span lang="fa">منطق‌الطیر</span>, who leads the birds through seven valleys to the Simorgh. Here he walks your road with you. He doesn't do the work; you do.</dd>
-            <dt>Feeling</dt><dd>The crest. Fanned up for a big moment, half up most of the time, folded flat for night and quiet days.</dd>
-            <dt>Colors</dt><dd>His own: cinnamon body, black-and-white wings and tail. Only the scarf takes the accent, so he never reads as a green bird like Duo.</dd>
-            <dt>Voice</dt><dd>A friend on the road, a little cheeky. <q lang="fa">کل امروز! تاجم سیخ شد.</q></dd>
+            <dt>Who</dt><dd>The guide from Attar's <span lang="fa">منطق‌الطیر</span>, who leads the birds through seven valleys to the Simorgh. He walks your road with you; you do the work.</dd>
+            <dt>Feeling</dt><dd>The crest. Folded most of the time, half raised when he's curious, a full fan for a big moment. His head lifts or lowers with it.</dd>
+            <dt>Look</dt><dd>A real Eurasian hoopoe on a branch: cinnamon body, zebra wings, the long curved bill.</dd>
+            <dt>Voice</dt><dd>Quiet and sure, a friend who knows the road. <q lang="fa">یک قدم دیگه.</q></dd>
           </dl>
         </div>
       </article>
       <article class="cand">
         <div class="stage" lang="fa">
-          <button class="fig" data-who="magician" data-hero aria-label="پیر؛ بزن تا ژست عوض کنه"></button>
-          <div class="say" data-say="magician">سلام رفیق! امروز چی می‌سازیم؟</div>
+          <button class="fig wide" data-who="magician" data-hero aria-label="پیر؛ بزن تا حالتش عوض بشه"></button>
+          <div class="say" data-say="magician">خوش اومدی. از کجا شروع کنیم؟</div>
         </div>
         <div class="body">
           <h3><span lang="fa">پیر</span><span>The old magician</span></h3>
           <dl>
-            <dt>Who</dt><dd>A kind old wizard. The Persian root is Hafez's <span lang="fa">پیر مغان</span>, "the elder of the magi", the wise guide of the poems. He has seen every road and knows there's no shortcut.</dd>
-            <dt>Feeling</dt><dd>Face and hands: bushy eyebrows, eyes, a wave, a hand on his beard. The star on his staff sparkles at big moments.</dd>
-            <dt>Colors</dt><dd>Hat and robe take the accent; gold trim and stars, white beard.</dd>
-            <dt>Voice</dt><dd>Warm, wise, gently funny. His signature line: <q lang="fa">این جادو نبود. کار خودت بود.</q> The only magic is doing it again.</dd>
+            <dt>Who</dt><dd>An old mage in a grey-blue robe and a worn hat, with a long beard and a staff. The Persian root is Hafez's <span lang="fa">پیر مغان</span>, the wise elder of the poems.</dd>
+            <dt>Feeling</dt><dd>His staff's stone and his eyes. It glows softly every day, blazes when he lifts it for a big moment, and dims at night.</dd>
+            <dt>Look</dt><dd>His face stays half in the shadow of the brim. That keeps him mysterious and dignified, not cute.</dd>
+            <dt>Voice</dt><dd>Slow, warm, a little dry. <q lang="fa">این جادو نبود. کار خودت بود.</q></dd>
           </dl>
         </div>
       </article>
@@ -150,27 +156,27 @@ td:first-child { color:var(--muted); width:20%; }
   </section>
 
   <section class="sec">
-    <h2>Six moments, side by side</h2>
-    <p>The same moments the current character covers (D82), with goal-neutral lines. Tap a hero above to cycle through them.</p>
+    <h2>Four states, side by side</h2>
+    <p>Fewer poses than round 1, because a real-looking character that changes pose all the time looks restless. Each state covers several moments. Tap a hero above to cycle through them.</p>
     <div class="moments" id="moments"></div>
   </section>
 
   <section class="sec">
     <h2>At real size</h2>
-    <p>On Today he is about 64 dp, next to one line. The launcher icon has to work at 48 and 24 px, so those are below too.</p>
+    <p>At 64 dp on Today and on the launcher icon, the full figure is too small, so both use a head crop there.</p>
     <div class="sizes">
       <div class="panel">
         <b>Today row, dark theme</b>
         <div class="today dark" lang="fa">
-          <div class="buddy"><div class="fig" data-who="hoopoe" data-pose="nod"></div><div class="bubble">یکی دیگه. داریم می‌ریم.</div></div>
-          <div class="buddy"><div class="fig" data-who="magician" data-pose="nod"></div><div class="bubble">یه جرقه‌ی دیگه. ادامه بده.</div></div>
+          <div class="buddy"><div class="fig" data-who="hoopoe" data-pose="calm" data-crop="head"></div><div class="bubble">یک قدم دیگه.</div></div>
+          <div class="buddy"><div class="fig" data-who="magician" data-pose="calm" data-crop="head"></div><div class="bubble">خوبه. یکی دیگه.</div></div>
         </div>
       </div>
       <div class="panel">
         <b>Today row, light theme</b>
         <div class="today light" lang="fa">
-          <div class="buddy"><div class="fig" data-who="hoopoe" data-pose="wave"></div><div class="bubble">سلام! امروز کدوم قدم رو برداریم؟</div></div>
-          <div class="buddy"><div class="fig" data-who="magician" data-pose="wave"></div><div class="bubble">سلام رفیق! امروز چی می‌سازیم؟</div></div>
+          <div class="buddy"><div class="fig" data-who="hoopoe" data-pose="think" data-crop="head"></div><div class="bubble">مقصد کجاست؟ اول هدف رو بنویس.</div></div>
+          <div class="buddy"><div class="fig" data-who="magician" data-pose="think" data-crop="head"></div><div class="bubble">هر سفری یه مقصد می‌خواد.</div></div>
         </div>
       </div>
       <div class="panel">
@@ -182,62 +188,70 @@ td:first-child { color:var(--muted); width:20%; }
   </section>
 
   <section class="sec">
-    <h2>How they compare</h2>
+    <h2>What changes for the build</h2>
     <div class="cmp">
       <table>
-        <thead><tr><th></th><th>Hoopoe <span lang="fa">هدهد</span></th><th>Magician <span lang="fa">پیر</span></th></tr></thead>
+        <thead><tr><th></th><th>Round 1, cartoon</th><th>Round 2, grown-up</th></tr></thead>
         <tbody>
-          <tr><td>Fits any goal</td><td>Yes. A guide on a road; the road can be anything.</td><td>Yes. A mentor; the craft can be anything.</td></tr>
-          <tr><td>Persian roots</td><td>Strong and specific: <span lang="fa">منطق‌الطیر</span>, the seven valleys, <span lang="fa">«سی مرغ»</span>. Chapters can become valleys.</td><td>Good: <span lang="fa">پیر مغان</span> in Hafez. But the pointed hat looks Western (Merlin, Gandalf).</td></tr>
-          <tr><td>Expression</td><td>Crest, eyes, beak, wings. Wings aren't hands, so fewer gestures.</td><td>Richest: eyebrows, eyes, both hands, the staff.</td></tr>
-          <tr><td>At 24 px</td><td>Crest and long beak: a clear, unusual silhouette.</td><td>Hat and beard read; the face is gone at that size.</td></tr>
-          <tr><td>Looks like</td><td>A bird, so people will compare him with Duo. His colors and crest keep him apart.</td><td>Many wizards already exist. His Persian lines carry the difference.</td></tr>
-          <tr><td>Risk in the message</td><td>None found.</td><td>"Magic" can hint at shortcuts. His voice has to keep saying the work is yours.</td></tr>
-          <tr><td>Name</td><td><span lang="fa">«هدهد»</span>, or a name of his own.</td><td><span lang="fa">«پیر»</span> or <span lang="fa">«استاد»</span>. Both also work for an app name only with care.</td></tr>
+          <tr><td>Format</td><td>Vector, one rig, about 17 poses.</td><td>Still vector: sharp at any size, small in the APK, tinted from the accent. Each state is drawn on its own, so expect 4–6 states, not 17.</td></tr>
+          <tr><td>Motion</td><td>A bouncy pop on each change.</td><td>A slow cross-fade; the crest or the glow changes, nothing jumps.</td></tr>
+          <tr><td>Small sizes</td><td>The whole figure reads at 64 dp.</td><td>A head crop for the Today row and the icon.</td></tr>
+          <tr><td>More real than this</td><td colspan="2">Painted or photographic art would be bitmaps from an illustrator or an image model: a file per state and screen density, a bigger APK, and no accent tint. This level is close to what hand-built vectors do well.</td></tr>
         </tbody>
       </table>
     </div>
     <div class="take">
       <b>My take</b>
-      <p><strong>The hoopoe still wins for me, narrowly.</strong> He is the more distinctive mark, he is unmistakably Iranian, and the seven-valleys story gives the whole app a structure, not only a mascot. The magician is the warmer talker, and <q lang="fa">این جادو نبود. کار خودت بود.</q> is the best single line on this page. If you love the old man, a Persian version of him (a sage's tall felt hat in place of the pointed one) would fix his weakest point.</p>
+      <p><strong>The hoopoe works better in this style.</strong> A real hoopoe is already striking, so realism makes him better, and at 24 px his crest and bill still read. The old magician is the stronger presence on a big screen, but at small sizes he's a hat and a beard, and he leans toward Gandalf. If you pick him, I'd make him more Persian: a tall felt hat, a patterned robe hem, and a lamp in place of the staff.</p>
+    </div>
+  </section>
+
+  <section class="sec">
+    <h2>Round 1, for reference</h2>
+    <div class="round1">
+      <div><div class="fig" data-r1="hoopoe" data-pose="wave"></div></div>
+      <div><div class="fig" data-r1="hoopoe" data-pose="cheer"></div></div>
+      <div><div class="fig" data-r1="magician" data-pose="wave"></div></div>
+      <div><div class="fig" data-r1="magician" data-pose="cheer"></div></div>
     </div>
   </section>
 </main>
 
 <script src="candidates.js"></script>
+<script src="candidates-real.js"></script>
 <script>
 (function () {
   "use strict";
   var ACCENTS = [["سبز", "#34C47A"], ["آبی", "#4D9BF0"], ["فیروزه‌ای", "#2CC2B4"], ["بنفش", "#9B7BEA"], ["نارنجی", "#F28B3C"]];
-  var MOMENTS = [
-    { pose: "wave",  name: "Hello", when: "First open, onboarding, a new goal.", h: "سلام! امروز کدوم قدم رو برداریم؟", m: "سلام رفیق! امروز چی می‌سازیم؟" },
-    { pose: "nod",   name: "After a tick", when: "Any task done. The most common pose.", h: "یکی دیگه. داریم می‌ریم.", m: "یه جرقه‌ی دیگه. ادامه بده." },
-    { pose: "cheer", name: "Big moment", when: "100% day, a record, a milestone, a goal reached.", h: "کل امروز! تاجم سیخ شد.", m: "این جادو نبود. کار خودت بود." },
-    { pose: "think", name: "Empty screen", when: "No goals or tasks yet.", h: "هنوز هدفی نداریم. اولیش چیه؟", m: "جای اولین هدف خالیه." },
-    { pose: "tea",   name: "Quiet day", when: "Minimum day or a special day (sick, travel, off).", h: "امروز آروم. اینم بخشی از راهه.", m: "امروز سبک. یه چای بخوریم." },
-    { pose: "sleep", name: "Night", when: "After the last block. His lowest mood is sleepy.", h: "امروز بسه. فردا ادامه.", m: "چراغ رو خاموش کنیم؟ فردا باز." }
+  var STATES = [
+    { pose: "calm", name: "Calm", when: "Most of the time: hello, after a tick, the Today row.", h: "راه از همین قدم شروع می‌شه.", m: "خوش اومدی. از کجا شروع کنیم؟" },
+    { pose: "big", name: "Big moment", when: "100% day, a record, a milestone, a goal reached.", h: "امروز کامل شد. ببین تا کجا اومدی.", m: "این جادو نبود. کار خودت بود." },
+    { pose: "think", name: "Curious", when: "Empty screens, a new goal, onboarding.", h: "مقصد کجاست؟ اول هدف رو بنویس.", m: "هر سفری یه مقصد می‌خواد. مال تو چیه؟" },
+    { pose: "rest", name: "Rest", when: "Night, a minimum day, a special day. His lowest mood is tired, never sad.", h: "امروز بسه. فردا ادامه‌ی راه.", m: "امروز کم، ولی امروز هم بود." }
   ];
   var acc = ACCENTS[0][1];
   try { acc = localStorage.getItem("cand-acc") || acc; } catch (e) {}
   var hero = { hoopoe: 0, magician: 0 };
 
   function esc(s) { return s.replace(/&/g, "&amp;").replace(/</g, "&lt;"); }
-  var mo = document.getElementById("moments");
-  mo.innerHTML = MOMENTS.map(function (m) {
+  document.getElementById("moments").innerHTML = STATES.map(function (m) {
     return '<article class="mo"><header><b>' + m.name + "</b><span>" + m.when + '</span></header><div class="pair">' +
       '<div><div class="fig" data-who="hoopoe" data-pose="' + m.pose + '"></div><p lang="fa">' + esc(m.h) + "</p></div>" +
       '<div><div class="fig" data-who="magician" data-pose="' + m.pose + '"></div><p lang="fa">' + esc(m.m) + "</p></div></div></article>";
   }).join("");
   document.getElementById("icons").innerHTML = ["hoopoe", "magician"].map(function (w) {
     return [96, 48, 24].map(function (s) {
-      return '<figure><div class="tile" style="width:' + s + "px;height:" + s + 'px"><div class="fig" data-who="' + w + '" data-pose="nod"></div></div><figcaption>' + s + "</figcaption></figure>";
+      return '<figure><div class="tile" style="width:' + s + "px;height:" + s + 'px"><div class="fig" data-who="' + w + '" data-pose="calm" data-crop="head"></div></div><figcaption>' + s + "</figcaption></figure>";
     }).join("");
   }).join("");
 
   function draw() {
     document.querySelectorAll(".fig[data-who]").forEach(function (el) {
-      var who = el.dataset.who, pose = el.hasAttribute("data-hero") ? MOMENTS[hero[who]].pose : el.dataset.pose;
-      el.innerHTML = Candidates.svg(who, pose, acc, who === "hoopoe" ? "هدهد" : "پیر");
+      var who = el.dataset.who, pose = el.hasAttribute("data-hero") ? STATES[hero[who]].pose : el.dataset.pose;
+      el.innerHTML = Real.svg(who, pose, acc, { crop: el.dataset.crop, label: who === "hoopoe" ? "هدهد" : "پیر" });
+    });
+    document.querySelectorAll(".fig[data-r1]").forEach(function (el) {
+      el.innerHTML = Candidates.svg(el.dataset.r1, el.dataset.pose, acc);
     });
     document.querySelectorAll(".pill").forEach(function (b) { b.setAttribute("aria-pressed", String(b.dataset.c === acc)); });
   }
@@ -251,10 +265,10 @@ td:first-child { color:var(--muted); width:20%; }
   });
   document.querySelectorAll("[data-hero]").forEach(function (btn) {
     btn.addEventListener("click", function () {
-      var who = btn.dataset.who; hero[who] = (hero[who] + 1) % MOMENTS.length;
+      var who = btn.dataset.who; hero[who] = (hero[who] + 1) % STATES.length;
       draw();
-      document.querySelector('[data-say="' + who + '"]').textContent = MOMENTS[hero[who]][who === "hoopoe" ? "h" : "m"];
-      btn.classList.remove("pop"); void btn.offsetWidth; btn.classList.add("pop");
+      document.querySelector('[data-say="' + who + '"]').textContent = STATES[hero[who]][who === "hoopoe" ? "h" : "m"];
+      btn.classList.remove("fade"); void btn.offsetWidth; btn.classList.add("fade");
     });
   });
   draw();
