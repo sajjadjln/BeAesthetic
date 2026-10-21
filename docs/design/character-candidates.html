@@ -1,0 +1,262 @@
+<title>Hoopoe or Magician</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Estedad:wght@400;500;600;700;800&display=swap">
+<style>
+/* Layout: one column; the two candidates always sit side by side, moment by moment, so the comparison is the page. */
+:root {
+  --page-bg:#0A0C0B; --page-fg:#E6EAE8; --muted:#8D9692; --line:#222826; --card:#151918; --frame:#2A302E;
+  /* the app's own dark "slate" (D136) and light surfaces, for the stages */
+  --app-bg:#1B201E; --app-sf:#252B29; --app-sf2:#2F3633; --app-t1:#EEF1EF; --app-t2:#A1ABA7;
+  --lt-bg:#F4F6F5; --lt-sf:#FFFFFF; --lt-sf2:#E4E9E6; --lt-t1:#121614; --lt-t2:#5C6662;
+  --acc:#34C47A;
+  --font:"Estedad","Vazirmatn","Noto Sans Arabic",system-ui,sans-serif;
+  color-scheme:dark;
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) { --page-bg:#E9ECEA; --page-fg:#121614; --muted:#5C6662; --line:#CFD5D2; --card:#F4F6F5; --frame:#C9D0CC; color-scheme:light; }
+}
+:root[data-theme="light"] { --page-bg:#E9ECEA; --page-fg:#121614; --muted:#5C6662; --line:#CFD5D2; --card:#F4F6F5; --frame:#C9D0CC; color-scheme:light; }
+
+body { background:var(--page-bg); color:var(--page-fg); font-family:var(--font); margin:0; }
+button { font:inherit; color:inherit; background:none; border:0; padding:0; cursor:pointer; }
+button:focus-visible { outline:2px solid var(--page-fg); outline-offset:2px; border-radius:10px; }
+.wrap { max-width:1080px; margin:0 auto; padding-block:28px 64px; padding-left:max(16px, env(safe-area-inset-left, 0px)); padding-right:max(16px, env(safe-area-inset-right, 0px)); display:grid; gap:40px; }
+.intro { display:grid; gap:10px; }
+.intro h1 { font-size:30px; font-weight:800; margin:0; text-wrap:balance; display:flex; flex-wrap:wrap; align-items:baseline; gap:6px 12px; }
+.intro h1 small { font-size:15px; font-weight:600; color:var(--muted); }
+.intro p, .sec > p { margin:0; color:var(--muted); font-size:15px; line-height:1.75; max-width:72ch; }
+.intro p b, .sec > p b { color:var(--page-fg); font-weight:600; }
+.sec { display:grid; gap:16px; }
+h2 { font-size:20px; font-weight:800; margin:0; text-wrap:balance; }
+[lang="fa"] { direction:rtl; unicode-bidi:isolate; }
+
+.bar { position:sticky; top:env(safe-area-inset-top, 0px); z-index:5; display:flex; flex-wrap:wrap; gap:8px 10px; align-items:center; padding:10px 14px; background:var(--page-bg); border:1px solid var(--line); border-radius:16px; font-size:13px; }
+body::before { content:""; position:fixed; inset:0 0 auto; height:env(safe-area-inset-top, 0px); z-index:10; background:var(--page-bg); }
+.bar .lbl { color:var(--muted); font-size:12px; letter-spacing:.06em; text-transform:uppercase; margin-inline-end:4px; }
+.pill { display:inline-flex; align-items:center; gap:6px; padding:5px 11px; border-radius:999px; border:1px solid var(--line); }
+.pill i { width:12px; height:12px; border-radius:50%; }
+.pill[aria-pressed="true"] { border-color:var(--page-fg); }
+.bar .note { color:var(--muted); font-size:12.5px; }
+
+/* meet: the two heroes */
+.meet { display:grid; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); gap:16px; }
+.cand { background:var(--card); border:1px solid var(--line); border-radius:24px; overflow:hidden; display:grid; align-content:start; }
+.stage { background:var(--app-bg); display:grid; justify-items:center; gap:10px; padding:22px 18px 20px; }
+.stage .fig { width:min(230px, 70%); }
+.stage .fig svg, .fig svg { display:block; width:100%; height:auto; }
+.say { position:relative; background:var(--app-sf2); color:var(--app-t1); border-radius:16px; padding:9px 16px; font-size:16px; font-weight:700; text-align:center; line-height:1.6; }
+.say::before { content:""; position:absolute; top:-5px; left:50%; width:12px; height:12px; margin-left:-6px; background:inherit; transform:rotate(45deg); border-radius:2px; }
+.cand .body { padding:18px 20px 20px; display:grid; gap:12px; }
+.cand h3 { margin:0; font-size:22px; font-weight:800; display:flex; align-items:baseline; gap:10px; flex-wrap:wrap; }
+.cand h3 span { font-size:14px; font-weight:600; color:var(--muted); }
+dl { margin:0; display:grid; grid-template-columns:auto minmax(0,1fr); gap:9px 14px; font-size:14px; line-height:1.7; }
+dt { color:var(--muted); font-size:11.5px; letter-spacing:.06em; text-transform:uppercase; padding-top:3px; }
+dd { margin:0; min-width:0; }
+q { quotes:"«" "»"; font-weight:600; }
+
+/* moments: one card per moment, both candidates in it */
+.moments { display:grid; grid-template-columns:repeat(auto-fill, minmax(320px, 1fr)); gap:14px; }
+.mo { background:var(--card); border:1px solid var(--line); border-radius:20px; padding:14px; display:grid; gap:10px; align-content:start; }
+.mo header { display:grid; gap:2px; }
+.mo header b { font-size:15px; }
+.mo header span { font-size:12.5px; color:var(--muted); line-height:1.6; }
+.pair { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+.pair > div { background:var(--app-bg); border-radius:14px; padding:10px 8px 10px; display:grid; gap:6px; justify-items:center; align-content:start; }
+.pair .fig { width:100%; max-width:150px; }
+.pair p { margin:0; color:var(--app-t1); font-size:13px; font-weight:600; line-height:1.6; text-align:center; }
+
+/* real size */
+.sizes { display:grid; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); gap:14px; }
+.panel { background:var(--card); border:1px solid var(--line); border-radius:20px; padding:16px; display:grid; gap:14px; align-content:start; }
+.panel > b { font-size:15px; }
+.panel > span { font-size:12.5px; color:var(--muted); line-height:1.6; margin-top:-8px; }
+.today { border-radius:18px; padding:12px; display:grid; gap:10px; }
+.today.dark { background:var(--app-bg); --sf:var(--app-sf); --sf2:var(--app-sf2); --t1:var(--app-t1); --t2:var(--app-t2); }
+.today.light { background:var(--lt-bg); --sf:var(--lt-sf); --sf2:var(--lt-sf2); --t1:var(--lt-t1); --t2:var(--lt-t2); }
+.buddy { display:flex; align-items:center; gap:8px; }
+.buddy .fig { width:64px; flex:none; }
+.bubble { position:relative; min-width:0; background:var(--sf2); color:var(--t1); border-radius:16px; padding:7px 13px; font-size:13.5px; font-weight:600; line-height:1.65; }
+.bubble::before { content:""; position:absolute; top:50%; right:-5px; width:12px; height:12px; margin-top:-6px; background:inherit; transform:rotate(45deg); border-radius:2px; }
+.icons { display:flex; flex-wrap:wrap; align-items:flex-end; gap:18px; }
+.icons figure { margin:0; display:grid; gap:6px; justify-items:center; font-size:11.5px; color:var(--muted); font-variant-numeric:tabular-nums; }
+.tile { border-radius:24%; background:#121715; display:grid; place-items:center; overflow:hidden; }
+.tile .fig { width:94%; }
+
+/* verdict */
+.cmp { overflow-x:auto; border:1px solid var(--line); border-radius:16px; }
+table { border-collapse:collapse; font-size:14px; width:100%; min-width:640px; }
+th, td { text-align:start; padding:11px 14px; border-bottom:1px solid var(--line); vertical-align:top; line-height:1.65; }
+tr:last-child td { border-bottom:0; }
+th { color:var(--muted); font-weight:600; font-size:11.5px; letter-spacing:.06em; text-transform:uppercase; }
+td:first-child { color:var(--muted); width:20%; }
+.take { background:var(--card); border:1px solid var(--line); border-radius:20px; padding:18px 20px; display:grid; gap:8px; }
+.take b { font-size:16px; }
+.take p { margin:0; font-size:14.5px; line-height:1.75; color:var(--muted); max-width:72ch; }
+.take p strong { color:var(--page-fg); font-weight:600; }
+
+.pop { animation:pop .34s cubic-bezier(.34,1.56,.64,1); }
+@keyframes pop { 0% { transform:scale(.9); } 100% { transform:scale(1); } }
+@media (prefers-reduced-motion: reduce) { .pop { animation:none; } }
+</style>
+
+<main class="wrap">
+  <header class="intro">
+    <h1><span lang="fa">هدهد یا پیر؟</span><small>Hoopoe or Old Magician</small></h1>
+    <p>The app is becoming a goal app for any goal: training, studying, a language, a habit. <b>Both candidates are drawn in the current <span lang="fa">«پیکر»</span> sticker style</b> (ink outline, white die-cut border, soft shadow, slight tilt), so the only difference is who they are. They do the same six moments with the same rules: no sad faces, no guilt, praise only for what you did.</p>
+  </header>
+
+  <div class="bar" role="toolbar" aria-label="Accent">
+    <span class="lbl">Accent</span>
+    <span id="acc" style="display:contents"></span>
+    <span class="note">The hoopoe wears it as a scarf; the magician as his hat and robe.</span>
+  </div>
+
+  <section class="sec">
+    <h2>Meet them</h2>
+    <div class="meet">
+      <article class="cand">
+        <div class="stage" lang="fa">
+          <button class="fig" data-who="hoopoe" data-hero aria-label="هدهد؛ بزن تا ژست عوض کنه"></button>
+          <div class="say" data-say="hoopoe">سلام! امروز کدوم قدم رو برداریم؟</div>
+        </div>
+        <div class="body">
+          <h3><span lang="fa">هدهد</span><span>The hoopoe</span></h3>
+          <dl>
+            <dt>Who</dt><dd>The guide from Attar's <span lang="fa">منطق‌الطیر</span>, who leads the birds through seven valleys to the Simorgh. Here he walks your road with you. He doesn't do the work; you do.</dd>
+            <dt>Feeling</dt><dd>The crest. Fanned up for a big moment, half up most of the time, folded flat for night and quiet days.</dd>
+            <dt>Colors</dt><dd>His own: cinnamon body, black-and-white wings and tail. Only the scarf takes the accent, so he never reads as a green bird like Duo.</dd>
+            <dt>Voice</dt><dd>A friend on the road, a little cheeky. <q lang="fa">کل امروز! تاجم سیخ شد.</q></dd>
+          </dl>
+        </div>
+      </article>
+      <article class="cand">
+        <div class="stage" lang="fa">
+          <button class="fig" data-who="magician" data-hero aria-label="پیر؛ بزن تا ژست عوض کنه"></button>
+          <div class="say" data-say="magician">سلام رفیق! امروز چی می‌سازیم؟</div>
+        </div>
+        <div class="body">
+          <h3><span lang="fa">پیر</span><span>The old magician</span></h3>
+          <dl>
+            <dt>Who</dt><dd>A kind old wizard. The Persian root is Hafez's <span lang="fa">پیر مغان</span>, "the elder of the magi", the wise guide of the poems. He has seen every road and knows there's no shortcut.</dd>
+            <dt>Feeling</dt><dd>Face and hands: bushy eyebrows, eyes, a wave, a hand on his beard. The star on his staff sparkles at big moments.</dd>
+            <dt>Colors</dt><dd>Hat and robe take the accent; gold trim and stars, white beard.</dd>
+            <dt>Voice</dt><dd>Warm, wise, gently funny. His signature line: <q lang="fa">این جادو نبود. کار خودت بود.</q> The only magic is doing it again.</dd>
+          </dl>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="sec">
+    <h2>Six moments, side by side</h2>
+    <p>The same moments the current character covers (D82), with goal-neutral lines. Tap a hero above to cycle through them.</p>
+    <div class="moments" id="moments"></div>
+  </section>
+
+  <section class="sec">
+    <h2>At real size</h2>
+    <p>On Today he is about 64 dp, next to one line. The launcher icon has to work at 48 and 24 px, so those are below too.</p>
+    <div class="sizes">
+      <div class="panel">
+        <b>Today row, dark theme</b>
+        <div class="today dark" lang="fa">
+          <div class="buddy"><div class="fig" data-who="hoopoe" data-pose="nod"></div><div class="bubble">یکی دیگه. داریم می‌ریم.</div></div>
+          <div class="buddy"><div class="fig" data-who="magician" data-pose="nod"></div><div class="bubble">یه جرقه‌ی دیگه. ادامه بده.</div></div>
+        </div>
+      </div>
+      <div class="panel">
+        <b>Today row, light theme</b>
+        <div class="today light" lang="fa">
+          <div class="buddy"><div class="fig" data-who="hoopoe" data-pose="wave"></div><div class="bubble">سلام! امروز کدوم قدم رو برداریم؟</div></div>
+          <div class="buddy"><div class="fig" data-who="magician" data-pose="wave"></div><div class="bubble">سلام رفیق! امروز چی می‌سازیم؟</div></div>
+        </div>
+      </div>
+      <div class="panel">
+        <b>Launcher icon</b>
+        <span>On the dark icon background (D78). 24 px is the hard test.</span>
+        <div class="icons" id="icons"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <h2>How they compare</h2>
+    <div class="cmp">
+      <table>
+        <thead><tr><th></th><th>Hoopoe <span lang="fa">هدهد</span></th><th>Magician <span lang="fa">پیر</span></th></tr></thead>
+        <tbody>
+          <tr><td>Fits any goal</td><td>Yes. A guide on a road; the road can be anything.</td><td>Yes. A mentor; the craft can be anything.</td></tr>
+          <tr><td>Persian roots</td><td>Strong and specific: <span lang="fa">منطق‌الطیر</span>, the seven valleys, <span lang="fa">«سی مرغ»</span>. Chapters can become valleys.</td><td>Good: <span lang="fa">پیر مغان</span> in Hafez. But the pointed hat looks Western (Merlin, Gandalf).</td></tr>
+          <tr><td>Expression</td><td>Crest, eyes, beak, wings. Wings aren't hands, so fewer gestures.</td><td>Richest: eyebrows, eyes, both hands, the staff.</td></tr>
+          <tr><td>At 24 px</td><td>Crest and long beak: a clear, unusual silhouette.</td><td>Hat and beard read; the face is gone at that size.</td></tr>
+          <tr><td>Looks like</td><td>A bird, so people will compare him with Duo. His colors and crest keep him apart.</td><td>Many wizards already exist. His Persian lines carry the difference.</td></tr>
+          <tr><td>Risk in the message</td><td>None found.</td><td>"Magic" can hint at shortcuts. His voice has to keep saying the work is yours.</td></tr>
+          <tr><td>Name</td><td><span lang="fa">«هدهد»</span>, or a name of his own.</td><td><span lang="fa">«پیر»</span> or <span lang="fa">«استاد»</span>. Both also work for an app name only with care.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="take">
+      <b>My take</b>
+      <p><strong>The hoopoe still wins for me, narrowly.</strong> He is the more distinctive mark, he is unmistakably Iranian, and the seven-valleys story gives the whole app a structure, not only a mascot. The magician is the warmer talker, and <q lang="fa">این جادو نبود. کار خودت بود.</q> is the best single line on this page. If you love the old man, a Persian version of him (a sage's tall felt hat in place of the pointed one) would fix his weakest point.</p>
+    </div>
+  </section>
+</main>
+
+<script src="candidates.js"></script>
+<script>
+(function () {
+  "use strict";
+  var ACCENTS = [["سبز", "#34C47A"], ["آبی", "#4D9BF0"], ["فیروزه‌ای", "#2CC2B4"], ["بنفش", "#9B7BEA"], ["نارنجی", "#F28B3C"]];
+  var MOMENTS = [
+    { pose: "wave",  name: "Hello", when: "First open, onboarding, a new goal.", h: "سلام! امروز کدوم قدم رو برداریم؟", m: "سلام رفیق! امروز چی می‌سازیم؟" },
+    { pose: "nod",   name: "After a tick", when: "Any task done. The most common pose.", h: "یکی دیگه. داریم می‌ریم.", m: "یه جرقه‌ی دیگه. ادامه بده." },
+    { pose: "cheer", name: "Big moment", when: "100% day, a record, a milestone, a goal reached.", h: "کل امروز! تاجم سیخ شد.", m: "این جادو نبود. کار خودت بود." },
+    { pose: "think", name: "Empty screen", when: "No goals or tasks yet.", h: "هنوز هدفی نداریم. اولیش چیه؟", m: "جای اولین هدف خالیه." },
+    { pose: "tea",   name: "Quiet day", when: "Minimum day or a special day (sick, travel, off).", h: "امروز آروم. اینم بخشی از راهه.", m: "امروز سبک. یه چای بخوریم." },
+    { pose: "sleep", name: "Night", when: "After the last block. His lowest mood is sleepy.", h: "امروز بسه. فردا ادامه.", m: "چراغ رو خاموش کنیم؟ فردا باز." }
+  ];
+  var acc = ACCENTS[0][1];
+  try { acc = localStorage.getItem("cand-acc") || acc; } catch (e) {}
+  var hero = { hoopoe: 0, magician: 0 };
+
+  function esc(s) { return s.replace(/&/g, "&amp;").replace(/</g, "&lt;"); }
+  var mo = document.getElementById("moments");
+  mo.innerHTML = MOMENTS.map(function (m) {
+    return '<article class="mo"><header><b>' + m.name + "</b><span>" + m.when + '</span></header><div class="pair">' +
+      '<div><div class="fig" data-who="hoopoe" data-pose="' + m.pose + '"></div><p lang="fa">' + esc(m.h) + "</p></div>" +
+      '<div><div class="fig" data-who="magician" data-pose="' + m.pose + '"></div><p lang="fa">' + esc(m.m) + "</p></div></div></article>";
+  }).join("");
+  document.getElementById("icons").innerHTML = ["hoopoe", "magician"].map(function (w) {
+    return [96, 48, 24].map(function (s) {
+      return '<figure><div class="tile" style="width:' + s + "px;height:" + s + 'px"><div class="fig" data-who="' + w + '" data-pose="nod"></div></div><figcaption>' + s + "</figcaption></figure>";
+    }).join("");
+  }).join("");
+
+  function draw() {
+    document.querySelectorAll(".fig[data-who]").forEach(function (el) {
+      var who = el.dataset.who, pose = el.hasAttribute("data-hero") ? MOMENTS[hero[who]].pose : el.dataset.pose;
+      el.innerHTML = Candidates.svg(who, pose, acc, who === "hoopoe" ? "هدهد" : "پیر");
+    });
+    document.querySelectorAll(".pill").forEach(function (b) { b.setAttribute("aria-pressed", String(b.dataset.c === acc)); });
+  }
+  document.getElementById("acc").innerHTML = ACCENTS.map(function (a) {
+    return '<button class="pill" lang="fa" data-c="' + a[1] + '" aria-pressed="false"><i style="background:' + a[1] + '"></i>' + a[0] + "</button>";
+  }).join("");
+  document.getElementById("acc").addEventListener("click", function (e) {
+    var b = e.target.closest(".pill"); if (!b) return;
+    acc = b.dataset.c; try { localStorage.setItem("cand-acc", acc); } catch (er) {}
+    draw();
+  });
+  document.querySelectorAll("[data-hero]").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var who = btn.dataset.who; hero[who] = (hero[who] + 1) % MOMENTS.length;
+      draw();
+      document.querySelector('[data-say="' + who + '"]').textContent = MOMENTS[hero[who]][who === "hoopoe" ? "h" : "m"];
+      btn.classList.remove("pop"); void btn.offsetWidth; btn.classList.add("pop");
+    });
+  });
+  draw();
+})();
+</script>
