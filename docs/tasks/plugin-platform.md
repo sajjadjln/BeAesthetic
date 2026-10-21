@@ -8,7 +8,8 @@ Read `CLAUDE.md`, `docs/TASKS.md`, `docs/DECISIONS.md` (D148–D171) and `docs/S
 
 - A **plugin is a template for one goal, with its own screens on top of the app** (D163). Example: the workout plugin is the plan editor, the session, ladders, records, strength tests and the check-in with the ghost camera, all attached to a fitness goal.
 - The core app (to-do, goals, the wall, reviews, reminders, backup) works with no plugin at all.
-- Plugins are **script code in a sandboxed runtime inside the app** (D166). A plugin can only call the host's plugin API and draw with the host's components. It can't touch the network, files, other plugins or the user's other data.
+- Plugins are **script code in a sandboxed runtime inside the app** (D166). A plugin can only call the host's plugin API. It draws with the host's components or with its own UI that meets the contract's minimum standard (D172). It can't touch the network, files, other plugins or the user's other data.
+- **Stores:** Cafe Bazaar and possibly Google Play (D173). Play bans downloaded native code but allows interpreted code, so plugins stay scripts. Every design choice must pass both stores' policies.
 - The **workout plugin is built into the APK, off by default**, and the user switches it on in the app (D168). The migration switches it on for the user's existing program goal.
 - An **online store** that the user builds (.NET, hosted in Iran, D170) lists reviewed plugins. The store screen in the app is a **WebView** limited to the store's domain (D171). It's the only online part of the app (D164). Only the `:store` module may use the network (D167).
 - **Timing (accepted 2026-10-22):** v1.0 sets the contract and ships the workout as the first, built-in plugin (P0–P3). The store, outside plugins and the backend come after v1.0 (P4–P6).
@@ -49,7 +50,9 @@ Read `CLAUDE.md`, `docs/TASKS.md`, `docs/DECISIONS.md` (D148–D171) and `docs/S
 
 ### P2. The runtime (`:plugin-runtime`)
 - Pick the engine in a spike. Candidates: **Zipline** (Cash App; Kotlin/JS on QuickJS; Kotlin interfaces across the bridge; signed manifests; can load from local files), a plain QuickJS binding, or a JSON UI schema with no code at all. Judge them on: APK size, startup time on the Poco, how contracts are expressed, sandboxing, code signing, maintenance, no Google dependencies.
-- **UI from host components only.** A plugin returns a UI tree; the host draws it with its own Compose components (tile, card, chip, band, path, stepper, counter, chart, list row, sheet, button, seek bar, photo slot). Tokens and accents come from `DESIGN.md`. A plugin can't set a color, so it can't make something red.
+- **Two UI levels (D172).**
+  - ① **Host components:** a plugin returns a UI tree; the host draws it with its own Compose components (tile, card, chip, band, path, stepper, counter, chart, list row, sheet, button, seek bar, photo slot). Tokens and accents come from `DESIGN.md`. The rules hold by construction.
+  - ② **The plugin's own UI:** likely a sandboxed WebView with the app's design kit (CSS, Estedad, theme tokens, light/dark), with no network and a message bridge to the host API only. The minimum standard is in the contract as testable rules: RTL and Persian digits, host theme tokens (no hard-coded colors), system back, accessibility basics, data only through the host API, and the product rules (checked in review).
 - **Storage:** a plugin-scoped document store in Room (plugin id, collection, key, JSON, schema version), with the plugin's own migrations run by the host. Included in `data.json` (`BACKUP_FORMAT.md`) and in restore.
 - Limits: CPU time per call, memory, storage size. A plugin that crashes or times out is paused with a calm message and never takes the app down.
 

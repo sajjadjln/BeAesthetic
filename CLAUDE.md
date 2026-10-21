@@ -23,7 +23,7 @@ If these files disagree, the order of trust is: `DECISIONS.md` (newest entry win
 - Prefers **direct, opinionated recommendations** over a menu of equal options. When asking questions, ask 3–5 at a time, mostly multiple choice, mark the recommended option and give a one-line reason.
 - Lives in **Iran**: Google Play Services, Firebase push and some APIs are unreliable. The app must not depend on them.
 - Phone: **Poco X4 5G on HyperOS** (Xiaomi). It must work on any Android phone, but this phone is the reliability target.
-- Plans to publish the app on **Cafe Bazaar** in the future, after the program (D49). For now it's only for them. Don't add release scope to the MVP; just don't hard-code anything personal.
+- Plans to publish the app on **Cafe Bazaar**, and possibly **Google Play**, in the future (D49, D173). For now it's only for them. Don't add release scope to the MVP; just don't hard-code anything personal.
 - Works in Persian and English. The app is **Persian only (RTL)**. An English version, if it ever comes, is a separate build, not a language switch (D87).
 - Their English is informal and sometimes has typos. Read for intent, and confirm when a message is truly ambiguous.
 - Known weak points the app must work against: quits when bored, when change isn't visible fast, or when there's no clear goal; routines slip (skincare, brushing, nails, snack prep).
