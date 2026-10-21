@@ -4,25 +4,25 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Estedad:wght@400;500;600;700;800&display=swap">
 <style>
-/* Layout: one column; the two candidates always sit side by side, moment by moment, so the comparison is the page. */
+/* Layout: one column; the three candidates always sit side by side, state by state, each in its own fog panel like the references. */
 :root {
-  --page-bg:#0A0C0B; --page-fg:#E6EAE8; --muted:#8D9692; --line:#222826; --card:#151918; --frame:#2A302E;
-  /* the app's own dark "slate" (D136) and light surfaces, for the stages */
-  --app-bg:#1B201E; --app-sf:#252B29; --app-sf2:#2F3633; --app-t1:#EEF1EF; --app-t2:#A1ABA7;
-  --lt-bg:#F4F6F5; --lt-sf:#FFFFFF; --lt-sf2:#E4E9E6; --lt-t1:#121614; --lt-t2:#5C6662;
-  --acc:#34C47A;
+  --page-bg:#0A0C0B; --page-fg:#E6EAE8; --muted:#8D9692; --line:#222826; --card:#151918;
+  --app-bg:#1B201E; --app-sf2:#2F3633; --app-t1:#EEF1EF;
+  --lt-bg:#F4F6F5; --lt-sf2:#E4E9E6; --lt-t1:#121614;
+  --panel-ink:#081018; --panel-t:#EAF6FC;
   --font:"Estedad","Vazirmatn","Noto Sans Arabic",system-ui,sans-serif;
   color-scheme:dark;
 }
 @media (prefers-color-scheme: light) {
-  :root:not([data-theme="dark"]) { --page-bg:#E9ECEA; --page-fg:#121614; --muted:#5C6662; --line:#CFD5D2; --card:#F4F6F5; --frame:#C9D0CC; color-scheme:light; }
+  :root:not([data-theme="dark"]) { --page-bg:#E9ECEA; --page-fg:#121614; --muted:#5C6662; --line:#CFD5D2; --card:#F4F6F5; color-scheme:light; }
 }
-:root[data-theme="light"] { --page-bg:#E9ECEA; --page-fg:#121614; --muted:#5C6662; --line:#CFD5D2; --card:#F4F6F5; --frame:#C9D0CC; color-scheme:light; }
+:root[data-theme="light"] { --page-bg:#E9ECEA; --page-fg:#121614; --muted:#5C6662; --line:#CFD5D2; --card:#F4F6F5; color-scheme:light; }
 
 body { background:var(--page-bg); color:var(--page-fg); font-family:var(--font); margin:0; }
 button { font:inherit; color:inherit; background:none; border:0; padding:0; cursor:pointer; }
 button:focus-visible { outline:2px solid var(--page-fg); outline-offset:2px; border-radius:10px; }
-.wrap { max-width:1080px; margin:0 auto; padding-block:28px 64px; padding-left:max(16px, env(safe-area-inset-left, 0px)); padding-right:max(16px, env(safe-area-inset-right, 0px)); display:grid; gap:40px; }
+[lang="fa"] { direction:rtl; unicode-bidi:isolate; }
+.wrap { max-width:1120px; margin:0 auto; padding-block:28px 64px; padding-left:max(16px, env(safe-area-inset-left, 0px)); padding-right:max(16px, env(safe-area-inset-right, 0px)); display:grid; gap:40px; }
 .intro { display:grid; gap:10px; }
 .intro h1 { font-size:30px; font-weight:800; margin:0; text-wrap:balance; display:flex; flex-wrap:wrap; align-items:baseline; gap:6px 12px; }
 .intro h1 small { font-size:15px; font-weight:600; color:var(--muted); }
@@ -30,7 +30,6 @@ button:focus-visible { outline:2px solid var(--page-fg); outline-offset:2px; bor
 .intro p b, .sec > p b { color:var(--page-fg); font-weight:600; }
 .sec { display:grid; gap:16px; }
 h2 { font-size:20px; font-weight:800; margin:0; text-wrap:balance; }
-[lang="fa"] { direction:rtl; unicode-bidi:isolate; }
 
 .bar { position:sticky; top:env(safe-area-inset-top, 0px); z-index:5; display:flex; flex-wrap:wrap; gap:8px 10px; align-items:center; padding:10px 14px; background:var(--page-bg); border:1px solid var(--line); border-radius:16px; font-size:13px; }
 body::before { content:""; position:fixed; inset:0 0 auto; height:env(safe-area-inset-top, 0px); z-index:10; background:var(--page-bg); }
@@ -40,219 +39,198 @@ body::before { content:""; position:fixed; inset:0 0 auto; height:env(safe-area-
 .pill[aria-pressed="true"] { border-color:var(--page-fg); }
 .bar .note { color:var(--muted); font-size:12.5px; }
 
-/* meet: the two heroes */
-.meet { display:grid; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); gap:16px; }
-.cand { background:var(--card); border:1px solid var(--line); border-radius:24px; overflow:hidden; display:grid; align-content:start; }
-.stage { background:var(--app-bg); display:grid; justify-items:center; gap:10px; padding:22px 18px 20px; }
-.stage .fig { width:min(230px, 70%); }
-.stage .fig svg, .fig svg { display:block; width:100%; height:auto; }
-.say { position:relative; background:var(--app-sf2); color:var(--app-t1); border-radius:16px; padding:9px 16px; font-size:16px; font-weight:700; text-align:center; line-height:1.6; }
-.say::before { content:""; position:absolute; top:-5px; left:50%; width:12px; height:12px; margin-left:-6px; background:inherit; transform:rotate(45deg); border-radius:2px; }
-.cand .body { padding:18px 20px 20px; display:grid; gap:12px; }
-.cand h3 { margin:0; font-size:22px; font-weight:800; display:flex; align-items:baseline; gap:10px; flex-wrap:wrap; }
+.fig svg { display:block; width:100%; height:auto; }
+/* a comic panel: the drawing with its line in a caption box, like the references */
+.panel { position:relative; border-radius:16px; overflow:hidden; border:2px solid var(--panel-ink); background:#0C355B; }
+.panel .cap { position:absolute; inset-inline:10px; bottom:10px; display:flex; justify-content:center; }
+.panel .cap span { background:var(--panel-ink); color:var(--panel-t); font-weight:800; font-size:14px; line-height:1.55; padding:4px 10px; border-radius:6px; text-align:center; text-wrap:balance; }
+
+.meet { display:grid; grid-template-columns:repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap:16px; }
+.cand { background:var(--card); border:1px solid var(--line); border-radius:22px; overflow:hidden; display:grid; align-content:start; }
+.cand .panel { border-radius:0; border:0; border-bottom:2px solid var(--panel-ink); }
+.cand .body { padding:16px 18px 18px; display:grid; gap:12px; }
+.cand h3 { margin:0; font-size:21px; font-weight:800; display:flex; align-items:baseline; gap:10px; flex-wrap:wrap; }
 .cand h3 span { font-size:14px; font-weight:600; color:var(--muted); }
 dl { margin:0; display:grid; grid-template-columns:auto minmax(0,1fr); gap:9px 14px; font-size:14px; line-height:1.7; }
 dt { color:var(--muted); font-size:11.5px; letter-spacing:.06em; text-transform:uppercase; padding-top:3px; }
 dd { margin:0; min-width:0; }
 q { quotes:"«" "»"; font-weight:600; }
 
-/* moments: one card per moment, both candidates in it */
-.moments { display:grid; grid-template-columns:repeat(auto-fill, minmax(min(100%, 420px), 1fr)); gap:14px; }
-.mo { background:var(--card); border:1px solid var(--line); border-radius:20px; padding:14px; display:grid; gap:10px; align-content:start; }
-.mo header { display:grid; gap:2px; }
-.mo header b { font-size:15px; }
-.mo header span { font-size:12.5px; color:var(--muted); line-height:1.6; }
-.pair { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
-.pair > div { background:var(--app-bg); border-radius:14px; padding:10px 8px 10px; display:grid; gap:6px; justify-items:center; align-content:start; }
-.pair .fig { width:100%; max-width:150px; }
-.pair p { margin:0; color:var(--app-t1); font-size:13px; font-weight:600; line-height:1.6; text-align:center; }
+.states { display:grid; gap:14px; }
+.st { background:var(--card); border:1px solid var(--line); border-radius:20px; padding:14px; display:grid; gap:10px; }
+.st header { display:flex; flex-wrap:wrap; align-items:baseline; gap:4px 10px; }
+.st header b { font-size:15px; }
+.st header span { font-size:12.5px; color:var(--muted); line-height:1.6; }
+.trio { display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:10px; }
+.trio .panel .cap span { font-size:12.5px; padding:3px 8px; }
+@media (max-width: 560px) { .trio { grid-template-columns:1fr 1fr; } .trio > :last-child { grid-column:1 / -1; max-width:calc(50% - 5px); justify-self:center; width:100%; } }
 
-/* real size */
-.sizes { display:grid; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); gap:14px; }
-.panel { background:var(--card); border:1px solid var(--line); border-radius:20px; padding:16px; display:grid; gap:14px; align-content:start; }
-.panel > b { font-size:15px; }
-.panel > span { font-size:12.5px; color:var(--muted); line-height:1.6; margin-top:-8px; }
+.sizes { display:grid; grid-template-columns:repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap:14px; }
+.box { background:var(--card); border:1px solid var(--line); border-radius:20px; padding:16px; display:grid; gap:14px; align-content:start; }
+.box > b { font-size:15px; }
+.box > span { font-size:12.5px; color:var(--muted); line-height:1.6; margin-top:-8px; }
 .today { border-radius:18px; padding:12px; display:grid; gap:10px; }
-.today.dark { background:var(--app-bg); --sf:var(--app-sf); --sf2:var(--app-sf2); --t1:var(--app-t1); --t2:var(--app-t2); }
-.today.light { background:var(--lt-bg); --sf:var(--lt-sf); --sf2:var(--lt-sf2); --t1:var(--lt-t1); --t2:var(--lt-t2); }
-.buddy { display:flex; align-items:center; gap:8px; }
-.buddy .fig { width:64px; flex:none; }
+.today.dark { background:var(--app-bg); --sf2:var(--app-sf2); --t1:var(--app-t1); }
+.today.light { background:var(--lt-bg); --sf2:var(--lt-sf2); --t1:var(--lt-t1); }
+.buddy { display:flex; align-items:center; gap:10px; }
+.buddy .fig { width:56px; flex:none; border-radius:14px; overflow:hidden; border:2px solid var(--panel-ink); }
 .bubble { position:relative; min-width:0; background:var(--sf2); color:var(--t1); border-radius:16px; padding:7px 13px; font-size:13.5px; font-weight:600; line-height:1.65; }
 .bubble::before { content:""; position:absolute; top:50%; right:-5px; width:12px; height:12px; margin-top:-6px; background:inherit; transform:rotate(45deg); border-radius:2px; }
-.icons { display:flex; flex-wrap:wrap; align-items:flex-end; gap:18px; }
+.icons { display:grid; gap:12px; }
+.icons .row { display:flex; align-items:flex-end; gap:16px; }
 .icons figure { margin:0; display:grid; gap:6px; justify-items:center; font-size:11.5px; color:var(--muted); font-variant-numeric:tabular-nums; }
-.tile { border-radius:24%; background:#121715; display:grid; place-items:center; overflow:hidden; }
-.tile .fig { width:94%; }
+.tile { border-radius:24%; overflow:hidden; }
 
-/* verdict */
-.cmp { overflow-x:auto; border:1px solid var(--line); border-radius:16px; }
-table { border-collapse:collapse; font-size:14px; width:100%; min-width:640px; }
-th, td { text-align:start; padding:11px 14px; border-bottom:1px solid var(--line); vertical-align:top; line-height:1.65; }
-tr:last-child td { border-bottom:0; }
-th { color:var(--muted); font-weight:600; font-size:11.5px; letter-spacing:.06em; text-transform:uppercase; }
-td:first-child { color:var(--muted); width:20%; }
+.notes { display:grid; grid-template-columns:repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap:14px; }
+.note-card { background:var(--card); border:1px solid var(--line); border-radius:18px; padding:16px 18px; display:grid; gap:8px; align-content:start; }
+.note-card b { font-size:15px; }
+.note-card p { margin:0; font-size:13.5px; line-height:1.7; color:var(--muted); }
 .take { background:var(--card); border:1px solid var(--line); border-radius:20px; padding:18px 20px; display:grid; gap:8px; }
 .take b { font-size:16px; }
-.take p { margin:0; font-size:14.5px; line-height:1.75; color:var(--muted); max-width:72ch; }
+.take p { margin:0; font-size:14.5px; line-height:1.75; color:var(--muted); max-width:76ch; }
 .take p strong { color:var(--page-fg); font-weight:600; }
+
+.earlier { display:grid; grid-template-columns:repeat(auto-fit, minmax(150px, 1fr)); gap:10px; }
+.earlier > div { background:var(--app-bg); border-radius:14px; padding:10px; display:grid; gap:6px; justify-items:center; font-size:12px; color:#A1ABA7; }
+.earlier .fig { width:100%; max-width:170px; }
 
 .fade { animation:fade .45s ease-out; }
 @keyframes fade { 0% { opacity:.35; } 100% { opacity:1; } }
 @media (prefers-reduced-motion: reduce) { .fade { animation:none; } }
-
-.mo .pair .fig { max-width:220px; }
-.round1 { display:grid; grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); gap:10px; }
-.round1 > div { background:var(--app-bg); border-radius:14px; padding:10px; }
-.round1 .fig { max-width:140px; margin:0 auto; }
-.stage .fig.wide { width:min(320px, 90%); }
 </style>
 
 <main class="wrap">
   <header class="intro">
-    <h1><span lang="fa">هدهد یا پیر؟</span><small>Round 2: grown-up</small></h1>
-    <p>Round 1 was too happy, childish and cartoonish. <b>Round 2 draws them as real-looking illustrations:</b> natural proportions, real colors, soft light from the upper left, calm faces, no sticker border. They also move less: a grown-up character shows feeling through small things (the hoopoe's crest and head, the old man's staff and eyes), never by jumping around. The lines are calmer too.</p>
+    <h1><span lang="fa">هدهد، جادوگر یا خانم سیاه‌پوش؟</span><small>Round 3: inked comic</small></h1>
+    <p><b>Drawn in the style of your three references:</b> heavy, rough ink lines, a cold blue palette with a glow behind the figure, fog that swallows everything below the waist, and dry, deadpan faces. The hoopoe stays and gets the same treatment, next to the new wizard and the goth lady.</p>
+    <p>Two changes from the references, on purpose. <b>Their red spot color is your accent here</b> (the app never uses red), so it lights the wizard's staff, the lady's pendant and the hoopoe's sprout. And <b>the lady wears a high lace collar and long sleeves</b>, which is very goth and keeps the app safe for Cafe Bazaar later.</p>
   </header>
 
   <div class="bar" role="toolbar" aria-label="Accent">
     <span class="lbl">Accent</span>
     <span id="acc" style="display:contents"></span>
-    <span class="note">The hoopoe's branch sprouts in it; the magician's staff glows in it.</span>
+    <span class="note">The one spot color in each panel.</span>
   </div>
 
   <section class="sec">
     <h2>Meet them</h2>
-    <div class="meet">
-      <article class="cand">
-        <div class="stage" lang="fa">
-          <button class="fig wide" data-who="hoopoe" data-hero aria-label="هدهد؛ بزن تا حالتش عوض بشه"></button>
-          <div class="say" data-say="hoopoe">راه از همین قدم شروع می‌شه.</div>
-        </div>
-        <div class="body">
-          <h3><span lang="fa">هدهد</span><span>The hoopoe</span></h3>
-          <dl>
-            <dt>Who</dt><dd>The guide from Attar's <span lang="fa">منطق‌الطیر</span>, who leads the birds through seven valleys to the Simorgh. He walks your road with you; you do the work.</dd>
-            <dt>Feeling</dt><dd>The crest. Folded most of the time, half raised when he's curious, a full fan for a big moment. His head lifts or lowers with it.</dd>
-            <dt>Look</dt><dd>A real Eurasian hoopoe on a branch: cinnamon body, zebra wings, the long curved bill.</dd>
-            <dt>Voice</dt><dd>Quiet and sure, a friend who knows the road. <q lang="fa">یک قدم دیگه.</q></dd>
-          </dl>
-        </div>
-      </article>
-      <article class="cand">
-        <div class="stage" lang="fa">
-          <button class="fig wide" data-who="magician" data-hero aria-label="پیر؛ بزن تا حالتش عوض بشه"></button>
-          <div class="say" data-say="magician">خوش اومدی. از کجا شروع کنیم؟</div>
-        </div>
-        <div class="body">
-          <h3><span lang="fa">پیر</span><span>The old magician</span></h3>
-          <dl>
-            <dt>Who</dt><dd>An old mage in a grey-blue robe and a worn hat, with a long beard and a staff. The Persian root is Hafez's <span lang="fa">پیر مغان</span>, the wise elder of the poems.</dd>
-            <dt>Feeling</dt><dd>His staff's stone and his eyes. It glows softly every day, blazes when he lifts it for a big moment, and dims at night.</dd>
-            <dt>Look</dt><dd>His face stays half in the shadow of the brim. That keeps him mysterious and dignified, not cute.</dd>
-            <dt>Voice</dt><dd>Slow, warm, a little dry. <q lang="fa">این جادو نبود. کار خودت بود.</q></dd>
-          </dl>
-        </div>
-      </article>
-    </div>
+    <div class="meet" id="meet"></div>
   </section>
 
   <section class="sec">
     <h2>Four states, side by side</h2>
-    <p>Fewer poses than round 1, because a real-looking character that changes pose all the time looks restless. Each state covers several moments. Tap a hero above to cycle through them.</p>
-    <div class="moments" id="moments"></div>
+    <p>Each state covers several moments. Tap a panel above to cycle through them.</p>
+    <div class="states" id="states"></div>
   </section>
 
   <section class="sec">
     <h2>At real size</h2>
-    <p>At 64 dp on Today and on the launcher icon, the full figure is too small, so both use a head crop there.</p>
+    <p>The panel comes with them: the blue fog is part of the character, so on the Today row they sit in a small framed tile, and the icon is the tile.</p>
     <div class="sizes">
-      <div class="panel">
+      <div class="box">
         <b>Today row, dark theme</b>
-        <div class="today dark" lang="fa">
-          <div class="buddy"><div class="fig" data-who="hoopoe" data-pose="calm" data-crop="head"></div><div class="bubble">یک قدم دیگه.</div></div>
-          <div class="buddy"><div class="fig" data-who="magician" data-pose="calm" data-crop="head"></div><div class="bubble">خوبه. یکی دیگه.</div></div>
-        </div>
+        <div class="today dark" lang="fa" id="row-dark"></div>
       </div>
-      <div class="panel">
+      <div class="box">
         <b>Today row, light theme</b>
-        <div class="today light" lang="fa">
-          <div class="buddy"><div class="fig" data-who="hoopoe" data-pose="think" data-crop="head"></div><div class="bubble">مقصد کجاست؟ اول هدف رو بنویس.</div></div>
-          <div class="buddy"><div class="fig" data-who="magician" data-pose="think" data-crop="head"></div><div class="bubble">هر سفری یه مقصد می‌خواد.</div></div>
-        </div>
+        <div class="today light" lang="fa" id="row-light"></div>
       </div>
-      <div class="panel">
+      <div class="box">
         <b>Launcher icon</b>
-        <span>On the dark icon background (D78). 24 px is the hard test.</span>
+        <span>96, 48 and 24 px. 24 px is the hard test.</span>
         <div class="icons" id="icons"></div>
       </div>
     </div>
   </section>
 
   <section class="sec">
-    <h2>What changes for the build</h2>
-    <div class="cmp">
-      <table>
-        <thead><tr><th></th><th>Round 1, cartoon</th><th>Round 2, grown-up</th></tr></thead>
-        <tbody>
-          <tr><td>Format</td><td>Vector, one rig, about 17 poses.</td><td>Still vector: sharp at any size, small in the APK, tinted from the accent. Each state is drawn on its own, so expect 4–6 states, not 17.</td></tr>
-          <tr><td>Motion</td><td>A bouncy pop on each change.</td><td>A slow cross-fade; the crest or the glow changes, nothing jumps.</td></tr>
-          <tr><td>Small sizes</td><td>The whole figure reads at 64 dp.</td><td>A head crop for the Today row and the icon.</td></tr>
-          <tr><td>More real than this</td><td colspan="2">Painted or photographic art would be bitmaps from an illustrator or an image model: a file per state and screen density, a bigger APK, and no accent tint. This level is close to what hand-built vectors do well.</td></tr>
-        </tbody>
-      </table>
+    <h2>What this style brings with it</h2>
+    <div class="notes">
+      <div class="note-card"><b>A deadpan face is fine; a judging face is not</b><p>The references' charm is the unimpressed look, and the no-shame rule (D84) still holds. So the face stays deadpan as a personality, the words are always on your side, and nobody ever looks at you like that after a gap. Dry praise lands harder than cheering: <q lang="fa">بد نبود.</q> from her means something.</p></div>
+      <div class="note-card"><b>The app turns cooler and darker</b><p>These panels are night-blue. The dark theme (slate, D136) takes them well. On the light theme they become dark tiles, which still works, but the whole app may want to move toward blue and fog to match.</p></div>
+      <div class="note-card"><b>Still vector, still buildable</b><p>Same as round 2: drawings in code, sharp at any size, small in the APK, tinted from the accent. The rough ink comes from one filter, so it costs nothing per pose. About 4–6 states per character.</p></div>
     </div>
     <div class="take">
       <b>My take</b>
-      <p><strong>The hoopoe works better in this style.</strong> A real hoopoe is already striking, so realism makes him better, and at 24 px his crest and bill still read. The old magician is the stronger presence on a big screen, but at small sizes he's a hat and a beard, and he leans toward Gandalf. If you pick him, I'd make him more Persian: a tall felt hat, a patterned robe hem, and a lamp in place of the staff.</p>
+      <p><strong>In this style, the goth lady has the most personality and the hoopoe is the strongest brand.</strong> She's funny, fresh and unlike any other habit app, and her dry lines fight boredom, your biggest risk. But she is the one most likely to drift into "unimpressed with you". The hoopoe is the safe, distinctive pick: Persian roots, a mark that reads at 24 px, and the deadpan eye makes him funnier than before. The wizard is well drawn but the most familiar of the three. <strong>My order: hoopoe, then the goth lady, then the wizard.</strong></p>
     </div>
   </section>
 
   <section class="sec">
-    <h2>Round 1, for reference</h2>
-    <div class="round1">
-      <div><div class="fig" data-r1="hoopoe" data-pose="wave"></div></div>
-      <div><div class="fig" data-r1="hoopoe" data-pose="cheer"></div></div>
-      <div><div class="fig" data-r1="magician" data-pose="wave"></div></div>
-      <div><div class="fig" data-r1="magician" data-pose="cheer"></div></div>
+    <h2>Round 2, for reference</h2>
+    <div class="earlier">
+      <div><div class="fig" data-r2="hoopoe" data-pose="calm"></div>Round 2 hoopoe</div>
+      <div><div class="fig" data-r2="hoopoe" data-pose="big"></div>Round 2 hoopoe, big moment</div>
     </div>
   </section>
 </main>
 
-<script src="candidates.js"></script>
 <script src="candidates-real.js"></script>
+<script src="candidates-ink.js"></script>
 <script>
 (function () {
   "use strict";
   var ACCENTS = [["سبز", "#34C47A"], ["آبی", "#4D9BF0"], ["فیروزه‌ای", "#2CC2B4"], ["بنفش", "#9B7BEA"], ["نارنجی", "#F28B3C"]];
-  var STATES = [
-    { pose: "calm", name: "Calm", when: "Most of the time: hello, after a tick, the Today row.", h: "راه از همین قدم شروع می‌شه.", m: "خوش اومدی. از کجا شروع کنیم؟" },
-    { pose: "big", name: "Big moment", when: "100% day, a record, a milestone, a goal reached.", h: "امروز کامل شد. ببین تا کجا اومدی.", m: "این جادو نبود. کار خودت بود." },
-    { pose: "think", name: "Curious", when: "Empty screens, a new goal, onboarding.", h: "مقصد کجاست؟ اول هدف رو بنویس.", m: "هر سفری یه مقصد می‌خواد. مال تو چیه؟" },
-    { pose: "rest", name: "Rest", when: "Night, a minimum day, a special day. His lowest mood is tired, never sad.", h: "امروز بسه. فردا ادامه‌ی راه.", m: "امروز کم، ولی امروز هم بود." }
+  var WHO = [
+    { k: "hoopoe", fa: "هدهد", en: "The hoopoe",
+      dl: [["Who", "The guide from Attar's <span lang=\"fa\">منطق‌الطیر</span>, now with a half-lidded, seen-it-all eye. He walks the road with you; you do the work."],
+           ["Feeling", "The crest: folded, half raised when curious, a full fan for a big moment."],
+           ["Voice", "Short and dry. <q lang=\"fa\">یک قدم دیگه.</q>"]] },
+    { k: "wizard", fa: "جادوگر", en: "The wizard",
+      dl: [["Who", "The wizard from your reference: a crooked hat, a long white beard, a gnarled staff and a book of spells, read with total boredom."],
+           ["Feeling", "Eyes and staff. The staff blazes in the accent for a big moment; he dozes off at night."],
+           ["Voice", "Absent-minded and dry. <q lang=\"fa\">این جادو نبود. کار خودت بود.</q>"]] },
+    { k: "goth", fa: "خانم سیاه‌پوش", en: "The goth lady",
+      dl: [["Who", "Long black hair with blunt bangs, pale blue skin, a lace collar and a pendant that glows in the accent. Unimpressed by everything, secretly on your side."],
+           ["Feeling", "Almost none, which is the joke: a smirk and a deadpan thumbs-up for a big moment."],
+           ["Voice", "Very dry, never mean. <q lang=\"fa\">کل روز؟ خب... تحت تأثیر قرار گرفتم.</q>"]] }
   ];
-  var acc = ACCENTS[0][1];
+  var STATES = [
+    { pose: "calm", name: "Calm", when: "Most of the time: hello, after a tick, the Today row.",
+      l: { hoopoe: "یک قدم دیگه.", wizard: "طلسم امروز: یکی‌یکی انجامش بده.", goth: "باشه. کار بعدی." } },
+    { pose: "big", name: "Big moment", when: "100% day, a record, a milestone, a goal reached.",
+      l: { hoopoe: "کل امروز! تاجم سیخ شد.", wizard: "این جادو نبود. کار خودت بود.", goth: "کل روز؟ خب... تحت تأثیر قرار گرفتم." } },
+    { pose: "think", name: "Curious", when: "Empty screens, a new goal, onboarding.",
+      l: { hoopoe: "مقصد کجاست؟ اول هدف رو بنویس.", wizard: "کتاب می‌گه اول یه هدف لازمه.", goth: "اینجا خالیه. یه هدف بنویس." } },
+    { pose: "rest", name: "Rest", when: "Night, a minimum day, a special day. The lowest mood is sleepy, never sad.",
+      l: { hoopoe: "امروز بسه. فردا ادامه‌ی راه.", wizard: "حتی جادوگرها هم می‌خوابن.", goth: "شب شد. بالاخره." } }
+  ];
+  var acc = ACCENTS[0][1], hero = { hoopoe: 0, wizard: 0, goth: 0 };
   try { acc = localStorage.getItem("cand-acc") || acc; } catch (e) {}
-  var hero = { hoopoe: 0, magician: 0 };
 
   function esc(s) { return s.replace(/&/g, "&amp;").replace(/</g, "&lt;"); }
-  document.getElementById("moments").innerHTML = STATES.map(function (m) {
-    return '<article class="mo"><header><b>' + m.name + "</b><span>" + m.when + '</span></header><div class="pair">' +
-      '<div><div class="fig" data-who="hoopoe" data-pose="' + m.pose + '"></div><p lang="fa">' + esc(m.h) + "</p></div>" +
-      '<div><div class="fig" data-who="magician" data-pose="' + m.pose + '"></div><p lang="fa">' + esc(m.m) + "</p></div></div></article>";
+  function panel(who, pose, line, extra) {
+    return '<div class="panel"' + (extra || "") + '><div class="fig" data-who="' + who + '" data-pose="' + pose + '"></div><div class="cap" lang="fa"><span>' + esc(line) + "</span></div></div>";
+  }
+  document.getElementById("meet").innerHTML = WHO.map(function (w) {
+    return '<article class="cand"><button class="panel-btn" data-hero="' + w.k + '" aria-label="' + w.fa + '؛ بزن تا حالتش عوض بشه" style="display:block;width:100%">' +
+      panel(w.k, "calm", STATES[0].l[w.k]) + '</button><div class="body"><h3><span lang="fa">' + w.fa + "</span><span>" + w.en + "</span></h3><dl>" +
+      w.dl.map(function (r) { return "<dt>" + r[0] + "</dt><dd>" + r[1] + "</dd>"; }).join("") + "</dl></div></article>";
   }).join("");
-  document.getElementById("icons").innerHTML = ["hoopoe", "magician"].map(function (w) {
-    return [96, 48, 24].map(function (s) {
-      return '<figure><div class="tile" style="width:' + s + "px;height:" + s + 'px"><div class="fig" data-who="' + w + '" data-pose="calm" data-crop="head"></div></div><figcaption>' + s + "</figcaption></figure>";
+  document.getElementById("states").innerHTML = STATES.map(function (s) {
+    return '<article class="st"><header><b>' + s.name + "</b><span>" + s.when + '</span></header><div class="trio">' +
+      WHO.map(function (w) { return panel(w.k, s.pose, s.l[w.k]); }).join("") + "</div></article>";
+  }).join("");
+  function row(pose, i) {
+    return WHO.map(function (w) {
+      return '<div class="buddy"><div class="fig" data-who="' + w.k + '" data-pose="' + pose + '" data-crop="head"></div><div class="bubble">' + esc(STATES[i].l[w.k]) + "</div></div>";
     }).join("");
+  }
+  document.getElementById("row-dark").innerHTML = row("calm", 0);
+  document.getElementById("row-light").innerHTML = row("think", 2);
+  document.getElementById("icons").innerHTML = WHO.map(function (w) {
+    return '<div class="row">' + [96, 48, 24].map(function (s) {
+      return '<figure><div class="tile fig" style="width:' + s + 'px" data-who="' + w.k + '" data-pose="calm" data-crop="head"></div><figcaption>' + s + "</figcaption></figure>";
+    }).join("") + "</div>";
   }).join("");
 
   function draw() {
     document.querySelectorAll(".fig[data-who]").forEach(function (el) {
-      var who = el.dataset.who, pose = el.hasAttribute("data-hero") ? STATES[hero[who]].pose : el.dataset.pose;
-      el.innerHTML = Real.svg(who, pose, acc, { crop: el.dataset.crop, label: who === "hoopoe" ? "هدهد" : "پیر" });
+      var who = el.dataset.who, btn = el.closest("[data-hero]");
+      var pose = btn ? STATES[hero[who]].pose : el.dataset.pose;
+      el.innerHTML = Ink.svg(who, pose, acc, { crop: el.dataset.crop, label: who });
     });
-    document.querySelectorAll(".fig[data-r1]").forEach(function (el) {
-      el.innerHTML = Candidates.svg(el.dataset.r1, el.dataset.pose, acc);
-    });
+    document.querySelectorAll(".fig[data-r2]").forEach(function (el) { el.innerHTML = Real.svg(el.dataset.r2, el.dataset.pose, acc); });
     document.querySelectorAll(".pill").forEach(function (b) { b.setAttribute("aria-pressed", String(b.dataset.c === acc)); });
   }
   document.getElementById("acc").innerHTML = ACCENTS.map(function (a) {
@@ -265,9 +243,9 @@ td:first-child { color:var(--muted); width:20%; }
   });
   document.querySelectorAll("[data-hero]").forEach(function (btn) {
     btn.addEventListener("click", function () {
-      var who = btn.dataset.who; hero[who] = (hero[who] + 1) % STATES.length;
+      var who = btn.dataset.hero; hero[who] = (hero[who] + 1) % STATES.length;
       draw();
-      document.querySelector('[data-say="' + who + '"]').textContent = STATES[hero[who]][who === "hoopoe" ? "h" : "m"];
+      btn.querySelector(".cap span").textContent = STATES[hero[who]].l[who];
       btn.classList.remove("fade"); void btn.offsetWidth; btn.classList.add("fade");
     });
   });
