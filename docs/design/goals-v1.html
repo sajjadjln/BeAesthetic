@@ -1,0 +1,881 @@
+<title>پیکر Goals Wall</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Estedad:wght@400;500;600;700;800&display=swap">
+<style>
+/* Layout: phones on a quiet board, grouped by screen. v1.0 (to-do + goals, D148–D162). Tokens from DESIGN.md (slate dark, green accent). */
+:root {
+  --page-bg: #121615; --page-fg: #E6EAE8; --page-muted: #8D9692; --page-line: #2A302E;
+  --bg:#1B201E; --sf:#252B29; --sf2:#2F3633; --bd:#3C4441; --t1:#EEF1EF; --t2:#A1ABA7; --t3:#828C88; --on-acc:#0E1110;
+  --acc:#34C47A; --acc-sub:#29503C; --acc-on:#5BD994; --w0:#3C4441; --w1:#23513A; --w2:#28754E; --w3:#2FA066; --w4:#5BD994;
+  --sp:#5560C9; --sp-sub:#313953; --sp-on:#A3AAF2; --nt:#E8B04B; --nt-sub:#4C4630; --frame:#2A302E;
+  --wall:#171C1A; --wall-dot:#2B322F; --note:#2A302E; --note-edge:#353D3A; --pin:#C9D1CD; --pin-shadow: rgba(0,0,0,.45);
+  --shadow: 0 24px 60px -24px rgba(0,0,0,.6);
+  --font-ui: "Estedad", "Vazirmatn", "Noto Sans Arabic", system-ui, sans-serif;
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --page-bg: #E9ECEA; --page-fg: #121614; --page-muted: #5C6662; --page-line: #CFD5D2;
+    --bg:#F6F7F6; --sf:#FFFFFF; --sf2:#EDF0EE; --bd:#DCE1DE; --t1:#0E1110; --t2:#5F6965; --t3:#8A948F; --on-acc:#FFFFFF;
+    --acc:#1D8A55; --acc-sub:#E4F7EC; --acc-on:#176B43; --w0:#DCE1DE; --w1:#C4F0D6; --w2:#93E6B6; --w3:#22A565; --w4:#176B43;
+    --sp:#8C95EA; --sp-sub:#D3D7F8; --sp-on:#3E479E; --nt:#B07610; --nt-sub:#FBEFD6; --frame:#C9D0CC;
+    --wall:#EEF0EE; --wall-dot:#D3D9D6; --note:#FFFFFF; --note-edge:#E3E7E5; --pin:#5F6965; --pin-shadow: rgba(14,17,16,.25);
+    --shadow: 0 24px 60px -28px rgba(14,17,16,.35);
+    color-scheme: light;
+  }
+}
+:root[data-theme="light"] {
+  --page-bg: #E9ECEA; --page-fg: #121614; --page-muted: #5C6662; --page-line: #CFD5D2;
+  --bg:#F6F7F6; --sf:#FFFFFF; --sf2:#EDF0EE; --bd:#DCE1DE; --t1:#0E1110; --t2:#5F6965; --t3:#8A948F; --on-acc:#FFFFFF;
+  --acc:#1D8A55; --acc-sub:#E4F7EC; --acc-on:#176B43; --w0:#DCE1DE; --w1:#C4F0D6; --w2:#93E6B6; --w3:#22A565; --w4:#176B43;
+  --sp:#8C95EA; --sp-sub:#D3D7F8; --sp-on:#3E479E; --nt:#B07610; --nt-sub:#FBEFD6; --frame:#C9D0CC;
+  --wall:#EEF0EE; --wall-dot:#D3D9D6; --note:#FFFFFF; --note-edge:#E3E7E5; --pin:#5F6965; --pin-shadow: rgba(14,17,16,.25);
+  --shadow: 0 24px 60px -28px rgba(14,17,16,.35);
+  color-scheme: light;
+}
+
+* { box-sizing: border-box; }
+body { background: var(--page-bg); color: var(--page-fg); font-family: var(--font-ui); margin: 0; }
+.wrap { max-width: 1240px; margin: 0 auto; padding-block: 24px 64px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.bar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; padding: 12px 0; margin-bottom: 24px; background: var(--page-bg); border-bottom: 1px solid var(--page-line); }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--page-bg); }
+.bar > span { font-size: 12px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--page-muted); }
+.bar button { font: inherit; font-size: 13px; font-weight: 600; color: var(--page-fg); background: transparent; border: 1px solid var(--page-line); border-radius: 999px; padding: 4px 14px; cursor: pointer; }
+.bar button[aria-pressed="true"] { background: var(--page-fg); color: var(--page-bg); border-color: var(--page-fg); }
+.bar nav { display: flex; flex-wrap: wrap; gap: 6px 14px; margin-inline-start: auto; }
+.bar nav a { color: var(--page-muted); font-size: 13px; text-decoration: none; }
+.bar nav a:hover { color: var(--page-fg); }
+.intro { display: grid; gap: 10px; margin-bottom: 36px; max-width: 720px; }
+.intro h1 { font-size: 30px; font-weight: 800; margin: 0; text-wrap: balance; }
+.intro p { margin: 0; color: var(--page-muted); font-size: 15px; line-height: 1.75; }
+.intro ul { margin: 0; padding-inline-start: 20px; color: var(--page-muted); font-size: 15px; line-height: 1.75; }
+.intro b { color: var(--page-fg); }
+.gallery { display: flex; flex-wrap: wrap; gap: 44px 32px; justify-content: center; align-items: flex-start; }
+figure { margin: 0; width: 360px; max-width: 100%; display: grid; gap: 12px; }
+figcaption { font-size: 13.5px; color: var(--page-muted); line-height: 1.6; }
+figcaption b { color: var(--page-fg); display: block; font-size: 15px; }
+.group-title { width: 100%; font-size: 12px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--page-muted); border-top: 1px solid var(--page-line); padding-top: 22px; margin-top: 6px; scroll-margin-top: 70px; }
+.group-title + p.group-note { width: 100%; margin: -30px 0 0; color: var(--page-muted); font-size: 14px; line-height: 1.7; max-width: 760px; }
+
+/* ---------- Phone shell ---------- */
+.phone { position: relative; width: 360px; max-width: 100%; min-height: 740px; background: var(--bg); color: var(--t1); border-radius: 32px; overflow: hidden;
+  border: 1px solid var(--frame); box-shadow: var(--shadow); font-family: var(--font-ui); font-size: 15px; line-height: 1.6; display: flex; flex-direction: column; }
+:where(.phone) button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; text-align: start; }
+:where(.phone) button:focus-visible { outline: 2px solid var(--acc); outline-offset: 2px; border-radius: 12px; }
+.status { display: flex; justify-content: space-between; padding: 12px 22px 0; font-size: 12px; font-weight: 600; color: var(--t2); }
+.body { flex: 1; display: flex; flex-direction: column; gap: 16px; padding: 14px 16px 20px; min-height: 0; }
+.i { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+.i.sm { width: 18px; height: 18px; } .i.xs { width: 14px; height: 14px; stroke-width: 2.4; }
+.row { display: flex; align-items: center; gap: 10px; }
+.between { justify-content: space-between; }
+.grow { flex: 1; min-width: 0; }
+.col { display: flex; flex-direction: column; }
+.c2 { color: var(--t2); } .c3 { color: var(--t3); } .cacc { color: var(--acc-on); } .csp { color: var(--sp-on); }
+.t-head { font-size: 24px; font-weight: 800; line-height: 1.45; text-wrap: balance; }
+.t-title { font-size: 18px; font-weight: 700; line-height: 1.5; }
+.t-sub { font-size: 16px; font-weight: 600; }
+.t-strong { font-size: 15px; font-weight: 500; }
+.t-lbl { font-size: 13px; font-weight: 500; }
+.t-cap { font-size: 12px; }
+.t-over { font-size: 11px; font-weight: 600; }
+.card { background: var(--sf); border-radius: 16px; }
+.pad { padding: 16px; }
+.chip { display: inline-flex; align-items: center; gap: 4px; border-radius: 999px; padding: 1px 10px; font-size: 12px; font-weight: 600; white-space: nowrap; line-height: 1.8; flex: none; }
+.chip.acc { background: var(--acc-sub); color: var(--acc-on); }
+.chip.sp { background: var(--sp-sub); color: var(--sp-on); }
+.chip.nt { background: var(--nt-sub); color: var(--nt); }
+.chip.neu { background: var(--sf2); color: var(--t2); }
+.chip.out { box-shadow: inset 0 0 0 1.5px var(--bd); color: var(--t2); }
+.topbar { display: flex; align-items: center; gap: 4px; padding: 6px 8px 0; }
+.icon-btn { width: 44px; height: 44px; display: grid; place-items: center; color: var(--t2); border-radius: 12px; flex: none; }
+.btn { display: flex; align-items: center; justify-content: center; gap: 8px; height: 52px; border-radius: 16px; font-size: 16px; font-weight: 700; width: 100%; text-align: center; }
+.btn.pri { background: var(--acc); color: var(--on-acc); }
+.btn.sec { background: var(--sf); color: var(--t1); }
+.btn.ghost { color: var(--t2); height: 44px; font-weight: 600; font-size: 15px; }
+.foot { margin-top: auto; display: grid; gap: 8px; }
+
+/* Nav: two tabs (D160) */
+.nav { display: flex; justify-content: space-around; padding: 8px 16px 16px; border-top: 1px solid var(--bd); background: var(--bg); }
+.nav button { width: 96px; height: 46px; display: grid; place-items: center; color: var(--t3); position: relative; }
+.nav button.on { color: var(--t1); }
+.nav button.on::after { content: ""; position: absolute; bottom: 2px; left: 50%; width: 5px; height: 5px; margin-left: -2.5px; border-radius: 50%; background: var(--acc); }
+
+/* ---------- Today ---------- */
+.date .d1 { font-size: 26px; font-weight: 800; line-height: 1.3; }
+.date .d2 { font-size: 13px; color: var(--t2); }
+.hero { display: flex; align-items: center; gap: 18px; }
+.ring { position: relative; width: 112px; height: 112px; flex: none; }
+.ring svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+.ring .trk { stroke: var(--sf2); }
+.ring .val { stroke: var(--acc); transition: stroke-dashoffset .4s ease; }
+.ring .mid { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; }
+.ring .big { font-size: 36px; font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums; }
+.ring .small { font-size: 12px; color: var(--t2); margin-top: 4px; }
+.week { display: flex; gap: 9px; }
+.wd { width: 13px; height: 13px; border-radius: 50%; background: var(--w0); }
+.wd.l1 { background: var(--w1); } .wd.l2 { background: var(--w2); } .wd.l3 { background: var(--w3); } .wd.l4 { background: var(--w4); }
+.wd.today { box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--acc); }
+.wd.fu { background: transparent; box-shadow: inset 0 0 0 1.5px var(--bd); }
+.strip { display: flex; gap: 10px; overflow-x: auto; margin-inline: -16px; padding-inline: 16px; scrollbar-width: none; }
+.strip::-webkit-scrollbar { display: none; }
+.gmini { flex: none; width: 176px; background: var(--sf); border-radius: 16px; padding: 12px; display: grid; gap: 8px; }
+.gmini .nm { font-size: 14px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.gmini .gi { width: 28px; height: 28px; border-radius: 9px; background: var(--sf2); color: var(--t2); display: grid; place-items: center; flex: none; }
+.times { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; background: var(--sf); border-radius: 18px; padding: 6px; }
+.times button { height: 44px; border-radius: 13px; display: grid; place-items: center; color: var(--t3); position: relative; }
+.times button[aria-pressed="true"] { background: var(--sf2); color: var(--t1); }
+.times button.full::before { content: ""; position: absolute; bottom: 5px; width: 4px; height: 4px; border-radius: 50%; background: var(--acc); }
+.tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.tile { position: relative; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-between; gap: 14px; min-height: 108px; padding: 16px; border-radius: 20px; background: var(--sf); transition: background .15s; }
+.tile .ic { color: var(--t2); }
+.tile .lb { font-size: 15px; font-weight: 600; line-height: 1.4; }
+.tile .cue { font-size: 12px; color: var(--t2); line-height: 1.4; }
+.tile .ok { position: absolute; top: 14px; inset-inline-end: 14px; width: 24px; height: 24px; border-radius: 50%; box-shadow: inset 0 0 0 2px var(--bd); display: grid; place-items: center; }
+.tile .ok .i { opacity: 0; color: var(--on-acc); }
+.tile .gbadge { position: absolute; top: 14px; inset-inline-end: 46px; height: 24px; padding: 0 8px; border-radius: 999px; background: var(--sf2); color: var(--t2); display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 600; }
+.tile .gbadge .i { width: 13px; height: 13px; stroke-width: 2.2; }
+.tile.due { box-shadow: inset 0 0 0 1.5px var(--nt); }
+.tile .tag { position: absolute; bottom: 14px; inset-inline-end: 12px; }
+.tile[aria-pressed="true"] { background: var(--acc-sub); box-shadow: none; }
+.tile[aria-pressed="true"] .ic { color: var(--acc-on); }
+.tile[aria-pressed="true"] .ok { background: var(--acc); box-shadow: none; }
+.tile[aria-pressed="true"] .ok .i { opacity: 1; }
+.tile[aria-pressed="true"] .tag { display: none; }
+.tile[aria-pressed="true"] .gbadge { background: transparent; color: var(--acc-on); }
+.fab { position: absolute; bottom: 86px; inset-inline-start: 16px; height: 52px; padding: 0 18px; border-radius: 16px; background: var(--acc); color: var(--on-acc); display: flex; align-items: center; gap: 8px; font-weight: 700; box-shadow: 0 10px 24px -10px rgba(0,0,0,.6); }
+.softcard { background: var(--sf); border-radius: 16px; padding: 12px 14px; display: flex; align-items: center; gap: 12px; }
+
+/* ---------- Weekly band (range) and chapter path ---------- */
+.band { display: flex; align-items: center; gap: 4px; }
+.band .slot { width: 14px; height: 14px; border-radius: 50%; box-shadow: inset 0 0 0 1.5px var(--bd); flex: none; }
+.band .zone { display: flex; gap: 4px; padding: 3px 4px; margin: -3px -2px; border-radius: 999px; background: var(--sf2); }
+.band .slot.on { background: var(--acc); box-shadow: none; }
+.band .slot.flex { background: var(--sp-sub); box-shadow: inset 0 0 0 1.5px var(--sp); }
+.band.lg .slot { width: 18px; height: 18px; } .band.lg { gap: 6px; } .band.lg .zone { gap: 6px; padding: 4px 5px; }
+.path { display: flex; align-items: center; gap: 0; }
+.path .st { width: 10px; height: 10px; border-radius: 50%; background: var(--sf); box-shadow: inset 0 0 0 1.5px var(--bd); flex: none; position: relative; z-index: 1; }
+.path .st.done { background: var(--acc); box-shadow: none; }
+.path .st.cur { background: var(--bg); box-shadow: inset 0 0 0 2.5px var(--acc); }
+.path .ln { height: 2px; flex: 1; background: var(--bd); min-width: 6px; }
+.path .ln.done { background: var(--acc); }
+.path .gapc { width: 8px; flex: none; }
+.path .flag { color: var(--t3); flex: none; margin-inline-start: 4px; }
+.path.lg .st { width: 16px; height: 16px; } .path.lg .ln { height: 3px; }
+.path.mini .st { width: 7px; height: 7px; } .path.mini .st.cur { box-shadow: inset 0 0 0 2px var(--acc); } .path.mini .ln { min-width: 3px; }
+
+/* ---------- Wall ---------- */
+.wall { flex: 1; background-color: var(--wall); background-image: radial-gradient(var(--wall-dot) 1.2px, transparent 1.4px); background-size: 18px 18px; display: flex; flex-direction: column; gap: 14px; padding: 12px 14px 20px; position: relative; min-height: 0; }
+.wallhead { display: flex; align-items: center; gap: 6px; padding: 6px 8px 8px 8px; background: var(--bg); }
+.notes { display: grid; grid-template-columns: 1fr 1fr; gap: 18px 12px; align-items: start; }
+.note { position: relative; background: var(--note); border-radius: 6px 6px 14px 14px; padding: 18px 12px 12px; display: grid; gap: 8px; box-shadow: 0 1px 0 var(--note-edge), 0 10px 18px -12px var(--pin-shadow); transform: rotate(var(--r, 0deg)); text-align: start; width: 100%; }
+.note::before { content: ""; position: absolute; top: 6px; left: 50%; width: 10px; height: 10px; margin-left: -5px; border-radius: 50%; background: var(--pin); box-shadow: 0 2px 3px var(--pin-shadow); }
+.note.wide { grid-column: span 2; }
+.note .nt-title { font-size: 15px; font-weight: 700; line-height: 1.45; text-wrap: balance; }
+.note .meta { font-size: 11.5px; color: var(--t2); }
+.note .gi { width: 26px; height: 26px; border-radius: 8px; background: var(--sf2); color: var(--t2); display: grid; place-items: center; flex: none; }
+.note.empty { background: transparent; box-shadow: inset 0 0 0 1.5px var(--bd); border: 0; min-height: 150px; place-content: center; text-align: center; color: var(--t2); }
+.note.empty::before { background: var(--bd); box-shadow: none; }
+.note.review { background: var(--acc-sub); }
+.note.review .nt-title { color: var(--acc-on); }
+.note.flipped { background: var(--sf); }
+.later { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.later .slip { background: var(--note); border-radius: 4px; padding: 4px 10px; font-size: 12.5px; color: var(--t2); box-shadow: 0 6px 10px -8px var(--pin-shadow); transform: rotate(var(--r, 0deg)); }
+.weektable { background: var(--bg); border-radius: 14px; padding: 10px 12px; display: grid; gap: 6px; box-shadow: 0 1px 0 var(--note-edge); }
+.weektable .wr { display: grid; grid-template-columns: 74px repeat(7, 1fr); align-items: center; gap: 4px; font-size: 12px; }
+.weektable .wr .nm { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--t2); }
+.weektable .dd { width: 12px; height: 12px; border-radius: 50%; justify-self: center; box-shadow: inset 0 0 0 1.5px var(--bd); }
+.weektable .dd.on { background: var(--acc); box-shadow: none; }
+.weektable .dd.none { box-shadow: none; background: transparent; }
+.weektable .dd.none::after { content: ""; display: block; width: 4px; height: 4px; margin: 4px; border-radius: 50%; background: var(--bd); }
+.weektable .dd.flex { background: var(--sp-sub); box-shadow: inset 0 0 0 1.5px var(--sp); }
+.weektable .dd.today { box-shadow: 0 0 0 2px var(--bg), 0 0 0 3.5px var(--acc); }
+.weektable .hd { font-size: 10.5px; color: var(--t3); text-align: center; font-weight: 600; }
+.mbar { height: 6px; border-radius: 999px; background: var(--sf2); overflow: hidden; }
+.mbar i { display: block; height: 100%; background: var(--acc); border-radius: 999px; margin-inline-start: 0; }
+
+/* ---------- Goal detail ---------- */
+.sect { display: grid; gap: 10px; }
+.sect h3 { margin: 0; font-size: 13px; font-weight: 600; color: var(--t2); }
+.why { font-size: 14px; color: var(--t2); line-height: 1.6; }
+.why::before { content: "«"; } .why::after { content: "»"; }
+.wkrow { display: flex; align-items: center; gap: 10px; padding: 6px 0; }
+.wkrow .wl { width: 64px; flex: none; font-size: 12.5px; color: var(--t2); }
+.wkrow .chip { margin-inline-start: auto; }
+.ms { display: flex; gap: 10px; align-items: flex-start; padding: 8px 0; }
+.ms .mk { width: 20px; height: 20px; border-radius: 50%; box-shadow: inset 0 0 0 1.5px var(--bd); flex: none; margin-top: 2px; display: grid; place-items: center; }
+.ms .mk.cur { box-shadow: inset 0 0 0 2px var(--acc); }
+.ms .mk.done { background: var(--acc); box-shadow: none; color: var(--on-acc); }
+.ms .mk.unsure { box-shadow: inset 0 0 0 1.5px var(--bd); border: 0; background: repeating-linear-gradient(45deg, transparent 0 3px, var(--sf2) 3px 5px); }
+.rate { display: flex; gap: 6px; }
+.rate i { width: 22px; height: 8px; border-radius: 999px; background: var(--sf2); }
+.rate i.on { background: var(--acc-on); }
+.chart svg { display: block; width: 100%; height: auto; }
+.chart text { fill: var(--t3); font-family: var(--font-ui); font-size: 11px; }
+.chart .gl { stroke: var(--bd); }
+.chart .dt { fill: var(--acc-on); }
+.chart .ghost { stroke: var(--bd); stroke-dasharray: 4 5; fill: none; stroke-width: 2; }
+
+/* ---------- Flow ---------- */
+.dashes { display: flex; gap: 5px; flex: 1; justify-content: center; }
+.dashes i { width: 18px; height: 4px; border-radius: 999px; background: var(--sf2); }
+.dashes i.on { background: var(--acc); }
+.q { font-size: 22px; font-weight: 800; line-height: 1.55; text-wrap: balance; }
+.hint { font-size: 14px; color: var(--t2); line-height: 1.7; }
+.field { background: var(--sf); border-radius: 14px; padding: 14px 16px; font-size: 16px; font-weight: 500; line-height: 1.6; box-shadow: inset 0 0 0 1.5px var(--bd); min-height: 56px; }
+.field.focus { box-shadow: inset 0 0 0 2px var(--acc); }
+.field .ph { color: var(--t3); }
+.field .blank { color: var(--acc-on); border-bottom: 1.5px dashed var(--acc-on); padding: 0 2px; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.pick { height: 38px; padding: 0 14px; border-radius: 999px; background: var(--sf); box-shadow: inset 0 0 0 1.5px var(--bd); font-size: 14px; font-weight: 500; display: inline-flex; align-items: center; gap: 6px; }
+.pick[aria-pressed="true"] { background: var(--acc-sub); color: var(--acc-on); box-shadow: none; }
+.suggest { background: var(--sf2); border-radius: 14px; padding: 12px 14px; display: grid; gap: 8px; font-size: 14px; line-height: 1.65; }
+.suggest .acts { display: flex; gap: 16px; font-weight: 700; font-size: 14px; }
+.stepper { display: flex; align-items: center; justify-content: space-between; background: var(--sf); border-radius: 16px; padding: 10px 12px; }
+.stepper .num { font-size: 34px; font-weight: 800; min-width: 54px; text-align: center; font-variant-numeric: tabular-nums; }
+.stepper .pm { width: 44px; height: 44px; border-radius: 50%; background: var(--sf2); display: grid; place-items: center; }
+.mrow { display: flex; gap: 12px; align-items: flex-start; }
+.mrow .mn { width: 52px; flex: none; font-size: 12.5px; font-weight: 600; color: var(--t2); padding-top: 14px; }
+.mrow .field { flex: 1; font-size: 14.5px; min-height: 48px; padding: 11px 14px; }
+.summary { background: var(--sf); border-radius: 18px; padding: 16px; display: grid; gap: 10px; }
+.summary .ln2 { display: flex; gap: 10px; font-size: 14px; line-height: 1.6; }
+.summary .ln2 .k { width: 64px; flex: none; color: var(--t3); font-size: 12.5px; padding-top: 2px; }
+
+/* ---------- Dashboard ---------- */
+.cell { display: block; width: 10px; height: 10px; border-radius: 2px; background: var(--w0); }
+.cell.l1 { background: var(--w1); } .cell.l2 { background: var(--w2); } .cell.l3 { background: var(--w3); } .cell.l4 { background: var(--w4); }
+.cell.sp { background: var(--sp); }
+.cell.fu { background: transparent; box-shadow: inset 0 0 0 1px var(--bd); }
+.cell.pre { background: transparent; outline: 1px dotted var(--t3); outline-offset: -1px; }
+.cell.today { outline: 1px solid var(--acc); outline-offset: 1px; }
+.cell.m { width: 22px; height: 22px; border-radius: 5px; }
+.journey { display: grid; grid-template-rows: repeat(7, 10px); grid-auto-flow: column; grid-auto-columns: 10px; gap: 3px; width: max-content; margin: 0 auto; direction: rtl; }
+.legend { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-size: 12px; color: var(--t3); }
+.wrow { display: flex; align-items: center; gap: 8px; padding: 8px; border-radius: 12px; }
+.wrow.cur { background: var(--sf); }
+.wrow .wdays { display: flex; gap: 3px; }
+.wrow .chip { margin-inline-start: auto; }
+
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+    <symbol id="i-today" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12.3l2.8 2.8L16.2 9.6"/></symbol>
+    <symbol id="i-pin" viewBox="0 0 24 24"><path d="M9 3h6l-1 6 4 4H6l4-4-1-6z"/><path d="M12 13v8"/></symbol>
+    <symbol id="i-grid" viewBox="0 0 24 24"><rect x="4" y="4" width="6" height="6" rx="1.2"/><rect x="14" y="4" width="6" height="6" rx="1.2"/><rect x="4" y="14" width="6" height="6" rx="1.2"/><rect x="14" y="14" width="6" height="6" rx="1.2"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
+    <symbol id="i-back" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+    <symbol id="i-more" viewBox="0 0 24 24"><circle cx="12" cy="5.5" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="12" cy="18.5" r="1.2"/></symbol>
+    <symbol id="i-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2.8v2.4M12 18.8v2.4M4.2 7.5l2.1 1.2M17.7 15.3l2.1 1.2M4.2 16.5l2.1-1.2M17.7 8.7l2.1-1.2"/><circle cx="12" cy="12" r="7"/></symbol>
+    <symbol id="i-leaf" viewBox="0 0 24 24"><path d="M5 19c0-8 5-13 14-14-1 9-6 14-14 14z"/><path d="M5 19l7-7"/></symbol>
+    <symbol id="i-sunrise" viewBox="0 0 24 24"><path d="M4 18h16M7 18a5 5 0 0110 0M12 6v3M5.6 10.6l1.6 1.6M18.4 10.6l-1.6 1.6"/></symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M5.6 18.4L7 17M17 7l1.4-1.4"/></symbol>
+    <symbol id="i-sunset" viewBox="0 0 24 24"><path d="M4 18h16M7 18a5 5 0 0110 0M12 4v4M10 6l2 2 2-2"/></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24"><path d="M19 14.5A7.5 7.5 0 019.5 5a7.5 7.5 0 109.5 9.5z"/></symbol>
+    <symbol id="i-book" viewBox="0 0 24 24"><path d="M4 5.5A2.5 2.5 0 016.5 3H20v15H6.5A2.5 2.5 0 004 20.5z"/><path d="M4 20.5A2.5 2.5 0 006.5 23H20v-5"/></symbol>
+    <symbol id="i-run" viewBox="0 0 24 24"><circle cx="14" cy="4.5" r="1.8"/><path d="M7 21l3-5 3 2 1-5 3 3h3M10 11l3-3 3 2"/></symbol>
+    <symbol id="i-pen" viewBox="0 0 24 24"><path d="M4 20l4-1 11-11-3-3L5 16z"/><path d="M14 6l3 3"/></symbol>
+    <symbol id="i-drop" viewBox="0 0 24 24"><path d="M12 3s6 6.5 6 11a6 6 0 01-12 0c0-4.5 6-11 6-11z"/></symbol>
+    <symbol id="i-brush" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="7" rx="2"/><path d="M12 10v11"/></symbol>
+    <symbol id="i-shower" viewBox="0 0 24 24"><path d="M5 20V8a4 4 0 018 0"/><path d="M10 12h6M11 15v1M14 15v1M17 15v1M11 18v1M14 18v1M17 18v1"/></symbol>
+    <symbol id="i-flag" viewBox="0 0 24 24"><path d="M5 21V4M5 4h11l-2 4 2 4H5"/></symbol>
+    <symbol id="i-cal" viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/></symbol>
+    <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></symbol>
+  </defs>
+</svg>
+
+<div class="wrap" dir="ltr">
+  <div class="bar">
+    <span>Theme</span>
+    <button type="button" id="th-sys" data-th="" aria-pressed="true">System</button>
+    <button type="button" id="th-dark" data-th="dark" aria-pressed="false">Dark</button>
+    <button type="button" id="th-light" data-th="light" aria-pressed="false">Light</button>
+    <nav aria-label="Sections">
+      <a href="#today">Today</a><a href="#wall">Wall</a><a href="#goal">Goal</a><a href="#flow">Set a goal</a><a href="#dash">Dashboard</a>
+    </nav>
+  </div>
+
+  <header class="intro">
+    <h1>پیکر v1.0: to-do + goals</h1>
+    <p>First mockups for the new identity (D148–D162). The look is the app's own (tokens, Estedad, tiles) with no character (D159). Two tabs only: <b>Today</b> and <b>Goals</b> (D160). The Goals tab is a <b>wall</b> with goals pinned to it like notes (D161). The dashboard grid is a screen behind the wall's grid button, and it only appears once a goal exists. Goals, dates and numbers are examples, not your data. Tap the tiles on Today to tick them.</p>
+    <ul>
+      <li><b>Pick one:</b> how the wall shows the week and the month (W1, W2 or W3 below).</li>
+      <li><b>Open:</b> where the weekly review lives without a Week tab. The mockup pins it to the wall on Friday as its own note (W1).</li>
+    </ul>
+  </header>
+
+  <div class="gallery" dir="ltr">
+
+    <!-- ================= TODAY ================= -->
+    <div class="group-title" id="today">Today (to-do, with goal actions)</div>
+
+    <figure>
+      <div class="phone" dir="rtl" id="ph-today">
+        <div class="status"><span>۱۹:۴۲</span><span>۸۵٪</span></div>
+        <div class="topbar">
+          <div class="date grow" style="padding-inline-start:8px">
+            <div class="d1">چهارشنبه</div>
+            <div class="d2"><bdi>۲۹ مهر ۱۴۰۵</bdi> · <bdi>۲۱ اکتبر ۲۰۲۶</bdi></div>
+          </div>
+          <button class="icon-btn" aria-label="روز حداقلی"><svg class="i"><use href="#i-leaf"/></svg></button>
+          <button class="icon-btn" aria-label="تنظیمات"><svg class="i"><use href="#i-gear"/></svg></button>
+        </div>
+        <div class="body" style="padding-bottom:84px">
+          <div class="hero">
+            <div class="ring">
+              <svg viewBox="0 0 160 160"><circle class="trk" cx="80" cy="80" r="70" fill="none" stroke-width="13"/><circle class="val" id="ring-val" cx="80" cy="80" r="70" fill="none" stroke-width="13" stroke-linecap="round" stroke-dasharray="439.8" stroke-dashoffset="195.5"/></svg>
+              <div class="mid"><div class="big" id="ring-big">۵</div><div class="small">از ۹</div></div>
+            </div>
+            <div class="col" style="gap:10px">
+              <div class="t-lbl c2">این هفته</div>
+              <div class="week" aria-label="این هفته"><i class="wd l3"></i><i class="wd l4"></i><i class="wd l2"></i><i class="wd l3"></i><i class="wd today l2"></i><i class="wd fu"></i><i class="wd fu"></i></div>
+              <div class="t-cap c3">شنبه ← جمعه</div>
+            </div>
+          </div>
+
+          <div class="strip" aria-label="هدف‌ها">
+            <div class="gmini">
+              <div class="row" style="gap:8px"><span class="gi"><svg class="i sm"><use href="#i-book"/></svg></span><span class="nm grow">آیلتس ۷</span></div>
+              <div class="band"><i class="slot on"></i><i class="slot on"></i><i class="slot on"></i><span class="zone"><i class="slot"></i><i class="slot"></i><i class="slot"></i></span></div>
+              <div class="t-cap c2">۳ جلسه · برنامه ۴ تا ۶</div>
+            </div>
+            <div class="gmini">
+              <div class="row" style="gap:8px"><span class="gi"><svg class="i sm"><use href="#i-run"/></svg></span><span class="nm grow">۵ کیلومتر بی‌وقفه</span></div>
+              <div class="band"><i class="slot on"></i><span class="zone"><i class="slot on"></i><i class="slot"></i></span></div>
+              <div class="t-cap cacc">این هفته توی برنامه‌ای</div>
+            </div>
+            <div class="gmini">
+              <div class="row" style="gap:8px"><span class="gi"><svg class="i sm"><use href="#i-pen"/></svg></span><span class="nm grow">پورتفولیو</span></div>
+              <div class="band"><span class="zone"><i class="slot"></i><i class="slot"></i></span></div>
+              <div class="t-cap c2">برنامه ۱ تا ۲</div>
+            </div>
+          </div>
+
+          <div class="times" role="group" aria-label="بخش روز">
+            <button class="full" aria-label="صبح"><svg class="i"><use href="#i-sunrise"/></svg></button>
+            <button class="full" aria-label="ظهر"><svg class="i"><use href="#i-sun"/></svg></button>
+            <button aria-pressed="true" aria-label="عصر"><svg class="i"><use href="#i-sunset"/></svg></button>
+            <button aria-label="شب"><svg class="i"><use href="#i-moon"/></svg></button>
+          </div>
+
+          <div class="tiles">
+            <button class="tile js-tick" aria-pressed="false">
+              <span class="ok"><svg class="i xs"><use href="#i-check"/></svg></span>
+              <span class="gbadge"><svg class="i"><use href="#i-book"/></svg>آیلتس</span>
+              <svg class="i ic"><use href="#i-book"/></svg>
+              <span class="col"><span class="lb">یه جلسه‌ی ۲۵ دقیقه‌ای</span><span class="cue">بعد از شام، پشت میز</span></span>
+            </button>
+            <button class="tile js-tick" aria-pressed="true">
+              <span class="ok"><svg class="i xs"><use href="#i-check"/></svg></span>
+              <span class="gbadge"><svg class="i"><use href="#i-run"/></svg>۵ کیلومتر</span>
+              <svg class="i ic"><use href="#i-run"/></svg>
+              <span class="col"><span class="lb">پیاده‌روی و دو</span><span class="cue">بعد از کار، ۲۰ دقیقه</span></span>
+            </button>
+            <button class="tile js-tick due" aria-pressed="false">
+              <span class="ok"><svg class="i xs"><use href="#i-check"/></svg></span>
+              <svg class="i ic"><use href="#i-shower"/></svg>
+              <span class="lb">دوش</span>
+              <span class="tag chip nt">موعدش رسیده</span>
+            </button>
+            <button class="tile js-tick" aria-pressed="false">
+              <span class="ok"><svg class="i xs"><use href="#i-check"/></svg></span>
+              <svg class="i ic"><use href="#i-drop"/></svg>
+              <span class="lb">آب</span>
+            </button>
+          </div>
+        </div>
+        <button class="fab"><svg class="i"><use href="#i-plus"/></svg>کار جدید</button>
+        <nav class="nav" aria-label="تب‌ها"><button class="on" aria-label="امروز"><svg class="i"><use href="#i-today"/></svg></button><button aria-label="هدف‌ها"><svg class="i"><use href="#i-pin"/></svg></button></nav>
+      </div>
+      <figcaption><b>Today, with goals</b>The to-do list is unchanged: the ring (smaller, to make room), the week dots, the parts of the day, one-tap tiles and «کار جدید». New: a goal strip under the ring (one small card per active goal, swiped sideways, this week's range as dots). A goal's daily action is a normal tile with the goal as a small badge and its cue as the second line. The header loses «هفته N از ۲۳», and the character row is gone. Long-press a goal tile to add an amount or a note.</figcaption>
+    </figure>
+
+    <figure>
+      <div class="phone" dir="rtl">
+        <div class="status"><span>۱۹:۴۲</span><span>۸۵٪</span></div>
+        <div class="topbar">
+          <div class="date grow" style="padding-inline-start:8px">
+            <div class="d1">جمعه</div>
+            <div class="d2"><bdi>۱ آبان ۱۴۰۵</bdi> · <bdi>۲۳ اکتبر ۲۰۲۶</bdi></div>
+          </div>
+          <button class="icon-btn" aria-label="روز حداقلی"><svg class="i"><use href="#i-leaf"/></svg></button>
+          <button class="icon-btn" aria-label="تنظیمات"><svg class="i"><use href="#i-gear"/></svg></button>
+        </div>
+        <div class="body" style="padding-bottom:84px">
+          <div class="softcard">
+            <span class="gi" style="width:36px;height:36px;border-radius:11px;background:var(--acc-sub);color:var(--acc-on);display:grid;place-items:center;flex:none"><svg class="i sm"><use href="#i-pin"/></svg></span>
+            <div class="grow col"><span class="t-strong">مرور هفته آماده‌ست</span><span class="t-cap c2">۵ دقیقه · روی دیوار</span></div>
+            <svg class="i sm c3" style="transform:scaleX(-1)"><use href="#i-back"/></svg>
+          </div>
+          <div class="softcard" style="align-items:flex-start">
+            <span class="gi" style="width:36px;height:36px;border-radius:11px;background:var(--sf2);color:var(--t2);display:grid;place-items:center;flex:none"><svg class="i sm"><use href="#i-pen"/></svg></span>
+            <div class="grow col" style="gap:8px">
+              <span class="t-strong">خوش برگشتی. امروز نسخه‌ی کوچیکش؟</span>
+              <span class="t-cap c2">پورتفولیو: ۱۵ دقیقه روی یه کار</span>
+              <div class="row" style="gap:18px"><button class="t-lbl cacc" style="font-weight:700">آره، کوچیکش</button><button class="t-lbl c2">الان نه</button></div>
+            </div>
+          </div>
+          <div class="softcard" style="align-items:flex-start">
+            <span class="gi" style="width:36px;height:36px;border-radius:11px;background:var(--sf2);color:var(--t2);display:grid;place-items:center;flex:none"><svg class="i sm"><use href="#i-book"/></svg></span>
+            <div class="grow col" style="gap:8px">
+              <span class="t-strong">هفته‌ی «آیلتس» چطور پیش می‌ره؟</span>
+              <div class="chips"><button class="pick">خوبه</button><button class="pick">یه کم سخته</button><button class="pick">باید عوضش کنم</button></div>
+            </div>
+          </div>
+          <div class="t-cap c3" style="text-align:center">در عمل فقط یکی از این کارت‌ها نشون داده می‌شه.</div>
+        </div>
+        <button class="fab"><svg class="i"><use href="#i-plus"/></svg>کار جدید</button>
+        <nav class="nav" aria-label="تب‌ها"><button class="on" aria-label="امروز"><svg class="i"><use href="#i-today"/></svg></button><button aria-label="هدف‌ها"><svg class="i"><use href="#i-pin"/></svg></button></nav>
+      </div>
+      <figcaption><b>Today's goal cards</b>The three goal cards that can sit above the tiles, shown together here only to compare them. In the app it's one card at a time (the existing queue). The review card on Friday. «خوش برگشتی» after 2 missed days on a goal, offering the backup version, at most once a week. The midweek check (Tue/Wed) appears only when a goal had no log for 2 days or its pace is under the low end.</figcaption>
+    </figure>
+
+    <!-- ================= WALL ================= -->
+    <div class="group-title" id="wall">The goals wall (D161), three ways to show the week and the month</div>
+
+    <figure>
+      <div class="phone" dir="rtl">
+        <div class="status"><span>۱۹:۴۲</span><span>۸۵٪</span></div>
+        <div class="wallhead">
+          <div class="grow" style="padding-inline-start:8px"><div class="t-head">هدف‌ها</div></div>
+          <button class="icon-btn" aria-label="داشبورد"><svg class="i"><use href="#i-grid"/></svg></button>
+          <button class="icon-btn" aria-label="هدف تازه"><svg class="i"><use href="#i-plus"/></svg></button>
+        </div>
+        <div class="wall">
+          <div class="notes">
+            <button class="note wide review" style="--r:-.6deg">
+              <div class="row between"><span class="nt-title">مرور هفته‌ی ۲ <span class="chip acc" style="vertical-align:middle;background:var(--bg)">۵ دقیقه</span></span><svg class="i sm cacc" style="transform:scaleX(-1)"><use href="#i-back"/></svg></div>
+              <span class="meta" style="color:var(--acc-on)">جمعه تا شنبه روی دیوار می‌مونه</span>
+            </button>
+            <button class="note" style="--r:-1.4deg">
+              <div class="row" style="gap:8px"><span class="gi"><svg class="i sm"><use href="#i-book"/></svg></span><span class="meta">تا ۳۱ خرداد</span></div>
+              <span class="nt-title">آیلتس ۷ بگیرم</span>
+              <div class="path mini"><i class="st done"></i><i class="ln"></i><i class="st cur"></i><i class="ln"></i><i class="st"></i><i class="ln"></i><i class="st"></i><i class="ln"></i><i class="st"></i><i class="ln"></i><i class="st"></i><i class="ln"></i><i class="st"></i><i class="ln"></i><i class="st"></i><svg class="i xs flag"><use href="#i-flag"/></svg></div>
+              <span class="meta">ماه ۱ از ۸ · مهر–آبان</span>
+              <div class="band"><i class="slot on"></i><i class="slot on"></i><i class="slot on"></i><span class="zone"><i class="slot"></i><i class="slot"></i><i class="slot"></i></span></div>
+              <span class="meta">این هفته ۳ · برنامه ۴ تا ۶</span>
+            </button>
+            <button class="note" style="--r:1.2deg">
+              <div class="row" style="gap:8px"><span class="gi"><svg class="i sm"><use href="#i-run"/></svg></span><span class="meta">تا نوروز</span></div>
+              <span class="nt-title">۵ کیلومتر بی‌وقفه بدوم</span>
+              <div class="path mini"><i class="st cur"></i><i class="ln"></i><i class="st"></i><i class="ln"></i><i class="st"></i><i class="ln"></i><i class="st"></i><i class="ln"></i><i class="st"></i><svg class="i xs flag"><use href="#i-flag"/></svg></div>
+              <span class="meta">ماه ۱ از ۵ · مهر–آبان</span>
+              <div class="band"><i class="slot on"></i><span class="zone"><i class="slot on"></i><i class="slot"></i></span></div>
+              <span class="meta" style="color:var(--acc-on)">این هفته توی برنامه‌ای</span>
+            </button>
+            <button class="note" style="--r:.8deg">
+              <div class="row" style="gap:8px"><span class="gi"><svg class="i sm"><use href="#i-pen"/></svg></span><span class="meta">تا ۳۰ دی</span></div>
+              <span class="nt-title">پورتفولیو: ۸ کار</span>
+              <div class="path mini"><i class="st done"></i><i class="ln done"></i><i class="st done"></i><i class="ln"></i><i class="st cur"></i><i class="ln"></i><i class="st"></i><i class="ln"></i><i class="st"></i><i class="ln"></i><i class="st"></i><i class="ln"></i><i class="st"></i><i class="ln"></i><i class="st"></i><svg class="i xs flag"><use href="#i-flag"/></svg></div>
+              <span class="meta">۲ از ۸ کار</span>
+              <div class="band"><span class="zone"><i class="slot"></i><i class="slot"></i></span></div>
+              <span class="meta">این هفته · برنامه ۱ تا ۲</span>
+            </button>
+            <button class="note" style="--r:-1deg">
+              <div class="row" style="gap:8px"><span class="gi"><svg class="i sm"><use href="#i-drop"/></svg></span><span class="meta">۴ هفته · کوتاه</span></div>
+              <span class="nt-title">روزی ۸ لیوان آب</span>
+              <div class="path mini"><i class="st done"></i><i class="ln done"></i><i class="st cur"></i><i class="ln"></i><i class="st"></i><i class="ln"></i><i class="st"></i><svg class="i xs flag"><use href="#i-flag"/></svg></div>
+              <span class="meta">هفته‌ی ۲ از ۴</span>
+              <div class="band"><i class="slot on"></i><i class="slot on"></i><i class="slot on"></i><i class="slot flex"></i><span class="zone"><i class="slot"></i><i class="slot"></i><i class="slot"></i></span></div>
+              <span class="meta">۳ روز + ۱ انعطاف · برنامه ۵ تا ۷</span>
+            </button>
+          </div>
+          <div class="later"><span class="t-lbl c2">بعداً · ۲</span><span class="slip" style="--r:-2deg">گیتار</span><span class="slip" style="--r:1.5deg">سفر شمال</span></div>
+        </div>
+        <nav class="nav" aria-label="تب‌ها"><button aria-label="امروز"><svg class="i"><use href="#i-today"/></svg></button><button class="on" aria-label="هدف‌ها"><svg class="i"><use href="#i-pin"/></svg></button></nav>
+      </div>
+      <figcaption><b>W1 · Each note shows both</b>Every pinned goal carries its whole path (one station per month, the finish flag on the left; a short goal has one per week, a project one per milestone) and this week's range: done dots, then the low-to-high zone. The most information, and the busiest notes. On Friday the weekly review pins itself across the top and stays until Saturday. «بعداً» ideas are small slips at the bottom.</figcaption>
+    </figure>
+
+    <figure>
+      <div class="phone" dir="rtl">
+        <div class="status"><span>۱۹:۴۲</span><span>۸۵٪</span></div>
+        <div class="wallhead">
+          <div class="grow" style="padding-inline-start:8px"><div class="t-head">هدف‌ها</div></div>
+          <button class="icon-btn" aria-label="داشبورد"><svg class="i"><use href="#i-grid"/></svg></button>
+          <button class="icon-btn" aria-label="هدف تازه"><svg class="i"><use href="#i-plus"/></svg></button>
+        </div>
+        <div class="wall">
+          <div class="notes">
+            <button class="note" style="--r:-1.4deg">
+              <div class="row" style="gap:8px"><span class="gi"><svg class="i sm"><use href="#i-book"/></svg></span><span class="meta">مهر–آبان</span></div>
+              <span class="nt-title">آیلتس ۷ بگیرم</span>
+              <span class="meta" style="color:var(--t1);font-size:13px;line-height:1.55">این ماه: تست تشخیصی، لغت، هفته‌ای یه رایتینگ</span>
+              <div class="mbar"><i style="width:28%"></i></div>
+              <span class="meta">ماه ۱ از ۸</span>
+            </button>
+            <button class="note flipped" style="--r:1.2deg">
+              <div class="row between"><span class="meta">این هفته · ۵ کیلومتر</span><svg class="i xs c3"><use href="#i-run"/></svg></div>
+              <span class="nt-title" style="font-size:14px">پیاده‌روی و دو ۲۰ دقیقه</span>
+              <div class="band lg"><i class="slot on"></i><span class="zone"><i class="slot on"></i><i class="slot"></i></span></div>
+              <span class="meta" style="color:var(--acc-on)">۲ جلسه · توی برنامه</span>
+              <span class="meta">بعد از کار</span>
+            </button>
+            <button class="note" style="--r:.8deg">
+              <div class="row" style="gap:8px"><span class="gi"><svg class="i sm"><use href="#i-pen"/></svg></span><span class="meta">مهر–آبان</span></div>
+              <span class="nt-title">پورتفولیو: ۸ کار</span>
+              <span class="meta" style="color:var(--t1);font-size:13px;line-height:1.55">این ماه: ۳ کار و پروفایل روی ۲ سایت</span>
+              <div class="mbar"><i style="width:66%"></i></div>
+              <span class="meta">۲ از ۳ کار این ماه</span>
+            </button>
+            <button class="note" style="--r:-1deg">
+              <div class="row" style="gap:8px"><span class="gi"><svg class="i sm"><use href="#i-drop"/></svg></span><span class="meta">۴ هفته</span></div>
+              <span class="nt-title">روزی ۸ لیوان آب</span>
+              <span class="meta" style="color:var(--t1);font-size:13px;line-height:1.55">کل هدف: ۴ هفته، هفته‌ای ۵ تا ۷ روز</span>
+              <div class="mbar"><i style="width:40%"></i></div>
+              <span class="meta">هفته‌ی ۲ از ۴</span>
+            </button>
+          </div>
+          <div class="t-cap c3" style="text-align:center">یه یادداشت رو لمس کن تا برگرده و هفته رو نشون بده</div>
+          <div class="later"><span class="t-lbl c2">بعداً · ۲</span><span class="slip" style="--r:-2deg">گیتار</span><span class="slip" style="--r:1.5deg">سفر شمال</span></div>
+        </div>
+        <nav class="nav" aria-label="تب‌ها"><button aria-label="امروز"><svg class="i"><use href="#i-today"/></svg></button><button class="on" aria-label="هدف‌ها"><svg class="i"><use href="#i-pin"/></svg></button></nav>
+      </div>
+      <figcaption><b>W2 · Month on the front, week on the back</b>The front of a note is this month's milestone in your own words, with a progress bar. A tap flips the note to its back: this week's action, cue and range (the second note is flipped). Holding it opens the goal. The wall stays calm, and the week is one tap away. Of the three, this one is the most like a real note on a wall.</figcaption>
+    </figure>
+
+    <figure>
+      <div class="phone" dir="rtl">
+        <div class="status"><span>۱۹:۴۲</span><span>۸۵٪</span></div>
+        <div class="wallhead">
+          <div class="grow" style="padding-inline-start:8px"><div class="t-head">هدف‌ها</div></div>
+          <button class="icon-btn" aria-label="داشبورد"><svg class="i"><use href="#i-grid"/></svg></button>
+          <button class="icon-btn" aria-label="هدف تازه"><svg class="i"><use href="#i-plus"/></svg></button>
+        </div>
+        <div class="wall">
+          <div class="weektable" aria-label="این هفته">
+            <div class="row between"><span class="t-lbl">هفته‌ی ۲، ۲۵ مهر تا ۱ آبان</span><span class="t-cap c3">۲ روز مونده</span></div>
+            <div class="wr"><span></span><span class="hd">ش</span><span class="hd">ی</span><span class="hd">د</span><span class="hd">س</span><span class="hd">چ</span><span class="hd">پ</span><span class="hd">ج</span></div>
+            <div class="wr"><span class="nm">آیلتس</span><i class="dd on"></i><i class="dd on"></i><i class="dd none"></i><i class="dd on"></i><i class="dd today"></i><i class="dd"></i><i class="dd"></i></div>
+            <div class="wr"><span class="nm">۵ کیلومتر</span><i class="dd on"></i><i class="dd none"></i><i class="dd none"></i><i class="dd none"></i><i class="dd on today"></i><i class="dd none"></i><i class="dd"></i></div>
+            <div class="wr"><span class="nm">پورتفولیو</span><i class="dd none"></i><i class="dd none"></i><i class="dd none"></i><i class="dd none"></i><i class="dd none today"></i><i class="dd"></i><i class="dd"></i></div>
+            <div class="wr"><span class="nm">آب</span><i class="dd on"></i><i class="dd on"></i><i class="dd flex"></i><i class="dd on"></i><i class="dd today"></i><i class="dd"></i><i class="dd"></i></div>
+          </div>
+          <div class="notes">
+            <button class="note" style="--r:-1.4deg">
+              <div class="row" style="gap:8px"><span class="gi"><svg class="i sm"><use href="#i-book"/></svg></span><span class="meta">تا ۳۱ خرداد</span></div>
+              <span class="nt-title">آیلتس ۷ بگیرم</span>
+              <div class="path mini"><i class="st done"></i><i class="ln"></i><i class="st cur"></i><i class="ln"></i><i class="st"></i><i class="ln"></i><i class="st"></i><i class="ln"></i><i class="st"></i><i class="ln"></i><i class="st"></i><i class="ln"></i><i class="st"></i><i class="ln"></i><i class="st"></i><svg class="i xs flag"><use href="#i-flag"/></svg></div>
+              <span class="meta">ماه ۱ از ۸</span>
+            </button>
+            <button class="note" style="--r:1.2deg">
+              <div class="row" style="gap:8px"><span class="gi"><svg class="i sm"><use href="#i-run"/></svg></span><span class="meta">تا نوروز</span></div>
+              <span class="nt-title">۵ کیلومتر بی‌وقفه بدوم</span>
+              <div class="path mini"><i class="st cur"></i><i class="ln"></i><i class="st"></i><i class="ln"></i><i class="st"></i><i class="ln"></i><i class="st"></i><i class="ln"></i><i class="st"></i><svg class="i xs flag"><use href="#i-flag"/></svg></div>
+              <span class="meta">ماه ۱ از ۵</span>
+            </button>
+            <button class="note" style="--r:.8deg">
+              <div class="row" style="gap:8px"><span class="gi"><svg class="i sm"><use href="#i-pen"/></svg></span><span class="meta">تا ۳۰ دی</span></div>
+              <span class="nt-title">پورتفولیو: ۸ کار</span>
+              <div class="path mini"><i class="st done"></i><i class="ln done"></i><i class="st done"></i><i class="ln"></i><i class="st cur"></i><i class="ln"></i><i class="st"></i><i class="ln"></i><i class="st"></i><i class="ln"></i><i class="st"></i><i class="ln"></i><i class="st"></i><i class="ln"></i><i class="st"></i><svg class="i xs flag"><use href="#i-flag"/></svg></div>
+              <span class="meta">۲ از ۸ کار</span>
+            </button>
+            <button class="note" style="--r:-1deg">
+              <div class="row" style="gap:8px"><span class="gi"><svg class="i sm"><use href="#i-drop"/></svg></span><span class="meta">۴ هفته</span></div>
+              <span class="nt-title">روزی ۸ لیوان آب</span>
+              <div class="path mini"><i class="st done"></i><i class="ln done"></i><i class="st cur"></i><i class="ln"></i><i class="st"></i><i class="ln"></i><i class="st"></i><svg class="i xs flag"><use href="#i-flag"/></svg></div>
+              <span class="meta">هفته‌ی ۲ از ۴</span>
+            </button>
+          </div>
+        </div>
+        <nav class="nav" aria-label="تب‌ها"><button aria-label="امروز"><svg class="i"><use href="#i-today"/></svg></button><button class="on" aria-label="هدف‌ها"><svg class="i"><use href="#i-pin"/></svg></button></nav>
+      </div>
+      <figcaption><b>W3 · One week board above the notes</b>The week is shown once for every goal: a 7-day board pinned above the notes (Saturday on the right, today ringed, a small dot where nothing was due, empty circles for days still ahead). The notes keep only the long path. Good for comparing goals at a glance. It gets tall with many goals and hides the ranges.</figcaption>
+    </figure>
+
+    <figure>
+      <div class="phone" dir="rtl">
+        <div class="status"><span>۱۹:۴۲</span><span>۸۵٪</span></div>
+        <div class="wallhead">
+          <div class="grow" style="padding-inline-start:8px"><div class="t-head">هدف‌ها</div></div>
+          <button class="icon-btn" aria-label="هدف تازه"><svg class="i"><use href="#i-plus"/></svg></button>
+        </div>
+        <div class="wall" style="justify-content:center">
+          <div class="notes">
+            <div class="note empty wide" style="--r:-1deg;min-height:220px;gap:14px">
+              <span class="t-title" style="color:var(--t1)">دیوارت هنوز خالیه</span>
+              <span class="t-lbl c2" style="line-height:1.7">یه هدف بچسبون: یه چیزی که دوست داری تا یه تاریخ واقعیت شده باشه.</span>
+            </div>
+          </div>
+          <div class="foot" style="margin-top:8px"><button class="btn pri"><svg class="i"><use href="#i-plus"/></svg>اولین هدفم</button><button class="btn ghost">فقط یه ایده، بعداً</button></div>
+        </div>
+        <nav class="nav" aria-label="تب‌ها"><button aria-label="امروز"><svg class="i"><use href="#i-today"/></svg></button><button class="on" aria-label="هدف‌ها"><svg class="i"><use href="#i-pin"/></svg></button></nav>
+      </div>
+      <figcaption><b>The empty wall</b>Before the first goal: an empty pinned outline and two ways in, the full flow or a quick «بعداً» idea (title only). There's no grid button yet: the dashboard appears once a goal exists (D160). Today works as a plain to-do list in the meantime.</figcaption>
+    </figure>
+
+    <!-- ================= GOAL DETAIL ================= -->
+    <div class="group-title" id="goal">A goal, opened from the wall (monitoring)</div>
+
+    <figure>
+      <div class="phone" dir="rtl">
+        <div class="status"><span>۱۹:۴۲</span><span>۸۵٪</span></div>
+        <div class="topbar">
+          <button class="icon-btn" aria-label="برگشت"><svg class="i"><use href="#i-back"/></svg></button>
+          <div class="grow"></div>
+          <button class="icon-btn" aria-label="برنامه"><svg class="i"><use href="#i-sliders"/></svg></button>
+          <button class="icon-btn" aria-label="بیشتر"><svg class="i"><use href="#i-more"/></svg></button>
+        </div>
+        <div class="body" style="gap:20px">
+          <div class="col" style="gap:4px">
+            <div class="t-head">آیلتس ۷ بگیرم</div>
+            <div class="why">برای اپلای ارشد؛ به خاطر خودم، نه کس دیگه</div>
+            <div class="t-cap c3">هفته‌ی ۲ از ۳۷ · ماه ۱ از ۸ · تا ۳۱ خرداد ۱۴۰۶</div>
+          </div>
+
+          <div class="card pad sect">
+            <div class="row between"><h3>فصل ۱ · مهر–آبان</h3><span class="chip acc">تا اینجا: ۸ جلسه</span></div>
+            <div class="path lg"><i class="st done"></i><i class="ln done"></i><i class="st cur"></i><i class="ln"></i><i class="st"></i><i class="ln"></i><i class="st"></i><i class="ln"></i><i class="st"></i><i class="ln"></i><i class="st"></i><svg class="i sm flag"><use href="#i-flag"/></svg></div>
+            <div class="row between t-cap c3"><span>۱۸ مهر</span><span>۳۰ آبان</span></div>
+            <div class="t-lbl" style="line-height:1.7">تست تشخیصی، لغت، هفته‌ای یه رایتینگ</div>
+          </div>
+
+          <div class="sect">
+            <h3>هفته به هفته · جلسه‌ی ۲۵ دقیقه‌ای</h3>
+            <div class="wkrow" style="background:var(--sf);border-radius:12px;padding:10px 12px">
+              <span class="wl">این هفته</span>
+              <div class="band lg"><i class="slot on"></i><i class="slot on"></i><i class="slot on"></i><span class="zone"><i class="slot"></i><i class="slot"></i><i class="slot"></i></span></div>
+              <span class="chip neu">۴ تا ۶</span>
+            </div>
+            <div class="wkrow" style="padding:6px 12px">
+              <span class="wl">هفته‌ی ۱</span>
+              <div class="band lg"><i class="slot on"></i><i class="slot on"></i><i class="slot on"></i><span class="zone"><i class="slot on"></i><i class="slot on"></i><i class="slot"></i></span></div>
+              <span class="chip acc">توی برنامه</span>
+            </div>
+            <div class="t-cap c3" style="padding-inline:12px">برنامه یعنی رسیدن به کمینه. بیشتر از اون، هفته‌ی خوبه.</div>
+          </div>
+
+          <div class="sect">
+            <h3>آزمون آزمایشی (ماهانه)</h3>
+            <div class="card pad chart">
+              <svg viewBox="0 0 300 110" role="img" aria-label="یک نتیجه تا الان: ۵.۵">
+                <line class="gl" x1="20" y1="20" x2="290" y2="20"/><line class="gl" x1="20" y1="55" x2="290" y2="55"/><line class="gl" x1="20" y1="90" x2="290" y2="90"/>
+                <text x="0" y="24">۷</text><text x="0" y="59">۶</text><text x="0" y="94">۵</text>
+                <path class="ghost" d="M38 72.5 L272 20"/>
+                <circle class="dt" cx="38" cy="72.5" r="5"/>
+                <text x="48" y="68" style="fill:var(--t1);font-weight:600">۵٫۵</text>
+                <text x="26" y="108">مهر</text><text x="258" y="108">خرداد</text>
+              </svg>
+              <div class="t-cap c2" style="margin-top:6px">نتیجه پله‌پله میاد، نه خطی. خط‌چین: مسیر تا ۷.</div>
+            </div>
+          </div>
+
+          <div class="sect">
+            <h3>ماه‌ها</h3>
+            <div class="ms"><span class="mk cur"></span><div class="col"><span class="t-strong">مهر–آبان: تست تشخیصی، لغت، هفته‌ای یه رایتینگ</span><span class="t-cap c3">تموم که شد یعنی: نمره‌ی اولیه رو دارم</span></div></div>
+            <div class="ms"><span class="mk"></span><div class="col"><span class="t-strong">آذر: ۳ تا نقطه‌ضعفم رو پیدا کنم</span></div></div>
+            <div class="ms"><span class="mk unsure"></span><div class="col"><span class="t-strong c2">دی تا اردیبهشت: هنوز مطمئن نیستم</span><span class="t-cap c3">توی مرور آخر هر ماه پر می‌شه</span></div></div>
+            <div class="ms"><span class="mk"></span><div class="col"><span class="t-strong">خرداد: دو آزمون کامل، رایتینگ تسک ۲</span></div></div>
+          </div>
+
+          <div class="sect">
+            <h3>هدف چقدر جلو رفت؟ (هر جمعه)</h3>
+            <div class="row"><div class="rate"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></div><span class="t-cap c2">هفته‌ی ۱: ۴ از ۵</span></div>
+          </div>
+        </div>
+      </div>
+      <figcaption><b>Goal detail (skill type)</b>Process first. The chapter path fills right to left with «تا اینجا» in the first half of the chapter (it switches to «۳ تا پایان فصل» after the midpoint). Then the weekly bands, where reaching the low end reads «توی برنامه» and anything less is just the count. The outcome is a sparse monthly line with a dashed path to the target. The months list allows «هنوز مطمئن نیستم». The weekly 1–5 rating comes last. The slider icon opens the breakdown; ⋮ holds «استراحت این ماه», «رسیدم» and «بایگانی».</figcaption>
+    </figure>
+
+    <!-- ================= FLOW ================= -->
+    <div class="group-title" id="flow">Setting a goal (the 8-step flow, D155)</div>
+
+    <figure>
+      <div class="phone" dir="rtl">
+        <div class="status"><span>۱۹:۴۲</span><span>۸۵٪</span></div>
+        <div class="topbar"><button class="icon-btn" aria-label="بستن"><svg class="i"><use href="#i-close"/></svg></button><div class="dashes"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><span style="width:44px"></span></div>
+        <div class="body" style="gap:18px">
+          <div class="q">تا کِی، دوست داری چی واقعیت شده باشه؟</div>
+          <div class="chips"><button class="pick">۱ ماه</button><button class="pick">۳ ماه</button><button class="pick">۶ ماه</button><button class="pick">تا نوروز</button><button class="pick" aria-pressed="true"><svg class="i xs"><use href="#i-cal"/></svg>۳۱ خرداد</button></div>
+          <div class="field focus">دیگه وقتم رو تلف نکنم و زبان بخونم</div>
+          <div class="suggest">
+            <span>می‌شه اینو به شکل کاری که انجام می‌دی یا چیزی که به دست میاری بنویسیم؟</span>
+            <span class="c2">مثلاً: «تا خرداد آیلتس ۷ بگیرم»</span>
+            <div class="acts"><button class="cacc">عوض کن</button><button class="c2">همین خوبه</button></div>
+          </div>
+          <div class="foot"><button class="btn pri">بعدی</button><button class="btn ghost">فعلاً فقط یه ایده، بعداً</button></div>
+        </div>
+      </div>
+      <figcaption><b>① The goal</b>The finish date comes first, as chips (the calendar behind the last one). Avoidance wording gets one soft gray suggestion. «همین خوبه» always works. «بعداً» saves just the title as a slip on the wall. Steps ② (why, one line) and ③ (obstacle) follow and can be skipped.</figcaption>
+    </figure>
+
+    <figure>
+      <div class="phone" dir="rtl">
+        <div class="status"><span>۱۹:۴۲</span><span>۸۵٪</span></div>
+        <div class="topbar"><button class="icon-btn" aria-label="برگشت"><svg class="i"><use href="#i-back"/></svg></button><div class="dashes"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i><i></i><i></i><i></i></div><span style="width:44px"></span></div>
+        <div class="body" style="gap:18px">
+          <div class="q">۱۰ ثانیه بهترین نتیجه رو تصور کن.</div>
+          <div class="hint">حالا: مهم‌ترین چیزی که توی خودت ممکنه مانعت بشه چیه؟</div>
+          <div class="chips"><button class="pick" aria-pressed="true">حوصله‌ام سر بره</button><button class="pick">تغییر رو زود نبینم</button><button class="pick">رشته از دستم در بره</button><button class="pick">روالم به هم بریزه</button><button class="pick"><svg class="i xs"><use href="#i-plus"/></svg>خودم می‌نویسم</button></div>
+          <div class="col" style="gap:8px">
+            <span class="t-lbl c2">اگه پیش اومد، اون‌وقت…</span>
+            <div class="field">یه درس رو با یه پادکست عوض می‌کنم</div>
+          </div>
+          <div class="foot"><button class="btn pri">بعدی</button><button class="btn ghost">رد شو</button></div>
+        </div>
+      </div>
+      <figcaption><b>③ The obstacle (a short WOOP)</b>Picture the outcome, name the inner obstacle (chips from your known patterns), write one if-then for it. It comes back at each month's review, never daily.</figcaption>
+    </figure>
+
+    <figure>
+      <div class="phone" dir="rtl">
+        <div class="status"><span>۱۹:۴۲</span><span>۸۵٪</span></div>
+        <div class="topbar"><button class="icon-btn" aria-label="برگشت"><svg class="i"><use href="#i-back"/></svg></button><div class="dashes"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i><i></i></div><span style="width:44px"></span></div>
+        <div class="body" style="gap:14px">
+          <div class="q">از آخر به اول</div>
+          <div class="hint">توی ماه آخر چی کار می‌کنی یا چی بلدی؟ بعد ماه قبلش. فقط ماه اول الان لازمه.</div>
+          <div class="mrow"><span class="mn">خرداد</span><div class="field">دو آزمون کامل، رایتینگ تسک ۲</div></div>
+          <div class="mrow"><span class="mn">اردیبهشت</span><div class="field"><span class="ph">هنوز مطمئن نیستم</span></div></div>
+          <div class="mrow"><span class="mn">…</span><div class="field" style="min-height:40px;padding-block:8px"><span class="ph">۴ ماه دیگه، بعداً</span></div></div>
+          <div class="mrow"><span class="mn">آذر</span><div class="field">۳ تا نقطه‌ضعفم رو پیدا کنم</div></div>
+          <div class="mrow"><span class="mn">مهر–آبان</span><div class="field focus">تست تشخیصی، لغت، هفته‌ای یه رایتینگ</div></div>
+          <div class="foot"><button class="btn pri">بعدی</button></div>
+        </div>
+      </div>
+      <figcaption><b>⑤ Work backward</b>The last month first, then back to month 1, which is the only required one (it's last in the list and has focus). Empty months say «هنوز مطمئن نیستم» and get filled at their monthly review. A short goal (6 weeks or less) skips this step.</figcaption>
+    </figure>
+
+    <figure>
+      <div class="phone" dir="rtl">
+        <div class="status"><span>۱۹:۴۲</span><span>۸۵٪</span></div>
+        <div class="topbar"><button class="icon-btn" aria-label="برگشت"><svg class="i"><use href="#i-back"/></svg></button><div class="dashes"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></div><span style="width:44px"></span></div>
+        <div class="body" style="gap:16px">
+          <div class="q">برای این هفته یه بازه‌ی واقعی</div>
+          <div class="hint">جلسه‌ی ۲۵ دقیقه‌ای در هفته</div>
+          <div class="col" style="gap:6px"><span class="t-lbl c2">کمینه: حتی توی یه هفته‌ی بد</span>
+            <div class="stepper"><button class="pm" aria-label="کمتر"><svg class="i"><use href="#i-minus"/></svg></button><span class="num">۴</span><button class="pm" aria-label="بیشتر"><svg class="i"><use href="#i-plus"/></svg></button></div></div>
+          <div class="col" style="gap:6px"><span class="t-lbl c2">بیشینه: توی یه هفته‌ی خوب</span>
+            <div class="stepper"><button class="pm" aria-label="کمتر"><svg class="i"><use href="#i-minus"/></svg></button><span class="num">۶</span><button class="pm" aria-label="بیشتر"><svg class="i"><use href="#i-plus"/></svg></button></div></div>
+          <div class="card pad col" style="gap:8px;align-items:center">
+            <div class="band lg"><i class="slot"></i><i class="slot"></i><i class="slot"></i><span class="zone"><i class="slot"></i><i class="slot"></i><i class="slot"></i></span></div>
+            <span class="t-cap c2">رسیدن به ۴ یعنی توی برنامه‌ای</span>
+          </div>
+          <div class="foot"><button class="btn pri">بعدی</button></div>
+        </div>
+      </div>
+      <figcaption><b>⑥ This week's range</b>Two steppers and a live preview of the band that will show on the wall and on Today. A range that's too wide (high ≥ 3 × low) or flat (low = high) gets one gentle suggestion.</figcaption>
+    </figure>
+
+    <figure>
+      <div class="phone" dir="rtl">
+        <div class="status"><span>۱۹:۴۲</span><span>۸۵٪</span></div>
+        <div class="topbar"><button class="icon-btn" aria-label="برگشت"><svg class="i"><use href="#i-back"/></svg></button><div class="dashes"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></div><span style="width:44px"></span></div>
+        <div class="body" style="gap:16px">
+          <div class="q">کِی و کجا انجامش می‌دی؟</div>
+          <div class="field">بعد از اینکه <span class="blank">شام خوردم</span>، <span class="blank">پشت میز یه جلسه‌ی ۲۵ دقیقه‌ای</span> انجام می‌دم.</div>
+          <div class="t-lbl c2">نسخه‌ی کوچیک‌تر، برای روز سخت</div>
+          <div class="field">اگه <span class="blank">خسته بودم</span>، اون‌وقت <span class="blank">۱۰ دقیقه فلش‌کارت</span>.</div>
+          <div class="row between card pad" style="padding-block:12px"><div class="col"><span class="t-strong">عصر · زنگ ۲۰:۳۰</span><span class="t-cap c3">از «بعد از شام» حدس زده شد</span></div><span class="chip neu">عوض کن</span></div>
+          <div class="foot"><button class="btn pri">یه بار بلند خوندمش</button></div>
+        </div>
+      </div>
+      <figcaption><b>⑦ The daily action and its if-then</b>Fill-in-the-blank sentences: the cue and the action, then the smaller backup. The part of the day comes from the cue, and an alarm at the cue time is optional. The main button is the one-time rehearsal: read it out loud, then tap.</figcaption>
+    </figure>
+
+    <figure>
+      <div class="phone" dir="rtl">
+        <div class="status"><span>۱۹:۴۲</span><span>۸۵٪</span></div>
+        <div class="topbar"><button class="icon-btn" aria-label="برگشت"><svg class="i"><use href="#i-back"/></svg></button><div class="dashes"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></div><span style="width:44px"></span></div>
+        <div class="body" style="gap:14px">
+          <div class="col" style="gap:6px"><span class="t-lbl c2">روز انعطاف در هفته: بخشی از برنامه‌ان، نه تقلب</span>
+            <div class="chips"><button class="pick">هیچ</button><button class="pick" aria-pressed="true">۱ روز</button><button class="pick">۲ روز</button></div></div>
+          <div class="summary">
+            <div class="t-title">این برنامه‌ی توئه، به قلم خودت.</div>
+            <div class="ln2"><span class="k">هدف</span><span>تا ۳۱ خرداد آیلتس ۷ بگیرم</span></div>
+            <div class="ln2"><span class="k">چرا</span><span>برای اپلای ارشد؛ به خاطر خودم</span></div>
+            <div class="ln2"><span class="k">این ماه</span><span>تست تشخیصی، لغت، هفته‌ای یه رایتینگ</span></div>
+            <div class="ln2"><span class="k">این هفته</span><span>۴ تا ۶ جلسه</span></div>
+            <div class="ln2"><span class="k">هر روز</span><span>بعد از شام، پشت میز: ۲۵ دقیقه. اگه خسته بودم: ۱۰ دقیقه فلش‌کارت.</span></div>
+            <div class="ln2"><span class="k">مانع</span><span>حوصله‌ام سر بره ← یه درس رو با پادکست عوض می‌کنم</span></div>
+          </div>
+          <div class="foot"><button class="btn pri"><svg class="i"><use href="#i-pin"/></svg>بچسبون به دیوار</button></div>
+        </div>
+      </div>
+      <figcaption><b>⑧ Flex days and the summary</b>Flex days (default 1) cover a missed day at week end with no penalty. The summary is the plan in your own words. «بچسبون به دیوار» pins the note: the flow ends with the new note landing on the wall, and the action appears on Today right away.</figcaption>
+    </figure>
+
+    <!-- ================= DASHBOARD ================= -->
+    <div class="group-title" id="dash">Dashboard (a screen behind the wall's grid button)</div>
+
+    <figure>
+      <div class="phone" dir="rtl">
+        <div class="status"><span>۱۹:۴۲</span><span>۸۵٪</span></div>
+        <div class="topbar"><button class="icon-btn" aria-label="برگشت"><svg class="i"><use href="#i-back"/></svg></button><div class="t-title grow">داشبورد</div></div>
+        <div class="body" style="gap:18px">
+          <div class="row" style="gap:12px">
+            <div class="card pad grow col"><span class="t-cap c2">روز حضور</span><span class="t-title">۱۲ از ۱۳</span></div>
+            <div class="card pad grow col"><span class="t-cap c2">روز ویژه</span><span class="t-title">۱</span></div>
+          </div>
+          <div class="card pad col" style="gap:10px">
+            <div class="row between"><span class="t-lbl">۲۶ هفته‌ی اخیر</span><span class="t-cap c3">کارهای روزانه</span></div>
+            <div style="overflow-x:auto"><div class="journey" id="journey"></div></div>
+            <div class="legend"><span>کمتر</span><i class="cell"></i><i class="cell l1"></i><i class="cell l2"></i><i class="cell l3"></i><i class="cell l4"></i><span>بیشتر</span><span style="width:8px"></span><i class="cell sp"></i><span>روز ویژه</span><i class="cell pre"></i><span>قبل از اپ</span></div>
+          </div>
+          <div class="col" style="gap:2px">
+            <span class="t-lbl c2" style="padding:0 8px 4px">هفته به هفته</span>
+            <div class="wrow cur"><div class="col" style="min-width:70px"><span class="t-lbl">هفته‌ی ۲</span><span class="t-cap c3">۲۵ مهر</span></div><div class="wdays"><i class="cell m l3"></i><i class="cell m l4"></i><i class="cell m l2"></i><i class="cell m l3"></i><i class="cell m l2 today"></i><i class="cell m fu"></i><i class="cell m fu"></i></div><span class="chip neu">جاری</span></div>
+            <div class="wrow"><div class="col" style="min-width:70px"><span class="t-lbl">هفته‌ی ۱</span><span class="t-cap c3">۱۸ مهر</span></div><div class="wdays"><i class="cell m l4"></i><i class="cell m l3"></i><i class="cell m l3"></i><i class="cell m sp"></i><i class="cell m l4"></i><i class="cell m l2"></i><i class="cell m l3"></i></div><span class="chip acc">۸۵٪</span></div>
+          </div>
+        </div>
+      </div>
+      <figcaption><b>Dashboard</b>The same grid and week rows as now, opened from the wall instead of a tab. Without a fixed program it scrolls back through the last 26 weeks. It still counts the day's to-do items (goal actions included). Open: should it also show one row per goal?</figcaption>
+    </figure>
+
+  </div>
+</div>
+
+<script>
+(function () {
+  var fa = "۰۱۲۳۴۵۶۷۸۹";
+  function toFa(n) { return String(n).replace(/\d/g, function (d) { return fa[d]; }); }
+
+  // Theme toggle
+  var btns = document.querySelectorAll(".bar [data-th]");
+  btns.forEach(function (b) {
+    b.addEventListener("click", function () {
+      var t = b.getAttribute("data-th");
+      if (t) document.documentElement.setAttribute("data-theme", t); else document.documentElement.removeAttribute("data-theme");
+      btns.forEach(function (x) { x.setAttribute("aria-pressed", x === b ? "true" : "false"); });
+    });
+  });
+
+  // Ticking tiles on Today updates the ring
+  var phone = document.getElementById("ph-today");
+  var ringVal = document.getElementById("ring-val");
+  var ringBig = document.getElementById("ring-big");
+  var base = 4; // done in the other parts of the day
+  function update() {
+    var done = base + phone.querySelectorAll('.js-tick[aria-pressed="true"]').length;
+    ringBig.textContent = toFa(done);
+    ringVal.setAttribute("stroke-dashoffset", (439.8 * (1 - done / 9)).toFixed(1));
+  }
+  phone.querySelectorAll(".js-tick").forEach(function (t) {
+    t.addEventListener("click", function () {
+      t.setAttribute("aria-pressed", t.getAttribute("aria-pressed") === "true" ? "false" : "true");
+      update();
+    });
+  });
+  update();
+
+  // Dashboard grid: 26 weeks x 7 days, newest week on the left (RTL)
+  var j = document.getElementById("journey");
+  var levels = ["l3","l4","l2","l3","l4","l1","l3"];
+  for (var w = 0; w < 26; w++) {
+    for (var d = 0; d < 7; d++) {
+      var c = document.createElement("i");
+      var cls = "cell";
+      if (w < 23) cls += " pre";
+      else if (w === 23) cls += (d < 5 ? " pre" : " " + levels[d]);
+      else if (w === 24) cls += (d === 3 ? " sp" : " " + levels[(d + 2) % 7]);
+      else { if (d < 4) cls += " " + levels[d]; else if (d === 4) cls += " l2 today"; else cls += " fu"; }
+      c.className = cls;
+      j.appendChild(c);
+    }
+  }
+})();
+</script>

@@ -1,8 +1,33 @@
 # Tasks and status
 
-_Last updated: 2026-10-17 (friends' feedback, 0.10.4)_
+_Last updated: 2026-10-22 (plugin platform brief)_
 
-## Where we are
+## New identity: to-do + goals (2026-10-21)
+
+The app is no longer a workout program. It has two parts: the to-do list (as built) and goals (set, break down, monitor). Decisions D148–D171; the spec is `SPEC.md` v1.0 (draft). The workout tables below describe the v0.x build, which stays installed and in use until the migration ships.
+
+| Phase | Status |
+|---|---|
+| 1. Discovery | ✅ Done 2026-10-21: research read (`~/Documents/aesthetic/research/research-goalsetting.pdf`), the user answered the 5 questions (no goal limit, remove the character, workout as a fitness template, short goals in the same flow, migrate). |
+| 2. Spec | ⏳ Draft written (`SPEC.md` v1.0). Waiting for the user's review and the open questions below. |
+| 3. Design | ⏳ First mockups 2026-10-21: `docs/design/goals-v1.html` (https://claude.ai/artifact/XnEtRxnxuJTC77Upakcsh8): Today with goal actions, the goals wall (W1/W2/W3), a goal's detail, the 8-step flow, the dashboard. No character (D159). `DESIGN.md` is still v0.x. |
+| 4. Architecture | Not started. `ARCHITECTURE.md` needs the goal tables, the migration and the new slices. |
+| 5. Build | Not started for v1.0. |
+
+Answered 2026-10-21: a new name later (D158), the character as images and GIFs with its place undecided (D159), two tabs with the dashboard behind the Goals section (D160), the wall (D161), the 4 review questions once (D162), mockups first.
+
+### Open questions for v1.0
+
+1. **The wall: how each goal shows its week and month.** W1 (both on every note) · W2 (month on the front, week on the back) · W3 (one shared week board above the notes). My pick: **W2**, the calmest wall and the most like a real note.
+2. **Where the weekly review lives** without a Week tab. Recommended: a note that pins itself to the top of the wall from Friday to Saturday, plus the Today card (as in the mockup).
+3. **The monthly chapter review**, also without a month screen. Recommended: the same way, a note on the wall at a chapter's end, opening the review flow.
+4. **Dashboard:** keep it to the day's to-do items only (as now), or add a row per goal?
+
+### Plugin platform (its own session)
+
+**The full brief is `docs/tasks/plugin-platform.md`.** Start a new session from it. Decided 2026-10-22: a sandboxed runtime with the app's components (D166), only `:store` may use the network (D167), the workout plugin built in and off by default (D168), free at first (D169), a .NET store backend hosted in Iran (D170), the store screen as a WebView (D171). v1.0 sets the contract and ships the workout as the first plugin; the store and outside plugins come after v1.0. The first session does the architecture (P0) and a runtime spike, then asks the user the brief's open questions.
+
+## Where we are (v0.x, the workout program)
 
 | Phase | Status |
 |---|---|
