@@ -1,6 +1,6 @@
 # Tasks and status
 
-_Last updated: 2026-10-22 (plugin platform brief)_
+_Last updated: 2026-10-22 (plugin platform research, plan and D177–D181)_
 
 ## New identity: to-do + goals (2026-10-21)
 
@@ -30,6 +30,8 @@ Decided 2026-10-22: follow the phone's language with a Settings switch; Gregoria
 ### Plugin platform (its own session)
 
 **The full brief is `docs/tasks/plugin-platform.md`.** A research prompt for a separate Opus session (is a VS Code-style platform achievable, can code stay native) is `docs/tasks/plugin-research-prompt.md`. Start a new session from it. Decided 2026-10-22: a sandboxed runtime with the app's components (D166), only `:store` may use the network (D167), the workout plugin built in and off by default (D168), free at first (D169), a .NET store backend hosted in Iran (D170), the store screen as a WebView (D171). v1.0 sets the contract and ships the workout as the first plugin; the store and outside plugins come after v1.0. The first session does the architecture (P0) and a runtime spike, then asks the user the brief's open questions.
+
+**Research done 2026-10-22:** `docs/research/plugin-platform-research.md` (achievable; native plugin code from our own store isn't allowed on Play and is risky on Bazaar; Zipline isn't a sandbox on its own, so it runs inside an isolated process). **Plan:** `docs/tasks/plugin-platform-plan.md` (architecture, draft contract, testable UI rules, developer kit, store flow, workout migration, slices S0–S12). **Round 1 answered 2026-10-22** (the recommended option each time): Zipline inside an isolated process (D177), level ② as a host-drawn free layout (D178), Kotlin only (D179), the workout as a built-in native plugin (D180), removing a plugin keeps its data (D181). **Next:** P0 (a plugin section in `ARCHITECTURE.md`, `docs/plugins/CONTRACT.md`) and S0, the spike on the Poco, in a session on the laptop. Round 2 of the plan's questions comes before the store.
 
 ## Where we are (v0.x, the workout program)
 

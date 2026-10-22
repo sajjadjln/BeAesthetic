@@ -61,8 +61,8 @@ Today (ring, week dots, part-of-day pages, tiles, «مهم», «موعدش رس�
 - A **plugin** is a template for one goal, with its own screens on top of the app. The workout is the first one (§5.11 becomes the workout plugin).
 - An **online store**, run by the user, lists reviewed plugins. It is the only online screen; the rest of the app works offline.
 - Plugins can contain code written by other developers against published guidelines, standards and contracts. Each is reviewed before it's listed.
-- Plugins run in a sandboxed runtime and draw only with the app's components (D166). Only the `:store` module uses the network (D167). The store screen is a WebView limited to the store domain (D171). The workout plugin is built in and off by default (D168). Free at first (D169).
-- The full task, with the contract, runtime, store and backend: `docs/tasks/plugin-platform.md`.
+- Plugin code runs in Zipline inside an isolated process with no permissions (D166, D177), and the host draws all plugin UI with the app's components and tokens (D172, D178). Plugins are written in Kotlin (D179). Only the `:store` module uses the network (D167). The store screen is a WebView limited to the store domain (D171). The workout plugin is built in and off by default (D168); it's a native module and its data stays in its tables (D180). Removing a plugin keeps its data (D181). Free at first (D169).
+- The full task, with the contract, runtime, store and backend: `docs/tasks/plugin-platform.md`. The research and the plan: `docs/research/plugin-platform-research.md`, `docs/tasks/plugin-platform-plan.md`.
 
 ### 3.4 Later
 | Feature | Why it waits |
