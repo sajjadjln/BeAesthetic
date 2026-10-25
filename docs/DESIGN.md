@@ -7,7 +7,33 @@ Published copy: https://claude.ai/artifact/BwuSiLCGAxV5fGR86MSmjH
 
 **Name and logo (D77, D78):** the app is «پیکر» in Persian, "BeAesthetic" in English (D79). Logo concepts: `docs/design/logo.html` (https://claude.ai/artifact/2o9iY6KqvcGFTbhYhFF6j9). **Chosen: the cartoon sticker** (D81): a chunky green bodybuilder flexing, ink outline, white sticker border, slight tilt, on the dark background. Files in `docs/design/logo/`.
 
-**Character «پیکر» (D82–D84):** `docs/design/character.html` (https://claude.ai/artifact/Jf7hbWjUQTf39HRDcVkExZ). The logo's sticker guy as a person in the app: poses, Today and moment screens, chapter outfits, sample lines and rules. The rig that draws him is `docs/design/piker.js`; `screens.html` uses it too.
+**The new characters (D182–D184).** Replace «پیکر» (removed, D151). A cast of four in one style, art in `characters/`: a full figure, a portrait and a sheet of 6 moods each (calm, busy, happy, nervous, cross, asleep). All 6 moods are kept; on no screen until the user says so. The knight's red embers become cyan; it's named with the app's new name.
+
+*The armored knight (D182):*
+
+![The knight, full figure](../characters/Armored_knight.jpg)
+![The knight, portrait](../characters/Armored_knight_portrait.jpg)
+![The knight's 6 moods](../characters/Armored_knight-sheet.jpg)
+
+*The vampire (D184):*
+
+![The vampire, full figure](../characters/Vampire.jpg)
+![The vampire, portrait](../characters/Vampire_portrai.jpg)
+![The vampire's 6 moods](../characters/Vampire_sheet.jpg)
+
+*The elderly wizard (D184).* The file names are swapped: `Elderly_wizard_portrait.jpg` is the full figure and `Elderly_wizard.jpg` is the portrait.
+
+![The wizard, full figure](../characters/Elderly_wizard_portrait.jpg)
+![The wizard, portrait](../characters/Elderly_wizard.jpg)
+![The wizard's 6 moods](../characters/Wizard_sheet.jpg)
+
+*The goth woman (D184):*
+
+![The goth woman, full figure](../characters/Goth_woman.jpg)
+![The goth woman, portrait](../characters/goth_Woman_portrait.jpg)
+![The goth woman's 6 moods](../characters/Goth_woman_sheet.jpg)
+
+**Old character «پیکر» (D82–D84, removed in v1.0):** `docs/design/character.html` (https://claude.ai/artifact/Jf7hbWjUQTf39HRDcVkExZ). The logo's sticker guy as a person in the app: poses, Today and moment screens, chapter outfits, sample lines and rules. The rig that draws him is `docs/design/piker.js`; `screens.html` uses it too.
 
 **Flows (D85):** `docs/design/flows.html` (https://claude.ai/artifact/An8XmUuGo4cWrbHHhWMkom): onboarding, notifications, check-in, strength test, day detail, backup, letters, recaps and the finish, offers, Progress additions. See Flows below.
 

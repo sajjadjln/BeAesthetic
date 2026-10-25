@@ -1,6 +1,6 @@
 # Tasks and status
 
-_Last updated: 2026-10-22 (plugin platform research, plan and D177–D181)_
+_Last updated: 2026-10-25 (the new characters: the knight and three more, D182–D184)_
 
 ## New identity: to-do + goals (2026-10-21)
 
@@ -13,6 +13,8 @@ The app is no longer a workout program. It has two parts: the to-do list (as bui
 | 3. Design | ⏳ First mockups 2026-10-21: `docs/design/goals-v1.html` (https://claude.ai/artifact/XnEtRxnxuJTC77Upakcsh8): Today with goal actions, the goals wall (W1/W2/W3), a goal's detail, the 8-step flow, the dashboard. No character (D159). `DESIGN.md` is still v0.x. |
 | 4. Architecture | Not started. `ARCHITECTURE.md` needs the goal tables, the migration and the new slices. |
 | 5. Build | Not started for v1.0. |
+
+**New characters 2026-10-25:** the armored knight (D182), then the vampire, the elderly wizard and the goth woman (D184); art in `characters/`. The knight's red embers → cyan, all 6 moods kept, the knight named with the app (D183). **Not on any screen until the user says so**: don't add them to mockups or the app before then. Open: how the four are used (pick one, or a role each), and whether the vampire's dark-red coat lining counts against "nothing is red".
 
 Answered 2026-10-21: a new name later (D158), the character as images and GIFs with its place undecided (D159), two tabs with the dashboard behind the Goals section (D160), the wall (D161), the 4 review questions once (D162), mockups first.
 
@@ -120,6 +122,8 @@ The program itself started on **2026-10-09 (Day 0)**. Week 1 began 2026-10-10. E
 12. ~~Tape sites~~ → waist, chest, arm (right, flexed), thigh (right), shoulders (D85, confirmed).
 
 ## Backlog (after MVP, from `SPEC.md` §3.2)
+
+- **The weekly and monthly review (parked 2026-10-25).** Removed from the Today and wall mockups until we know how to handle it. To decide: where it lives, when it shows, what it asks, and how empty months («هنوز مطمئن نیستم») and the obstacle get revisited without it.
 
 - **Decide the Today redesign after the app is finished** (D137). Options in `docs/design/today-v3.html`, the leaning mix (clock picks the part, «فهرست» checklist, + and folded parts on a bottom sheet) in `docs/design/today-v4.html`. Until then Today stays as built.
 - Public release on Cafe Bazaar: a **future goal, after the program** (D49; `ARCHITECTURE.md` §15, `research/07`).

@@ -305,7 +305,7 @@ figcaption b { color: var(--page-fg); display: block; font-size: 15px; }
     <p>First mockups for the new identity (D148–D162). The look is the app's own (tokens, Estedad, tiles) with no character (D159). Two tabs only: <b>Today</b> and <b>Goals</b> (D160). The Goals tab is a <b>wall</b> with goals pinned to it like notes (D161). The dashboard grid is a screen behind the wall's grid button, and it only appears once a goal exists. Goals, dates and numbers are examples, not your data. Tap the tiles on Today to tick them.</p>
     <ul>
       <li><b>Pick one:</b> how the wall shows the week and the month (W1, W2 or W3 below).</li>
-      <li><b>Open:</b> where the weekly review lives without a Week tab. The mockup pins it to the wall on Friday as its own note (W1).</li>
+      <li><b>Parked:</b> the weekly and monthly review are removed for now (2026-10-25). They are in the backlog.</li>
     </ul>
   </header>
 
@@ -407,11 +407,6 @@ figcaption b { color: var(--page-fg); display: block; font-size: 15px; }
           <button class="icon-btn" aria-label="تنظیمات"><svg class="i"><use href="#i-gear"/></svg></button>
         </div>
         <div class="body" style="padding-bottom:84px">
-          <div class="softcard">
-            <span class="gi" style="width:36px;height:36px;border-radius:11px;background:var(--acc-sub);color:var(--acc-on);display:grid;place-items:center;flex:none"><svg class="i sm"><use href="#i-pin"/></svg></span>
-            <div class="grow col"><span class="t-strong">مرور هفته آماده‌ست</span><span class="t-cap c2">۵ دقیقه · روی دیوار</span></div>
-            <svg class="i sm c3" style="transform:scaleX(-1)"><use href="#i-back"/></svg>
-          </div>
           <div class="softcard" style="align-items:flex-start">
             <span class="gi" style="width:36px;height:36px;border-radius:11px;background:var(--sf2);color:var(--t2);display:grid;place-items:center;flex:none"><svg class="i sm"><use href="#i-pen"/></svg></span>
             <div class="grow col" style="gap:8px">
@@ -432,7 +427,7 @@ figcaption b { color: var(--page-fg); display: block; font-size: 15px; }
         <button class="fab"><svg class="i"><use href="#i-plus"/></svg>کار جدید</button>
         <nav class="nav" aria-label="تب‌ها"><button class="on" aria-label="امروز"><svg class="i"><use href="#i-today"/></svg></button><button aria-label="هدف‌ها"><svg class="i"><use href="#i-pin"/></svg></button></nav>
       </div>
-      <figcaption><b>Today's goal cards</b>The three goal cards that can sit above the tiles, shown together here only to compare them. In the app it's one card at a time (the existing queue). The review card on Friday. «خوش برگشتی» after 2 missed days on a goal, offering the backup version, at most once a week. The midweek check (Tue/Wed) appears only when a goal had no log for 2 days or its pace is under the low end.</figcaption>
+      <figcaption><b>Today's goal cards</b>The two goal cards that can sit above the tiles, shown together here only to compare them. In the app it's one card at a time (the existing queue). «خوش برگشتی» after 2 missed days on a goal, offering the backup version, at most once a week. The midweek check (Tue/Wed) appears only when a goal had no log for 2 days or its pace is under the low end.</figcaption>
     </figure>
 
     <!-- ================= WALL ================= -->
@@ -448,10 +443,6 @@ figcaption b { color: var(--page-fg); display: block; font-size: 15px; }
         </div>
         <div class="wall">
           <div class="notes">
-            <button class="note wide review" style="--r:-.6deg">
-              <div class="row between"><span class="nt-title">مرور هفته‌ی ۲ <span class="chip acc" style="vertical-align:middle;background:var(--bg)">۵ دقیقه</span></span><svg class="i sm cacc" style="transform:scaleX(-1)"><use href="#i-back"/></svg></div>
-              <span class="meta" style="color:var(--acc-on)">جمعه تا شنبه روی دیوار می‌مونه</span>
-            </button>
             <button class="note" style="--r:-1.4deg">
               <div class="row" style="gap:8px"><span class="gi"><svg class="i sm"><use href="#i-book"/></svg></span><span class="meta">تا ۳۱ خرداد</span></div>
               <span class="nt-title">آیلتس ۷ بگیرم</span>
@@ -489,7 +480,7 @@ figcaption b { color: var(--page-fg); display: block; font-size: 15px; }
         </div>
         <nav class="nav" aria-label="تب‌ها"><button aria-label="امروز"><svg class="i"><use href="#i-today"/></svg></button><button class="on" aria-label="هدف‌ها"><svg class="i"><use href="#i-pin"/></svg></button></nav>
       </div>
-      <figcaption><b>W1 · Each note shows both</b>Every pinned goal carries its whole path (one station per month, the finish flag on the left; a short goal has one per week, a project one per milestone) and this week's range: done dots, then the low-to-high zone. The most information, and the busiest notes. On Friday the weekly review pins itself across the top and stays until Saturday. «بعداً» ideas are small slips at the bottom.</figcaption>
+      <figcaption><b>W1 · Each note shows both</b>Every pinned goal carries its whole path (one station per month, the finish flag on the left; a short goal has one per week, a project one per milestone) and this week's range: done dots, then the low-to-high zone. The most information, and the busiest notes. «بعداً» ideas are small slips at the bottom.</figcaption>
     </figure>
 
     <figure>

@@ -306,6 +306,14 @@ Research: `docs/research/plugin-platform-research.md` («research §n»). Plan: 
 | D180 | **The workout is a built-in native plugin.** Its code moves into a `:plugin-workout` Kotlin module that implements the same contract inside the app and keeps its own Compose screens (only built-in plugins may). Its data stays in its current tables; the update only adds the plugin tables and the workout's install row, attached to the migrated goal, in the same migration as D154. Refines D163 and D168. | No data moves, and the screens in daily use stay as they are. The sample reading-log plugin proves the script runtime instead (plan §12). User took the recommended answer (brief §5, question 1). | Final |
 | D181 | **Removing a plugin hides it and keeps its data.** Its package, data and photos stay, so turning it back on restores everything. Deleting its data is a separate step that asks first. | Never lose data. User took the recommended answer (brief §5, question 4). | Final |
 
+## The new character (2026-10-25)
+
+| # | Decision | Why | Status |
+|---|---|---|---|
+| D182 | **The new character is the armored knight.** A knight in dark steel with a torn cape, bat-wing crests on the helmet and glowing cyan eyes; the face is always hidden, so the eyes carry the mood. Art in `characters/`: the full figure (`Armored_knight.jpg`), a portrait (`Armored_knight_portrait.jpg`) and a sheet of 6 moods (`Armored_knight-sheet.jpg`: calm with hands on the sword, focused glare, happy with a thumbs-up, nervous and sweating, huffing with a fist, asleep). Images and GIFs as in D159. Fills the place D151 left open. | User: "for the new character i want this character". | Final |
+| D183 | **Rules for the knight art.** ① The red specks (embers) are recolored **cyan**, like the eyes, before any art ships: nothing in the app is red. ② **All 6 moods are kept**, the huffing and nervous ones included. A mood is never shown in response to a miss: the no-shame rules pick the moments, not the art. ③ **On no screen for now.** The knight is not added to any mockup or to the app until the user says so; D159's "place on screen undecided" still stands. ④ **The name is picked with the app's new name** (D158). | User picked cyan, all 6 moods and the name later; "right now dont add to any screen untill i tell so just update the document and add the image". ② second sentence is mine, from the product rules. | Final (② second sentence Default) |
+| D184 | **Three more characters join the knight: a cast of four.** All four are drawn in the same style (ink outline, dark blue-teal night, cyan glow), each with a full figure, a portrait and a sheet of 6 moods in the same order: calm, busy, happy, nervous, cross, asleep. ① **The vampire:** a pale young man with a long black coat and a high collar, a rolled scroll; reads the scroll when busy, crosses his arms when cross. ② **The elderly wizard:** white braided beard, round glasses, blue robe and hat, a glowing staff, a book and an hourglass; «hmm…» when calm, laughs with sparkles when happy, holds the hourglass when nervous, a storm cloud when cross. ③ **The goth woman:** black hair with a white streak, a moon choker, a journal and quill, a black cat on her shoulder that reacts with her (hearts when happy, «HISSS!» when cross, asleep with her). D183's rules ②–③ hold for all four: all 6 moods kept, never a mood in response to a miss, on no screen until the user says so. How the four are used (the user picks one, or each takes a role) is open. | User: "also i added other characters add them too". | Final (rules and use Default/open) |
+
 ## Superseded
 
 - Weekly focus sentence (Phase 2) → removed in D24.
@@ -339,7 +347,7 @@ Research: `docs/research/plugin-platform-research.md` («research §n»). Plan: 
 - Fade-through between screens and tabs (D76) → slides; the parts of the day as swipe pages instead of tap only (D147).
 - The «گوشی» screen (D99) → «رسیدن یادآورها» (D147).
 - One fixed app-wide program (Day 0, 23 weeks, chapters of the program, Yalda halfway, Nowruz finish; D51, D52, D61, D74) → dates, chapters, recaps and letters per goal (D148).
-- The character «پیکر» (D82–D84, D93) → removed; the user brings a new character (D151).
+- The character «پیکر» (D82–D84, D93) → removed (D151); the new characters are the armored knight (D182) and three more (D184).
 - "Goals: target values on metrics" (SPEC v0.3 §3.2, later) → the goals part (D149).
 - Workout log, strength tests, check-in and plan editor as core features (SPEC v0.3 M4, M5, M7, M14) → the fitness goal template (D152).
 - The Progress tab (D138) → «هدف‌ها» and the goal detail screen (D157).

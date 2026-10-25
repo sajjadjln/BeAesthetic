@@ -54,7 +54,7 @@ Today (ring, week dots, part-of-day pages, tiles, «مهم», «موعدش رس�
 
 ### 3.3 Removed
 - The fixed app-wide program: Day 0, «هفته N از ۲۳», program chapters, the Nowruz countdown, the program line (they move to each goal).
-- The character «پیکر» and its Today row (D151). A new character comes from the user later **[OPEN: format]**.
+- The character «پیکر» and its Today row (D151). The new characters are a cast of four: the armored knight (D182), the vampire, the elderly wizard and the goth woman (D184), as images and GIFs (D159), art in `characters/`. They are on no screen until the user says so (D183) **[OPEN: placement, and how the four are used]**.
 - The Progress tab as its own tab (it becomes the goal detail).
 
 ### 3.3b Plugins (D163–D165)
