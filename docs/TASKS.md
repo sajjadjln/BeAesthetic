@@ -1,6 +1,6 @@
 # Tasks and status
 
-_Last updated: 2026-10-25 (the new characters: the knight and three more, D182–D184)_
+_Last updated: 2026-10-27 (Today redesign with the characters, the character pick, Settings and the new-task sheet, D186–D189)_
 
 ## New identity: to-do + goals (2026-10-21)
 
@@ -14,7 +14,13 @@ The app is no longer a workout program. It has two parts: the to-do list (as bui
 | 4. Architecture | Not started. `ARCHITECTURE.md` needs the goal tables, the migration and the new slices. |
 | 5. Build | Not started for v1.0. |
 
-**New characters 2026-10-25:** the armored knight (D182), then the vampire, the elderly wizard and the goth woman (D184); art in `characters/`. The knight's red embers → cyan, all 6 moods kept, the knight named with the app (D183). **Not on any screen until the user says so**: don't add them to mockups or the app before then. Open: how the four are used (pick one, or a role each), and whether the vampire's dark-red coat lining counts against "nothing is red".
+**Today redesign with the characters, 2026-10-27 (D186–D189).** The user picks one of the four characters on first launch, then the Today layout; the character sits at the top of Today and its color themes the whole app (knight cyan, vampire red, goth purple, wizard gray; done stays green, due stays amber). Today moods: calm, busy, happy only (no nervous, cross or asleep). Mockups, all in `docs/design/`:
+- `today-v5.html` (https://claude.ai/artifact/DUEzm7WHa2QJNDXnQTa2zw): Today, two layouts (list, parts slider), today only, no week row.
+- `character-pick.html` (https://claude.ai/artifact/6MQKkY1faSmU6NKZ569bTL): onboarding, the character, then the layout.
+- `settings-task.html` (https://claude.ai/artifact/DCcA6oTcrkC7VENQVCgpok): Settings («همراه», «صفحه‌ی امروز», «زبان»; «ظاهر» and light mode removed) and the new-task sheet.
+**Next:** the user reviews these; then the rest of the screens in the same theme (tasks list, reminders, goals wall), and `DESIGN.md` gets rewritten for v1.0.
+
+**New characters 2026-10-25:** the armored knight (D182), then the vampire, the elderly wizard and the goth woman (D184); art in `characters/`. The knight's red embers → cyan, all 6 moods kept, the knight named with the app (D183). Now on the goal flow (D185), Today, onboarding and Settings (D186–D189); still not on other screens until the user says so. The vampire's red theme is allowed (D187); red never means missed.
 
 Answered 2026-10-21: a new name later (D158), the character as images and GIFs with its place undecided (D159), two tabs with the dashboard behind the Goals section (D160), the wall (D161), the 4 review questions once (D162), mockups first.
 

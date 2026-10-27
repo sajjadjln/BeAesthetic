@@ -7,6 +7,8 @@ Published copy: https://claude.ai/artifact/BwuSiLCGAxV5fGR86MSmjH
 
 **Name and logo (D77, D78):** the app is «پیکر» in Persian, "BeAesthetic" in English (D79). Logo concepts: `docs/design/logo.html` (https://claude.ai/artifact/2o9iY6KqvcGFTbhYhFF6j9). **Chosen: the cartoon sticker** (D81): a chunky green bodybuilder flexing, ink outline, white sticker border, slight tilt, on the dark background. Files in `docs/design/logo/`.
 
+**v1.0 redesign in progress (D185–D189).** The goal flow, Today, onboarding's character pick, Settings and the new-task sheet are redesigned in the characters' night/pixel theme; see `docs/TASKS.md` for the mockups. Where this file disagrees with D185–D189, the decisions win. «ظاهر» (06b) is removed (D189).
+
 **The new characters (D182–D184).** Replace «پیکر» (removed, D151). A cast of four in one style, art in `characters/`: a full figure, a portrait and a sheet of 6 moods each (calm, busy, happy, nervous, cross, asleep). All 6 moods are kept; on no screen until the user says so. The knight's red embers become cyan; it's named with the app's new name.
 
 *The armored knight (D182):*
