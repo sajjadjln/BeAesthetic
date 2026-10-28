@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="window_bg">#F6F7F6</color>
-    <color name="notification_accent">#34C47A</color>
+    <!-- The night sky behind Compose (D189), so a cold start never flashes white. -->
+    <color name="window_bg">#0B1622</color>
+    <color name="notification_accent">#5FD3E6</color>
 </resources>

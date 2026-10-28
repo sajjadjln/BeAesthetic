@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- A pixel lantern for the system splash (D190). 108 units; the art stays inside the middle 60 so the
+     splash's round mask never cuts it. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp" android:height="108dp"
+    android:viewportWidth="108" android:viewportHeight="108">
+    <!-- soft glow -->
+    <path android:fillColor="#225FD3E6" android:pathData="M30,54 a24,24 0 1,0 48,0 a24,24 0 1,0 -48,0"/>
+    <!-- handle -->
+    <path android:fillColor="#A9BCCB" android:pathData="M48,26h12v3h3v6h-3v-3h-12v3h-3v-6h3z"/>
+    <!-- cap -->
+    <path android:fillColor="#CDEFF6" android:pathData="M42,35h24v4h3v3h-30v-3h3z"/>
+    <!-- frame -->
+    <path android:fillColor="#2A6478" android:pathData="M39,42h30v30h-30z"/>
+    <!-- glass -->
+    <path android:fillColor="#0F2232" android:pathData="M42,45h24v24h-24z"/>
+    <!-- flame -->
+    <path android:fillColor="#5FD3E6" android:pathData="M51,50h6v3h3v9h-3v3h-6v-3h-3v-9h3z"/>
+    <path android:fillColor="#E9FFFF" android:pathData="M53,56h2v6h-2z"/>
+    <!-- base -->
+    <path android:fillColor="#CDEFF6" android:pathData="M39,72h30v3h-3v3h-24v-3h-3z"/>
+</vector>

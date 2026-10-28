@@ -425,6 +425,8 @@
     <!-- Slice 5: tabs, dashboard (02) and the day sheet (D1) -->
     <string name="tab_today">امروز</string>
     <string name="tab_goals">هدف‌ها</string>
+    <string name="splash_en" translatable="false">LANTERN</string>
+    <string name="splash_line">یه چراغ برای هر روز</string>
     <string name="char_knight">شوالیه</string>
     <string name="char_vampire">ومپایر</string>
     <string name="char_wizard">جادوگر</string>

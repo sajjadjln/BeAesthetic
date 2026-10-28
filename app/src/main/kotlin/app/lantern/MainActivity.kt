@@ -67,6 +67,8 @@ import app.lantern.ui.theme.LanternCharacter
 import app.lantern.ui.theme.BaMotion
 import app.lantern.ui.theme.LanternTheme
 import app.lantern.ui.today.TodayRoute
+import app.lantern.ui.splash.Splash
+import androidx.compose.runtime.saveable.rememberSaveable
 import app.lantern.ui.today.TodayViewModel
 import app.lantern.ui.goals.GoalsPlaceholder
 import app.lantern.ui.onboarding.OnboardingScreen
@@ -111,6 +113,8 @@ class MainActivity : ComponentActivity() {
         // The first run seeds the settings row the start route waits for (onboarding has no Today view model).
         lifecycleScope.launch { container.ensureReady() }
 
+        // The splash plays once per cold start, not after a rotation or a theme change.
+        val coldStart = savedInstanceState == null
         setContent {
             val settings by container.db.settings().observe().collectAsStateWithLifecycle(null)
             val character = LanternCharacter.of(settings?.character)
@@ -203,6 +207,9 @@ class MainActivity : ComponentActivity() {
                     if (tab != null) shown = tab
                     BottomBar(shown, onSelect = { selectTab(it, shown, nav) })
                 }
+                // Full on the first launch, short after (D191 ③); over everything, so the app loads under it.
+                var splash by rememberSaveable { mutableStateOf(coldStart) }
+                if (splash) Splash(full = !onboarded) { splash = false }
               }
             }
         }

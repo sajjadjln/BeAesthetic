@@ -66,6 +66,11 @@ Each slice ends with a build on the Poco, a short "what works, what's next", and
 - Then the Compose "Gather" animation: stars, the four portraits drift in, the light at the center, «فانوس», "LANTERN", the line, the pixel bar. Full on first launch, short after (Q3).
 - Respects "remove animations" in the phone's settings.
 - **Done when:** cold start on the Poco looks like the mockup, with no white flash.
+- ✅ **Done 2026-10-28 (not yet seen on the phone).** As built:
+  - The window background is the night sky in every mode (the light `window_bg` and `values-night` are gone), so nothing flashes white.
+  - Android 12+: `values-v31/themes.xml` sets the system splash to the night color and a pixel lantern (`drawable/ic_splash_lantern.xml`). No splash library, so no new dependency.
+  - `ui/splash/Splash.kt`: the "Gather" timeline from `splash.html` (stars, the four portraits each in its own glow, the core of light, «فانوس», "LANTERN", «یه چراغ برای هر روز», the pixel bar). Full (4.4 s) until onboarding is done, then at 30% speed (~1.3 s). A tap skips it. Only on a cold start. "Remove animations" makes it instant (Compose's duration scale).
+  - **Open:** the launcher icon is still the old «پیکر» sticker; it needs a lantern icon (small, could join L9). **Open:** Q5 (English from the first slice) is not started: `values/` still holds Persian only. Splitting it into `values/` (English) and `values-fa/` should come before L3, so the new screens' strings land in both.
 
 ### L3. Onboarding
 - ① Character pick (four pixel cards, intro lines, smile on second tap).
