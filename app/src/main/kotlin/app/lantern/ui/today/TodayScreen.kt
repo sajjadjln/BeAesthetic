@@ -179,6 +179,11 @@ fun TodayScreen(state: TodayUiState?, actions: TodayActions) {
         wasComplete = complete
     }
 
+    // Layout 1, the list (D188), unless it's a minimum day: that keeps the floor grid below for now.
+    if (state != null && state.layout == app.lantern.ui.theme.TodayLayout.LIST && !state.minimumMode) {
+        TodayList(state, actions)
+        return
+    }
     Box(Modifier.fillMaxSize().background(colors.bg).safeDrawingPadding()) {
         if (state == null) return@Box
         val partNames = listOf(R.string.part_morning, R.string.part_midday, R.string.part_evening, R.string.part_night).map { stringResource(it) }
@@ -249,7 +254,7 @@ fun TodayScreen(state: TodayUiState?, actions: TodayActions) {
 }
 
 @Composable
-private fun NewTaskFab(onClick: () -> Unit, modifier: Modifier = Modifier) {
+internal fun NewTaskFab(onClick: () -> Unit, modifier: Modifier = Modifier) {
     val c = Ba.colors
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -297,7 +302,7 @@ private fun Hero(state: TodayUiState, pulse: Int) {
 }
 
 @Composable
-private fun HealthBannerRow(banner: HealthBanner, onFix: () -> Unit, modifier: Modifier = Modifier) {
+internal fun HealthBannerRow(banner: HealthBanner, onFix: () -> Unit, modifier: Modifier = Modifier) {
     val c = Ba.colors
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -319,7 +324,7 @@ private fun HealthBannerRow(banner: HealthBanner, onFix: () -> Unit, modifier: M
 }
 
 @Composable
-private fun BackupRow(status: BackupStatus, onOpen: () -> Unit, modifier: Modifier = Modifier) {
+internal fun BackupRow(status: BackupStatus, onOpen: () -> Unit, modifier: Modifier = Modifier) {
     val c = Ba.colors
     val text = when {
         status.notice == BackupNotice.NO_FOLDER -> stringResource(R.string.backup_no_folder)
@@ -453,7 +458,7 @@ private fun PartDot(visible: Boolean, modifier: Modifier) {
  * 96% and springs back, with a light vibration. An untick drains back without vibrating (D76).
  */
 @Composable
-private fun TaskTile(tile: TileUi, onToggle: () -> Unit) {
+internal fun TaskTile(tile: TileUi, onToggle: () -> Unit) {
     val colors = Ba.colors
     val haptics = rememberHaptics()
     val interaction = remember { MutableInteractionSource() }
@@ -543,7 +548,7 @@ private fun TaskTile(tile: TileUi, onToggle: () -> Unit) {
  * stays until the day ends, so a wrong tick can be undone; it never counts in the ring.
  */
 @Composable
-private fun AnytimeCard(items: List<AnytimeUi>, open: Boolean, actions: TodayActions, modifier: Modifier = Modifier) {
+internal fun AnytimeCard(items: List<AnytimeUi>, open: Boolean, actions: TodayActions, modifier: Modifier = Modifier) {
     val colors = Ba.colors
     val haptics = rememberHaptics()
     val chevron by animateFloatAsState(if (open) 180f else 0f, tween(BaMotion.SHORT), label = "anytimeChevron")
@@ -599,7 +604,7 @@ private fun AnytimeCard(items: List<AnytimeUi>, open: Boolean, actions: TodayAct
 
 /** The round check of a tile, the workout card and «هر وقت» rows. */
 @Composable
-private fun CheckCircle(done: Boolean, modifier: Modifier = Modifier) {
+internal fun CheckCircle(done: Boolean, modifier: Modifier = Modifier) {
     val colors = Ba.colors
     val bg by animateColorAsState(if (done) colors.accent else colors.surface, tween(BaMotion.SHORT), label = "checkCircle")
     Box(

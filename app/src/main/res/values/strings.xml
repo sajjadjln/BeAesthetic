@@ -340,4 +340,74 @@
     <string name="widget_next_part">Next: %1$s</string>
     <string name="widget_more">and %1$s more</string>
 
+    <!-- Today, list layout (L4): each character's lines by mood; %1$s is the task to do now. -->
+    <string name="today_now">Now</string>
+    <string name="today_count">%1$s of %2$s</string>
+    <string name="today_all_done">Nothing left today. ✦</string>
+    <string name="today_night_rest">The rest is for tomorrow. Good night.</string>
+    <string-array name="lines_knight_calm">
+        <item>Good morning. First of all: %1$s.</item>
+        <item>A small step, but today. Start with %1$s.</item>
+    </string-array>
+    <string-array name="lines_knight_busy">
+        <item>Good. Next: %1$s.</item>
+        <item>The sword is sharp; keep going. Next: %1$s.</item>
+    </string-array>
+    <string-array name="lines_knight_happy">
+        <item>All done. Today was yours.</item>
+        <item>Rest is part of the battle too.</item>
+    </string-array>
+    <string-array name="lines_knight_night">
+        <item>The day is over. Tomorrow, together.</item>
+        <item>Night watch is mine. Go rest.</item>
+    </string-array>
+    <string-array name="lines_vampire_calm">
+        <item>The sun is still up… but fine, first %1$s.</item>
+        <item>Today\'s scroll is short. Start with %1$s.</item>
+    </string-array>
+    <string-array name="lines_vampire_busy">
+        <item>One line crossed off the scroll. Next: %1$s.</item>
+        <item>Not bad. Not bad at all. Next: %1$s.</item>
+    </string-array>
+    <string-array name="lines_vampire_happy">
+        <item>The whole scroll is done. I\'m impressed.</item>
+        <item>Now you can enjoy the night.</item>
+    </string-array>
+    <string-array name="lines_vampire_night">
+        <item>Night is my time. But you go rest.</item>
+        <item>The scroll can wait till tomorrow.</item>
+    </string-array>
+    <string-array name="lines_wizard_calm">
+        <item>Hmm… start today with %1$s.</item>
+        <item>Every great spell starts small. Try %1$s.</item>
+    </string-array>
+    <string-array name="lines_wizard_busy">
+        <item>Aha! Now %1$s.</item>
+        <item>The hourglass is still full, no rush. Next: %1$s.</item>
+    </string-array>
+    <string-array name="lines_wizard_happy">
+        <item>Haha! All of it! I wasn\'t this tidy when I was young.</item>
+        <item>Today\'s book is closed.</item>
+    </string-array>
+    <string-array name="lines_wizard_night">
+        <item>Hmm… the stars are out. We go on tomorrow.</item>
+        <item>Even wizards sleep. Tomorrow.</item>
+    </string-array>
+    <string-array name="lines_goth_calm">
+        <item>I wrote it in my journal: first %1$s.</item>
+        <item>My cat agrees: %1$s first.</item>
+    </string-array>
+    <string-array name="lines_goth_busy">
+        <item>Ticked one. Next: %1$s.</item>
+        <item>My ink isn\'t dry yet. Next: %1$s.</item>
+    </string-array>
+    <string-array name="lines_goth_happy">
+        <item>All ticked. My cat is happy, and so am I, a little.</item>
+        <item>Today\'s page turned out pretty.</item>
+    </string-array>
+    <string-array name="lines_goth_night">
+        <item>I\'m closing today\'s page. Tomorrow.</item>
+        <item>The cat is already asleep. Tomorrow.</item>
+    </string-array>
+
 </resources>

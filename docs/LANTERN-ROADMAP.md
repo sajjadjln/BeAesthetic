@@ -87,6 +87,7 @@ Each slice ends with a build on the Poco, a short "what works, what's next", and
 - The progress bar (one block per task), the «الان» card with one-tap tick, the parts of the day, «هر وقت».
 - Bottom bar: Today, «+», Goals.
 - **Done when:** a real day of tasks runs on it, and ticks and moods are right after the 04:00 rollover.
+- ✅ **Built 2026-10-28 (not yet seen on the phone).** `ui/today/TodayList.kt`, shown when the layout is LIST and it isn't a minimum day (the minimum day keeps the old floor grid until L5). The character's lines are string arrays per character and mood in both languages (`lines_<character>_<calm|busy|happy|night>`), with the «الان» task filled in; a tap on the character or the box gives the next line. The rules (mood, which lines, which task is «الان») are in `TodayPick` with unit tests. «+» is a pixel button at the bottom end; moving it into the bottom bar's middle (as in the mockup) waits for the bar's restyle in L7. The «هر وقت» card, the health and backup rows still use their old look inside the new screen.
 
 ### L5. Today, layout 2 (parts slider)
 - The 4-part pixel bar, swipe pages with the indicator following the finger, opens on the clock's part, the done square, «هر وقت» under the pages.

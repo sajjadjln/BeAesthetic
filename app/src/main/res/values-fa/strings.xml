@@ -339,4 +339,74 @@
     <string name="widget_next_part">بعدی: %1$s</string>
     <string name="widget_more">و %1$s تای دیگه</string>
 
+    <!-- Today, list layout (L4): each character's lines by mood; %1$s is the task to do now. -->
+    <string name="today_now">الان</string>
+    <string name="today_count">%1$s از %2$s</string>
+    <string name="today_all_done">امروز کاری نمونده. ✦</string>
+    <string name="today_night_rest">بقیه‌ش مال فردا. شب بخیر.</string>
+    <string-array name="lines_knight_calm">
+        <item>صبح بخیر. اول از همه: %1$s.</item>
+        <item>قدم کوچیک، ولی امروز. با %1$s شروع کن.</item>
+    </string-array>
+    <string-array name="lines_knight_busy">
+        <item>خوبه. بعدی: %1$s.</item>
+        <item>شمشیر تیزه، ادامه بده. بعدی: %1$s.</item>
+    </string-array>
+    <string-array name="lines_knight_happy">
+        <item>همه‌ش انجام شد. امروز مال تو بود.</item>
+        <item>استراحت هم بخشی از نبرده.</item>
+    </string-array>
+    <string-array name="lines_knight_night">
+        <item>امروز تموم شد. فردا با هم.</item>
+        <item>نگهبانی شب با من. تو برو استراحت کن.</item>
+    </string-array>
+    <string-array name="lines_vampire_calm">
+        <item>هنوز آفتابه… ولی خب، اول %1$s.</item>
+        <item>طومار امروز کوتاهه. با %1$s شروع کن.</item>
+    </string-array>
+    <string-array name="lines_vampire_busy">
+        <item>یکی از طومار خط خورد. بعدی: %1$s.</item>
+        <item>بد نیست. اصلاً بد نیست. بعدی: %1$s.</item>
+    </string-array>
+    <string-array name="lines_vampire_happy">
+        <item>کل طومار تموم شد. تحت تأثیر قرار گرفتم.</item>
+        <item>حالا می‌تونی شب رو بی‌خیال بگذرونی.</item>
+    </string-array>
+    <string-array name="lines_vampire_night">
+        <item>شب، وقت منه. ولی تو برو استراحت کن.</item>
+        <item>طومار تا فردا صبر می‌کنه.</item>
+    </string-array>
+    <string-array name="lines_wizard_calm">
+        <item>هوم… امروز با %1$s شروع کن.</item>
+        <item>هر جادوی بزرگی از یه حرکت کوچیک شروع می‌شه. %1$s.</item>
+    </string-array>
+    <string-array name="lines_wizard_busy">
+        <item>آها! حالا %1$s.</item>
+        <item>ساعت‌شنی هنوز پره، عجله‌ای نیست. بعدی: %1$s.</item>
+    </string-array>
+    <string-array name="lines_wizard_happy">
+        <item>هاها! همه‌ش! من تو جوونی این‌قدر منظم نبودم.</item>
+        <item>کتاب امروز بسته شد.</item>
+    </string-array>
+    <string-array name="lines_wizard_night">
+        <item>هوم… ستاره‌ها درومدن. فردا ادامه می‌دیم.</item>
+        <item>جادوگرها هم می‌خوابن. فردا.</item>
+    </string-array>
+    <string-array name="lines_goth_calm">
+        <item>تو دفترم نوشتم: اول %1$s.</item>
+        <item>گربه‌م هم موافقه: اول %1$s.</item>
+    </string-array>
+    <string-array name="lines_goth_busy">
+        <item>یکی رو تیک زدم. بعدی: %1$s.</item>
+        <item>جوهرم هنوز خشک نشده. بعدی: %1$s.</item>
+    </string-array>
+    <string-array name="lines_goth_happy">
+        <item>همه تیک خوردن. گربه‌م خوشحاله، منم یه‌کم.</item>
+        <item>صفحه‌ی امروز قشنگ شد.</item>
+    </string-array>
+    <string-array name="lines_goth_night">
+        <item>صفحه‌ی امروز رو می‌بندم. فردا.</item>
+        <item>گربه‌م خوابیده. فردا.</item>
+    </string-array>
+
 </resources>

@@ -19,6 +19,8 @@ import app.lantern.domain.time.JalaliDate
 import app.lantern.domain.time.Part
 import app.lantern.domain.time.ProgramCalendar
 import app.lantern.reminders.AlarmScheduler.Companion.toLogRow
+import app.lantern.ui.theme.LanternCharacter
+import app.lantern.ui.theme.TodayLayout
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -67,6 +69,10 @@ data class TodayUiState(
     val anytimeOpen: Boolean = false,
     /** The backup row under the tiles (SPEC §8); shown only when no reminder banner is. */
     val backup: BackupStatus? = null,
+    /** The part of the day the clock is in (the selected part can differ). */
+    val currentPart: Part = selectedPart,
+    val character: LanternCharacter = LanternCharacter.KNIGHT,
+    val layout: TodayLayout = TodayLayout.LIST,
 ) {
     val dayComplete: Boolean get() = total > 0 && done == total
 }
@@ -75,7 +81,7 @@ data class TodayUiState(
 private data class Now(val date: LocalDate, val part: Part)
 
 /** Settings Today reads, without the fields that change on every app open (so nothing re-subscribes). */
-private data class TodaySettings(val healthSeenAt: Instant?, val anytimeOpen: Boolean)
+private data class TodaySettings(val healthSeenAt: Instant?, val anytimeOpen: Boolean, val character: LanternCharacter, val layout: TodayLayout)
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class TodayViewModel(private val container: AppContainer) : ViewModel() {
@@ -102,7 +108,7 @@ class TodayViewModel(private val container: AppContainer) : ViewModel() {
         .distinctUntilChanged()
         .onEach { pickedPart.value = null }
 
-    private val todaySettings = settings.map { TodaySettings(it.healthSeenAt, it.anytimeOpen) }.distinctUntilChanged()
+    private val todaySettings = settings.map { TodaySettings(it.healthSeenAt, it.anytimeOpen, LanternCharacter.of(it.character), TodayLayout.of(it.todayLayout)) }.distinctUntilChanged()
 
     private val day: Flow<Pair<Now, DayView>> = now.flatMapLatest { n -> container.tasks.observeDay(n.date).map { n to it } }
 
@@ -189,6 +195,9 @@ class TodayViewModel(private val container: AppContainer) : ViewModel() {
             banner = banner,
             anytime = day.anytime.map { AnytimeUi(it.task.id, it.task.title, it.done, it.task.isImportant) },
             anytimeOpen = s.anytimeOpen,
+            currentPart = n.part,
+            character = s.character,
+            layout = s.layout,
         )
     }
 
