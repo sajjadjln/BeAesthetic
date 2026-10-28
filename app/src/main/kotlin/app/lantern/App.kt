@@ -14,7 +14,7 @@ class App : Application() {
         private set
 
     override fun attachBaseContext(base: Context) {
-        super.attachBaseContext(PersianLocale.wrap(base))
+        super.attachBaseContext(AppLanguage.wrap(base))
     }
 
     override fun onCreate() {

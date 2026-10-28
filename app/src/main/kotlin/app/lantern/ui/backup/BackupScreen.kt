@@ -50,6 +50,7 @@ import app.lantern.ui.components.SectionTitle
 import app.lantern.ui.components.TopBar
 import app.lantern.ui.jalaliDayMonth
 import app.lantern.ui.theme.Ba
+import app.lantern.ui.theme.sky
 import java.time.Instant
 import java.time.ZoneId
 
@@ -83,7 +84,7 @@ fun BackupScreen(
     onRestore: () -> Unit,
 ) {
     val c = Ba.colors
-    Column(Modifier.fillMaxSize().background(c.bg).safeDrawingPadding()) {
+    Column(Modifier.fillMaxSize().then(Modifier.sky()).safeDrawingPadding()) {
         TopBar(stringResource(R.string.backup_title), onBack, stringResource(R.string.cd_back))
         val s = state ?: return@Column
         Column(

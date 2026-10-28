@@ -10,7 +10,7 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import app.lantern.MainActivity
-import app.lantern.PersianLocale
+import app.lantern.AppLanguage
 import app.lantern.R
 import app.lantern.domain.reminders.BlockLine
 import app.lantern.domain.text.PersianDigits
@@ -24,7 +24,7 @@ import java.time.LocalDate
  */
 class Notifier(appContext: Context) {
 
-    private val context = PersianLocale.wrap(appContext)
+    private val context = AppLanguage.wrap(appContext)
     private val manager = NotificationManagerCompat.from(appContext)
 
     /**

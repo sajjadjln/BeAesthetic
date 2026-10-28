@@ -41,7 +41,8 @@ val BOTTOM_BAR_HEIGHT = 61.dp
 fun BottomBar(selected: Tab, onSelect: (Tab) -> Unit, modifier: Modifier = Modifier) {
     val c = Ba.colors
     Column(modifier.fillMaxWidth().background(c.surface).navigationBarsPadding()) {
-        HorizontalDivider(color = c.border)
+        // A dashed pixel line on top, in the character's color.
+        HorizontalDivider(color = c.glow.copy(alpha = 0.25f), thickness = 2.dp)
         Row(
             horizontalArrangement = Arrangement.SpaceEvenly,
             modifier = Modifier.fillMaxWidth().height(60.dp).selectableGroup(),
@@ -58,9 +59,9 @@ fun BottomBar(selected: Tab, onSelect: (Tab) -> Unit, modifier: Modifier = Modif
                         .selectable(on, role = Role.Tab) { onSelect(tab) }
                         .semantics { contentDescription = label },
                 ) {
-                    Icon(tab.icon, null, tint = if (on) c.text1 else c.text3, modifier = Modifier.size(24.dp))
+                    Icon(tab.icon, null, tint = if (on) c.glow else c.text3, modifier = Modifier.size(24.dp))
                     // The active tab's small accent dot.
-                    Box(Modifier.padding(top = 4.dp).size(5.dp).clip(CircleShape).background(if (on) c.accent else c.surface))
+                    Box(Modifier.padding(top = 4.dp).size(5.dp).background(if (on) c.glow else c.surface))
                 }
             }
         }

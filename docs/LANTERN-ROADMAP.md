@@ -104,6 +104,11 @@ Each slice ends with a build on the Poco, a short "what works, what's next", and
 - Settings: the health banner, «همراه», «صفحه‌ی امروز», «زبان», then the rows.
 - Restyle the screens it opens: tasks list, reminders, backup, phone setup. Same behavior.
 - The home-screen widget in the theme.
+- ✅ **Built 2026-10-28 (not yet seen on the phone).** As built:
+  - Settings: the health line, «همراه» (the character with a line in its voice and the four pixel cards; a tap re-themes the app and the widget at once), «صفحه‌ی امروز» (list or parts; Today swaps live), «زبان» (like the phone, فارسی, English), then rows to tasks, reminders, backup and phone setup, and the version. No plugins row in v1.
+  - Language (D176): `AppLanguage` replaces `PersianLocale`. The choice is in plain preferences (needed before the database opens); changing it recreates the screen. **The default is "like the phone"**, so on an English phone the app is now English. English shows Latin digits (`PersianDigits.latin`). **Open:** English dates still show Jalali first; D176 wants Gregorian first in English (L9).
+  - The sub-screens (tasks, reminders, backup, phone setup) and Goals sit on the night sky; cards, round buttons, the back button and the calendar are pixel-shaped, the calendar's picked day in the character's color. The bottom bar takes the character's color for the active tab. «+» stays at the bottom corner of Today (the bar keeps two tabs).
+  - The widget uses the picked character's colors (box background, the title in its color, done green) and pixel-ish corners.
 
 ### L8. Goals placeholder
 - The Goals tab shows the character with a line like «اینجا داره ساخته می‌شه» and a «در دست ساخت» tag. Nothing else.

@@ -52,6 +52,7 @@ import app.lantern.ui.components.TopBar
 import app.lantern.ui.jalaliDayMonth
 import app.lantern.ui.settings.Segmented
 import app.lantern.ui.theme.Ba
+import app.lantern.ui.theme.sky
 import app.lantern.ui.theme.LanternTheme
 import java.time.LocalDate
 
@@ -71,7 +72,7 @@ fun TasksScreen(state: TasksUiState?, onBack: () -> Unit, onSave: (TaskForm, Tas
     var filter by rememberSaveable { mutableStateOf(0) }
     var editing by remember { mutableStateOf<Editing?>(null) }
 
-    Box(Modifier.fillMaxSize().background(c.bg).safeDrawingPadding()) {
+    Box(Modifier.fillMaxSize().then(Modifier.sky()).safeDrawingPadding()) {
         Column(Modifier.fillMaxSize()) {
             TopBar(stringResource(R.string.tasks_title), onBack, stringResource(R.string.cd_back))
             val (today, tasks, completions) = state ?: return@Column

@@ -72,6 +72,17 @@
     <string name="settings_title">Settings</string>
     <string name="health_ok">Reminders are healthy</string>
     <string name="health_not_ok">Reminders need a look</string>
+    <string name="settings_companion">Companion</string>
+    <string name="settings_today_layout">Today\'s layout</string>
+    <string name="settings_language">Language</string>
+    <string name="settings_more">More</string>
+    <string name="lang_system">Like the phone</string>
+    <string name="lang_fa">فارسی</string>
+    <string name="lang_en">English</string>
+    <string name="companion_knight">By your side. Change me whenever you like.</string>
+    <string name="companion_vampire">I still hold the scroll of your tasks.</string>
+    <string name="companion_wizard">Hmm… my patience is still plenty.</string>
+    <string name="companion_goth">My cat and I still write everything down.</string>
     <string name="settings_tasks">Tasks</string>
     <string name="settings_reminders">Reminders</string>
     <string name="settings_backup">Backup</string>

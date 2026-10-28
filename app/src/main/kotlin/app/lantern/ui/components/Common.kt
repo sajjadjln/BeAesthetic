@@ -73,7 +73,7 @@ fun RoundIconButton(
         contentAlignment = Alignment.Center,
         modifier = modifier
             .size(44.dp)
-            .clip(CircleShape)
+            .clip(app.lantern.ui.theme.Px.Small)
             .background(if (selected) colors.specialSubtle else colors.surface)
             .selectable(selected = selected, role = Role.Button, onClick = onClick)
             .semantics { contentDescription = description },
@@ -88,7 +88,7 @@ fun TopBar(title: String, onBack: () -> Unit, backDescription: String, icon: Ima
     Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp, vertical = 4.dp)) {
         Box(
             contentAlignment = Alignment.Center,
-            modifier = Modifier.size(48.dp).clip(CircleShape).clickable(role = Role.Button, onClick = onBack).semantics { contentDescription = backDescription },
+            modifier = Modifier.size(48.dp).clip(app.lantern.ui.theme.Px.Small).clickable(role = Role.Button, onClick = onBack).semantics { contentDescription = backDescription },
         ) {
             Icon(icon, contentDescription = null, tint = Ba.colors.text1, modifier = Modifier.size(24.dp))
         }
@@ -99,7 +99,7 @@ fun TopBar(title: String, onBack: () -> Unit, backDescription: String, icon: Ima
 @Composable
 fun BaCard(modifier: Modifier = Modifier, padding: PaddingValues = PaddingValues(16.dp), content: @Composable ColumnScope.() -> Unit) {
     Column(
-        modifier = modifier.fillMaxWidth().clip(RoundedCornerShape(16.dp)).background(Ba.colors.surface).padding(padding),
+        modifier = modifier.fillMaxWidth().clip(app.lantern.ui.theme.Px.Card).background(Ba.colors.surface).padding(padding),
         content = content,
     )
 }

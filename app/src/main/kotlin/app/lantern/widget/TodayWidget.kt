@@ -14,6 +14,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.glance.GlanceId
+import app.lantern.ui.theme.BaColors
+import app.lantern.ui.theme.LanternCharacter
+import app.lantern.ui.theme.lanternColors
 import androidx.glance.GlanceModifier
 import androidx.glance.GlanceTheme
 import androidx.glance.action.ActionParameters
@@ -45,7 +48,7 @@ import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
 import app.lantern.App
 import app.lantern.MainActivity
-import app.lantern.PersianLocale
+import app.lantern.AppLanguage
 import app.lantern.R
 import app.lantern.domain.reminders.PartOfDay
 import app.lantern.domain.reminders.ReminderSlot
@@ -57,7 +60,8 @@ import app.lantern.domain.widget.WidgetContent
 /**
  * The Today widget (D67, D143): «امروز · ۵ از ۱۲», then up to three tasks still open in the current part of
  * the day, each with a circle that ticks it in one tap. Done means the accent, never red; earlier parts are
- * never listed. A tap anywhere else opens Today. Colors follow the phone's light/dark mode (the green accent).
+ * never listed. A tap anywhere else opens Today. Colors are the picked character's night theme (D187); done
+ * stays green.
  */
 @OptIn(ExperimentalCoroutinesApi::class)
 class TodayWidget : GlanceAppWidget() {
@@ -75,34 +79,37 @@ class TodayWidget : GlanceAppWidget() {
         }.distinctUntilChanged().flatMapLatest { (today, part) ->
             container.tasks.observeDay(today).map { day -> WidgetContent.of(day.items, day.minimumMode, part) }
         }
-        val res = PersianLocale.wrap(context).resources
+        val res = AppLanguage.wrap(context).resources
         // The launcher lays the widget out in the phone's own direction. On an LTR phone the rows are built
         // mirrored, so the widget still reads right to left like the app (D87).
         // The app's own context is always Persian (RTL), so the system's configuration is the launcher's.
-        val ltrPhone = android.content.res.Resources.getSystem().configuration.layoutDirection == android.view.View.LAYOUT_DIRECTION_LTR
+        val ltrPhone = android.content.res.Resources.getSystem().configuration.layoutDirection == android.view.View.LAYOUT_DIRECTION_LTR &&
+            AppLanguage.locale(context).language == "fa"
+        val colors = lanternColors(LanternCharacter.of(container.db.settings().get()?.character))
         provideContent {
             val w by content.collectAsState(initial = null)
-            GlanceTheme { Body(w, res, ltrPhone) }
+            GlanceTheme { Body(w, res, ltrPhone, colors) }
         }
     }
 
     @Composable
-    private fun Body(w: WidgetContent?, res: android.content.res.Resources, ltrPhone: Boolean) {
+    private fun Body(w: WidgetContent?, res: android.content.res.Resources, ltrPhone: Boolean, c: BaColors) {
         val start = if (ltrPhone) Alignment.End else Alignment.Start
-        val bg = ColorProvider(day = Color(0xFFFFFFFF), night = Color(0xFF242A28))
-        val text1 = ColorProvider(day = Color(0xFF1A1F1D), night = Color(0xFFE8ECEA))
-        val text2 = ColorProvider(day = Color(0xFF5C6662), night = Color(0xFFA4AEAA))
-        val accent = ColorProvider(day = Color(0xFF1D8A55), night = Color(0xFF5BD994))
-        val ring = ColorProvider(day = Color(0xFFC4CBC8), night = Color(0xFF55605C))
+        val bg = ColorProvider(day = c.surface, night = c.surface)
+        val text1 = ColorProvider(day = c.text1, night = c.text1)
+        val text2 = ColorProvider(day = c.text2, night = c.text2)
+        val accent = ColorProvider(day = c.accent, night = c.accent)
+        val ring = ColorProvider(day = c.text3, night = c.text3)
+        val glow = ColorProvider(day = c.glow, night = c.glow)
         Column(
             horizontalAlignment = start,
-            modifier = GlanceModifier.fillMaxSize().background(bg).cornerRadius(20.dp).padding(14.dp)
+            modifier = GlanceModifier.fillMaxSize().background(bg).cornerRadius(6.dp).padding(14.dp)
                 .clickable(actionStartActivity<MainActivity>()),
         ) {
             if (w == null) return@Column
             RtlRow(ltrPhone, GlanceModifier.fillMaxWidth()) {
                 listOf(
-                    { Text(RLM + res.getString(R.string.tab_today), style = TextStyle(color = text1, fontSize = 16.sp, fontWeight = FontWeight.Bold)) },
+                    { Text(RLM + res.getString(R.string.tab_today), style = TextStyle(color = glow, fontSize = 16.sp, fontWeight = FontWeight.Bold)) },
                     { Spacer(GlanceModifier.width(8.dp)) },
                     {
                         Text(

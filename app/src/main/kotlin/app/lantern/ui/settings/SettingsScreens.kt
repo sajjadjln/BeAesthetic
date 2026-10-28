@@ -1,10 +1,30 @@
 package app.lantern.ui.settings
 
+import app.lantern.AppLanguage
+import app.lantern.ui.theme.CharacterPortrait
+import app.lantern.ui.theme.LanternCharacter
+import app.lantern.ui.theme.Mood
+import app.lantern.ui.theme.Px
+import app.lantern.ui.theme.TodayLayout
+import app.lantern.ui.theme.art
+import app.lantern.ui.theme.sky
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.selection.selectable
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.ColorMatrix
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.runtime.rememberCoroutineScope
+import kotlinx.coroutines.launch
 import android.app.Activity
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -20,7 +40,6 @@ import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -34,7 +53,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -42,13 +60,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
-import androidx.compose.ui.semantics.contentDescription
-import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
@@ -85,7 +100,6 @@ import app.lantern.ui.components.TimePickerDialog
 import app.lantern.ui.components.TopBar
 import app.lantern.ui.theme.Ba
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.launch
 import java.time.Duration
 import java.time.Instant
 import java.time.ZoneId
@@ -93,7 +107,7 @@ import java.time.ZoneId
 /** A settings sub-screen: top bar and a scrolling column. */
 @Composable
 private fun SettingsPage(title: String, onBack: () -> Unit, content: @Composable () -> Unit) {
-    Column(Modifier.fillMaxSize().background(Ba.colors.bg).safeDrawingPadding()) {
+    Column(Modifier.fillMaxSize().sky().safeDrawingPadding()) {
         TopBar(title, onBack, stringResource(R.string.cd_back))
         Column(
             verticalArrangement = Arrangement.spacedBy(12.dp),
@@ -132,7 +146,7 @@ private fun HealthLine(ok: Boolean, action: (@Composable () -> Unit)? = null) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(12.dp),
-        modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(16.dp)).background(if (ok) c.accentSubtle else c.amberSubtle).padding(horizontal = 16.dp, vertical = 12.dp),
+        modifier = Modifier.fillMaxWidth().clip(Px.Card).background(if (ok) c.accentSubtle else c.amberSubtle).padding(horizontal = 16.dp, vertical = 12.dp),
     ) {
         Icon(BaIcons.Shield, null, tint = if (ok) c.onAccentSubtle else c.amber, modifier = Modifier.size(22.dp))
         Text(stringResource(if (ok) R.string.health_ok else R.string.health_not_ok), style = Ba.type.subtitle, color = c.text1, modifier = Modifier.weight(1f))
@@ -147,55 +161,140 @@ enum class SettingsDestination { TASKS, REMINDERS, BACKUP, PHONE, DEBUG }
 @Composable
 fun SettingsScreen(container: AppContainer, debugAvailable: Boolean, onBack: () -> Unit, onOpen: (SettingsDestination) -> Unit) {
     val c = Ba.colors
+    val scope = rememberCoroutineScope()
+    val context = LocalContext.current
     val remindersOk = rememberRemindersOk(container)
+    val settings by container.db.settings().observe().collectAsStateWithLifecycle(null)
+    val character = LanternCharacter.of(settings?.character)
+    val layout = TodayLayout.of(settings?.todayLayout)
     SettingsPage(stringResource(R.string.settings_title), onBack) {
         HealthLine(remindersOk)
-        val tiles = listOf(
+
+        // «همراه» (D189): the current character with a line, and the four; a tap re-themes the app at once.
+        SectionLabel(R.string.settings_companion)
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            modifier = Modifier.fillMaxWidth().clip(Px.Card).background(c.surface).border(2.dp, c.glow.copy(alpha = 0.35f), Px.Card).padding(12.dp),
+        ) {
+            CharacterPortrait(character, Mood.CALM, Modifier.size(70.dp), breathe = false)
+            Column(Modifier.weight(1f)) {
+                Text(stringResource(character.nameRes), style = Ba.type.title, color = c.glow)
+                Text(stringResource(character.settingsLine()), style = Ba.type.caption, color = c.text2)
+            }
+        }
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            LanternCharacter.entries.forEach { who ->
+                val on = who == character
+                val name = stringResource(who.nameRes)
+                Box(
+                    Modifier
+                        .weight(1f)
+                        .aspectRatio(1f)
+                        .clip(Px.Card)
+                        .background(c.surface)
+                        .border(if (on) 3.dp else 2.dp, if (on) c.glow else Color.White.copy(alpha = 0.12f), Px.Card)
+                        .selectable(on, role = Role.RadioButton) { scope.launch { container.db.settings().setCharacter(who.name); app.lantern.widget.TodayWidget.refresh(context) } }
+                        .semantics { contentDescription = name }
+                        .padding(4.dp),
+                ) {
+                    Image(
+                        painterResource(who.art(Mood.CALM)),
+                        contentDescription = null,
+                        contentScale = ContentScale.Crop,
+                        colorFilter = if (on) null else ColorFilter.colorMatrix(ColorMatrix().apply { setToSaturation(0.45f) }),
+                        alpha = if (on) 1f else 0.7f,
+                        modifier = Modifier.fillMaxSize().clip(Px.Small),
+                    )
+                }
+            }
+        }
+
+        // «صفحه‌ی امروز» (D188): the two layouts; Today swaps at once.
+        SectionLabel(R.string.settings_today_layout)
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            TodayLayout.entries.forEach { option ->
+                val on = option == layout
+                Text(
+                    stringResource(if (option == TodayLayout.LIST) R.string.layout_list else R.string.layout_parts),
+                    style = Ba.type.label,
+                    color = if (on) c.glow else c.text2,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier
+                        .weight(1f)
+                        .clip(Px.Card)
+                        .background(if (on) c.glow.copy(alpha = 0.15f) else c.surface)
+                        .border(if (on) 3.dp else 2.dp, if (on) c.glow else Color.White.copy(alpha = 0.12f), Px.Card)
+                        .selectable(on, role = Role.RadioButton) { scope.launch { container.db.settings().setTodayLayout(option.name) } }
+                        .padding(vertical = 14.dp),
+                )
+            }
+        }
+
+        // «زبان» (D176): like the phone, Persian or English. The screen is redrawn in the new language.
+        SectionLabel(R.string.settings_language)
+        val language = remember { AppLanguage.choice(context) }
+        Segmented(
+            listOf(stringResource(R.string.lang_system), stringResource(R.string.lang_fa), stringResource(R.string.lang_en)),
+            AppLanguage.Choice.entries.indexOf(language),
+        ) { i ->
+            val pick = AppLanguage.Choice.entries[i]
+            if (pick != language) {
+                AppLanguage.set(context, pick)
+                (context as? android.app.Activity)?.recreate()
+            }
+        }
+
+        SectionLabel(R.string.settings_more)
+        val rows = listOf(
             Triple(SettingsDestination.TASKS, BaIcons.List, R.string.settings_tasks),
             Triple(SettingsDestination.REMINDERS, BaIcons.Bell, R.string.settings_reminders),
             Triple(SettingsDestination.BACKUP, BaIcons.Cloud, R.string.settings_backup),
             Triple(SettingsDestination.PHONE, BaIcons.Phone, R.string.settings_phone),
         )
         val backup by remember { container.backup.observeStatus() }.collectAsStateWithLifecycle(null)
-        tiles.chunked(2).forEach { row ->
-            // Tiles in a row share one height, whatever their second line.
-            Row(horizontalArrangement = Arrangement.spacedBy(10.dp), modifier = Modifier.height(IntrinsicSize.Min)) {
-                row.forEach { (dest, icon, label) ->
-                    Column(
-                        verticalArrangement = Arrangement.spacedBy(14.dp),
-                        modifier = Modifier
-                            .weight(1f)
-                            .fillMaxHeight()
-                            .clip(RoundedCornerShape(20.dp))
-                            .background(c.surface)
-                            .clickable(role = Role.Button) { onOpen(dest) }
-                            .padding(16.dp),
-                    ) {
-                        Icon(icon, null, tint = c.text2, modifier = Modifier.size(26.dp))
-                        Column {
-                            Text(stringResource(label), style = Ba.type.tile, color = c.text1)
-                            if (dest == SettingsDestination.BACKUP) backup?.let { b -> BackupTileLine(b) }
-                        }
-                    }
+        rows.forEach { (dest, icon, label) ->
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(Px.Card)
+                    .background(Color.White.copy(alpha = 0.04f))
+                    .clickable(role = Role.Button) { onOpen(dest) }
+                    .padding(horizontal = 14.dp, vertical = 13.dp),
+            ) {
+                Box(Modifier.size(30.dp).clip(Px.Small).background(c.glow.copy(alpha = 0.12f)), contentAlignment = Alignment.Center) {
+                    Icon(icon, null, tint = c.glow, modifier = Modifier.size(16.dp))
                 }
+                Text(stringResource(label), style = Ba.type.tile, color = c.text1, modifier = Modifier.weight(1f))
+                if (dest == SettingsDestination.BACKUP) backup?.let { b -> BackupTileLine(b) }
             }
         }
-        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp), modifier = Modifier.padding(top = 16.dp)) {
-            // The adaptive icon's two vector layers (painterResource can't load an adaptive-icon XML). 108 dp
-            // layers show their middle 72 dp, so they are drawn at 1.5× the circle and clipped.
-            Box(contentAlignment = Alignment.Center, modifier = Modifier.size(48.dp).clip(CircleShape)) {
-                Image(painterResource(R.drawable.ic_launcher_background), null, modifier = Modifier.requiredSize(72.dp))
-                Image(painterResource(R.drawable.ic_launcher_foreground), null, modifier = Modifier.requiredSize(72.dp))
-            }
-            Column {
-                Text(stringResource(R.string.app_name), style = Ba.type.subtitle, color = c.text1)
-                Text(stringResource(R.string.settings_version, "\u2066" + PersianDigits.format(BuildConfig.VERSION_NAME) + "\u2069"), style = Ba.type.caption, color = c.text3)
-            }
-        }
+        Text(
+            stringResource(R.string.settings_version, "\u2066" + PersianDigits.format(BuildConfig.VERSION_NAME) + "\u2069"),
+            style = Ba.type.caption,
+            color = c.text3,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.fillMaxWidth().padding(top = 12.dp),
+        )
         if (debugAvailable) {
             SecondaryButton("Debug", onClick = { onOpen(SettingsDestination.DEBUG) }, modifier = Modifier.fillMaxWidth())
         }
     }
+}
+
+@Composable
+private fun SectionLabel(text: Int) {
+    Text(stringResource(text), style = Ba.type.label, color = Ba.colors.text3, modifier = Modifier.padding(top = 10.dp))
+}
+
+/** A short line in each character's voice under its name (settings-task.html). */
+private fun LanternCharacter.settingsLine(): Int = when (this) {
+    LanternCharacter.KNIGHT -> R.string.companion_knight
+    LanternCharacter.VAMPIRE -> R.string.companion_vampire
+    LanternCharacter.WIZARD -> R.string.companion_wizard
+    LanternCharacter.GOTH -> R.string.companion_goth
 }
 
 /** «۳ روز پیش» under «پشتیبان», amber when the folder needs a look (SPEC §8). */

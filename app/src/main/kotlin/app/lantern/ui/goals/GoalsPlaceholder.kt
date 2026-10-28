@@ -15,6 +15,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import app.lantern.R
 import app.lantern.ui.theme.Ba
+import app.lantern.ui.theme.sky
 
 /** The Goals tab in v1: only a «در دست ساخت» note (D191). The goal flow comes after v1. */
 @Composable
@@ -22,7 +23,7 @@ fun GoalsPlaceholder() {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically),
-        modifier = Modifier.fillMaxSize().background(Ba.colors.bg).safeDrawingPadding().padding(24.dp),
+        modifier = Modifier.fillMaxSize().sky().safeDrawingPadding().padding(24.dp),
     ) {
         Text(stringResource(R.string.goals_soon_title), style = Ba.type.title, color = Ba.colors.text1)
         Text(stringResource(R.string.goals_soon_body), style = Ba.type.body, color = Ba.colors.text2, textAlign = TextAlign.Center)

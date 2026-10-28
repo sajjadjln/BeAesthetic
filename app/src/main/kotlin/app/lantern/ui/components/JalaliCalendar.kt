@@ -64,7 +64,7 @@ fun JalaliCalendar(
 
     Column(
         verticalArrangement = Arrangement.spacedBy(6.dp),
-        modifier = modifier.fillMaxWidth().clip(RoundedCornerShape(16.dp)).background(c.surface2).padding(10.dp),
+        modifier = modifier.fillMaxWidth().clip(app.lantern.ui.theme.Px.Card).background(c.surface).padding(10.dp),
     ) {
         Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth()) {
             MonthButton(BaIcons.ChevronBackward, stringResource(R.string.cd_prev_month), enabled = month != first) { month = month.plus(-1) }
@@ -118,16 +118,16 @@ private fun DayCell(date: LocalDate, selected: LocalDate?, today: LocalDate, ena
         contentAlignment = Alignment.Center,
         modifier = Modifier
             .size(40.dp)
-            .clip(CircleShape)
-            .background(if (isSelected) c.accent else c.surface2)
-            .then(if (date == today && !isSelected) Modifier.border(1.5.dp, c.accent, CircleShape) else Modifier)
+            .clip(app.lantern.ui.theme.Px.Small)
+            .background(if (isSelected) c.glow else c.surface2)
+            .then(if (date == today && !isSelected) Modifier.border(2.dp, c.glow, app.lantern.ui.theme.Px.Small) else Modifier)
             .selectable(isSelected, enabled = !past, role = Role.RadioButton) { onPick(date) },
     ) {
         Text(
             PersianDigits.format(Jalali.fromGregorian(date).day),
             style = Ba.type.label,
             color = when {
-                isSelected -> c.onAccent
+                isSelected -> c.onGlow
                 past -> c.text3.copy(alpha = 0.5f)
                 else -> c.text1
             },
@@ -142,7 +142,7 @@ private fun MonthButton(icon: androidx.compose.ui.graphics.vector.ImageVector, d
         contentAlignment = Alignment.Center,
         modifier = Modifier
             .size(40.dp)
-            .clip(RoundedCornerShape(10.dp))
+            .clip(app.lantern.ui.theme.Px.Small)
             .clickable(enabled = enabled, role = Role.Button, onClick = onClick)
             .semantics { contentDescription = description },
     ) { Icon(icon, null, tint = if (enabled) c.text2 else c.text3.copy(alpha = 0.35f), modifier = Modifier.size(20.dp)) }
