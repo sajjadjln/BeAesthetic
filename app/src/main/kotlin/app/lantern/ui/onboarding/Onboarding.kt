@@ -57,28 +57,25 @@ import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.lantern.AppContainer
 import app.lantern.R
-import app.lantern.data.repo.Seed
-import app.lantern.domain.text.PersianDigits
-import app.lantern.domain.time.ProgramCalendar
-import app.lantern.ui.components.BaCard
 import app.lantern.ui.components.BaIcons
 import app.lantern.ui.components.EndLayout
-import app.lantern.ui.components.JalaliCalendar
 import app.lantern.ui.components.PrimaryButton
 import app.lantern.ui.components.SecondaryButton
-import app.lantern.ui.jalaliDayMonth
 import app.lantern.ui.theme.Ba
+import app.lantern.ui.theme.LanternCharacter
+import app.lantern.ui.theme.Px
+import app.lantern.ui.theme.TodayLayout
+import app.lantern.ui.theme.sky
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
-import java.time.LocalDate
 
-private enum class Step { HELLO, REMINDERS, PHONE, BACKUP, DONE }
+private enum class Step { CHARACTER, LAYOUT, REMINDERS, PHONE, BACKUP, DONE }
 
 /**
- * Onboarding, the lean flow (flows O1–O5, D142): hello (or restore a backup) → dates → reminders and the
- * notification permission → phone setup → backup folder → done. Day 0, the plan, the identity sentence and
- * milestones have their own places (Progress, Settings, the Week tab), so they aren't repeated here.
- * Reminders, phone and backup open the real screens; coming back continues where it was.
+ * Onboarding (D186, D188, roadmap L3): pick the character (the app re-themes as you tap), pick Today's
+ * layout, then reminders and the notification permission → phone setup → backup folder → done.
+ * A backup can be restored from the first step. Reminders, phone and backup open the real screens;
+ * coming back continues where it was.
  */
 @Composable
 fun OnboardingScreen(
@@ -94,6 +91,7 @@ fun OnboardingScreen(
     val step = Step.entries[stepIndex]
     val settings by remember { container.db.settings().observe().filterNotNull() }.collectAsStateWithLifecycle(null)
     val s = settings ?: return
+    val character = LanternCharacter.of(s.character)
 
     // A restore from the hello screen sets onboardingDone: leave as soon as it does.
     LaunchedEffect(s.onboardingDone) { if (s.onboardingDone) onFinished() }
@@ -108,7 +106,7 @@ fun OnboardingScreen(
     val back = { stepIndex = (stepIndex - 1).coerceAtLeast(0) }
     BackHandler(enabled = stepIndex > 0) { back() }
 
-    Column(Modifier.fillMaxSize().background(c.bg).safeDrawingPadding()) {
+    Column(Modifier.fillMaxSize().sky().safeDrawingPadding()) {
         // Back and the progress bar stay put; only the step under them slides.
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -124,8 +122,8 @@ fun OnboardingScreen(
                 }
                 Row(horizontalArrangement = Arrangement.spacedBy(4.dp), modifier = Modifier.weight(1f).padding(end = 8.dp)) {
                     (1 until Step.entries.size).forEach { i ->
-                        val fill by animateColorAsState(if (i <= stepIndex) c.accent else c.surface2, tween(BaMotion.MEDIUM), label = "step")
-                        Box(Modifier.weight(1f).height(4.dp).clip(RoundedCornerShape(2.dp)).background(fill))
+                        val fill by animateColorAsState(if (i <= stepIndex) c.glow else c.surface2, tween(BaMotion.MEDIUM), label = "step")
+                        Box(Modifier.weight(1f).height(6.dp).background(fill))
                     }
                 }
             }
@@ -147,11 +145,16 @@ fun OnboardingScreen(
             EndLayout(
                 buttons = {
                     when (st) {
-                        Step.HELLO -> {
-                            Text(stringResource(R.string.onb_restore_help), style = Ba.type.caption, color = c.text3, textAlign = TextAlign.Center)
-                            SecondaryButton(stringResource(R.string.onb_restore), onOpenBackup, Modifier.fillMaxWidth(), icon = BaIcons.Download)
-                            PrimaryButton(stringResource(R.string.onb_start), { next() }, Modifier.fillMaxWidth())
+                        Step.CHARACTER -> {
+                            PrimaryButton(stringResource(R.string.onb_char_go, stringResource(character.nameRes)), { next() }, Modifier.fillMaxWidth())
+                            Text(
+                                stringResource(R.string.onb_restore),
+                                style = Ba.type.label,
+                                color = c.text3,
+                                modifier = Modifier.clip(Px.Small).clickable(role = Role.Button, onClick = onOpenBackup).padding(8.dp),
+                            )
                         }
+                        Step.LAYOUT -> PrimaryButton(stringResource(R.string.onb_next), { next() }, Modifier.fillMaxWidth())
                         Step.REMINDERS -> {
                             SecondaryButton(stringResource(R.string.onb_reminders_edit), onOpenReminders, Modifier.fillMaxWidth(), icon = BaIcons.Bell)
                             PrimaryButton(stringResource(R.string.onb_next), { next() }, Modifier.fillMaxWidth())
@@ -171,9 +174,8 @@ fun OnboardingScreen(
                 },
             ) {
                 when (st) {
-                    Step.HELLO -> {
-                        Title(R.string.onb_hello_title, R.string.onb_hello_body)
-                    }
+                    Step.CHARACTER -> CharacterStep(character) { pick -> scope.launch { container.db.settings().setCharacter(pick.name) } }
+                    Step.LAYOUT -> LayoutStep(character, TodayLayout.of(s.todayLayout)) { pick -> scope.launch { container.db.settings().setTodayLayout(pick.name) } }
                     Step.REMINDERS -> {
                         Title(R.string.onb_reminders_title, R.string.onb_reminders_body)
                         Notifications()

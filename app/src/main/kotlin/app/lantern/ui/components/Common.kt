@@ -133,13 +133,13 @@ fun PrimaryButton(text: String, onClick: () -> Unit, modifier: Modifier = Modifi
         horizontalArrangement = Arrangement.Center,
         modifier = modifier
             .height(height)
-            .clip(RoundedCornerShape(12.dp))
-            .background(if (enabled) c.accent else c.surface2)
+            .clip(app.lantern.ui.theme.Px.Card)
+            .background(if (enabled) c.glow else c.surface2)
             .clickable(enabled = enabled, role = Role.Button, onClick = onClick)
             .padding(horizontal = 16.dp),
     ) {
-        icon?.let { Icon(it, null, tint = if (enabled) c.onAccent else c.text3, modifier = Modifier.size(20.dp).padding(end = 2.dp)) }
-        Text(text, style = Ba.type.subtitle, color = if (enabled) c.onAccent else c.text3, modifier = Modifier.padding(start = if (icon != null) 6.dp else 0.dp))
+        icon?.let { Icon(it, null, tint = if (enabled) c.onGlow else c.text3, modifier = Modifier.size(20.dp).padding(end = 2.dp)) }
+        Text(text, style = Ba.type.subtitle, color = if (enabled) c.onGlow else c.text3, modifier = Modifier.padding(start = if (icon != null) 6.dp else 0.dp))
     }
 }
 
@@ -151,7 +151,7 @@ fun SecondaryButton(text: String, onClick: () -> Unit, modifier: Modifier = Modi
         horizontalArrangement = Arrangement.Center,
         modifier = modifier
             .height(height)
-            .clip(RoundedCornerShape(12.dp))
+            .clip(app.lantern.ui.theme.Px.Card)
             .background(c.surface2)
             .clickable(role = Role.Button, onClick = onClick)
             .padding(horizontal = 16.dp),

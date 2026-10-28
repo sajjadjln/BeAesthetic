@@ -294,11 +294,24 @@
     <string name="banner_backup_look">یه نگاه بنداز</string>
 
     <!-- Slice 9: onboarding (flows O1–O5, D142). -->
-    <string name="onb_hello_title">سلام! به فانوس خوش اومدی.</string>
-    <string name="onb_hello_body">هر روز می‌گم الان چی کار کنی و سر وقت یادت می‌ندازم. همه‌چی روی همین گوشی می‌مونه.</string>
-    <string name="onb_start">شروع</string>
+    <string name="onb_char_title">همراهت رو انتخاب کن</string>
+    <string name="onb_char_go">با %1$s بریم</string>
+    <string name="intro_knight_1">من شوالیه‌ام. حرف زیاد نمی‌زنم، فقط کنارت می‌ایستم.</string>
+    <string name="intro_knight_2">قدم کوچیک، ولی هر روز. قبول؟</string>
+    <string name="intro_vampire_1">شب‌ها بیدارم و طومار کارهات دستمه.</string>
+    <string name="intro_vampire_2">قول می‌دم غر نزنم. زیاد.</string>
+    <string name="intro_wizard_1">هوم… یه شاگرد تازه! من صبرم زیاده.</string>
+    <string name="intro_wizard_2">هر جادوی بزرگی از یه حرکت کوچیک شروع می‌شه.</string>
+    <string name="intro_goth_1">من و گربه‌م همه‌چی رو تو دفترم می‌نویسیم.</string>
+    <string name="intro_goth_2">گربه‌م ازت خوشش اومد. این کم پیش میاد.</string>
+    <string name="onb_layout_title">امروزت چه شکلی باشه؟</string>
+    <string name="layout_list">فهرست</string>
+    <string name="layout_parts">بخش‌های روز</string>
+    <string name="layout_list_help">همه‌ی کارهای امروز، پشت سر هم</string>
+    <string name="layout_parts_help">صبح، ظهر، عصر، شب؛ با کشیدن عوض می‌شه</string>
+    <string name="layout_list_line">همه‌ی کارها تو یه فهرست. اولیش همونیه که الان باید انجام بدی.</string>
+    <string name="layout_parts_line">روز رو چهار تیکه می‌کنیم؛ همون بخشی که الانه باز می‌شه.</string>
     <string name="onb_restore">بازگردانی از پشتیبان</string>
-    <string name="onb_restore_help">گوشی تازه‌ست؟ فایل پشتیبانتو انتخاب کن تا همه چی برگرده.</string>
     <string name="onb_next">بعدی</string>
     <string name="onb_later">بعداً</string>
     <string name="onb_reminders_title">یادآورها</string>

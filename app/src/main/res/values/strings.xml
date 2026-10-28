@@ -295,11 +295,24 @@
     <string name="banner_backup_look">Take a look</string>
 
     <!-- Slice 9: onboarding (flows O1–O5, D142). -->
-    <string name="onb_hello_title">Hi! Welcome to Lantern.</string>
-    <string name="onb_hello_body">Every day I tell you what to do now and remind you on time. Everything stays on this phone.</string>
-    <string name="onb_start">Start</string>
+    <string name="onb_char_title">Pick your companion</string>
+    <string name="onb_char_go">Let\'s go with the %1$s</string>
+    <string name="intro_knight_1">I\'m the knight. I don\'t talk much; I just stand by you.</string>
+    <string name="intro_knight_2">Small steps, but every day. Deal?</string>
+    <string name="intro_vampire_1">I\'m up at night, and I keep the scroll of your tasks.</string>
+    <string name="intro_vampire_2">I promise not to grumble. Much.</string>
+    <string name="intro_wizard_1">Hmm… a new apprentice! I have plenty of patience.</string>
+    <string name="intro_wizard_2">Every great spell starts with one small move.</string>
+    <string name="intro_goth_1">My cat and I write everything down in my journal.</string>
+    <string name="intro_goth_2">My cat likes you. That doesn\'t happen often.</string>
+    <string name="onb_layout_title">How should your Today look?</string>
+    <string name="layout_list">List</string>
+    <string name="layout_parts">Parts of the day</string>
+    <string name="layout_list_help">All of today\'s tasks, one after another</string>
+    <string name="layout_parts_help">Morning, midday, evening, night; swipe to switch</string>
+    <string name="layout_list_line">All your tasks in one list. The first is the one to do now.</string>
+    <string name="layout_parts_line">We split the day in four; the part you\'re in opens first.</string>
     <string name="onb_restore">Restore from a backup</string>
-    <string name="onb_restore_help">New phone? Pick your backup file and everything comes back.</string>
     <string name="onb_next">Next</string>
     <string name="onb_later">Later</string>
     <string name="onb_reminders_title">Reminders</string>

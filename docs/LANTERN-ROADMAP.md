@@ -78,6 +78,7 @@ Each slice ends with a build on the Poco, a short "what works, what's next", and
 - ② Today layout (list or parts).
 - ③ Phone setup: notifications, exact alarms, Xiaomi battery and autostart (the existing `PhoneSetup` steps, restyled).
 - **Done when:** a fresh install goes splash → onboarding → Today with the picked character and layout.
+- ✅ **Done 2026-10-28 (not yet seen on the phone).** As built: character → layout → reminders (with the notification permission) → phone setup → backup folder → done. The character step re-themes the app on each tap and the second tap on the picked card makes it smile; «بازگردانی از پشتیبان» sits under the main button. The layout step shows both layouts as pixel cards with a sketch, the character explaining the picked one. The night sky is behind every step, and the app's main and secondary buttons are now pixel buttons in the character's color. The old hello step is gone (the splash says hello). The old program-date columns stay in `settings`, unused and harmless; dropping them would need a manual migration for no gain.
 
 ### L4. Today, layout 1 (list)
 - Header: the date in the theme color, Jalali first. No week row.
