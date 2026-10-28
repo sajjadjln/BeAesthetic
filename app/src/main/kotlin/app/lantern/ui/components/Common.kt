@@ -184,7 +184,7 @@ fun BaSwitch(checked: Boolean, onChange: (Boolean) -> Unit, description: String)
         onCheckedChange = onChange,
         modifier = Modifier.semantics { contentDescription = description },
         colors = SwitchDefaults.colors(
-            checkedThumbColor = c.onAccent, checkedTrackColor = c.accent, checkedBorderColor = c.accent,
+            checkedThumbColor = c.onGlow, checkedTrackColor = c.glow, checkedBorderColor = c.glow,
             uncheckedThumbColor = c.text3, uncheckedTrackColor = c.surface2, uncheckedBorderColor = c.border,
         ),
     )

@@ -98,6 +98,7 @@ Each slice ends with a build on the Poco, a short "what works, what's next", and
 - The simple sheet (name, «کِی؟», the day/part line, «ذخیره») and «تنظیمات بیشتر» (part, «بعد از…», «زنگ» with day squares, «مهم»). No «هدف» row in v1.
 - The character at the top, happy when saved.
 - Same rules as today's editor (D128–D130); only the look changes.
+- ✅ **Built 2026-10-28 (not yet seen on the phone).** The sheet has pixel corners on the box color. At its top: your character (from `LocalCharacter`, now provided by `LanternTheme`) and its hello in the dialog box; on «ذخیره» it smiles and answers for 0.9 s before the sheet closes. The name is typed in the character's color over an underline that lights up. Pills, icon squares, part boxes, day squares, the alarm card and the date row are pixel-shaped, picked ones in the character's color; switches too. The «کار تمرین» switch and its strings are gone (no workout in v1). The same sheet serves Today's «+» and the Tasks screen.
 
 ### L7. Settings and its screens
 - Settings: the health banner, «همراه», «صفحه‌ی امروز», «زبان», then the rows.

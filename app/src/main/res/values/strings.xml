@@ -144,6 +144,14 @@
     <string name="row_once">%1$s · %2$s</string>
     <string name="today">Today</string>
     <string name="tomorrow">Tomorrow</string>
+    <string name="editor_hi_knight">A new task? Tell me, I\'ll write it down.</string>
+    <string name="editor_ok_knight">Done. Small step, but today.</string>
+    <string name="editor_hi_vampire">One more line on the scroll?</string>
+    <string name="editor_ok_vampire">Written on the scroll.</string>
+    <string name="editor_hi_wizard">Hmm… a small new spell?</string>
+    <string name="editor_ok_wizard">Haha! Added.</string>
+    <string name="editor_hi_goth">My journal is open. What shall I write?</string>
+    <string name="editor_ok_goth">Written. My cat approves.</string>
     <string name="editor_new">New task</string>
     <string name="editor_edit">Edit task</string>
     <string name="editor_name">Task name</string>
@@ -196,9 +204,6 @@
         <item>Tick</item>
     </string-array>
 
-    <!-- Slice 4a: task editor's workout switch (D117) -->
-    <string name="editor_workout">Workout task</string>
-    <string name="editor_workout_help">On plan days the workout card takes its place and ticks it with the first set.</string>
 
     <!-- Tabs, splash, characters, goals -->
     <string name="tab_today">Today</string>

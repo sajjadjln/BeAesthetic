@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
@@ -73,6 +74,13 @@ import app.lantern.ui.components.ToggleRow
 import app.lantern.ui.components.sheetScroll
 import app.lantern.ui.jalaliDayMonth
 import app.lantern.ui.theme.Ba
+import app.lantern.ui.theme.CharacterPortrait
+import app.lantern.ui.theme.LanternCharacter
+import app.lantern.ui.theme.LocalCharacter
+import app.lantern.ui.theme.Mood
+import app.lantern.ui.theme.PixelDialog
+import app.lantern.ui.theme.Px
+import kotlinx.coroutines.delay
 import java.time.LocalDate
 
 /** What the sheet is editing: a new task (in a part, starting on a repeat kind) or an existing one. */
@@ -119,12 +127,25 @@ internal fun TaskEditorSheet(
     }
     val sheet = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
-    ModalBottomSheet(onDismissRequest = onDismiss, sheetState = sheet, containerColor = c.surface) {
+    // «ذخیره» makes the character smile and answer for a moment before the sheet closes (settings-task.html).
+    var saved by remember(editing) { mutableStateOf<TaskForm?>(null) }
+    LaunchedEffect(saved) { saved?.let { delay(900); onSave(it) } }
+    val character = LocalCharacter.current
+
+    ModalBottomSheet(onDismissRequest = onDismiss, sheetState = sheet, containerColor = c.surface2, shape = Px.Dialog) {
         Column(
             verticalArrangement = Arrangement.spacedBy(16.dp),
             modifier = Modifier.fillMaxWidth().sheetScroll(scroll).padding(start = 16.dp, end = 16.dp, bottom = 24.dp),
         ) {
-            Text(stringResource(if (original == null) R.string.editor_new else R.string.editor_edit), style = Ba.type.title, color = c.text1)
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                CharacterPortrait(character, if (saved != null) Mood.HAPPY else Mood.CALM, Modifier.size(64.dp))
+                val (hi, ok) = character.editorLines()
+                PixelDialog(
+                    if (saved != null) stringResource(ok) else stringResource(if (original == null) hi else R.string.editor_edit),
+                    Modifier.weight(1f),
+                    typing = saved != null,
+                )
+            }
             NameField(form.title, onChange = { form = form.copy(title = it.take(TaskForms.MAX_TITLE)) })
             problem(FormError.NO_TITLE, R.string.error_title)
 
@@ -135,16 +156,16 @@ internal fun TaskEditorSheet(
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(6.dp, Alignment.CenterHorizontally),
                     verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(12.dp)).clickable(role = Role.Button) { full = true }.padding(vertical = 10.dp),
+                    modifier = Modifier.fillMaxWidth().clip(Px.Small).clickable(role = Role.Button) { full = true }.padding(vertical = 10.dp),
                 ) {
-                    Text(stringResource(R.string.editor_more), style = Ba.type.label, color = c.text2)
-                    Icon(BaIcons.ChevronDown, null, tint = c.text2, modifier = Modifier.size(18.dp))
+                    Text(stringResource(R.string.editor_more), style = Ba.type.label, color = c.glow)
+                    Icon(BaIcons.ChevronDown, null, tint = c.glow, modifier = Modifier.size(18.dp))
                 }
             }
 
             PrimaryButton(
                 stringResource(R.string.save),
-                onClick = { if (errors.isEmpty()) onSave(form) else { tried = true; attempt++ } },
+                onClick = { if (errors.isEmpty()) { if (saved == null) saved = form } else { tried = true; attempt++ } },
                 modifier = Modifier.fillMaxWidth(),
             )
             if (original != null && onDelete != null) {
@@ -307,7 +328,6 @@ private fun FullForm(
         ToggleRow(BaIcons.Leaf, R.string.editor_min_day, R.string.editor_min_day_help, form.inMinimumDay || floorForced, enabled = !floorForced) {
             onChange(form.copy(inMinimumDay = it))
         }
-        ToggleRow(BaIcons.Dumbbell, R.string.editor_workout, R.string.editor_workout_help, form.opensWorkout) { onChange(form.copy(opensWorkout = it)) }
     }
 
     if (pickTime) {
@@ -324,7 +344,7 @@ private fun AlarmCard(form: TaskForm, original: Task?, problem: @Composable (For
     val c = Ba.colors
     Column(
         verticalArrangement = Arrangement.spacedBy(12.dp),
-        modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(16.dp)).background(c.surface2).padding(16.dp),
+        modifier = Modifier.fillMaxWidth().clip(Px.Card).background(c.surface).padding(16.dp),
     ) {
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
             Icon(BaIcons.Bell, null, tint = c.text2, modifier = Modifier.size(20.dp))
@@ -343,8 +363,8 @@ private fun AlarmCard(form: TaskForm, original: Task?, problem: @Composable (For
                 Text(
                     clockText(form.alarmMinute),
                     style = Ba.type.headline,
-                    color = c.text1,
-                    modifier = Modifier.clip(RoundedCornerShape(10.dp)).clickable(role = Role.Button, onClick = onTime).padding(horizontal = 8.dp, vertical = 2.dp),
+                    color = c.glow,
+                    modifier = Modifier.clip(Px.Small).clickable(role = Role.Button, onClick = onTime).padding(horizontal = 8.dp, vertical = 2.dp),
                 )
                 Box(Modifier.weight(1f))
                 when (form.repeat) {
@@ -368,7 +388,7 @@ private fun DateRow(date: LocalDate, today: LocalDate, onClick: () -> Unit) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(10.dp),
-        modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(14.dp)).background(c.surface2).clickable(role = Role.Button, onClick = onClick).padding(horizontal = 14.dp, vertical = 12.dp),
+        modifier = Modifier.fillMaxWidth().clip(Px.Card).background(c.surface).clickable(role = Role.Button, onClick = onClick).padding(horizontal = 14.dp, vertical = 12.dp),
     ) {
         Icon(BaIcons.Calendar, null, tint = c.text2, modifier = Modifier.size(20.dp))
         Text(dayLabel(date, today), style = Ba.type.subtitle, color = c.text1, modifier = Modifier.weight(1f))
@@ -384,15 +404,19 @@ private fun NameField(value: String, onChange: (String) -> Unit) {
         value = value,
         onValueChange = onChange,
         singleLine = true,
-        textStyle = Ba.type.headline.copy(color = c.text1),
-        cursorBrush = SolidColor(c.accent),
+        textStyle = Ba.type.headline.copy(color = c.glow),
+        cursorBrush = SolidColor(c.glow),
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
         keyboardActions = KeyboardActions(onDone = { focus.clearFocus() }),
         modifier = Modifier.fillMaxWidth(),
         decorationBox = { inner ->
-            Box {
-                if (value.isEmpty()) Text(stringResource(R.string.editor_name), style = Ba.type.headline, color = c.text3)
-                inner()
+            Column {
+                Box {
+                    if (value.isEmpty()) Text(stringResource(R.string.editor_name), style = Ba.type.headline, color = c.text3)
+                    inner()
+                }
+                // The underline lights up in the character's color once there's a name.
+                Box(Modifier.padding(top = 8.dp).fillMaxWidth().height(2.dp).background(if (value.isEmpty()) c.border else c.glow))
             }
         },
     )
@@ -406,11 +430,12 @@ private fun PickCircle(selected: Boolean, description: String, onClick: () -> Un
         contentAlignment = Alignment.Center,
         modifier = Modifier
             .size(48.dp)
-            .clip(CircleShape)
-            .background(if (selected) c.accentSubtle else c.surface2)
+            .clip(Px.Small)
+            .background(if (selected) c.glow.copy(alpha = 0.18f) else c.surface)
+            .then(if (selected) Modifier.border(2.dp, c.glow, Px.Small) else Modifier)
             .selectable(selected, role = Role.RadioButton, onClick = onClick)
             .semantics { contentDescription = description },
-    ) { content(if (selected) c.onAccentSubtle else c.text2) }
+    ) { content(if (selected) c.glow else c.text2) }
 }
 
 @Composable
@@ -420,11 +445,12 @@ private fun PickBox(selected: Boolean, onClick: () -> Unit, modifier: Modifier =
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(2.dp),
         modifier = modifier
-            .clip(RoundedCornerShape(12.dp))
-            .background(if (selected) c.accentSubtle else c.surface2)
+            .clip(Px.Small)
+            .background(if (selected) c.glow.copy(alpha = 0.18f) else c.surface)
+            .then(if (selected) Modifier.border(2.dp, c.glow, Px.Small) else Modifier)
             .selectable(selected, role = Role.RadioButton, onClick = onClick)
             .padding(vertical = 10.dp),
-    ) { content(if (selected) c.onAccentSubtle else c.text2) }
+    ) { content(if (selected) c.glow else c.text2) }
 }
 
 /** 7 day circles, Saturday first (on the right in RTL). */
@@ -440,14 +466,22 @@ private fun DayCircles(bits: Int, onChange: (Int) -> Unit) {
                 contentAlignment = Alignment.Center,
                 modifier = Modifier
                     .size(40.dp)
-                    .clip(CircleShape)
-                    .background(if (on) c.accent else c.surface)
-                    .then(if (on) Modifier else Modifier.border(1.5.dp, c.border, CircleShape))
+                    .clip(Px.Small)
+                    .background(if (on) c.glow else c.surface)
+                    .then(if (on) Modifier else Modifier.border(2.dp, c.border, Px.Small))
                     .toggleable(on, role = Role.Checkbox) { onChange(bits xor (1 shl i)) }
                     .semantics { contentDescription = names[i] },
             ) {
-                Text(letters[i], style = Ba.type.label, color = if (on) c.onAccent else c.text2)
+                Text(letters[i], style = Ba.type.label, color = if (on) c.onGlow else c.text2)
             }
         }
     }
+}
+
+/** The character's hello on a new task and its answer on «ذخیره» (settings-task.html). */
+private fun LanternCharacter.editorLines(): Pair<Int, Int> = when (this) {
+    LanternCharacter.KNIGHT -> R.string.editor_hi_knight to R.string.editor_ok_knight
+    LanternCharacter.VAMPIRE -> R.string.editor_hi_vampire to R.string.editor_ok_vampire
+    LanternCharacter.WIZARD -> R.string.editor_hi_wizard to R.string.editor_ok_wizard
+    LanternCharacter.GOTH -> R.string.editor_hi_goth to R.string.editor_ok_goth
 }

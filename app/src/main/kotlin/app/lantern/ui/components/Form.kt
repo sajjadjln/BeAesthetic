@@ -2,6 +2,7 @@ package app.lantern.ui.components
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -80,13 +81,13 @@ fun InputBox(
         onValueChange = { onChange(if (numeric) app.lantern.domain.text.PersianDigits.format(it).replace('.', '٫').replace(',', '٫').replace('/', '٫') else it) },
         singleLine = true,
         textStyle = Ba.type.body.copy(color = c.text1),
-        cursorBrush = SolidColor(c.accent),
+        cursorBrush = SolidColor(c.glow),
         keyboardOptions = keyboard.copy(imeAction = ImeAction.Done),
         // Without its own action, «تایید» ends the edit: focus goes and the keyboard closes.
         keyboardActions = KeyboardActions(onDone = { onDone?.invoke() ?: focus.clearFocus() }),
         modifier = Modifier.fillMaxWidth(),
         decorationBox = { inner ->
-            Box(Modifier.fillMaxWidth().clip(RoundedCornerShape(12.dp)).background(c.surface2).padding(horizontal = 14.dp, vertical = 12.dp)) {
+            Box(Modifier.fillMaxWidth().clip(app.lantern.ui.theme.Px.Card).background(c.surface2).padding(horizontal = 14.dp, vertical = 12.dp)) {
                 if (value.isEmpty()) Text(hint, style = Ba.type.body, color = c.text3)
                 inner()
             }
@@ -101,12 +102,13 @@ fun PickPill(text: String, selected: Boolean, small: Boolean = false, onClick: (
         contentAlignment = Alignment.Center,
         modifier = Modifier
             .height(if (small) 34.dp else 40.dp)
-            .clip(RoundedCornerShape(50))
-            .background(if (selected) c.accentSubtle else c.surface2)
+            .clip(app.lantern.ui.theme.Px.Small)
+            .background(if (selected) c.glow.copy(alpha = 0.18f) else c.surface2)
+            .then(if (selected) Modifier.border(2.dp, c.glow, app.lantern.ui.theme.Px.Small) else Modifier)
             .selectable(selected, role = Role.RadioButton, onClick = onClick)
             .padding(horizontal = 14.dp),
     ) {
-        Text(text, style = if (small) Ba.type.caption else Ba.type.label, color = if (selected) c.onAccentSubtle else c.text1)
+        Text(text, style = if (small) Ba.type.caption else Ba.type.label, color = if (selected) c.glow else c.text1)
     }
 }
 

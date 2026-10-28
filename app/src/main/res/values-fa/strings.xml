@@ -144,6 +144,14 @@
     <string name="row_once">%1$s · %2$s</string>
     <string name="today">امروز</string>
     <string name="tomorrow">فردا</string>
+    <string name="editor_hi_knight">کار تازه؟ بگو، می‌نویسمش.</string>
+    <string name="editor_ok_knight">ثبت شد. قدم کوچیک، ولی امروز.</string>
+    <string name="editor_hi_vampire">یه خط دیگه به طومار؟</string>
+    <string name="editor_ok_vampire">تو طومار نوشتمش.</string>
+    <string name="editor_hi_wizard">هوم… یه جادوی کوچیک تازه؟</string>
+    <string name="editor_ok_wizard">هاها! اضافه شد.</string>
+    <string name="editor_hi_goth">دفترم بازه. چی بنویسم؟</string>
+    <string name="editor_ok_goth">نوشتمش. گربه‌م تأیید کرد.</string>
     <string name="editor_new">کار جدید</string>
     <string name="editor_edit">ویرایش کار</string>
     <string name="editor_name">اسم کار</string>
@@ -196,9 +204,6 @@
         <item>تیک</item>
     </string-array>
 
-    <!-- Slice 4a: task editor's workout switch (D117) -->
-    <string name="editor_workout">کار تمرین</string>
-    <string name="editor_workout_help">روزهای برنامه، کارت «تمرین امروز» جاش میاد و با اولین ست تیک می‌خوره.</string>
 
     <!-- Slice 5: tabs, dashboard (02) and the day sheet (D1) -->
     <string name="tab_today">امروز</string>

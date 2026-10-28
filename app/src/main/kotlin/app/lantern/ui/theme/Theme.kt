@@ -58,6 +58,9 @@ object BaMotion {
 val LocalBaColors = staticCompositionLocalOf { lanternColors(LanternCharacter.KNIGHT) }
 val LocalBaType = staticCompositionLocalOf { BaType() }
 
+/** The picked character, for screens that show it (Today, the task sheet). */
+val LocalCharacter = staticCompositionLocalOf { LanternCharacter.KNIGHT }
+
 object Ba {
     val colors: BaColors @Composable get() = LocalBaColors.current
     val type: BaType @Composable get() = LocalBaType.current
@@ -77,7 +80,7 @@ fun LanternTheme(
         onSurfaceVariant = colors.text2, outline = colors.border, error = colors.amber,
     )
     val type = BaType()
-    CompositionLocalProvider(LocalBaColors provides colors, LocalBaType provides type) {
+    CompositionLocalProvider(LocalBaColors provides colors, LocalBaType provides type, LocalCharacter provides character) {
         MaterialTheme(colorScheme = scheme, typography = MaterialTheme.typography.copy(bodyLarge = type.body), content = content)
     }
 }
