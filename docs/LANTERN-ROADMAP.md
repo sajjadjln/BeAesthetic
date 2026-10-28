@@ -92,6 +92,7 @@ Each slice ends with a build on the Poco, a short "what works, what's next", and
 ### L5. Today, layout 2 (parts slider)
 - The 4-part pixel bar, swipe pages with the indicator following the finger, opens on the clock's part, the done square, «هر وقت» under the pages.
 - **Done when:** switching the layout in Settings swaps Today with no restart.
+- ✅ **Built 2026-10-28 (not yet seen on the phone).** `ui/today/TodayParts.kt`: the pixel bar with the four pixel icons, the indicator that follows the pager while you swipe, the green done square, and the pages as pixel task rows. Both layouts now share one screen (`TodayBody`): the header, the character, the progress blocks, «هر وقت» and the rows. A minimum day shows its floor tasks as one pixel list in both layouts. The old grid Today is gone. Until L7's Settings switch, the layout is changed from onboarding or Debug → "Today: list / parts"; it swaps live.
 
 ### L6. New task sheet
 - The simple sheet (name, «کِی؟», the day/part line, «ذخیره») and «تنظیمات بیشتر» (part, «بعد از…», «زنگ» with day squares, «مهم»). No «هدف» row in v1.

@@ -4,7 +4,7 @@ _Last updated: 2026-10-27 (Today redesign with the characters, the character pic
 
 ## Lantern v1 (branch `lantern`, 2026-10-28)
 
-**The plan is `docs/LANTERN-ROADMAP.md`:** splash, onboarding, Today (both layouts), Settings; goals as «در دست ساخت»; no workout. Slices L0–L9. Q1–Q6 confirmed (D191). **L0 done 2026-10-28** (0.1.0, check green; not yet tried on the phone). L0 tried on the phone. **L1 done 2026-10-28** (the theme and the characters; not yet seen on the phone). **L2 done 2026-10-28** (the splash; not yet seen on the phone). Strings split into English and Persian. **L3 done 2026-10-28** (onboarding). None of L1–L3 seen on the phone yet. **L4 built 2026-10-28** (Today, list layout). None of L1–L4 seen on the phone yet. **Next:** a day of real use on the Poco, then L5 (parts slider).
+**The plan is `docs/LANTERN-ROADMAP.md`:** splash, onboarding, Today (both layouts), Settings; goals as «در دست ساخت»; no workout. Slices L0–L9. Q1–Q6 confirmed (D191). **L0 done 2026-10-28** (0.1.0, check green; not yet tried on the phone). L0 tried on the phone. **L1 done 2026-10-28** (the theme and the characters; not yet seen on the phone). **L2 done 2026-10-28** (the splash; not yet seen on the phone). Strings split into English and Persian. **L3 done 2026-10-28** (onboarding). None of L1–L3 seen on the phone yet. **L4 built 2026-10-28** (Today, list layout). None of L1–L4 seen on the phone yet. **L5 built 2026-10-28** (parts slider). **Next:** a day of real use on the Poco, then L6 (new-task sheet).
 
 ## New identity: to-do + goals (2026-10-21)
 

@@ -165,140 +165,18 @@ fun TodayRoute(
 
 @Composable
 fun TodayScreen(state: TodayUiState?, actions: TodayActions) {
-    val colors = Ba.colors
     val haptics = rememberHaptics()
     // The 100% moment (D76): once, when the day reaches 100% while the screen is open.
     var wasComplete by remember { mutableStateOf<Boolean?>(null) }
-    var pulse by remember { mutableIntStateOf(0) }
     LaunchedEffect(state?.dayComplete, state?.date) {
         val complete = state?.dayComplete ?: return@LaunchedEffect
         if (wasComplete == false && complete) {
             haptics.medium()
-            pulse++
         }
         wasComplete = complete
     }
 
-    // Layout 1, the list (D188), unless it's a minimum day: that keeps the floor grid below for now.
-    if (state != null && state.layout == app.lantern.ui.theme.TodayLayout.LIST && !state.minimumMode) {
-        TodayList(state, actions)
-        return
-    }
-    Box(Modifier.fillMaxSize().background(colors.bg).safeDrawingPadding()) {
-        if (state == null) return@Box
-        val partNames = listOf(R.string.part_morning, R.string.part_midday, R.string.part_evening, R.string.part_night).map { stringResource(it) }
-        val tiles = if (state.minimumMode) {
-            // All parts show at once, so a repeated name («مسواک» morning and night) gets its part.
-            val repeated = state.floorTiles.groupingBy { it.title }.eachCount().filterValues { it > 1 }.keys
-            state.floorTiles.map { if (it.title in repeated) it.copy(title = it.title + " " + partNames[it.part.ordinal]) else it }
-        } else {
-            state.tiles[state.selectedPart].orEmpty()
-        }
-        // The parts of the day are pages (D147): swipe the tiles, or tap the switcher; both move the other.
-        val pager = rememberPagerState(initialPage = state.selectedPart.ordinal) { Part.entries.size }
-        LaunchedEffect(pager) { snapshotFlow { pager.settledPage }.collect { actions.selectPart(Part.entries[it]) } }
-        LaunchedEffect(state.selectedPart) {
-            if (pager.currentPage != state.selectedPart.ordinal) pager.animateScrollToPage(state.selectedPart.ordinal)
-        }
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(2),
-            contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 14.dp, bottom = 88.dp),
-            horizontalArrangement = Arrangement.spacedBy(10.dp),
-            verticalArrangement = Arrangement.spacedBy(10.dp),
-        ) {
-            item(span = { GridItemSpan(maxLineSpan) }) { Header(state, actions) }
-            item(span = { GridItemSpan(maxLineSpan) }) { Hero(state, pulse) }
-            if (state.minimumMode) {
-                item(span = { GridItemSpan(maxLineSpan) }) {
-                    Text(
-                        stringResource(R.string.today_minimum_label),
-                        style = Ba.type.subtitle,
-                        color = colors.onSpecialSubtle,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.fillMaxWidth(),
-                    )
-                }
-            }
-            if (!state.minimumMode) {
-                item(span = { GridItemSpan(maxLineSpan) }) {
-                    PartSwitcher(
-                        Part.entries[pager.currentPage],
-                        { pager.currentPage + pager.currentPageOffsetFraction },
-                        state.completeParts,
-                        actions.selectPart,
-                        Modifier.padding(vertical = 6.dp),
-                    )
-                }
-                item(span = { GridItemSpan(maxLineSpan) }) { PartPager(state, pager, actions) }
-            } else {
-                if (tiles.isEmpty()) {
-                    item(span = { GridItemSpan(maxLineSpan) }) { EmptyPart() }
-                }
-                items(tiles, key = { it.taskId }) { tile -> TaskTile(tile, onToggle = { actions.toggle(tile.taskId) }) }
-            }
-            if (!state.minimumMode && state.anytime.isNotEmpty()) {
-                item(span = { GridItemSpan(maxLineSpan) }) {
-                    AnytimeCard(state.anytime, state.anytimeOpen, actions, Modifier.padding(top = 6.dp))
-                }
-            }
-            state.banner?.let { banner ->
-                item(span = { GridItemSpan(maxLineSpan) }) { HealthBannerRow(banner, actions.fixReminders, Modifier.padding(top = 8.dp)) }
-            }
-            state.backup?.let { backup ->
-                item(span = { GridItemSpan(maxLineSpan) }) { BackupRow(backup, actions.openBackup, Modifier.padding(top = 8.dp)) }
-            }
-        }
-        // «+ کار جدید» (today-v3/v4 A): where the thumb already is; bottom End = the left edge in RTL.
-        if (!state.minimumMode) NewTaskFab(actions.addTask, Modifier.align(Alignment.BottomEnd).padding(16.dp))
-    }
-}
-
-@Composable
-internal fun NewTaskFab(onClick: () -> Unit, modifier: Modifier = Modifier) {
-    val c = Ba.colors
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-        modifier = modifier
-            .shadow(8.dp, RoundedCornerShape(18.dp))
-            .clip(RoundedCornerShape(18.dp))
-            .background(c.accent)
-            .clickable(role = androidx.compose.ui.semantics.Role.Button, onClick = onClick)
-            .height(52.dp)
-            .padding(start = 18.dp, end = 20.dp),
-    ) {
-        Icon(BaIcons.Plus, null, tint = c.onAccent, modifier = Modifier.size(22.dp))
-        Text(stringResource(R.string.tasks_new), style = Ba.type.label, color = c.onAccent)
-    }
-}
-
-@Composable
-private fun Header(state: TodayUiState, actions: TodayActions) {
-    val colors = Ba.colors
-    val weekdays = stringArrayResource(R.array.weekdays)
-    val line = jalaliDayMonth(state.date)
-    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
-        Column(Modifier.weight(1f)) {
-            Text(weekdays[Weekdays.index(state.date.dayOfWeek)], style = Ba.type.headline, color = colors.text1)
-            Text(line, style = Ba.type.label, color = colors.text2)
-        }
-        RoundIconButton(BaIcons.Leaf, stringResource(R.string.cd_minimum_day), actions.toggleMinimum, selected = state.minimumMode)
-        RoundIconButton(BaIcons.Gear, stringResource(R.string.cd_settings), actions.openSettings)
-    }
-}
-
-@Composable
-private fun Hero(state: TodayUiState, pulse: Int) {
-    Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(14.dp), modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)) {
-        DayRing(
-            done = state.done,
-            total = state.total,
-            centerBig = PersianDigits.format(state.done),
-            centerSmall = stringResource(R.string.ring_of, PersianDigits.format(state.total)),
-            description = stringResource(R.string.cd_ring, PersianDigits.format(state.done), PersianDigits.format(state.total)),
-            pulse = pulse,
-        )
-    }
+    if (state != null) TodayBody(state, actions)
 }
 
 @Composable
@@ -309,7 +187,7 @@ internal fun HealthBannerRow(banner: HealthBanner, onFix: () -> Unit, modifier: 
         horizontalArrangement = Arrangement.spacedBy(10.dp),
         modifier = modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(14.dp))
+            .clip(app.lantern.ui.theme.Px.Card)
             .background(c.surface)
             .clickable(onClick = onFix)
             .padding(horizontal = 14.dp, vertical = 12.dp),
@@ -319,7 +197,7 @@ internal fun HealthBannerRow(banner: HealthBanner, onFix: () -> Unit, modifier: 
             stringResource(if (banner == HealthBanner.LATE) R.string.banner_late else R.string.banner_blocked),
             style = Ba.type.body, color = c.text1, modifier = Modifier.weight(1f),
         )
-        Text(stringResource(R.string.banner_fix), style = Ba.type.label, color = c.accent)
+        Text(stringResource(R.string.banner_fix), style = Ba.type.label, color = c.glow)
     }
 }
 
@@ -337,209 +215,14 @@ internal fun BackupRow(status: BackupStatus, onOpen: () -> Unit, modifier: Modif
         horizontalArrangement = Arrangement.spacedBy(10.dp),
         modifier = modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(14.dp))
+            .clip(app.lantern.ui.theme.Px.Card)
             .background(c.surface)
             .clickable(onClick = onOpen)
             .padding(horizontal = 14.dp, vertical = 12.dp),
     ) {
         Icon(BaIcons.Cloud, null, tint = c.text2, modifier = Modifier.size(20.dp))
         Text(text, style = Ba.type.body, color = c.text1, modifier = Modifier.weight(1f))
-        Text(stringResource(R.string.banner_backup_look), style = Ba.type.label, color = c.accent)
-    }
-}
-
-/**
- * The parts of the day: one tile each, Morning on the right. The indicator follows [position] (the pager's
- * page plus how far it has been dragged), so it slides with the finger and settles with the page (D76, D147).
- */
-@Composable
-private fun PartSwitcher(selected: Part, position: () -> Float, complete: Set<Part>, onSelect: (Part) -> Unit, modifier: Modifier = Modifier) {
-    val colors = Ba.colors
-    val names = mapOf(
-        Part.MORNING to stringResource(R.string.part_morning),
-        Part.MIDDAY to stringResource(R.string.part_midday),
-        Part.EVENING to stringResource(R.string.part_evening),
-        Part.NIGHT to stringResource(R.string.part_night),
-    )
-    val gap = 8.dp
-    BoxWithConstraints(
-        modifier = modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(18.dp))
-            .background(colors.surface)
-            .padding(6.dp),
-    ) {
-        val cell = (maxWidth - gap * (Part.entries.size - 1)) / Part.entries.size
-        // offset {} follows the layout direction, so a positive step moves toward the left in RTL.
-        Box(
-            Modifier
-                .offset { IntOffset((position() * (cell + gap).toPx()).roundToInt(), 0) }
-                .width(cell)
-                .height(44.dp)
-                .clip(RoundedCornerShape(13.dp))
-                .background(colors.surface2),
-        )
-        Row(horizontalArrangement = Arrangement.spacedBy(gap), modifier = Modifier.fillMaxWidth().selectableGroup()) {
-            for (part in Part.entries) {
-                val isSelected = part == selected
-                val tint by animateColorAsState(if (isSelected) colors.text1 else colors.text3, tween(BaMotion.SHORT, easing = BaMotion.Standard), label = "partTint")
-                Box(
-                    contentAlignment = Alignment.Center,
-                    modifier = Modifier
-                        .weight(1f)
-                        .height(44.dp)
-                        .clip(RoundedCornerShape(13.dp))
-                        .selectable(selected = isSelected, role = Role.Tab, onClick = { onSelect(part) })
-                        .semantics { contentDescription = names.getValue(part) },
-                ) {
-                    Icon(BaIcons.of(part), contentDescription = null, tint = tint, modifier = Modifier.size(24.dp))
-                    PartDot(part in complete, Modifier.align(Alignment.BottomCenter).padding(bottom = 5.dp))
-                }
-            }
-        }
-    }
-}
-
-/**
- * The tiles of each part as a page. The pager reaches the screen edges (past the list's 16 dp padding), so a
- * page slides off the screen rather than vanishing at the padding. Time flows right → left: the next part
- * is to the left, the same side as in the switcher.
- */
-@Composable
-private fun PartPager(state: TodayUiState, pager: PagerState, actions: TodayActions) {
-    val bleed = 16.dp
-    HorizontalPager(
-        pager,
-        contentPadding = PaddingValues(horizontal = bleed),
-        pageSpacing = bleed,
-        verticalAlignment = Alignment.Top,
-        key = { it },
-        modifier = Modifier.layout { measurable, constraints ->
-            val extra = (bleed * 2).roundToPx()
-            val placeable = measurable.measure(constraints.copy(minWidth = constraints.minWidth + extra, maxWidth = constraints.maxWidth + extra))
-            layout(placeable.width - extra, placeable.height) { placeable.place(-extra / 2, 0) }
-        },
-    ) { page ->
-        val tiles = state.tiles[Part.entries[page]].orEmpty()
-        if (tiles.isEmpty()) {
-            EmptyPart()
-        } else {
-            Column(verticalArrangement = Arrangement.spacedBy(10.dp), modifier = Modifier.fillMaxWidth()) {
-                tiles.chunked(2).forEach { row ->
-                    Row(horizontalArrangement = Arrangement.spacedBy(10.dp), modifier = Modifier.fillMaxWidth()) {
-                        row.forEach { tile ->
-                            Box(Modifier.weight(1f), propagateMinConstraints = true) {
-                                key(tile.taskId) { TaskTile(tile, onToggle = { actions.toggle(tile.taskId) }) }
-                            }
-                        }
-                        if (row.size == 1) Spacer(Modifier.weight(1f))
-                    }
-                }
-            }
-        }
-    }
-}
-
-@Composable
-private fun EmptyPart() {
-    Text(stringResource(R.string.today_part_empty), style = Ba.type.body, color = Ba.colors.text3, modifier = Modifier.fillMaxWidth().padding(vertical = 24.dp))
-}
-
-/** A finished part's dot pops in (D76). */
-@Composable
-private fun PartDot(visible: Boolean, modifier: Modifier) {
-    AnimatedVisibility(visible, enter = scaleIn(BaMotion.bouncy()), modifier = modifier) {
-        Box(Modifier.size(4.dp).clip(CircleShape).background(Ba.colors.accent))
-    }
-}
-
-/**
- * A task tile. A tick spreads the accent fill from the touch point, the check appears and the tile dips to
- * 96% and springs back, with a light vibration. An untick drains back without vibrating (D76).
- */
-@Composable
-internal fun TaskTile(tile: TileUi, onToggle: () -> Unit) {
-    val colors = Ba.colors
-    val haptics = rememberHaptics()
-    val interaction = remember { MutableInteractionSource() }
-    val pressed by interaction.collectIsPressedAsState()
-    val scale by animateFloatAsState(if (pressed) 0.96f else 1f, BaMotion.spring(), label = "tileScale")
-    var touch by remember { mutableStateOf<Offset?>(null) }
-    val fill = remember { Animatable(if (tile.done) 1f else 0f) }
-    LaunchedEffect(tile.done) { fill.animateTo(if (tile.done) 1f else 0f, tween(BaMotion.SHORT + 50, easing = BaMotion.Standard)) }
-    val checkBg by animateColorAsState(if (tile.done) colors.accent else colors.surface, tween(BaMotion.SHORT), label = "checkBg")
-    val shape = RoundedCornerShape(20.dp)
-    val outlined = !tile.done && (tile.due || tile.important)
-
-    Box(
-        modifier = Modifier
-            .graphicsLayer { scaleX = scale; scaleY = scale }
-            .heightIn(min = 108.dp)
-            .clip(shape)
-            .drawBehind {
-                drawRect(colors.surface)
-                if (fill.value > 0f) {
-                    val origin = touch ?: center
-                    val reach = max(
-                        max(hypot(origin.x, origin.y), hypot(size.width - origin.x, origin.y)),
-                        max(hypot(origin.x, size.height - origin.y), hypot(size.width - origin.x, size.height - origin.y)),
-                    )
-                    drawCircle(colors.accentSubtle, reach * fill.value, origin)
-                }
-            }
-            .then(if (outlined) Modifier.border(1.5.dp, colors.amber, shape) else Modifier)
-            .pointerInput(Unit) { awaitEachGesture { touch = awaitFirstDown(requireUnconsumed = false).position } }
-            .toggleable(
-                value = tile.done,
-                interactionSource = interaction,
-                indication = ripple(color = colors.accent),
-                role = Role.Checkbox,
-                onValueChange = { nowDone ->
-                    if (nowDone) haptics.light()
-                    onToggle()
-                },
-            )
-            .padding(16.dp),
-    ) {
-        Icon(
-            BaIcons.of(tile.icon),
-            contentDescription = null,
-            tint = if (tile.done) colors.onAccentSubtle else colors.text2,
-            modifier = Modifier.align(Alignment.TopStart).size(28.dp),
-        )
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier = Modifier
-                .align(Alignment.TopEnd)
-                .size(24.dp)
-                .clip(CircleShape)
-                .background(checkBg)
-                .then(if (tile.done) Modifier else Modifier.border(2.dp, colors.border, CircleShape)),
-        ) {
-            Icon(BaIcons.Check, contentDescription = null, tint = colors.onAccent, modifier = Modifier.size(14.dp).graphicsLayer { alpha = fill.value; scaleX = .6f + .4f * fill.value; scaleY = .6f + .4f * fill.value })
-        }
-        // Label and tag share the bottom row; a long label wraps instead of running under the tag.
-        Row(
-            verticalAlignment = Alignment.Bottom,
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            modifier = Modifier.align(Alignment.BottomStart).fillMaxWidth().padding(top = 44.dp),
-        ) {
-            Text(tile.title, style = Ba.type.tile, color = colors.text1, modifier = Modifier.weight(1f))
-            when {
-                tile.due && !tile.done -> Text(
-                    stringResource(R.string.tag_due),
-                    style = Ba.type.caption,
-                    color = colors.amber,
-                    maxLines = 1,
-                    modifier = Modifier.clip(RoundedCornerShape(50)).background(colors.amberSubtle).padding(horizontal = 8.dp),
-                )
-                tile.important -> Text(
-                    stringResource(R.string.tag_important),
-                    style = Ba.type.caption.copy(fontWeight = androidx.compose.ui.text.font.FontWeight.Bold),
-                    color = if (tile.done) colors.onAccentSubtle.copy(alpha = 0.7f) else colors.amber,
-                )
-            }
-        }
+        Text(stringResource(R.string.banner_backup_look), style = Ba.type.label, color = c.glow)
     }
 }
 
@@ -552,7 +235,7 @@ internal fun AnytimeCard(items: List<AnytimeUi>, open: Boolean, actions: TodayAc
     val colors = Ba.colors
     val haptics = rememberHaptics()
     val chevron by animateFloatAsState(if (open) 180f else 0f, tween(BaMotion.SHORT), label = "anytimeChevron")
-    Column(modifier.fillMaxWidth().clip(RoundedCornerShape(20.dp)).background(colors.surface)) {
+    Column(modifier.fillMaxWidth().clip(app.lantern.ui.theme.Px.Card).background(colors.surface)) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(10.dp),

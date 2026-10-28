@@ -55,6 +55,7 @@ import app.lantern.ui.theme.PixelDialog
 import app.lantern.ui.theme.Px
 import app.lantern.ui.theme.rememberHaptics
 import app.lantern.ui.theme.sky
+import app.lantern.ui.theme.TodayLayout
 
 /** The character's lines for the moment (strings: lines_<character>_<pool>). */
 @ArrayRes
@@ -65,15 +66,17 @@ private fun linesRes(character: LanternCharacter, pool: TodayPick.Lines): Int = 
     LanternCharacter.GOTH -> when (pool) { TodayPick.Lines.CALM -> R.array.lines_goth_calm; TodayPick.Lines.BUSY -> R.array.lines_goth_busy; TodayPick.Lines.HAPPY -> R.array.lines_goth_happy; TodayPick.Lines.NIGHT -> R.array.lines_goth_night }
 }
 
-private val partNames = listOf(R.string.part_morning, R.string.part_midday, R.string.part_evening, R.string.part_night)
+internal val partNames = listOf(R.string.part_morning, R.string.part_midday, R.string.part_evening, R.string.part_night)
 
 /**
- * Today, layout 1 (D186, today-v5.html): the date in the character's color, the character with its line
- * in the pixel dialog box, one progress block per task, the «الان» card, then every part of the day and
- * «هر وقت» in one scroll. Today only: no week row.
+ * Today (D186, D188, today-v5.html): the date in the character's color, the character with its line in the
+ * pixel dialog box, one progress block per task, then the layout's body: the list (the «الان» card and every
+ * part of the day in one scroll) or the parts slider (a 4-part pixel bar over swipeable pages). A minimum day
+ * shows only its floor tasks in both. «هر وقت» and the reminder and backup rows close the page. Today only:
+ * no week row.
  */
 @Composable
-internal fun TodayList(state: TodayUiState, actions: TodayActions) {
+internal fun TodayBody(state: TodayUiState, actions: TodayActions) {
     val c = Ba.colors
     val haptics = rememberHaptics()
     val tiles = state.tiles
@@ -83,6 +86,7 @@ internal fun TodayList(state: TodayUiState, actions: TodayActions) {
     val lines = stringArrayResource(linesRes(state.character, pool))
     val line = lines[tap.mod(lines.size)].format(now?.title ?: "")
 
+    val floor = minimumTiles(state)
     Box(Modifier.fillMaxSize().sky().safeDrawingPadding()) {
         LazyColumn(contentPadding = PaddingValues(bottom = 96.dp), modifier = Modifier.fillMaxSize()) {
             item { Header(state, actions) }
@@ -105,15 +109,23 @@ internal fun TodayList(state: TodayUiState, actions: TodayActions) {
                 }
             }
             item { Progress(state.done, state.total) }
-            item { NowCard(now, state, onTick = { id -> haptics.light(); actions.toggle(id) }) }
-            Part.entries.forEach { part ->
-                val list = tiles[part].orEmpty()
-                if (list.isNotEmpty()) {
-                    item(key = "h$part") { SectionHeader(stringResource(partNames[part.ordinal]), current = part == state.currentPart) }
-                    items(list, key = { it.taskId }) { tile ->
-                        PixelTile(tile) { if (!tile.done) haptics.light(); actions.toggle(tile.taskId) }
+            val tick = { tile: TileUi -> if (!tile.done) haptics.light(); actions.toggle(tile.taskId) }
+            when {
+                state.minimumMode -> {
+                    item { SectionHeader(stringResource(R.string.today_minimum_label), current = true) }
+                    items(floor, key = { it.taskId }) { tile -> PixelTile(tile) { tick(tile) } }
+                }
+                state.layout == TodayLayout.LIST -> {
+                    item { NowCard(now, state, onTick = { id -> haptics.light(); actions.toggle(id) }) }
+                    Part.entries.forEach { part ->
+                        val list = tiles[part].orEmpty()
+                        if (list.isNotEmpty()) {
+                            item(key = "h$part") { SectionHeader(stringResource(partNames[part.ordinal]), current = part == state.currentPart) }
+                            items(list, key = { it.taskId }) { tile -> PixelTile(tile) { tick(tile) } }
+                        }
                     }
                 }
+                else -> item { PartsSlider(state, actions.selectPart, tick) }
             }
             if (state.anytime.isNotEmpty()) {
                 item { AnytimeCard(state.anytime, state.anytimeOpen, actions, Modifier.padding(start = 16.dp, end = 16.dp, top = 20.dp)) }
@@ -121,7 +133,7 @@ internal fun TodayList(state: TodayUiState, actions: TodayActions) {
             state.banner?.let { item { HealthBannerRow(it, actions.fixReminders, Modifier.padding(start = 16.dp, end = 16.dp, top = 12.dp)) } }
             state.backup?.let { item { BackupRow(it, actions.openBackup, Modifier.padding(start = 16.dp, end = 16.dp, top = 12.dp)) } }
         }
-        AddButton(actions.addTask, Modifier.align(Alignment.BottomEnd).padding(16.dp))
+        if (!state.minimumMode) AddButton(actions.addTask, Modifier.align(Alignment.BottomEnd).padding(16.dp))
     }
 }
 
@@ -198,7 +210,7 @@ private fun NowCard(now: TileUi?, state: TodayUiState, onTick: (Long) -> Unit) {
 }
 
 @Composable
-private fun SectionHeader(text: String, current: Boolean) {
+internal fun SectionHeader(text: String, current: Boolean) {
     val c = Ba.colors
     val color = if (current) c.glow else c.text3
     Row(
@@ -216,7 +228,7 @@ private fun SectionHeader(text: String, current: Boolean) {
 
 /** A task row: pixel corners, green when done, amber «موعدش رسیده» when due, «مهم» when important. */
 @Composable
-private fun PixelTile(tile: TileUi, onToggle: () -> Unit) {
+internal fun PixelTile(tile: TileUi, onToggle: () -> Unit) {
     val c = Ba.colors
     val bg by animateColorAsState(if (tile.done) c.accent.copy(alpha = 0.14f) else Color.White.copy(alpha = 0.05f), tween(250), label = "tileBg")
     Row(
@@ -278,4 +290,12 @@ private fun AddButton(onClick: () -> Unit, modifier: Modifier) {
     ) {
         Icon(BaIcons.Plus, null, tint = c.onGlow, modifier = Modifier.size(24.dp))
     }
+}
+
+/** The floor tasks of a minimum day, all parts at once; a repeated name («مسواک» morning and night) gets its part. */
+@Composable
+private fun minimumTiles(state: TodayUiState): List<TileUi> {
+    val names = partNames.map { stringResource(it) }
+    val repeated = state.floorTiles.groupingBy { it.title }.eachCount().filterValues { it > 1 }.keys
+    return state.floorTiles.map { if (it.title in repeated) it.copy(title = it.title + " · " + names[it.part.ordinal]) else it }
 }

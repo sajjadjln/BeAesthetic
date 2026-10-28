@@ -170,6 +170,17 @@ object DebugMenu {
                 }
             }
             Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                app.lantern.ui.theme.TodayLayout.entries.forEach { layout ->
+                    val on = layout.name == settings?.todayLayout
+                    Box(
+                        Modifier.weight(1f).clip(Px.Small).background(if (on) c.glow else c.surface)
+                            .clickable { scope.launch { container.db.settings().setTodayLayout(layout.name) } }
+                            .padding(vertical = 10.dp),
+                        contentAlignment = Alignment.Center,
+                    ) { Text("Today: " + layout.name.lowercase(), style = Ba.type.label, color = if (on) c.onGlow else c.text2) }
+                }
+            }
+            Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                 Mood.entries.forEach { m -> CharacterPortrait(character, m, Modifier.weight(1f).size(100.dp)) }
             }
             PixelDialog("سلام! این جعبه‌ی گفت‌وگوئه، حرف‌به‌حرف تایپ می‌شه.", Modifier.fillMaxWidth())
