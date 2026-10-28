@@ -53,6 +53,13 @@ Each slice ends with a build on the Poco, a short "what works, what's next", and
 - The picked character and the layout saved in settings (DataStore or the existing settings row).
 - A debug screen to flip characters and see every component.
 - **Done when:** switching the character in the debug screen re-themes it at once.
+- ✅ **Done 2026-10-28 (0.1.0, not yet seen on the phone).** As built:
+  - `ui/theme/Colors.kt`: one palette per character, mapped onto the existing tokens, so every screen follows it now. New tokens `glow`, `onGlow`, `sky2`, `rimLight`, `rimDeep`; `accent` is always the done green, `amber` the due amber. The five accents and light mode are gone, and so is the Appearance screen (D189, done early from L7).
+  - `ui/theme/Character.kt`: `LanternCharacter`, `Mood` (calm, busy, happy) and `TodayLayout`.
+  - `ui/theme/Pixel.kt`: `PixelShape` (`Px.Card` 6 dp, `Px.Small` 3 dp, `Px.Dialog` two 4 dp steps), `Modifier.sky()`, `PixelDialog` (rims, scanlines, typing, the nudging arrow), `CharacterPortrait` (round fade, glow, breathing).
+  - Art: `res/drawable-nodpi/char_<character>_<mood>.jpg`, 480 px, cut by `scripts/cut-character.swift` (embers recolored there). A few faint dark-red specks are left on the knight's armor; the script's threshold can be tightened later.
+  - Settings: `character` and `todayLayout` columns (DB v2, auto-migration from v1).
+  - Debug menu → "Theme (Lantern L1)": four buttons save the character; the gallery shows the three moods, the dialog box and the color tokens.
 
 ### L2. Splash
 - The system splash (Android 12+ API): the night color and a small lantern icon, held only until the first frame.

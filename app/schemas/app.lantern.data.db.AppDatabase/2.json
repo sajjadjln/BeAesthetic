@@ -1,0 +1,658 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 2,
+    "identityHash": "516ce86cb7202e4fc35b7794715de30b",
+    "entities": [
+      {
+        "tableName": "task",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `title` TEXT NOT NULL, `icon` TEXT NOT NULL, `part` TEXT NOT NULL, `repeat` TEXT NOT NULL, `weekdays` INTEGER NOT NULL, `everyNDays` INTEGER, `onceDate` TEXT, `startDate` TEXT NOT NULL, `isImportant` INTEGER NOT NULL, `inMinimumDay` INTEGER NOT NULL, `action` TEXT NOT NULL, `alarmTime` INTEGER, `alarmWeekdays` INTEGER NOT NULL, `alarmEnabled` INTEGER NOT NULL, `anchor` TEXT, `remindersSilencedAt` INTEGER, `fadeOfferedAt` INTEGER, `sortOrder` INTEGER NOT NULL, `createdAt` INTEGER NOT NULL, `archivedAt` INTEGER)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "title",
+            "columnName": "title",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "icon",
+            "columnName": "icon",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "part",
+            "columnName": "part",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "repeat",
+            "columnName": "repeat",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "weekdays",
+            "columnName": "weekdays",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "everyNDays",
+            "columnName": "everyNDays",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "onceDate",
+            "columnName": "onceDate",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "startDate",
+            "columnName": "startDate",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isImportant",
+            "columnName": "isImportant",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "inMinimumDay",
+            "columnName": "inMinimumDay",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "action",
+            "columnName": "action",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "alarmTime",
+            "columnName": "alarmTime",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "alarmWeekdays",
+            "columnName": "alarmWeekdays",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "alarmEnabled",
+            "columnName": "alarmEnabled",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "anchor",
+            "columnName": "anchor",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "remindersSilencedAt",
+            "columnName": "remindersSilencedAt",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "fadeOfferedAt",
+            "columnName": "fadeOfferedAt",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "sortOrder",
+            "columnName": "sortOrder",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "createdAt",
+            "columnName": "createdAt",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "archivedAt",
+            "columnName": "archivedAt",
+            "affinity": "INTEGER"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        }
+      },
+      {
+        "tableName": "completion",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`taskId` INTEGER NOT NULL, `date` TEXT NOT NULL, `completedAt` INTEGER NOT NULL, PRIMARY KEY(`taskId`, `date`))",
+        "fields": [
+          {
+            "fieldPath": "taskId",
+            "columnName": "taskId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "date",
+            "columnName": "date",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "completedAt",
+            "columnName": "completedAt",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "taskId",
+            "date"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_completion_date",
+            "unique": false,
+            "columnNames": [
+              "date"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_completion_date` ON `${TABLE_NAME}` (`date`)"
+          }
+        ]
+      },
+      {
+        "tableName": "day",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`date` TEXT NOT NULL, `special` TEXT, `minimumMode` INTEGER NOT NULL, `dueCount` INTEGER NOT NULL, `doneCount` INTEGER NOT NULL, `floorDone` INTEGER NOT NULL, PRIMARY KEY(`date`))",
+        "fields": [
+          {
+            "fieldPath": "date",
+            "columnName": "date",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "special",
+            "columnName": "special",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "minimumMode",
+            "columnName": "minimumMode",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dueCount",
+            "columnName": "dueCount",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "doneCount",
+            "columnName": "doneCount",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "floorDone",
+            "columnName": "floorDone",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "date"
+          ]
+        }
+      },
+      {
+        "tableName": "reminder_slot",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`profile` TEXT NOT NULL, `part` TEXT NOT NULL, `time` INTEGER NOT NULL, `enabled` INTEGER NOT NULL, PRIMARY KEY(`profile`, `part`))",
+        "fields": [
+          {
+            "fieldPath": "profile",
+            "columnName": "profile",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "part",
+            "columnName": "part",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "time",
+            "columnName": "time",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "enabled",
+            "columnName": "enabled",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "profile",
+            "part"
+          ]
+        }
+      },
+      {
+        "tableName": "reminder_log",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `key` TEXT NOT NULL, `kind` TEXT NOT NULL, `scheduledAt` INTEGER NOT NULL, `firedAt` INTEGER, `outcome` TEXT NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "key",
+            "columnName": "key",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "kind",
+            "columnName": "kind",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "scheduledAt",
+            "columnName": "scheduledAt",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "firedAt",
+            "columnName": "firedAt",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "outcome",
+            "columnName": "outcome",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_reminder_log_key",
+            "unique": false,
+            "columnNames": [
+              "key"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_reminder_log_key` ON `${TABLE_NAME}` (`key`)"
+          },
+          {
+            "name": "index_reminder_log_scheduledAt",
+            "unique": false,
+            "columnNames": [
+              "scheduledAt"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_reminder_log_scheduledAt` ON `${TABLE_NAME}` (`scheduledAt`)"
+          }
+        ]
+      },
+      {
+        "tableName": "settings",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `programStartDate` TEXT NOT NULL, `programEndDate` TEXT NOT NULL, `installDate` TEXT NOT NULL, `halfwayDate` TEXT, `rolloverHour` INTEGER NOT NULL, `specialCapPerWeek` INTEGER NOT NULL, `followUpMinutes` INTEGER NOT NULL, `ritualTime` INTEGER NOT NULL, `alarmMode` TEXT NOT NULL, `accentColor` TEXT NOT NULL, `themeMode` TEXT NOT NULL, `showBuddy` INTEGER NOT NULL, `backupTreeUri` TEXT, `lastOpenedAt` INTEGER, `lastBackupAt` INTEGER, `onboardingDone` INTEGER NOT NULL, `identitySentence` TEXT, `afterFinishMode` TEXT NOT NULL, `experimentFlags` INTEGER NOT NULL, `firstLetterOfferDone` INTEGER NOT NULL DEFAULT 0, `cardDismissedOn` TEXT, `healthSeenAt` INTEGER, `healthNotifiedOn` TEXT, `autostartConfirmed` INTEGER NOT NULL DEFAULT 0, `recentsLockConfirmed` INTEGER NOT NULL DEFAULT 0, `anytimeOpen` INTEGER NOT NULL DEFAULT 0, `autoBackup` INTEGER NOT NULL DEFAULT 1, `character` TEXT NOT NULL DEFAULT 'KNIGHT', `todayLayout` TEXT NOT NULL DEFAULT 'LIST', PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "programStartDate",
+            "columnName": "programStartDate",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "programEndDate",
+            "columnName": "programEndDate",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "installDate",
+            "columnName": "installDate",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "halfwayDate",
+            "columnName": "halfwayDate",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "rolloverHour",
+            "columnName": "rolloverHour",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "specialCapPerWeek",
+            "columnName": "specialCapPerWeek",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "followUpMinutes",
+            "columnName": "followUpMinutes",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "ritualTime",
+            "columnName": "ritualTime",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "alarmMode",
+            "columnName": "alarmMode",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "accentColor",
+            "columnName": "accentColor",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "themeMode",
+            "columnName": "themeMode",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "showBuddy",
+            "columnName": "showBuddy",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "backupTreeUri",
+            "columnName": "backupTreeUri",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "lastOpenedAt",
+            "columnName": "lastOpenedAt",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "lastBackupAt",
+            "columnName": "lastBackupAt",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "onboardingDone",
+            "columnName": "onboardingDone",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "identitySentence",
+            "columnName": "identitySentence",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "afterFinishMode",
+            "columnName": "afterFinishMode",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "experimentFlags",
+            "columnName": "experimentFlags",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "firstLetterOfferDone",
+            "columnName": "firstLetterOfferDone",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "cardDismissedOn",
+            "columnName": "cardDismissedOn",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "healthSeenAt",
+            "columnName": "healthSeenAt",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "healthNotifiedOn",
+            "columnName": "healthNotifiedOn",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "autostartConfirmed",
+            "columnName": "autostartConfirmed",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "recentsLockConfirmed",
+            "columnName": "recentsLockConfirmed",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "anytimeOpen",
+            "columnName": "anytimeOpen",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "autoBackup",
+            "columnName": "autoBackup",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "1"
+          },
+          {
+            "fieldPath": "character",
+            "columnName": "character",
+            "affinity": "TEXT",
+            "notNull": true,
+            "defaultValue": "'KNIGHT'"
+          },
+          {
+            "fieldPath": "todayLayout",
+            "columnName": "todayLayout",
+            "affinity": "TEXT",
+            "notNull": true,
+            "defaultValue": "'LIST'"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        }
+      },
+      {
+        "tableName": "event",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `at` INTEGER NOT NULL, `type` TEXT NOT NULL, `ref` TEXT, `valueMinutes` INTEGER)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "at",
+            "columnName": "at",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "type",
+            "columnName": "type",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "ref",
+            "columnName": "ref",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "valueMinutes",
+            "columnName": "valueMinutes",
+            "affinity": "INTEGER"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_event_at",
+            "unique": false,
+            "columnNames": [
+              "at"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_event_at` ON `${TABLE_NAME}` (`at`)"
+          },
+          {
+            "name": "index_event_type",
+            "unique": false,
+            "columnNames": [
+              "type"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_event_type` ON `${TABLE_NAME}` (`type`)"
+          }
+        ]
+      },
+      {
+        "tableName": "backup_record",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `at` INTEGER NOT NULL, `fileName` TEXT NOT NULL, `sizeBytes` INTEGER NOT NULL, `photoCount` INTEGER NOT NULL, `reason` TEXT NOT NULL, `ok` INTEGER NOT NULL, `error` TEXT)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "at",
+            "columnName": "at",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "fileName",
+            "columnName": "fileName",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sizeBytes",
+            "columnName": "sizeBytes",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "photoCount",
+            "columnName": "photoCount",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "reason",
+            "columnName": "reason",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "ok",
+            "columnName": "ok",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "error",
+            "columnName": "error",
+            "affinity": "TEXT"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_backup_record_at",
+            "unique": false,
+            "columnNames": [
+              "at"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_backup_record_at` ON `${TABLE_NAME}` (`at`)"
+          }
+        ]
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '516ce86cb7202e4fc35b7794715de30b')"
+    ]
+  }
+}

@@ -1,6 +1,17 @@
 package app.lantern.debug
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.ui.Alignment
+import app.lantern.ui.theme.CharacterPortrait
+import app.lantern.ui.theme.LanternCharacter
+import app.lantern.ui.theme.Mood
+import app.lantern.ui.theme.PixelDialog
+import app.lantern.ui.theme.Px
+import app.lantern.ui.theme.sky
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.size
+import androidx.compose.ui.draw.clip
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -69,6 +80,7 @@ object DebugMenu {
                     }
                 }
                 item { Text(message, style = Ba.type.caption, color = Ba.colors.text2) }
+                item { ThemeGallery(container) }
                 item {
                     Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
                         Button(onClick = {
@@ -133,4 +145,41 @@ object DebugMenu {
 
     @Composable
     private fun Line(text: String) = Text(text, style = Ba.type.caption, color = Ba.colors.text2)
+
+    /**
+     * Lantern L1: flip the character and see the theme's pieces at once. The pick is saved, so the whole
+     * app re-themes with it.
+     */
+    @Composable
+    private fun ThemeGallery(container: AppContainer) {
+        val scope = rememberCoroutineScope()
+        val settings by remember { container.db.settings().observe() }.collectAsStateWithLifecycle(null)
+        val character = LanternCharacter.of(settings?.character)
+        val c = Ba.colors
+        Column(Modifier.fillMaxWidth().clip(Px.Card).sky().padding(12.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+            Text("Theme (Lantern L1)", style = Ba.type.title, color = c.glow)
+            Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                LanternCharacter.entries.forEach { ch ->
+                    val on = ch == character
+                    Box(
+                        Modifier.weight(1f).clip(Px.Small).background(if (on) c.glow else c.surface)
+                            .clickable { scope.launch { container.db.settings().setCharacter(ch.name) } }
+                            .padding(vertical = 10.dp),
+                        contentAlignment = Alignment.Center,
+                    ) { Text(ch.name.lowercase(), style = Ba.type.label, color = if (on) c.onGlow else c.text2) }
+                }
+            }
+            Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                Mood.entries.forEach { m -> CharacterPortrait(character, m, Modifier.weight(1f).size(100.dp)) }
+            }
+            PixelDialog("سلام! این جعبه‌ی گفت‌وگوئه، حرف‌به‌حرف تایپ می‌شه.", Modifier.fillMaxWidth())
+            Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                listOf("glow" to c.glow, "done" to c.accent, "due" to c.amber, "special" to c.special).forEach { (name, color) ->
+                    Box(Modifier.weight(1f).clip(Px.Card).background(color).padding(vertical = 12.dp), contentAlignment = Alignment.Center) {
+                        Text(name, style = Ba.type.caption, color = c.onGlow)
+                    }
+                }
+            }
+        }
+    }
 }

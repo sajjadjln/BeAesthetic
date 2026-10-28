@@ -53,7 +53,6 @@ import app.lantern.ui.jalaliDayMonth
 import app.lantern.ui.settings.Segmented
 import app.lantern.ui.theme.Ba
 import app.lantern.ui.theme.LanternTheme
-import app.lantern.ui.theme.ThemeMode
 import java.time.LocalDate
 
 // ---------------------------------------------------------------- 07 Tasks

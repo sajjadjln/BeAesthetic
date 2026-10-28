@@ -130,6 +130,11 @@ data class SettingsEntity(
     // v6 (slice 6)
     /** The automatic backup (D133); on by default. Kept on this phone through a restore. */
     @ColumnInfo(defaultValue = "1") val autoBackup: Boolean = true,
+    // v2 (Lantern L1)
+    /** The picked character (D186); it themes the whole app (D187). */
+    @ColumnInfo(defaultValue = "KNIGHT") val character: String = "KNIGHT",
+    /** Today's layout (D188): LIST or PARTS. */
+    @ColumnInfo(defaultValue = "LIST") val todayLayout: String = "LIST",
 )
 
 object EventType {

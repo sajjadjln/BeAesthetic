@@ -3,6 +3,7 @@ package app.lantern.data.db
 
 import android.content.Context
 import androidx.room.Dao
+import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -178,6 +179,12 @@ interface SettingsDao {
     @Query("UPDATE settings SET anytimeOpen = :open WHERE id = 1")
     suspend fun setAnytimeOpen(open: Boolean)
 
+    @Query("UPDATE settings SET character = :character WHERE id = 1")
+    suspend fun setCharacter(character: String)
+
+    @Query("UPDATE settings SET todayLayout = :layout WHERE id = 1")
+    suspend fun setTodayLayout(layout: String)
+
     @Query("UPDATE settings SET backupTreeUri = :uri WHERE id = 1")
     suspend fun setBackupTreeUri(uri: String?)
 
@@ -256,8 +263,9 @@ interface EventDao {
         EventEntity::class,
         BackupRecordEntity::class,
     ],
-    version = 1,
+    version = 2,
     exportSchema = true,
+    autoMigrations = [AutoMigration(from = 1, to = 2)],
 )
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {

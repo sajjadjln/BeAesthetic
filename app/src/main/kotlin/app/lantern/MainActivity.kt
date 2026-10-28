@@ -18,7 +18,6 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -42,7 +41,6 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import app.lantern.debug.DebugMenu
 import app.lantern.domain.time.Part
-import app.lantern.ui.settings.AppearanceScreen
 import app.lantern.ui.settings.PhoneScreen
 import app.lantern.ui.settings.RemindersScreen
 import app.lantern.ui.settings.SettingsDestination
@@ -65,10 +63,9 @@ import androidx.compose.ui.Modifier
 import app.lantern.ui.backup.BackupRoute as BackupScreenRoute
 import app.lantern.ui.backup.BackupViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
-import app.lantern.ui.theme.Accent
+import app.lantern.ui.theme.LanternCharacter
 import app.lantern.ui.theme.BaMotion
 import app.lantern.ui.theme.LanternTheme
-import app.lantern.ui.theme.ThemeMode
 import app.lantern.ui.today.TodayRoute
 import app.lantern.ui.today.TodayViewModel
 import app.lantern.ui.goals.GoalsPlaceholder
@@ -83,7 +80,6 @@ import kotlinx.serialization.Serializable
 @Serializable object TasksRoute
 @Serializable object RemindersRoute
 @Serializable object PhoneRoute
-@Serializable object AppearanceRoute
 @Serializable object DebugRoute
 @Serializable object BackupRoute
 @Serializable object GoalsTab
@@ -117,16 +113,10 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             val settings by container.db.settings().observe().collectAsStateWithLifecycle(null)
-            val accent = settings?.accentColor?.let { runCatching { Accent.valueOf(it) }.getOrNull() } ?: Accent.GREEN
-            val mode = settings?.themeMode?.let { runCatching { ThemeMode.valueOf(it) }.getOrNull() } ?: ThemeMode.SYSTEM
-            // Status and navigation bar icons follow the app's theme, not only the phone's.
-            val dark = when (mode) {
-                ThemeMode.SYSTEM -> isSystemInDarkTheme()
-                ThemeMode.DARK -> true
-                ThemeMode.LIGHT -> false
-            }
-            LaunchedEffect(dark) {
-                val style = if (dark) SystemBarStyle.dark(Color.TRANSPARENT) else SystemBarStyle.light(Color.TRANSPARENT, Color.TRANSPARENT)
+            val character = LanternCharacter.of(settings?.character)
+            // The theme is always the night sky (D189): light status and navigation bar icons.
+            LaunchedEffect(Unit) {
+                val style = SystemBarStyle.dark(Color.TRANSPARENT)
                 enableEdgeToEdge(statusBarStyle = style, navigationBarStyle = style)
             }
             // Onboarding asks for notifications with the reason on screen (D142); an onboarded install that
@@ -151,7 +141,7 @@ class MainActivity : ComponentActivity() {
             }
             val current by nav.currentBackStackEntryAsState()
             val tab = current?.let(::tabOf)
-            LanternTheme(accent, mode) {
+            LanternTheme(character) {
               Box(Modifier.fillMaxSize()) {
                 NavHost(
                     nav,
@@ -190,7 +180,6 @@ class MainActivity : ComponentActivity() {
                                 SettingsDestination.TASKS -> nav.navigate(TasksRoute)
                                 SettingsDestination.REMINDERS -> nav.navigate(RemindersRoute)
                                 SettingsDestination.PHONE -> nav.navigate(PhoneRoute)
-                                SettingsDestination.APPEARANCE -> nav.navigate(AppearanceRoute)
                                 SettingsDestination.BACKUP -> nav.navigate(BackupRoute)
                                 SettingsDestination.DEBUG -> nav.navigate(DebugRoute)
                                 else -> Unit
@@ -200,7 +189,6 @@ class MainActivity : ComponentActivity() {
                     composable<TasksRoute> { TasksScreenRoute(viewModel { TasksViewModel(container) }, onBack = nav::popBackStack) }
                     composable<RemindersRoute> { RemindersScreen(container, onBack = nav::popBackStack) }
                     composable<PhoneRoute> { PhoneScreen(container, onBack = nav::popBackStack) }
-                    composable<AppearanceRoute> { AppearanceScreen(container, onBack = nav::popBackStack) }
                     composable<BackupRoute> { BackupScreenRoute(viewModel { BackupViewModel(container) }, onBack = nav::popBackStack) }
                     composable<DebugRoute> { DebugMenu.Screen(container, onClose = nav::popBackStack) }
                 }

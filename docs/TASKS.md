@@ -4,7 +4,7 @@ _Last updated: 2026-10-27 (Today redesign with the characters, the character pic
 
 ## Lantern v1 (branch `lantern`, 2026-10-28)
 
-**The plan is `docs/LANTERN-ROADMAP.md`:** splash, onboarding, Today (both layouts), Settings; goals as «در دست ساخت»; no workout. Slices L0–L9. Q1–Q6 confirmed (D191). **L0 done 2026-10-28** (0.1.0, check green; not yet tried on the phone). **Next:** install 0.1.0 on the Poco and try it, then L1 (the theme and the characters).
+**The plan is `docs/LANTERN-ROADMAP.md`:** splash, onboarding, Today (both layouts), Settings; goals as «در دست ساخت»; no workout. Slices L0–L9. Q1–Q6 confirmed (D191). **L0 done 2026-10-28** (0.1.0, check green; not yet tried on the phone). L0 tried on the phone. **L1 done 2026-10-28** (the theme and the characters; not yet seen on the phone). **Next:** check L1 in the debug menu on the Poco, then L2 (splash).
 
 ## New identity: to-do + goals (2026-10-21)
 

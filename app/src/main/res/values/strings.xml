@@ -425,6 +425,10 @@
     <!-- Slice 5: tabs, dashboard (02) and the day sheet (D1) -->
     <string name="tab_today">امروز</string>
     <string name="tab_goals">هدف‌ها</string>
+    <string name="char_knight">شوالیه</string>
+    <string name="char_vampire">ومپایر</string>
+    <string name="char_wizard">جادوگر</string>
+    <string name="char_goth">دختر گات</string>
     <string name="goals_soon_title">در دست ساخت</string>
     <string name="goals_soon_body">هدف‌ها به‌زودی اینجا میان.</string>
     <string name="tab_dashboard">داشبورد</string>

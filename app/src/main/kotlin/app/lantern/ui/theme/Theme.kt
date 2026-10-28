@@ -4,10 +4,8 @@ import androidx.compose.animation.core.CubicBezierEasing
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.SpringSpec
 import androidx.compose.animation.core.spring
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
@@ -57,7 +55,7 @@ object BaMotion {
     fun <T> bouncy(): SpringSpec<T> = spring(dampingRatio = 0.5f, stiffness = Spring.StiffnessMedium)
 }
 
-val LocalBaColors = staticCompositionLocalOf { baColors(Accent.GREEN, dark = true) }
+val LocalBaColors = staticCompositionLocalOf { lanternColors(LanternCharacter.KNIGHT) }
 val LocalBaType = staticCompositionLocalOf { BaType() }
 
 object Ba {
@@ -65,34 +63,19 @@ object Ba {
     val type: BaType @Composable get() = LocalBaType.current
 }
 
-enum class ThemeMode { SYSTEM, DARK, LIGHT }
-
+/** The app's theme: always the night sky, in the picked character's colors (D187, D189). */
 @Composable
 fun LanternTheme(
-    accent: Accent = Accent.GREEN,
-    mode: ThemeMode = ThemeMode.SYSTEM,
+    character: LanternCharacter = LanternCharacter.KNIGHT,
     content: @Composable () -> Unit,
 ) {
-    val dark = when (mode) {
-        ThemeMode.SYSTEM -> isSystemInDarkTheme()
-        ThemeMode.DARK -> true
-        ThemeMode.LIGHT -> false
-    }
-    val colors = baColors(accent, dark)
+    val colors = lanternColors(character)
     // M3 components (sheets, switches) read colorScheme; map it from our tokens so they match.
-    val scheme = if (dark) {
-        darkColorScheme(
-            primary = colors.accent, onPrimary = colors.onAccent, background = colors.bg, onBackground = colors.text1,
-            surface = colors.surface, onSurface = colors.text1, surfaceVariant = colors.surface2,
-            onSurfaceVariant = colors.text2, outline = colors.border, error = colors.amber,
-        )
-    } else {
-        lightColorScheme(
-            primary = colors.accent, onPrimary = colors.onAccent, background = colors.bg, onBackground = colors.text1,
-            surface = colors.surface, onSurface = colors.text1, surfaceVariant = colors.surface2,
-            onSurfaceVariant = colors.text2, outline = colors.border, error = colors.amber,
-        )
-    }
+    val scheme = darkColorScheme(
+        primary = colors.glow, onPrimary = colors.onGlow, background = colors.bg, onBackground = colors.text1,
+        surface = colors.surface, onSurface = colors.text1, surfaceVariant = colors.surface2,
+        onSurfaceVariant = colors.text2, outline = colors.border, error = colors.amber,
+    )
     val type = BaType()
     CompositionLocalProvider(LocalBaColors provides colors, LocalBaType provides type) {
         MaterialTheme(colorScheme = scheme, typography = MaterialTheme.typography.copy(bodyLarge = type.body), content = content)

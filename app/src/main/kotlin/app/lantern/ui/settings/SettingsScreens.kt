@@ -83,10 +83,7 @@ import app.lantern.ui.components.SecondaryButton
 import app.lantern.ui.components.SectionTitle
 import app.lantern.ui.components.TimePickerDialog
 import app.lantern.ui.components.TopBar
-import app.lantern.ui.theme.Accent
 import app.lantern.ui.theme.Ba
-import app.lantern.ui.theme.ThemeMode
-import app.lantern.ui.theme.baColors
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import java.time.Duration
@@ -145,7 +142,7 @@ private fun HealthLine(ok: Boolean, action: (@Composable () -> Unit)? = null) {
 
 // ---------------------------------------------------------------- 06 Settings
 
-enum class SettingsDestination { TASKS, REMINDERS, BACKUP, APPEARANCE, PHONE, DEBUG }
+enum class SettingsDestination { TASKS, REMINDERS, BACKUP, PHONE, DEBUG }
 
 @Composable
 fun SettingsScreen(container: AppContainer, debugAvailable: Boolean, onBack: () -> Unit, onOpen: (SettingsDestination) -> Unit) {
@@ -157,7 +154,6 @@ fun SettingsScreen(container: AppContainer, debugAvailable: Boolean, onBack: () 
             Triple(SettingsDestination.TASKS, BaIcons.List, R.string.settings_tasks),
             Triple(SettingsDestination.REMINDERS, BaIcons.Bell, R.string.settings_reminders),
             Triple(SettingsDestination.BACKUP, BaIcons.Cloud, R.string.settings_backup),
-            Triple(SettingsDestination.APPEARANCE, BaIcons.Palette, R.string.settings_appearance),
             Triple(SettingsDestination.PHONE, BaIcons.Phone, R.string.settings_phone),
         )
         val backup by remember { container.backup.observeStatus() }.collectAsStateWithLifecycle(null)
@@ -559,68 +555,3 @@ private fun CheckRow(label: String, ok: Boolean, help: String?, onOpen: () -> Un
 }
 
 // ---------------------------------------------------------------- 06b Appearance
-
-@Composable
-fun AppearanceScreen(container: AppContainer, onBack: () -> Unit) {
-    val c = Ba.colors
-    val scope = rememberCoroutineScope()
-    val settings by container.db.settings().observe().collectAsStateWithLifecycle(null)
-    val s = settings ?: return
-    val names = stringArrayResource(R.array.accent_names)
-    val current = runCatching { Accent.valueOf(s.accentColor) }.getOrDefault(Accent.GREEN)
-    fun save(update: (SettingsEntity) -> SettingsEntity) = scope.launch { container.db.settings().upsert(update(s)) }
-
-    SettingsPage(stringResource(R.string.appearance_title), onBack) {
-        SectionTitle(stringResource(R.string.appearance_color))
-        Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()) {
-            Accent.entries.forEach { accent ->
-                val swatch = baColors(accent, c.isDark).accent
-                Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                    Box(
-                        contentAlignment = Alignment.Center,
-                        modifier = Modifier
-                            .size(48.dp)
-                            .then(if (accent == current) Modifier.border(2.dp, swatch, CircleShape).padding(4.dp) else Modifier)
-                            .clip(CircleShape)
-                            .background(swatch)
-                            .selectable(accent == current, role = Role.RadioButton) { save { it.copy(accentColor = accent.name) } }
-                            .semantics { contentDescription = names[accent.ordinal] },
-                    ) {
-                        if (accent == current) Icon(BaIcons.Check, null, tint = c.onAccent, modifier = Modifier.size(20.dp))
-                    }
-                    Text(names[accent.ordinal], style = Ba.type.caption, color = c.text2)
-                }
-            }
-        }
-        BaCard {
-            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-                DayRing(8, 12, PersianDigits.format(8), "", "", ringSize = 88.dp)
-                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                        (1..4).forEach { Box(Modifier.size(16.dp).clip(RoundedCornerShape(4.dp)).background(c.grid[it])) }
-                        Box(Modifier.size(16.dp).clip(RoundedCornerShape(4.dp)).background(c.grid[0]))
-                    }
-                    Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                        Chip(stringResource(R.string.chip_record), ChipKind.ACCENT)
-                        Chip(stringResource(R.string.tag_important), ChipKind.AMBER)
-                    }
-                    Chip(stringResource(R.string.chip_special), ChipKind.SPECIAL)
-                }
-            }
-        }
-        SectionTitle(stringResource(R.string.appearance_mode))
-        val modes = ThemeMode.entries
-        val mode = runCatching { ThemeMode.valueOf(s.themeMode) }.getOrDefault(ThemeMode.SYSTEM)
-        Segmented(
-            options = listOf(stringResource(R.string.mode_system), stringResource(R.string.mode_dark), stringResource(R.string.mode_light)),
-            selected = mode.ordinal,
-            onSelect = { i -> save { it.copy(themeMode = modes[i].name) } },
-        )
-        BaCard(padding = androidx.compose.foundation.layout.PaddingValues(0.dp)) {
-            ListRow {
-                Text(stringResource(R.string.appearance_buddy), style = Ba.type.subtitle, color = c.text1, modifier = Modifier.weight(1f))
-                BaSwitch(s.showBuddy, { on -> save { it.copy(showBuddy = on) } }, stringResource(R.string.appearance_buddy))
-            }
-        }
-    }
-}

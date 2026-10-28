@@ -94,7 +94,6 @@ import app.lantern.ui.jalaliDayMonth
 import app.lantern.ui.theme.Ba
 import app.lantern.ui.theme.BaMotion
 import app.lantern.ui.theme.LanternTheme
-import app.lantern.ui.theme.ThemeMode
 import app.lantern.ui.theme.rememberHaptics
 import java.time.LocalDate
 import kotlin.math.hypot
