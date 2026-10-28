@@ -86,7 +86,6 @@ import app.lantern.ui.tasks.Editing
 import app.lantern.ui.tasks.TaskEditorSheet
 import app.lantern.ui.components.BaIcons
 import app.lantern.ui.components.DayDot
-import app.lantern.ui.components.DayRing
 import app.lantern.ui.components.PrimaryButton
 import app.lantern.ui.components.RoundIconButton
 import app.lantern.ui.components.SecondaryButton

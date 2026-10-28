@@ -92,7 +92,6 @@ import app.lantern.ui.components.BaIcons
 import app.lantern.ui.components.BaSwitch
 import app.lantern.ui.components.Chip
 import app.lantern.ui.components.ChipKind
-import app.lantern.ui.components.DayRing
 import app.lantern.ui.components.ListRow
 import app.lantern.ui.components.SecondaryButton
 import app.lantern.ui.components.SectionTitle

@@ -112,12 +112,22 @@ Each slice ends with a build on the Poco, a short "what works, what's next", and
 
 ### L8. Goals placeholder
 - The Goals tab shows the character with a line like «اینجا داره ساخته می‌شه» and a «در دست ساخت» tag. Nothing else.
+- ✅ **Built 2026-10-28.** The character (busy look) with the «در دست ساخت» tag and «اینجا رو دارم می‌سازم. به‌زودی هدف‌هات اینجا زندگی می‌کنن.» in the dialog box.
 
 ### L9. Release 1.0.0
 - Both languages checked on every screen, in both directions.
 - A week of daily use on the Poco next to «پیکر»; reminder health check green the whole week.
 - Backup and restore tested on a real backup.
 - Signed APK, installed over USB.
+- **Done in code 2026-10-28 (0.9.0, the release candidate):**
+  - The launcher icon is the pixel lantern on the night sky (adaptive, with a themed monochrome layer). The old «پیکر» sticker is gone from the launcher.
+  - English dates are Gregorian ("28 October"), Persian stays Jalali (D176). The calendar picker is still the Jalali grid in both languages (D129).
+  - Unused code and strings removed (`Chapters`, `DayRing`, three strings); lint shows no unused resources.
+- **Left for 1.0.0 (needs you and the Poco):**
+  1. Install 0.9.0 and go through every screen in Persian and in English (Settings → «زبان»): text fits, directions right, digits right.
+  2. A week of daily use next to «پیکر»; Settings shows «یادآورها سالم‌اند» all week, and the phone screen's 7-day bar stays on time.
+  3. Back up, uninstall, reinstall, restore: everything comes back.
+  4. Then: version 1.0.0 (`versionCode 10000`), `scripts/release.sh` for the signed APK.
 
 ## After v1 (not now)
 

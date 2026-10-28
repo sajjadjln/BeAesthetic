@@ -58,10 +58,8 @@
     <string name="notif_health_title">Reminders may be blocked</string>
     <string name="notif_health_text">Tap to fix it.</string>
 
-    <string name="ring_of">of %1$s</string>
     <string name="today_minimum_label">Minimum day</string>
     <string name="cd_minimum_day">Minimum day</string>
-    <string name="cd_ring">%1$s of %2$s tasks done</string>
     <string name="banner_late">A reminder came late</string>
     <string name="banner_blocked">Reminders may be blocked</string>
     <string name="banner_fix">Fix it</string>
@@ -163,7 +161,6 @@
     <string name="editor_ok_wizard">Haha! Added.</string>
     <string name="editor_hi_goth">My journal is open. What shall I write?</string>
     <string name="editor_ok_goth">Written. My cat approves.</string>
-    <string name="editor_new">New task</string>
     <string name="editor_edit">Edit task</string>
     <string name="editor_name">Task name</string>
     <string name="editor_icon">Icon</string>
@@ -226,7 +223,7 @@
     <string name="char_wizard">Wizard</string>
     <string name="char_goth">Goth girl</string>
     <string name="goals_soon_title">In development</string>
-    <string name="goals_soon_body">Goals are coming here soon.</string>
+    <string name="goals_soon_body">I\'m building this place. Your goals will live here soon.</string>
     <string-array name="gregorian_months">
         <item>January</item>
         <item>February</item>

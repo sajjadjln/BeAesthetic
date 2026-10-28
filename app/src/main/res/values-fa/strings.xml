@@ -58,10 +58,8 @@
     <string name="notif_health_title">یادآورها شاید بسته شدن</string>
     <string name="notif_health_text">بزن تا درستش کنیم.</string>
 
-    <string name="ring_of">از %1$s</string>
     <string name="today_minimum_label">روز حداقلی</string>
     <string name="cd_minimum_day">روز حداقلی</string>
-    <string name="cd_ring">%1$s از %2$s کار انجام شده</string>
     <string name="banner_late">یه یادآور دیر رسید</string>
     <string name="banner_blocked">یادآورها شاید بسته شدن</string>
     <string name="banner_fix">درستش کن</string>
@@ -163,7 +161,6 @@
     <string name="editor_ok_wizard">هاها! اضافه شد.</string>
     <string name="editor_hi_goth">دفترم بازه. چی بنویسم؟</string>
     <string name="editor_ok_goth">نوشتمش. گربه‌م تأیید کرد.</string>
-    <string name="editor_new">کار جدید</string>
     <string name="editor_edit">ویرایش کار</string>
     <string name="editor_name">اسم کار</string>
     <string name="editor_icon">آیکن</string>
@@ -225,7 +222,7 @@
     <string name="char_wizard">جادوگر</string>
     <string name="char_goth">دختر گات</string>
     <string name="goals_soon_title">در دست ساخت</string>
-    <string name="goals_soon_body">هدف‌ها به‌زودی اینجا میان.</string>
+    <string name="goals_soon_body">اینجا رو دارم می‌سازم. به‌زودی هدف‌هات اینجا زندگی می‌کنن.</string>
     <string-array name="gregorian_months">
         <item>ژانویه</item>
         <item>فوریه</item>

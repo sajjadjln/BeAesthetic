@@ -1,3 +1,4 @@
+
 package app.lantern.ui.components
 
 import androidx.compose.animation.core.Animatable
@@ -193,41 +194,6 @@ fun BaSwitch(checked: Boolean, onChange: (Boolean) -> Unit, description: String)
 @Composable
 fun SectionTitle(text: String, modifier: Modifier = Modifier) {
     Text(text, style = Ba.type.label, color = Ba.colors.text2, modifier = modifier.padding(top = 8.dp, start = 4.dp))
-}
-
-/**
- * The day ring: done / total (D27). The arc starts at the top and springs to its new value (D76).
- */
-@Composable
-fun DayRing(done: Int, total: Int, centerBig: String, centerSmall: String, description: String, modifier: Modifier = Modifier, pulse: Int = 0, ringSize: Dp = 164.dp) {
-    val c = Ba.colors
-    val fraction by animateFloatAsState(if (total == 0) 0f else done.toFloat() / total, BaMotion.spring(), label = "ring")
-    val pulseScale = remember { Animatable(1f) }
-    LaunchedEffect(pulse) {
-        if (pulse > 0) {
-            pulseScale.animateTo(1.06f, BaMotion.spring())
-            pulseScale.animateTo(1f, BaMotion.bouncy())
-        }
-    }
-    Box(contentAlignment = Alignment.Center, modifier = modifier.size(ringSize).semantics { contentDescription = description }) {
-        Canvas(Modifier.size(ringSize)) {
-            val stroke = ringSize.toPx() * 10f / 164f
-            val inset = stroke / 2
-            val arcSize = Size(size.width - stroke, size.height - stroke)
-            scale(pulseScale.value) {
-                drawArc(c.surface2, 0f, 360f, false, Offset(inset, inset), arcSize, style = Stroke(stroke))
-                if (fraction > 0f) {
-                    val sweep = 360f * fraction
-                    drawArc(c.accent, -90f, sweep, false, Offset(inset, inset), arcSize, style = Stroke(stroke, cap = StrokeCap.Round))
-                }
-            }
-        }
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            val big = if (ringSize < 120.dp) Ba.type.headline else Ba.type.display
-            Text(centerBig, style = big, color = c.text1, textAlign = TextAlign.Center)
-            if (centerSmall.isNotEmpty()) Text(centerSmall, style = Ba.type.label, color = c.text2)
-        }
-    }
 }
 
 /** One dot of the week row, by level; before the app = dotted; future = an outline (D56). */
