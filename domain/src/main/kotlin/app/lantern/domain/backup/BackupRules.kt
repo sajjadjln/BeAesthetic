@@ -23,7 +23,7 @@ object BackupRules {
     /** The automatic safety net: a backup on app open once this many days have passed (ARCHITECTURE §9). */
     const val AUTO_DAYS = 7L
 
-    const val PREFIX = "beaesthetic-"
+    const val PREFIX = "lantern-"
     const val EXTENSION = ".zip"
     const val PARTIAL = ".partial"
 

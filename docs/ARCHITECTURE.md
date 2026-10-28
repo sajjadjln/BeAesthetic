@@ -1,6 +1,15 @@
-# BeAesthetic: Architecture (v0.2)
+# Lantern: Architecture
 
-Status: **Accepted** (2026-10-10). The user approved every recommendation, except the install route: builds happen in Android Studio on the user's laptop (§13). Updated the same day for the research decisions D48–D69 (chapters, recaps, comebacks, anchors, routine strength, usage log, no `INTERNET`, new slice order) and the gamification additions D70–D75 (ladders, totals, letters, guesses, countdown, check-in reveal).
+_Lantern v1, on the `lantern` branch (2026-10-28, D191). The v0.x architecture of «پیکر» is on `main`. This file keeps the parts that carry over unchanged (time rules, reminders, backup) and says what changed. The slice plan is `docs/LANTERN-ROADMAP.md`._
+
+**What changed for Lantern, in short:**
+- **App ID and package** `app.lantern` (debug `app.lantern.debug`), installed next to «پیکر». Version 0.9.0, 1.0.0 after the L9 checks.
+- **Removed:** the workout, progress (metrics, check-ins, photos), letters, recaps, the week tab and ritual, the dashboard and the old character. Their code, tables and tests are gone.
+- **Database:** a fresh schema: v1 with 8 tables, v2 adds `settings.character` and `settings.todayLayout`.
+- **Theme:** one palette per character (D187), pixel shapes, the dialog box, character portraits. No accents, no light mode.
+- **Language:** English and Persian (D174–D176), chosen in Settings, kept in plain preferences.
+- **New UI:** the splash, onboarding, Today (two layouts), the task sheet, Settings and the Goals placeholder.
+
 For product rules see `SPEC.md`; for screens see `DESIGN.md`; for decision history see `DECISIONS.md` (D30 onward).
 
 ---
@@ -25,9 +34,8 @@ For product rules see `SPEC.md`; for screens see `DESIGN.md`; for decision histo
 | Background | `AlarmManager` for reminders; WorkManager for the watchdog and backup jobs | Neither needs Google Play Services. WorkManager runs on JobScheduler. |
 | DI | **Manual DI** (one `AppContainer`) | About 10 objects to wire. No annotation processing, no magic; receivers and workers just read `app.container`. Hilt also works without Google services, but costs build time for little gain here. |
 | JSON | kotlinx.serialization | Backup format and nav routes. No reflection, R8-friendly. |
-| Images | Coil 3 | Loads the progress photos from private storage. |
 | Charts | Hand-drawn with Compose `Canvas` | We need one line chart, a sparkline and a grid. A chart library would be bigger than that code. |
-| Locale | Fixed to `fa` (Persian) on start-up | Persian only (D87): RTL and Persian digits even on a phone set to English. No language switch. |
+| Locale | `AppLanguage`: the phone's language, or Persian or English from Settings | D174–D176. Persian: RTL, Persian digits, Jalali dates. English: LTR, Latin digits, Gregorian dates. Kept in plain preferences, because it's needed in `attachBaseContext`, before the database opens. |
 
 **SDK levels:** `minSdk 26` (Android 8: native `java.time`, notification channels). `targetSdk` and `compileSdk` = 36, the newest platform on the laptop at slice 1. Exact versions are in `gradle/libs.versions.toml` (D89).
 
@@ -51,30 +59,28 @@ Why not more: feature modules buy build speed and team boundaries. We have neith
 ### Package layout
 
 ```
-domain/src/main/kotlin/app/beaesthetic/domain/
-  time/        ProgramCalendar (04:00 rollover, week number, part of day, chapter, landmarks, countdown), Jalali, Weekday set
-  tasks/       Task model, due-list rules, interval due dates, RoutineStrength (Loop score), fade rules
-  score/       Day level, weekly score, special-day cap, comebacks, "before the app"
-  reminders/   ReminderPlanner, ReminderHealth
-  workout/     Set pre-fill, progression suggestion (incl. next ladder rung), personal records (incl. in-session record), ladders, lifetime totals + round numbers
-  progress/    "Since Day 0" deltas, check-in schedule, milestones, recap content, letter opening dates, strength-test guess outcome
-  buddy/       BuddyPicker: the character's pose, line id and outfit from the day state and moment (D82–D84)
-  backup/      Export format (serializable models), format versions
+domain/src/main/kotlin/app/lantern/domain/
+  time/        ProgramCalendar (04:00 rollover, part of day, week start), Jalali, JalaliMonth, Weekdays, ProgramDates (seed only)
+  tasks/       Task model, due-list rules, interval due dates, task form rules
+  score/       Day counts and levels (the day snapshot)
+  reminders/   ReminderPlanner, ReminderHealth, block content
+  backup/      Backup rules
+  widget/      What the widget shows
+  text/        PersianDigits (Latin in English)
 
-app/src/main/kotlin/app/beaesthetic/
-  App.kt, AppContainer.kt, MainActivity.kt
-  data/db/        Entities, DAOs, migrations, AppDatabase
-  data/repo/      Repositories: map entities ↔ domain models, write the day snapshot
-  reminders/      AlarmScheduler, receivers, notifications, Xiaomi intents
+app/src/main/kotlin/app/lantern/
+  App.kt, AppContainer.kt, MainActivity.kt, AppLanguage.kt, ProgramClock.kt
+  data/db/        Entities, DAOs, AppDatabase
+  data/repo/      TaskRepository (the day snapshot), Seed
+  reminders/      AlarmScheduler, receivers, notifications, Xiaomi setup
   backup/         Zip writer/reader, SAF folder, restore
-  photos/         Capture (incl. ghost-overlay camera), import, downscale
-  events/         Local usage log writer (D59)
-  ui/theme/       Tokens per accent × dark/light, Estedad typography, shapes
-  ui/components/  Tile, Ring, WeekDots, GridSquare, Chip, SeekBar1to10, Buddy («پیکر»: pose vectors + bubble) …
-  ui/today/ ui/dashboard/ ui/progress/ ui/week/ ui/workout/ ui/settings/ …
+  events/         Local usage log (D59)
+  ui/theme/       Colors (a palette per character), Character (+ moods, layout), Pixel (shapes, sky, dialog box, portrait), Theme
+  ui/splash/ ui/onboarding/ ui/today/ ui/tasks/ ui/settings/ ui/backup/ ui/goals/ ui/components/
+  widget/         The Today widget (Glance)
 ```
 
-Application ID: `app.beaesthetic` (debug builds: `app.beaesthetic.debug`, so both can be installed side by side). It can never change after the first install, and it stays the same for a later Cafe Bazaar release (§15).
+Application ID: `app.lantern` (debug builds: `app.lantern.debug`). It can never change after the first install. «پیکر» keeps `app.beaesthetic`, so both can be installed (D191).
 
 ## 4. App architecture
 
@@ -202,35 +208,18 @@ On non-Xiaomi phones the Xiaomi-only rows are hidden.
 
 ## 8. Database (Room)
 
-Physical schema for `SPEC.md` §9, updated for D25–D28. Dates are ISO `LocalDate` strings, times are minutes after midnight, instants are epoch milliseconds.
+Lantern started a fresh schema (D191): `lantern.db`, version 1 in 0.1.0, version 2 in L1 (auto-migration). Dates are ISO `LocalDate` strings, times are minutes after midnight, instants are epoch milliseconds.
 
 | Table | Columns | Notes |
 |---|---|---|
-| `task` | id, title, icon, part (MORNING·MIDDAY·EVENING·NIGHT), repeat (DAILY·WEEKDAYS·EVERY_N_DAYS·ONCE·MIN_DAY_ONLY·ANYTIME), weekdays (bits), everyNDays?, onceDate?, startDate, isImportant, inMinimumDay, action (NONE·WORKOUT·HIKE·WEIGH_IN·SNACK_NOTE), alarmTime?, alarmWeekdays (bits), alarmEnabled, anchor?, remindersSilencedAt?, fadeOfferedAt?, sortOrder, createdAt, archivedAt? | "Routine" is renamed **task** to match the UI («کارها»). The task alarm (D25) is folded in: one alarm per task. Deleting a task archives it so history keeps its name. `anchor` = the «بعد از…» text (D55). `remindersSilencedAt` set = left out of notifications (D57). Strength is computed, not stored. ANYTIME = «هر وقت» (D127): never a day item, so no score, block line or alarm; stored as a name, no schema change. Icon CHECK is the generic default for new tasks (5b). |
+| `task` | id, title, icon, part (MORNING·MIDDAY·EVENING·NIGHT), repeat (DAILY·WEEKDAYS·EVERY_N_DAYS·ONCE·MIN_DAY_ONLY·ANYTIME), weekdays (bits), everyNDays?, onceDate?, startDate, isImportant, inMinimumDay, action, alarmTime?, alarmWeekdays (bits), alarmEnabled, anchor?, remindersSilencedAt?, fadeOfferedAt?, sortOrder, createdAt, archivedAt? | Deleting a task archives it so history keeps its name. `anchor` = «بعد از…» (D55). ANYTIME = «هر وقت» (D127). `action` is always NONE in v1 (no workout). |
 | `completion` | taskId, date, completedAt | Key (taskId, date). |
-| `day` | date, special (SICK·TRAVEL·OFF)?, minimumMode, dueCount, doneCount, floorDone | Replaces DayMeta. Holds the **day snapshot**, see below. A future row can hold only a planned special day. |
-| `snack_note` | date, text, updatedAt | |
-| `week` | weekStart (Saturday), ritualDoneAt?, reviewNote? | |
-| ~~`ladder`~~ | — | Not built: ladders are `exercise.harderId` chains (D119). |
-| `exercise` | id, name, kind (REPS·SECONDS), ladderId?, rung?, archivedAt?, harderId? | One `name`, typed in whichever language the user uses. A ladder is a chain of `harderId` links (v4, D119); `ladderId` and `rung` (v3) stay empty. |
-| `workout` | id, weekday (unique), name | One per training weekday (the user's plan: Sat, Mon, Wed, Fri; D102). |
-| `workout_exercise` | workoutId, position, exerciseId, sets, rangeMin?, rangeMax?, kg?, perSide, targetEffort?, restSeconds?, note? | Key (workoutId, position). Drag-to-reorder rewrites positions. No range = «حداکثر» (D105). `kg` is the default load (D103). |
-| `session` | id, workoutId, date, startedAt, finishedAt? | Created with the first set; the same workout on the same date continues it (D115). |
-| `set_log` | sessionId, exerciseId, setIndex, value, kg?, effort (1–10), loggedAt | D27: effort is per set, 1–10. `kg` per set (D103). Key (sessionId, exerciseId, setIndex): logging a set again replaces it. `loggedAt` orders the sets for records (D118). Added in schema v3 (slice 4a); `ladder` comes in 4b. |
-| `metric` | id, kind (BODY·TAPE·STRENGTH), key, name, unit (kg·cm·reps·s), higherIsBetter, sortOrder | Added by the user, nothing seeded (D100). The editor suggests weight and the 5 tape sites (D85). Strength tests are user-defined (D106). |
-| `metric_entry` | id, metricId, date, value, guess?, note? | Baseline entries simply carry the Day 0 date. `guess` = the strength-test guess (D73). |
-| `check_in` | idx (0–6), date, doneAt? | D28: 7 monthly check-ins. |
-| `photo` | checkInIdx, pose (FRONT·SIDE·BACK), fileName, takenAt | Key (checkInIdx, pose). |
+| `day` | date, special?, minimumMode, dueCount, doneCount, floorDone | The **day snapshot**, see below. |
 | `reminder_slot` | profile (NORMAL·FRIDAY), part, time, enabled | |
 | `reminder_log` | id, key, kind, scheduledAt, firedAt?, outcome | §7.5 |
-| `backup_record` | id, at, fileName, sizeBytes, photoCount, ok, error? | |
-| `milestone` | id, title, metricId?, target?, reachedOn?, sortOrder | D65. Linked to a metric when it has one (e.g. pull-ups ≥ 10); otherwise ticked by hand. |
-| `event` | id, at, type (APP_OPEN·SCREEN·NOTIF_SHOWN·NOTIF_TAP·FIRST_TICK), ref?, valueMinutes? | D59. Local usage log. `ref` = screen name or reminder key. Rows older than 180 days are deleted. Included in backups. |
-| `recap` | key (HALFWAY·FINISH), seenAt? | D52. The content is computed; only "seen" is stored. |
-| `letter` | id, writtenOn, writtenAt, opensOn, text, openedAt?, isFirst | D72. Added in schema v2 (slice 2). The UI refuses to show `text` before `opensOn`. Included in backups. |
-| `round_number` | key (e.g. `reps:ladder:3:1000`, `workouts:50`, `days:100`), reachedOn, seenAt? | D71. Written when a total first crosses a round number, so it's noted once even if a log is later edited. Totals themselves are computed. |
-| `settings` | single row: programStartDate, rolloverHour, specialCapPerWeek, followUpMinutes, alarmMode, accentColor (GREEN·BLUE·TURQUOISE·VIOLET·ORANGE), themeMode (SYSTEM·DARK·LIGHT), backupTreeUri, lastOpenedAt, lastBackupAt, onboardingDone, programEndDate, installDate, halfwayDate?, identitySentence?, afterFinishMode (NONE·MAINTENANCE·NEW_PROGRAM), experimentFlags (bits, debug); v2: firstLetterOfferDone, cardDismissedOn?, healthSeenAt?, healthNotifiedOn?, autostartConfirmed, recentsLockConfirmed, showBuddy, ritualTime; v5: anytimeOpen (D127); v6: autoBackup (D133) | `installDate` drives the «قبل از اپ» cells (D56). |
-| `backup_record` | id, at, fileName, sizeBytes, photoCount, reason (MANUAL·AUTO·BEFORE_RESTORE), ok, error? | Every backup try (v6, slice 6). Kept on the phone, never in a backup (D132). Feeds the backup screen, the Settings tile and the Today row (D134). |
+| `event` | id, at, type, ref?, valueMinutes? | D59. The local usage log; never leaves the phone except in a backup. |
+| `backup_record` | id, at, fileName, sizeBytes, photoCount, reason, ok, error? | Kept on the phone, never in a backup (D132). |
+| `settings` | single row: the v0.x columns (program dates, accent and theme mode stay but are unused), plus v2: `character` (KNIGHT·VAMPIRE·WIZARD·GOTH, D186), `todayLayout` (LIST·PARTS, D188) | The language is not here (see §2). |
 
 ### The day snapshot (why some derived numbers are stored)
 
@@ -246,20 +235,20 @@ A day the app never saw has no row, which is a gray gap, which is exactly right.
 
 - Schemas are exported to `app/schemas/` and committed.
 - Additive changes use Room auto-migrations; anything else gets a hand-written migration.
-- Every migration has a test that opens the old schema with real-looking data and checks it after migrating.
+- Every hand-written migration needs a test that opens the old schema with real-looking data. Lantern has only the auto-migration 1 → 2 so far; the v0.x migration tests went with the old schema.
 - **Never** `fallbackToDestructiveMigration`.
 
 ## 9. Backup and restore
 
 ### Format
 
-`beaesthetic-1405-07-24-193012.zip` (Jalali date and time to the second in the name, so it sorts naturally, never collides and reads easily; D133):
+`lantern-1405-07-24-193012.zip` (Jalali date and time to the second in the name, so it sorts naturally, never collides and reads easily; D133):
 
 ```
 manifest.json     formatVersion, appVersion, dbSchemaVersion, createdAt, counts per table, photo list with sizes
 data.json         every table as plain JSON, row by row (docs/BACKUP_FORMAT.md, D132)
 photos/           0-front.jpg, 0-side.jpg … 6-back.jpg
-db/beaesthetic.db raw database copy, an emergency fallback only
+db/lantern.db raw database copy, an emergency fallback only
 ```
 
 `data.json` is the **source of truth for restore**. It has its own `formatVersion`, and the importer reads every older version. That's what lets an old backup restore into a newer app, and what a .NET backend could read later.
@@ -289,20 +278,19 @@ Android's own cloud backup (`allowBackup`) is **off**: it would send data to Goo
 
 ## 10. Photos
 
-- Taken with the system camera (`TakePicture` into a file we own) or picked from the gallery. Either way, the app **copies** the photo into private storage: `files/photos/<checkIn>-<pose>.jpg`.
-- Downscaled to 2560 px on the long edge, JPEG quality 90, location EXIF removed. 21 photos stay around 15–25 MB, so backups stay quick.
-- Never written to the shared gallery. Photos leave the phone only inside backups.
+None in v1. The backup format still has a `photos/` folder, empty, so the format stays the same.
 
 ## 11. UI foundation
 
-- **Theme:** the tokens in `DESIGN.md` become a `BaColors` class, built from the neutral set for dark or light plus the chosen accent palette (5 accents × 2 modes, including the accent's overrides for special and amber). It's provided through a `CompositionLocal`, and M3's `colorScheme` is mapped from it so built-in components match. The accent and the mode (system/dark/light) are columns in `settings`; changing them recomposes the app at once. No dynamic (wallpaper) color.
-- **Accent is a token, never a literal.** No code says "green"; every done/progress color reads `colors.accent*` or `colors.grid*`. A unit test checks contrast for every accent × mode.
+- **Theme (D187):** `lanternColors(character)` builds `BaColors` from the picked character's palette: the night sky, the glow (its color) and the dialog box's rims, with done green and due amber in every theme. `LanternTheme(character)` provides it, the type scale and `LocalCharacter` through `CompositionLocal`s, and maps M3's `colorScheme` from it. Changing the character (Settings, onboarding) recomposes the app at once.
+- **Colors are tokens, never literals.** Done reads `accent`, the character's color reads `glow`, text on it `onGlow`.
+- **Pixel pieces** (`ui/theme/Pixel.kt`): `PixelShape` (`Px.Card`, `Px.Small`, `Px.Dialog`), `Modifier.sky()`, `PixelDialog` (typing text), `CharacterPortrait` (round fade, glow, breathing).
 - **Font:** Estedad static TTFs (400, 500, 600, 700, 800) in `res/font`, with the OFL license in the app's about screen. The type scale from `DESIGN.md` becomes `BaType`.
 - **RTL:** `supportsRtl="true"`; layouts use start/end only. Charts and the dashboard grid read the layout direction, so time runs right → left in Persian.
-- **Strings:** Persian only, in `values/` (D87). Lint fails the build on a hard-coded string, so a separate English build stays possible.
-- **Locale:** the app always runs in `fa` (layout RTL, Persian digits, Persian number formatting), whatever the phone's language.
+- **Strings:** English in `values/`, Persian in `values-fa/`; every string lives in both (D174). Lint fails the build on a hard-coded string or a missing translation.
+- **Locale:** `AppLanguage.wrap` sets the resources' locale and direction, and `PersianDigits.latin` for English. `Locale.setDefault` is left alone.
 - **Motion (D76):** a `BaMotion` object in the theme holds the tokens from `DESIGN.md` → Motion (durations, the standard easing, and `spring()` specs for spring / settle / bouncy) and is provided through a `CompositionLocal`, like `BaColors`. Built only with Compose's animation APIs (`animate*AsState`, `Animatable`, `updateTransition`, `AnimatedContent`, `SharedTransitionLayout` for the workout tile → session), and `Canvas` for the ring, grid, charts and odometer. No Lottie. Compose's duration scale follows the system "Remove animations" setting, so motion becomes instant there; anything driven by hand reads the same scale. Vibration goes through one `Haptics` helper (light = `CONFIRM`, fallback `VIRTUAL_KEY`; medium = `EFFECT_HEAVY_CLICK`; record = a short waveform). No sound.
-- **The character «پیکر» (D82, D93):** `ui/components/buddy/PikerRig.kt` is a Compose `Canvas` port of `docs/design/piker.js`: the same parts (ink outline, white border, shadow, body), every pose, prop and outfit. The body color is a parameter (the accent); outfits are a separate overlay vector. A pose change is `AnimatedContent` with the bouncy spring; the bubble fades. `:domain`'s `BuddyPicker` decides the pose, line and outfit; the composable only draws. Lines are string arrays; the last-shown date per line is kept in the usage log (D59).
+- **The characters (D184, D186):** portraits per mood are drawables cut from the sheets by `scripts/cut-character.swift` (480 px, the knight's embers recolored). `TodayPick` (unit-tested) decides the mood, the pool of lines and the «الان» task; the lines are string arrays per character and mood.
 - **Accessibility (D68):** every icon-only tab and tile has a content description; layouts are checked at 130% font size; day detail states the level as a number, so the grid isn't color-only.
 - **Crash log without an SDK:** an uncaught-exception handler writes the stack trace to a private file. Settings shows "last crash" with a share button. Nothing leaves the phone unless the user shares it.
 
@@ -324,45 +312,24 @@ No UI screenshot tests in the MVP. Compose previews with fake state cover visual
 - Cloud sessions don't build the app: their container can't download the Android SDK. They can still edit code and run `:domain` tests, which need only a JVM.
 - Gradle Kotlin DSL with a version catalog (`gradle/libs.versions.toml`). JDK 17 or newer.
 - **No CI in the MVP.** A GitHub Actions workflow that runs the tests can be added later if it's wanted; it changes nothing in the code.
-- **Signing:** the user creates the release keystore once (`keytool`, at `~/peykar-release.jks`, alias `peykar`) and keeps it in a password manager and on a second disk. `scripts/release.sh` builds the signed APK: it asks for the password, passes it to Gradle as an environment variable for that one build (configuration cache off), and installs on a phone connected over USB. No password is ever stored in the repo or on disk. An update only installs over the app when it's signed with the same key, and that includes the later Bazaar release. Debug builds use the debug key and the `.debug` app ID, so they never clash with the real install.
-- **Versions:** `versionName` = `0.<slice>.<fix>` until the MVP is complete, then `1.0.0`. `versionCode` = major × 10000 + minor × 100 + patch.
+- **Signing:** Lantern uses the same release key as «پیکر» (a different app ID, so no clash). With the git-ignored `keystore.properties`, `./gradlew assembleRelease` signs on its own. The user created the release keystore once (`keytool`, at `~/peykar-release.jks`, alias `peykar`) and keeps it in a password manager and on a second disk. `scripts/release.sh` builds the signed APK: it asks for the password, passes it to Gradle as an environment variable for that one build (configuration cache off), and installs on a phone connected over USB. No password is ever stored in the repo or on disk. An update only installs over the app when it's signed with the same key, and that includes the later Bazaar release. Debug builds use the debug key and the `.debug` app ID, so they never clash with the real install.
+- **Versions:** Lantern started at 0.1.0 (D191); 0.9.0 is the release candidate, 1.0.0 after the L9 checks. `versionCode` = major × 10000 + minor × 100 + patch.
 - R8 minify and resource shrinking on release builds, with keep rules for kotlinx.serialization.
 - A **banned-dependency check** runs as part of `./gradlew check` (no Google Play Services, Firebase or analytics).
-- A **manifest check** fails the build if `android.permission.INTERNET` appears in the merged manifest (D60). Coil is used without its network module.
+- A **manifest check** fails the build if `android.permission.INTERNET` appears in the merged manifest (D60).
 
-## 14. Build order (Phase 5 slices)
+## 14. Build order
 
-Each slice ends with an installable APK, a short demo note, and a pause for feedback.
-
-| # | Slice | Done when |
-|---|---|---|
-| 1 | Skeleton: both modules, theme (color and motion tokens, 5 accents, Estedad, RTL, the fixed `fa` locale), haptics helper, Room with seeded tasks (`SPEC.md` §5, with default anchors), launcher and notification icons from `docs/design/logo/` (D81), **basic Today** (tiles, ticking, day snapshot), the **reminder core** (planner, `setAlarmClock` scheduler, receivers, channels, block notifications with anchors, reminder log), usage log, `installDate`, manifest check | Real block reminders arrive on the phone and ticks survive restarts (D50) |
-| 2 | **Today complete** (ring, week dots, minimum day, week + chapter line and chapter-start card (with the letter offer; the first letter is offered once after install), the last-chapter countdown, tick feedback, the «پیکر» row with the day poses and the line picker (D82), comeback line) and **reminders complete** (follow-up "Done", task alarms, health + banner, absence rule, Xiaomi setup screen, Reminders screen) | A week of real reminders with a clean health log |
-| 3 | Tasks list + task editor (repeat rules, task alarms, important, minimum day, anchor) (D107–D111) | The user edits their own routine without a rebuild |
-| 4 | **4a** (D113): workout plan editor + workout session (pre-fill, kg, effort, in-session «رکورد», ticks the workout task). **4b**: ladders and the next-rung offer, round numbers at the end of a session | A real session is logged and the next one is pre-filled |
-| 5 | Dashboard (grid with «قبل از اپ» cells, week rows, day detail) | The whole program is visible |
-| 5b | Fixes after the first days of use (D126–D130): «تمرین امروز» card on Today + rest-day row, «هر وقت» items (new repeat kind, folded card, never counted), simple new-task sheet with «تنظیمات بیشتر», Jalali calendar for one-off days, alarm that follows the repeat | The workout opens from Today in any part, and a shopping item is added with a name and one tap |
-| 6 | Backup and restore | The round-trip test passes on the phone, and Syncthing picks up the zip |
-| 7 | **7a** (D138, built 0.7.0): metrics + readings (v7: `metric`, `metric_entry`, `check_in`, `photo`), Day 0 baseline, check-in with system-camera/gallery photos, Progress tab, Today check-in card and Friday weigh-in. **7b** (D139, built 0.7.1): v8 `milestone`, CameraX ghost camera, reveal slider, ladders, totals, program line, backfill. Originally: progress (ladders, lifetime totals), monthly check-in with the **ghost-overlay camera** and the **reveal** with a compare slider (before ~11 Dec), strength tests with the guess, baseline entry with past dates + workout backfill, program line, milestones | Day 0 data is entered and the first deltas show |
-| 8 | Friday review and plan (short path, comebacks, best routines, reserves wording, identity sentence, special days, snack notes, weekly backup) | The first real ritual is done in the app |
-| 8b | **Halfway recap**. **Deadline: 19 Dec 2026** (numbers-only version if time is short) | The recap opens on Yalda |
-| 9 | Onboarding | A fresh install walks through setup |
-| 10 | Later, in this order: widget (aimed at before week 8, D67) · reminder fade offer (from week ~8, D57) · finish recap + after-the-finish mode (by ~week 18, D61) | |
-
-The slices before 8b must leave room to hit 19 Dec. If they slip, build 8b before slice 8.
-
-Onboarding is last: the user is the only user for now and is already set up by the dev seed. Slice 9 removed the task seed: a fresh install starts empty (D100, D142).
-
-Every slice also runs the accessibility checklist (§11, D68).
+Lantern's slices L0–L9 and their status are in `docs/LANTERN-ROADMAP.md`. The v0.x slices are on `main`.
 
 ## 15. Later: a public release on Cafe Bazaar
 
 **Not in the MVP.** Publishing on Cafe Bazaar is a **future goal, after the program** (D49). The research for it is in `research/07-marketing-strategy.md`. What we do now so that stays possible:
 
-- **App ID `app.beaesthetic` is final.** Android package names allow only Latin letters, digits and `_`, so every app in Iranian stores has an English ID. Stores match searches against the listing (title, description), not the package name. The ID has no effect on search ranking (Bazaar's own app is `com.farsitel.bazaar`).
+- **App ID `app.lantern` is final** (D191). Android package names allow only Latin letters, digits and `_`, so every app in Iranian stores has an English ID. Stores match searches against the listing (title, description), not the package name. The ID has no effect on search ranking (Bazaar's own app is `com.farsitel.bazaar`).
 - **Nothing personal is hard-coded.** Program start and end dates live in `settings`; routines, the workout plan, metrics and reminder times are added by the user; a fresh install starts empty (D100).
 - **The same release key** signs every build the user installs, so a store version can update the personal install later.
-- **An English version** (D87) would be a separate build: a Gradle product flavor `en` with its own `strings.xml`, LTR, Latin digits, the name "BeAesthetic" and its own app ID (e.g. `app.beaesthetic.en`) and listing. The Persian app never contains English.
-- **The app name** (launcher label) is a string resource: «پیکر» (D79). "BeAesthetic" is the Latin name (app ID, an English build). The icon is an adaptive vector icon with a monochrome layer and a white notification silhouette (D78).
+- **English is in the same app** (D174), chosen by the phone's language or in Settings.
+- **The app name** is a string resource: «فانوس» / Lantern (D190). The icon is an adaptive vector pixel lantern with a monochrome layer.
 
 Left for that release: onboarding that sets your own program dates and routine; the Bazaar listing (a Persian title with the words people search for, description, screenshots); a short privacy note (the app collects nothing and has no internet permission; the usage log never leaves the phone); starter routines for people without their own plan; and a check of Bazaar's current rules on target SDK and permissions such as `USE_EXACT_ALARM`.
