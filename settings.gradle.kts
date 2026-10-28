@@ -14,5 +14,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "BeAesthetic"
+rootProject.name = "Lantern"
 include(":domain", ":app")

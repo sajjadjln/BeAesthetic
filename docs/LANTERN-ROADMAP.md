@@ -39,6 +39,12 @@ Each slice ends with a build on the Poco, a short "what works, what's next", and
 - Remove the workout and v0.x-only features: `ui/workout`, `ui/progress`, `ui/letters`, `ui/recap`, `ui/week`, `ui/dashboard`, the «پیکر» rig (`ui/components/buddy`), `WorkoutRepository`, `ProgressRepository`, `PhotoStore`, the program seed and `ProgramClock` (Today uses the plain date), the related Room tables (a fresh database, version 1) and their `:domain` rules and tests.
 - Keep: tasks, reminders, backup, phone setup, the Jalali calendar, the widget (restyled in L7).
 - **Done when:** the app builds and runs with the old Today, tasks, reminders and backup only; the domain tests that are left pass.
+- ✅ **Done 2026-10-28 (0.1.0).** `./gradlew check :app:assembleDebug` green, 114 tests. As built:
+  - Package, `applicationId`, project and DB file renamed (`app.lantern`, `Lantern`, `lantern.db`); deep links `lantern://`; the app name in strings is «فانوس».
+  - Removed: workout, progress/check-in/metrics, letters, recaps, week/ritual, dashboard, the «پیکر» rig, their repositories, `:domain` packages (`workout`, `progress`, `buddy`, `week`) and tests, the migration test and the old schemas. The database is a fresh version 1 with 8 tables.
+  - Today keeps: the ring, the parts pager, minimum day, «هر وقت», the health and backup rows, «+». The week dots and the header's week line are gone.
+  - Onboarding loses the program-dates step. Settings loses the workout row. Bottom bar: Today and Goals; Goals shows «در دست ساخت» (an early L8).
+  - Kept on purpose for later slices: `ProgramClock` and `ProgramCalendar.programDate` (the 04:00 rollover), the program dates in `settings` (unused; cleaned up in L3), the Appearance screen (removed in L7), unused strings (cleaned in L9). The signing env names (`PEYKAR_*`) are unchanged so `scripts/release.sh` still works.
 
 ### L1. The theme and the characters
 - A theme built from the four palettes (D187): night sky, glow, dialog box, ink; done green and due amber in every theme.

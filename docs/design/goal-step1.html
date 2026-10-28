@@ -130,6 +130,11 @@ body { background: var(--page); font-family: "Estedad", system-ui, sans-serif; m
 @keyframes pop { 40% { transform: scale(1.05); } }
 .later { height: 44px; border: 0; background: none; color: var(--t2); font: 600 14px "Estedad"; cursor: pointer; }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; opacity: 1 !important; } }
+/* bar: back and next on one row, the progress blocks under them */
+.bottom { flex-wrap: wrap; row-gap: 14px; }
+.bottom .steps { order: 2; flex: 1 1 100%; }
+.bottom { justify-content: center; column-gap: 12px; }
+.phone > .bottom { padding: 0 22px 30px; margin-top: auto; }
 </style>
 </head>
 <body>
@@ -151,10 +156,10 @@ body { background: var(--page); font-family: "Estedad", system-ui, sans-serif; m
       <div class="ul"></div>
     </div>
     <div class="hint" id="hint">به‌جاش چی کار می‌کنی؟<button id="ok">همین خوبه</button></div>
-    <div class="bottom">
-      <div class="steps" id="steps" aria-label="مرحله‌ی ۱ از ۷"><i class="cur"><b></b></i><i style="--n:1"></i><i style="--n:2"></i><i style="--n:3"></i><i style="--n:4"></i><i style="--n:5"></i><i style="--n:6"></i></div>
-      <button class="go" id="next" disabled aria-label="بعدی"><svg viewBox="0 0 12 12" width="18" height="18"><path d="M8 2h-2v2h-2v2h-2v-0 M2 6h2v2h2v2h2" fill="none"/><rect x="6" y="1" width="2" height="2"/><rect x="4" y="3" width="2" height="2"/><rect x="2" y="5" width="2" height="2"/><rect x="4" y="7" width="2" height="2"/><rect x="6" y="9" width="2" height="2"/></svg></button>
-    </div>
+  </div>
+  <div class="bottom">
+    <div class="steps" id="steps" aria-label="مرحله‌ی ۱ از ۵"><i class="cur"><b></b></i><i style="--n:1"></i><i style="--n:2"></i><i style="--n:3"></i><i style="--n:4"></i></div>
+    <button class="go" id="next" disabled aria-label="بعدی"><svg viewBox="0 0 12 12" width="18" height="18"><path d="M8 2h-2v2h-2v2h-2v-0 M2 6h2v2h2v2h2" fill="none"/><rect x="6" y="1" width="2" height="2"/><rect x="4" y="3" width="2" height="2"/><rect x="2" y="5" width="2" height="2"/><rect x="4" y="7" width="2" height="2"/><rect x="6" y="9" width="2" height="2"/></svg></button>
   </div>
 </div>
 <p class="cap"><b>① The goal: preview</b>The knight asks the question in its dialog box. At the bottom, a pixel progress bar for the 7 steps (the first fills when you type) and a cyan pixel arrow right under the field. Once you type, a light runs along the bar toward the arrow and the arrow pulses and pokes forward. The knight sits on top: it breathes, blinks, embers drift up, and its eyes flash when you start typing. The placeholder types example goals by itself. No date here (it moves to a later step). «بعدی» wakes up once there's text. Avoidance wording («دیگه… نکنم»، «ترک»، «کمتر») shows one soft line under the field. Buttons sit right under the field; what you type is cyan, the question is white. The knight talks in a pixel-game box, typed letter by letter; tap it for the next line. Try typing «دیگه گوشی دستم نگیرم».</p>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Persian only (D87). The default values/ folder is Persian; an English build would be a separate flavor. -->
 <resources>
-    <string name="app_name">پیکر</string>
+    <string name="app_name">فانوس</string>
 
     <!-- Calendar -->
     <string-array name="weekdays">
@@ -190,7 +190,7 @@
     <string name="settings_backup">پشتیبان</string>
     <string name="settings_appearance">ظاهر</string>
     <string name="settings_phone">رسیدن یادآورها</string>
-    <string name="settings_version">نسخه %1$s · BeAesthetic</string>
+    <string name="settings_version">نسخه %1$s · Lantern</string>
 
     <!-- Reminders (09) -->
     <string name="reminders_title">یادآورها</string>
@@ -222,19 +222,19 @@
     <string name="row_notifications">اجازه‌ی اعلان</string>
     <string name="row_exact">یادآور سر دقیقه</string>
     <string name="row_autostart">شروع با روشن شدن گوشی</string>
-    <string name="row_battery">باتری، پیکر رو نبنده</string>
+    <string name="row_battery">باتری، فانوس رو نبنده</string>
     <string name="row_recents">قفل توی اپ‌های اخیر</string>
-    <string name="row_notifications_help">اعلان‌های پیکر روشن باشه.</string>
+    <string name="row_notifications_help">اعلان‌های فانوس روشن باشه.</string>
     <string name="row_exact_help">توی تنظیمات اسمش «زنگ‌ها و یادآورها»ست.</string>
     <string name="row_autostart_help">بعد از خاموش‌روشن، یادآورها دوباره راه بیفتن. توی تنظیمات اسمش «اجرای خودکار»ه.</string>
     <string name="row_autostart_help_unknown">گوشی وضعیتش رو نمی‌گه؛ بعد از روشن کردن ازت می‌پرسم.</string>
-    <string name="row_battery_help">صرفه‌جویی باتری پیکر رو نبنده. توی تنظیمات: باتری ← «بدون محدودیت».</string>
+    <string name="row_battery_help">صرفه‌جویی باتری فانوس رو نبنده. توی تنظیمات: باتری ← «بدون محدودیت».</string>
     <string name="row_battery_help_xiaomi">اول «اجازه بده»، بعد توی صرفه‌جویی باتری «بدون محدودیت».</string>
-    <string name="row_recents_help">«پاک کردن همه» پیکر رو نبنده.</string>
+    <string name="row_recents_help">«پاک کردن همه» فانوس رو نبنده.</string>
     <string name="ask_autostart_title">اجرای خودکار</string>
-    <string name="ask_autostart_text">برای پیکر روشنش کردی؟</string>
+    <string name="ask_autostart_text">برای فانوس روشنش کردی؟</string>
     <string name="ask_recents_title">قفل در اپ‌های اخیر</string>
-    <string name="ask_recents_text">صفحه‌ی اپ‌های اخیر رو باز کن (از پایین صفحه بکش بالا و نگه دار). کارت پیکر رو نگه دار و آیکن قفل رو بزن. با قفل، «پاک کردن همه» و پاک‌کننده‌ی گوشی پیکر رو نمی‌بندن، پس یادآورها سر جاشون می‌مونن.</string>
+    <string name="ask_recents_text">صفحه‌ی اپ‌های اخیر رو باز کن (از پایین صفحه بکش بالا و نگه دار). کارت فانوس رو نگه دار و آیکن قفل رو بزن. با قفل، «پاک کردن همه» و پاک‌کننده‌ی گوشی فانوس رو نمی‌بندن، پس یادآورها سر جاشون می‌مونن.</string>
     <string name="ask_yes_autostart">آره، روشنه</string>
     <string name="ask_yes_recents">قفلش کردم</string>
     <string name="ask_not_yet">هنوز نه</string>
@@ -424,6 +424,9 @@
 
     <!-- Slice 5: tabs, dashboard (02) and the day sheet (D1) -->
     <string name="tab_today">امروز</string>
+    <string name="tab_goals">هدف‌ها</string>
+    <string name="goals_soon_title">در دست ساخت</string>
+    <string name="goals_soon_body">هدف‌ها به‌زودی اینجا میان.</string>
     <string name="tab_dashboard">داشبورد</string>
     <string name="dash_title">داشبورد</string>
     <string name="dash_range">%1$s تا %2$s %3$s</string>
@@ -524,11 +527,11 @@
     <string name="backup_reason_auto">خودکار</string>
     <string name="backup_reason_before_restore">پیش از بازگردانی</string>
     <string name="backup_restore">بازگردانی از فایل</string>
-    <string name="backup_privacy">همه‌چی روی همین گوشیه و پیکر اجازه‌ی اینترنت نداره. Syncthing پوشه رو به کامپیوترت می‌بره.</string>
+    <string name="backup_privacy">همه‌چی روی همین گوشیه و فانوس اجازه‌ی اینترنت نداره. Syncthing پوشه رو به کامپیوترت می‌بره.</string>
     <string name="backup_saved">پشتیبان گرفته شد.</string>
     <string name="backup_restored">بازگردانی شد. همه‌چی سر جاشه.</string>
-    <string name="backup_not_ours">این فایل پشتیبان پیکر نیست.</string>
-    <string name="backup_newer">این پشتیبان مال نسخه‌ی جدیدتر پیکره؛ اول اپ رو به‌روز کن.</string>
+    <string name="backup_not_ours">این فایل پشتیبان فانوس نیست.</string>
+    <string name="backup_newer">این پشتیبان مال نسخه‌ی جدیدتر فانوسه؛ اول اپ رو به‌روز کن.</string>
     <string name="backup_damaged">این فایل خرابه و نمی‌شه ازش بازگردانی کرد.</string>
     <string name="backup_restore_failed">بازگردانی نشد؛ داده‌ها همون‌طور که بودن موندن.</string>
     <string name="size_mb">%1$s مگ</string>
@@ -787,7 +790,7 @@
     <string name="progress_recap_row">مرور نیمه‌ی راه</string>
 
     <!-- Slice 9: onboarding (flows O1–O5, D142). -->
-    <string name="onb_hello_title">سلام! من پیکرم.</string>
+    <string name="onb_hello_title">سلام! به فانوس خوش اومدی.</string>
     <string name="onb_hello_body">رفیق تمرینت تا نوروز. هر روز می‌گم چی کار کنی، یادت می‌ندازم و پیشرفتتو نشونت می‌دم. همه چی رو همین گوشی می‌مونه.</string>
     <string name="onb_start">شروع</string>
     <string name="onb_restore">بازگردانی از پشتیبان</string>
@@ -816,7 +819,7 @@
     <string name="onb_step">%1$s از %2$s</string>
 
     <!-- Slice 10: the Today widget (D67, D143). -->
-    <string name="widget_label">امروز پیکر</string>
+    <string name="widget_label">امروز فانوس</string>
     <string name="widget_description">کارهای این بخش روز، با یه تیک.</string>
     <string name="widget_count">%1$s از %2$s</string>
     <string name="widget_empty">هنوز کاری نساختی. از اپ اضافه کن.</string>

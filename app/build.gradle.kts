@@ -12,16 +12,16 @@ plugins {
 }
 
 android {
-    namespace = "app.beaesthetic"
+    namespace = "app.lantern"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "app.beaesthetic"
+        applicationId = "app.lantern"
         minSdk = 26
         targetSdk = 36
-        // versionName = 0.<slice>.<fix> until the MVP is complete; versionCode = major × 10000 + minor × 100 + patch.
-        versionCode = 1004
-        versionName = "0.10.4"
+        // Lantern (D191): versionName = 0.<slice>.<fix> until 1.0.0; versionCode = major × 10000 + minor × 100 + patch.
+        versionCode = 100
+        versionName = "0.1.0"
     }
 
     // The release key lives outside the repo (ARCHITECTURE §13). Its passwords never go in a file the
