@@ -55,7 +55,7 @@ If these files disagree, the order of trust is: `DECISIONS.md` (newest entry win
 
 ## Repository and environment notes
 
-- **`main` is the main branch** (created 2026-10-10 from `claude/trusting-lovelace-e5b7iq`, which has the same history). Start new work from `main`.
+- **Two branches (2026-10-28):** **`main`** keeps everything from «پیکر» (the v0.x app, all designs and screens; created 2026-10-10 from `claude/trusting-lovelace-e5b7iq`). **`lantern`** is where «پیکر» is refactored into «فانوس» / Lantern v1: splash, onboarding, Today, Settings; goals shown as «در دست ساخت»; no workout. The plan is `docs/LANTERN-ROADMAP.md` on `lantern`. Lantern work starts from `lantern`; design and «پیکر» fixes go on `main`.
 - **App code exists from slice 1 on** (2026-10-10): `:domain` (pure Kotlin rules and tests) and `:app` (Android). Build from the command line with Android Studio's JDK: `JAVA_HOME="/Applications/Android Studio.app/Contents/jbr/Contents/Home" ./gradlew check :app:assembleDebug`. `./gradlew check` runs the domain tests, lint, the no-`INTERNET` check and the banned-dependency check.
 - **The app is built on the user's laptop in Android Studio** (it has the Android SDK) and installed over USB. Cloud sessions can't download the Android SDK (`dl.google.com` is blocked), so don't create or build the Android project there. Pure Kotlin (`:domain`) tests can run in a cloud session.
 - **Figma** file https://www.figma.com/design/1DzXN6iOhAa0PsnLDSjOAg holds the first design-system pass. It is **out of date**. The user's Figma account is on the Starter plan: 3 pages, 1 variable mode per collection, and **20 MCP calls per month**, which were used up on 2026-10-09. Don't plan work that depends on Figma. The HTML mockups are the reference.
