@@ -1,6 +1,6 @@
 # Tasks and status
 
-_Last updated: 2026-10-27 (Today redesign with the characters, the character pick, Settings and the new-task sheet, D186–D189)_
+_Last updated: 2026-10-27 (Today redesign with the characters, the character pick, Settings, the new-task sheet, the splash and the name «فانوس» / Lantern, D186–D190)_
 
 ## New identity: to-do + goals (2026-10-21)
 
@@ -17,6 +17,7 @@ The app is no longer a workout program. It has two parts: the to-do list (as bui
 **Today redesign with the characters, 2026-10-27 (D186–D189).** The user picks one of the four characters on first launch, then the Today layout; the character sits at the top of Today and its color themes the whole app (knight cyan, vampire red, goth purple, wizard gray; done stays green, due stays amber). Today moods: calm, busy, happy only (no nervous, cross or asleep). Mockups, all in `docs/design/`:
 - `today-v5.html` (https://claude.ai/artifact/DUEzm7WHa2QJNDXnQTa2zw): Today, two layouts (list, parts slider), today only, no week row.
 - `character-pick.html` (https://claude.ai/artifact/6MQKkY1faSmU6NKZ569bTL): onboarding, the character, then the layout.
+- `splash.html` (https://claude.ai/artifact/UjFq29NLD4zABaBfavF23m): the splash, "Gather", and the name «فانوس» / Lantern (D190).
 - `settings-task.html` (https://claude.ai/artifact/DCcA6oTcrkC7VENQVCgpok): Settings («همراه», «صفحه‌ی امروز», «زبان»; «ظاهر» and light mode removed) and the new-task sheet.
 **Next:** the user reviews these; then the rest of the screens in the same theme (tasks list, reminders, goals wall), and `DESIGN.md` gets rewritten for v1.0.
 
