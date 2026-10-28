@@ -19,18 +19,16 @@ Everything else stays on `main`, untouched.
 
 The design reference is the mockups in `docs/design/`: `splash.html`, `character-pick.html`, `today-v5.html`, `settings-task.html`.
 
-## Decisions to confirm first
-
-My recommendations; the build follows them unless you change them.
+## Decisions (confirmed 2026-10-28, D191)
 
 | # | Question | Recommended | Why |
 |---|---|---|---|
-| Q1 | Application ID | **New: `app.lantern`**, installed next to «پیکر» | «پیکر» stays on the phone and keeps running the 23-week program until Lantern is ready. No risk to its data. |
-| Q2 | Bringing tasks over | **Import from a «پیکر» backup zip** in onboarding (optional step) | Uses the backup format we already have. Workout and progress tables are skipped. |
-| Q3 | Splash length | **Full (~4 s) on the first launch; short (~1.2 s, same animation, faster) after** | A 4 s wait on every launch gets old fast. Tap skips it. |
-| Q4 | Kotlin package | **Rename `app.beaesthetic` → `app.lantern` in L0** | One big rename now is cheaper than living with two names. |
-| Q5 | Language | **Persian and English from v1** (D174), Persian first | New strings go into `values/` and `values-fa/` from the first slice, so nothing has to be translated later. |
-| Q6 | Version | **Lantern starts at 0.1.0**, 1.0.0 when L9 is done | Its own line, apart from «پیکر» 0.10.x. |
+| Q1 | Application ID | ✅ **New: `app.lantern`**, installed next to «پیکر» | «پیکر» stays on the phone and keeps running the 23-week program until Lantern is ready. No risk to its data. |
+| Q2 | Bringing tasks over | ✅ **No import.** Lantern starts empty | «پیکر» was never installed on anyone else's phone, so there is nothing to carry over. |
+| Q3 | Splash length | ✅ **Full (~4 s) on the first launch; short (~1.2 s, same animation, faster) after** | A 4 s wait on every launch gets old fast. Tap skips it. |
+| Q4 | Kotlin package | ✅ **Rename `app.beaesthetic` → `app.lantern` in L0** | One big rename now is cheaper than living with two names. |
+| Q5 | Language | ✅ **Persian and English from v1** (D174), Persian first | New strings go into `values/` and `values-fa/` from the first slice, so nothing has to be translated later. |
+| Q6 | Version | ✅ **Lantern starts at 0.1.0**, 1.0.0 when L9 is done | Its own line, apart from «پیکر» 0.10.x. |
 
 ## The slices
 
@@ -60,7 +58,6 @@ Each slice ends with a build on the Poco, a short "what works, what's next", and
 - ① Character pick (four pixel cards, intro lines, smile on second tap).
 - ② Today layout (list or parts).
 - ③ Phone setup: notifications, exact alarms, Xiaomi battery and autostart (the existing `PhoneSetup` steps, restyled).
-- ④ Optional: import tasks from a «پیکر» backup (Q2).
 - **Done when:** a fresh install goes splash → onboarding → Today with the picked character and layout.
 
 ### L4. Today, layout 1 (list)

@@ -4,7 +4,7 @@ _Last updated: 2026-10-27 (Today redesign with the characters, the character pic
 
 ## Lantern v1 (branch `lantern`, 2026-10-28)
 
-**The plan is `docs/LANTERN-ROADMAP.md`:** splash, onboarding, Today (both layouts), Settings; goals as «در دست ساخت»; no workout. Slices L0–L9. **Next:** you confirm Q1–Q6 in the roadmap, then L0 (clean the branch) in a session on the laptop.
+**The plan is `docs/LANTERN-ROADMAP.md`:** splash, onboarding, Today (both layouts), Settings; goals as «در دست ساخت»; no workout. Slices L0–L9. Q1–Q6 confirmed (D191). **Next:** L0 (clean the branch) in a session on the laptop.
 
 ## New identity: to-do + goals (2026-10-21)
 
