@@ -71,6 +71,7 @@ Each slice ends with a build on the Poco, a short "what works, what's next", and
   - Android 12+: `values-v31/themes.xml` sets the system splash to the night color and a pixel lantern (`drawable/ic_splash_lantern.xml`). No splash library, so no new dependency.
   - `ui/splash/Splash.kt`: the "Gather" timeline from `splash.html` (stars, the four portraits each in its own glow, the core of light, «فانوس», "LANTERN", «یه چراغ برای هر روز», the pixel bar). Full (4.4 s) until onboarding is done, then at 30% speed (~1.3 s). A tap skips it. Only on a cold start. "Remove animations" makes it instant (Compose's duration scale).
   - **Open:** the launcher icon is still the old «پیکر» sticker; it needs a lantern icon (small, could join L9). **Open:** Q5 (English from the first slice) is not started: `values/` still holds Persian only. Splitting it into `values/` (English) and `values-fa/` should come before L3, so the new screens' strings land in both.
+- ✅ **Strings split 2026-10-28.** 414 unused strings (workout, letters, recaps, dashboard, the old character) removed; the 238 left are English in `values/` and Persian in `values-fa/`. The app still runs in Persian whatever the phone's language (`PersianLocale`) until the «زبان» switch in L7. Digits are still always Persian (`PersianDigits`); English digits come with that switch.
 
 ### L3. Onboarding
 - ① Character pick (four pixel cards, intro lines, smile on second tap).

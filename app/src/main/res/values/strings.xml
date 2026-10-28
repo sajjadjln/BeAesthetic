@@ -1,865 +1,330 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Persian only (D87). The default values/ folder is Persian; an English build would be a separate flavor. -->
+<!-- English, the default (D174). Persian is in values-fa/; every string lives in both. -->
 <resources>
-    <string name="app_name">فانوس</string>
+    <string name="app_name">Lantern</string>
 
     <!-- Calendar -->
     <string-array name="weekdays">
-        <item>شنبه</item>
-        <item>یکشنبه</item>
-        <item>دوشنبه</item>
-        <item>سه‌شنبه</item>
-        <item>چهارشنبه</item>
-        <item>پنجشنبه</item>
-        <item>جمعه</item>
+        <item>Saturday</item>
+        <item>Sunday</item>
+        <item>Monday</item>
+        <item>Tuesday</item>
+        <item>Wednesday</item>
+        <item>Thursday</item>
+        <item>Friday</item>
     </string-array>
     <string-array name="jalali_months">
-        <item>فروردین</item>
-        <item>اردیبهشت</item>
-        <item>خرداد</item>
-        <item>تیر</item>
-        <item>مرداد</item>
-        <item>شهریور</item>
-        <item>مهر</item>
-        <item>آبان</item>
-        <item>آذر</item>
-        <item>دی</item>
-        <item>بهمن</item>
-        <item>اسفند</item>
+        <item>Farvardin</item>
+        <item>Ordibehesht</item>
+        <item>Khordad</item>
+        <item>Tir</item>
+        <item>Mordad</item>
+        <item>Shahrivar</item>
+        <item>Mehr</item>
+        <item>Aban</item>
+        <item>Azar</item>
+        <item>Dey</item>
+        <item>Bahman</item>
+        <item>Esfand</item>
     </string-array>
     <string name="date_day_month">%1$s %2$s</string>
 
     <!-- Parts of the day -->
-    <string name="part_morning">صبح</string>
-    <string name="part_midday">ظهر</string>
-    <string name="part_evening">عصر</string>
-    <string name="part_night">شب</string>
+    <string name="part_morning">Morning</string>
+    <string name="part_midday">Midday</string>
+    <string name="part_evening">Evening</string>
+    <string name="part_night">Night</string>
 
-    <!-- Today -->
-    <string name="today_line_week">%1$s · هفته %2$s از %3$s</string>
-    <string name="today_line_day0">%1$s · روز صفر</string>
-    <string name="today_progress">%1$s از %2$s</string>
-    <string name="today_part_empty">این بخش امروز کاری نداره.</string>
-    <string name="tag_important">مهم</string>
-    <string name="tag_due">موعدش رسیده</string>
-    <string name="cd_settings">تنظیمات</string>
+    <string name="today_part_empty">Nothing in this part today.</string>
+    <string name="tag_important">Important</string>
+    <string name="tag_due">Due</string>
+    <string name="cd_settings">Settings</string>
 
     <!-- Notifications: neutral, forward-looking, no character (SPEC §7.2, D84) -->
-    <string name="channel_blocks">یادآور بخش‌های روز</string>
-    <string name="channel_follow_ups">یادآور دوباره‌ی کارهای مهم</string>
-    <string name="channel_ritual">مرور هفته و چک‌این</string>
-    <string name="channel_system">سیستم</string>
-    <string name="notif_block_title">%1$s · %2$s کار</string>
+    <string name="channel_blocks">Parts of the day</string>
+    <string name="channel_follow_ups">Second reminder for important tasks</string>
+    <string name="channel_ritual">Weekly review</string>
+    <string name="channel_system">System</string>
+    <string name="notif_block_title">%1$s · %2$s tasks</string>
     <string name="notif_line_with_anchor">%1$s · %2$s</string>
-    <string name="list_separator">"، "</string>
-    <string name="notif_test_title">یادآورها کار می‌کنن</string>
-    <string name="notif_test_text">این یه یادآور آزمایشیه.</string>
+    <string name="list_separator">", "</string>
+    <string name="notif_test_title">Reminders work</string>
+    <string name="notif_test_text">This is a test reminder.</string>
 
     <!-- Notifications, slice 2 -->
-    <string name="channel_task_alarms">زنگ کارها</string>
-    <string name="notif_follow_up_text">هنوز وقتش هست.</string>
-    <string name="notif_action_done">انجام شد</string>
-    <string name="notif_health_title">یادآورها شاید بسته شدن</string>
-    <string name="notif_health_text">بزن تا درستش کنیم.</string>
+    <string name="channel_task_alarms">Task alarms</string>
+    <string name="notif_follow_up_text">There\'s still time.</string>
+    <string name="notif_action_done">Done</string>
+    <string name="notif_health_title">Reminders may be blocked</string>
+    <string name="notif_health_text">Tap to fix it.</string>
 
-    <!-- Today, slice 2 -->
-    <string name="today_line_chapter">%1$s · هفته %2$s از %3$s · فصل %4$s</string>
-    <string name="today_line_countdown">%1$s · هفته %2$s از %3$s · %4$s</string>
-    <string name="countdown_to_nowruz">%1$s روز تا نوروز</string>
-    <string name="countdown_to_finish">%1$s روز تا خط پایان</string>
-    <string name="countdown_finish_nowruz">فردا نوروز · امروز خط پایان</string>
-    <string name="countdown_finish">امروز خط پایان</string>
-    <string name="ring_of">از %1$s</string>
-    <string name="today_minimum_label">روز حداقلی</string>
-    <string name="cd_minimum_day">روز حداقلی</string>
-    <string name="cd_this_week">این هفته</string>
-    <string name="cd_ring">%1$s از %2$s کار انجام شده</string>
-    <string name="cd_piker">پیکر</string>
-    <string name="banner_late">یه یادآور دیر رسید</string>
-    <string name="banner_blocked">یادآورها شاید بسته شدن</string>
-    <string name="banner_fix">درستش کن</string>
-    <string-array name="day_level_words">
-        <item>خالی</item>
-        <item>کم</item>
-        <item>نصفه</item>
-        <item>خوب</item>
-        <item>کامل</item>
-    </string-array>
+    <string name="ring_of">of %1$s</string>
+    <string name="today_minimum_label">Minimum day</string>
+    <string name="cd_minimum_day">Minimum day</string>
+    <string name="cd_ring">%1$s of %2$s tasks done</string>
+    <string name="banner_late">A reminder came late</string>
+    <string name="banner_blocked">Reminders may be blocked</string>
+    <string name="banner_fix">Fix it</string>
 
-    <!-- Chapters (D51) -->
-    <string name="chapter_card_title">فصل %1$s %2$s شروع شد</string>
-    <string name="chapter_card_text">%1$s روز، یه شروع تازه. هیچ عددی صفر نمی‌شه.</string>
-    <string name="chapter_letter_button">یه نامه برای %1$s</string>
-    <string name="later">بعداً</string>
-    <string-array name="chapter_numbers">
-        <item>①</item>
-        <item>②</item>
-        <item>③</item>
-        <item>④</item>
-        <item>⑤</item>
-    </string-array>
-    <!-- The line «پیکر» says on each chapter's first day, showing the new outfit (D83). Index = chapter − 1. -->
-    <string-array name="chapter_lines">
-        <item>فصل تازه، شروع تازه.</item>
-        <item>فصل آذر! هدبندمو بستم.</item>
-        <item>فصل دی! کلاه و شال‌گردنم آماده‌ست.</item>
-        <item>فصل بهمن! عینکمو زدم. خفن شدیم.</item>
-        <item>فصل اسفند! سبزه‌مو گذاشتم.</item>
-    </string-array>
-
-    <!-- Letters (D72) -->
-    <string name="first_letter_title">یه نامه برای خودت؟</string>
-    <string name="first_letter_text">روز آخر، %1$s، باز می‌شه. هر وقت خواستی.</string>
-    <string name="first_letter_button">بنویسم</string>
-    <string name="letter_title">نامه به خودم</string>
-    <string name="letter_written_on">نوشته: %1$s</string>
-    <string name="letter_opens_on">باز می‌شه: %1$s</string>
-    <string name="letter_hint">سلام خودم،</string>
-    <string name="letter_seal_note">بعد از مهر و موم، تا %1$s نه می‌شه خوندش نه عوضش کرد. فقط می‌شه پاکش کرد.</string>
-    <string name="letter_seal">مهر و موم کن</string>
-    <string name="letter_arrived">یه نامه از %1$s برات اومده</string>
-    <string name="letter_tap_to_open">بزن تا باز بشه</string>
-    <string name="letter_from">از خودِ %1$s</string>
-    <string name="cd_close">بستن</string>
-    <string name="cd_back">برگشت</string>
-
-    <!-- «پیکر» lines (D82–D84): first person, informal, short. Never about a missed day, never about the body. -->
-    <string-array name="buddy_morning">
-        <item>صبح بخیر! اول یه لیوان آب.</item>
-        <item>روز جدید، بزن بریم.</item>
-        <item>امروز %1$s تا کار داریم. آروم آروم.</item>
-        <item>صبحت بخیر قهرمان!</item>
-    </string-array>
-    <string-array name="buddy_start">
-        <item>بزن بریم! اولیش با تو.</item>
-        <item>سلام! من همین‌جام.</item>
-        <item>یکی بزنیم؟</item>
-    </string-array>
-    <string-array name="buddy_tick">
-        <item>%1$s تا زدی. داره خوب پیش می‌ره!</item>
-        <item>همینه! یکی‌یکی.</item>
-        <item>دمت گرم.</item>
-        <item>%1$s تا! ادامه بده.</item>
-    </string-array>
-    <string-array name="buddy_part_done">
-        <item>%2$s کامل شد! ایول.</item>
-        <item>%2$s تموم شد. حال کردم!</item>
-    </string-array>
-    <string-array name="part_possessive">
-        <item>صبحت</item>
-        <item>ظهرت</item>
-        <item>عصرت</item>
-        <item>شبت</item>
-    </string-array>
-    <string-array name="buddy_day_done">
-        <item>امروز کامل شد! این بازوها مال خودته.</item>
-        <item>صد در صد. خفن بود.</item>
-    </string-array>
-    <string-array name="buddy_comeback">
-        <item>خوش برگشتی! بزن بریم.</item>
-        <item>اومدی! همینه که مهمه.</item>
-    </string-array>
-    <string-array name="buddy_minimum">
-        <item>امروز سبک. همینم حسابه.</item>
-        <item>حداقلشم یعنی هستی. کافیه.</item>
-    </string-array>
-    <string-array name="buddy_special">
-        <item>استراحت هم جزو برنامه‌ست.</item>
-        <item>امروز آروم. فردا ادامه می‌دیم.</item>
-    </string-array>
-    <string-array name="buddy_night">
-        <item>شب بخیر. فردا می‌بینمت.</item>
-        <item>خواب خوب یعنی عضله‌ی خوب.</item>
-    </string-array>
-    <string-array name="buddy_tap">
-        <item>بازوهامو دیدی؟ مال تو هم داره می‌شه.</item>
-        <item>آب خوردی؟</item>
-        <item>دست نزن، دارم پمپ می‌کنم!</item>
-    </string-array>
-    <string-array name="buddy_letter_day">
-        <item>نامه داری! از خودت.</item>
-    </string-array>
+    <string name="cd_back">Back</string>
 
     <!-- Settings (06) -->
-    <string name="settings_title">تنظیمات</string>
-    <string name="health_ok">یادآورها سالم‌اند</string>
-    <string name="health_not_ok">یادآورها یه نگاه می‌خوان</string>
-    <string name="settings_tasks">کارها</string>
-    <string name="settings_reminders">یادآورها</string>
-    <string name="settings_workout">برنامه تمرین</string>
-    <string name="settings_backup">پشتیبان</string>
-    <string name="settings_appearance">ظاهر</string>
-    <string name="settings_phone">رسیدن یادآورها</string>
-    <string name="settings_version">نسخه %1$s · Lantern</string>
+    <string name="settings_title">Settings</string>
+    <string name="health_ok">Reminders are healthy</string>
+    <string name="health_not_ok">Reminders need a look</string>
+    <string name="settings_tasks">Tasks</string>
+    <string name="settings_reminders">Reminders</string>
+    <string name="settings_backup">Backup</string>
+    <string name="settings_phone">Getting reminders</string>
+    <string name="settings_version">Version %1$s · Lantern</string>
 
     <!-- Reminders (09) -->
-    <string name="reminders_title">یادآورها</string>
-    <string name="reminders_test">آزمایش</string>
-    <string name="profile_normal">روزهای عادی</string>
-    <string name="profile_friday">جمعه</string>
-    <string name="task_alarms">زنگ‌های کارها</string>
-    <string name="task_alarms_empty">هنوز هیچ کاری زنگ خودش رو نداره. از «کارها» اضافه می‌شه.</string>
-    <string name="follow_up_delay">یادآور دوباره برای «مهم»</string>
-    <string name="minutes">%1$s دقیقه</string>
-    <string name="friday_review">مرور جمعه</string>
-    <string name="every_day">هر روز</string>
-    <string name="ok">باشه</string>
-    <string name="cancel">بی‌خیال</string>
-    <string name="test_scheduled">یه دقیقه دیگه می‌رسه. گوشی رو قفل کن.</string>
-    <string name="test_arrived">رسید! یادآورها کار می‌کنن.</string>
-    <string name="test_blocked">زنگ زد، ولی اعلان‌ها بسته‌ان.</string>
+    <string name="reminders_title">Reminders</string>
+    <string name="reminders_test">Test</string>
+    <string name="profile_normal">Normal days</string>
+    <string name="profile_friday">Friday</string>
+    <string name="task_alarms">Task alarms</string>
+    <string name="task_alarms_empty">No task has its own alarm yet. Add one from Tasks.</string>
+    <string name="follow_up_delay">Second reminder for important tasks</string>
+    <string name="minutes">%1$s min</string>
+    <string name="friday_review">Friday review</string>
+    <string name="every_day">Every day</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="test_scheduled">It arrives in a minute. Lock the phone.</string>
+    <string name="test_arrived">It arrived! Reminders work.</string>
+    <string name="test_blocked">It rang, but notifications are off.</string>
 
     <!-- Phone setup (N2) -->
-    <string name="phone_title">رسیدن یادآورها</string>
-    <string name="phone_this_week">۷ روز اخیر</string>
-    <string name="phone_week_help">چند تا از یادآورهای ۷ روز اخیر سر وقت رسیدن.</string>
-    <string name="phone_on_time">%1$s از %2$s به‌موقع</string>
-    <string name="phone_nothing_yet">هنوز یادآوری نرسیده.</string>
-    <string name="phone_late_detail">یکی %1$s دقیقه دیر رسید: %2$s، %3$s. احتمالاً صرفه‌جویی باتری.</string>
-    <string name="phone_missed_detail">یکی نرسید: %1$s، %2$s. احتمالاً گوشی اپ رو بسته.</string>
-    <string name="phone_blocked_detail">یکی زنگ زد ولی اعلان‌ها بسته بودن: %1$s، %2$s.</string>
-    <string name="phone_all_good">همه به‌موقع رسیدن.</string>
-    <string name="row_notifications">اجازه‌ی اعلان</string>
-    <string name="row_exact">یادآور سر دقیقه</string>
-    <string name="row_autostart">شروع با روشن شدن گوشی</string>
-    <string name="row_battery">باتری، فانوس رو نبنده</string>
-    <string name="row_recents">قفل توی اپ‌های اخیر</string>
-    <string name="row_notifications_help">اعلان‌های فانوس روشن باشه.</string>
-    <string name="row_exact_help">توی تنظیمات اسمش «زنگ‌ها و یادآورها»ست.</string>
-    <string name="row_autostart_help">بعد از خاموش‌روشن، یادآورها دوباره راه بیفتن. توی تنظیمات اسمش «اجرای خودکار»ه.</string>
-    <string name="row_autostart_help_unknown">گوشی وضعیتش رو نمی‌گه؛ بعد از روشن کردن ازت می‌پرسم.</string>
-    <string name="row_battery_help">صرفه‌جویی باتری فانوس رو نبنده. توی تنظیمات: باتری ← «بدون محدودیت».</string>
-    <string name="row_battery_help_xiaomi">اول «اجازه بده»، بعد توی صرفه‌جویی باتری «بدون محدودیت».</string>
-    <string name="row_recents_help">«پاک کردن همه» فانوس رو نبنده.</string>
-    <string name="ask_autostart_title">اجرای خودکار</string>
-    <string name="ask_autostart_text">برای فانوس روشنش کردی؟</string>
-    <string name="ask_recents_title">قفل در اپ‌های اخیر</string>
-    <string name="ask_recents_text">صفحه‌ی اپ‌های اخیر رو باز کن (از پایین صفحه بکش بالا و نگه دار). کارت فانوس رو نگه دار و آیکن قفل رو بزن. با قفل، «پاک کردن همه» و پاک‌کننده‌ی گوشی فانوس رو نمی‌بندن، پس یادآورها سر جاشون می‌مونن.</string>
-    <string name="ask_yes_autostart">آره، روشنه</string>
-    <string name="ask_yes_recents">قفلش کردم</string>
-    <string name="ask_not_yet">هنوز نه</string>
-    <string name="open">باز کن</string>
-    <string name="test_notification">یه یادآور امتحانی (۱ دقیقه بعد)</string>
+    <string name="phone_title">Getting reminders</string>
+    <string name="phone_this_week">Last 7 days</string>
+    <string name="phone_week_help">How many reminders from the last 7 days arrived on time.</string>
+    <string name="phone_on_time">%1$s of %2$s on time</string>
+    <string name="phone_nothing_yet">No reminder has arrived yet.</string>
+    <string name="phone_late_detail">One came %1$s minutes late: %2$s, %3$s. Probably battery saving.</string>
+    <string name="phone_missed_detail">One didn\'t arrive: %1$s, %2$s. The phone probably closed the app.</string>
+    <string name="phone_blocked_detail">One rang but notifications were off: %1$s, %2$s.</string>
+    <string name="phone_all_good">All arrived on time.</string>
+    <string name="row_notifications">Notifications allowed</string>
+    <string name="row_exact">Reminders on the minute</string>
+    <string name="row_autostart">Start when the phone starts</string>
+    <string name="row_battery">Battery doesn\'t close Lantern</string>
+    <string name="row_recents">Locked in recent apps</string>
+    <string name="row_notifications_help">Keep Lantern\'s notifications on.</string>
+    <string name="row_exact_help">In settings it\'s called “Alarms &amp; reminders”.</string>
+    <string name="row_autostart_help">So reminders start again after a restart. In settings it\'s called “Autostart”.</string>
+    <string name="row_autostart_help_unknown">The phone doesn\'t say; I\'ll ask you after a restart.</string>
+    <string name="row_battery_help">So battery saving doesn\'t close Lantern. In settings: Battery → “No restrictions”.</string>
+    <string name="row_battery_help_xiaomi">First “Allow”, then “No restrictions” in battery saver.</string>
+    <string name="row_recents_help">So “Clear all” doesn\'t close Lantern.</string>
+    <string name="ask_autostart_title">Autostart</string>
+    <string name="ask_autostart_text">Did you turn it on for Lantern?</string>
+    <string name="ask_recents_title">Lock in recent apps</string>
+    <string name="ask_recents_text">Open recent apps (swipe up from the bottom and hold). Hold Lantern\'s card and tap the lock. Locked, “Clear all” and the phone\'s cleaner won\'t close Lantern, so reminders stay in place.</string>
+    <string name="ask_yes_autostart">Yes, it\'s on</string>
+    <string name="ask_yes_recents">I locked it</string>
+    <string name="ask_not_yet">Not yet</string>
+    <string name="open">Open</string>
+    <string name="test_notification">A test reminder (in 1 minute)</string>
 
-    <!-- Appearance (06b) -->
-    <string name="appearance_title">ظاهر</string>
-    <string name="appearance_color">رنگ</string>
-    <string name="appearance_mode">حالت</string>
-    <string name="mode_system">سیستم</string>
-    <string name="mode_dark">تیره</string>
-    <string name="mode_light">روشن</string>
-    <string name="appearance_buddy">پیکر در صفحه‌ی امروز</string>
-    <string-array name="accent_names">
-        <item>سبز</item>
-        <item>آبی</item>
-        <item>فیروزه‌ای</item>
-        <item>بنفش</item>
-        <item>نارنجی</item>
-    </string-array>
-    <string name="chip_record">رکورد</string>
-    <string name="chip_special">روز ویژه</string>
     <!-- Tasks (07) and the task editor (08) -->
-    <string name="tasks_title">کارها</string>
-    <string name="tasks_all">همه</string>
-    <string name="tasks_once">یک‌باره</string>
-    <string name="tasks_new">کار جدید</string>
-    <string name="tasks_empty_title">هنوز کاری اینجا نیست</string>
-    <string name="tasks_empty_text">اولین کارت رو اضافه کن، مثلاً مسواک صبح. بعد هر روز توی «امروز» میاد.</string>
-    <string name="tasks_part_empty">این بخش هنوز کاری نداره.</string>
-    <string name="repeat_daily">هر روز</string>
-    <string name="repeat_weekdays">روزهای خاص</string>
-    <string name="repeat_every_n">هر %1$s روز</string>
-    <string name="repeat_every_n_short">هر چند روز</string>
-    <string name="repeat_once">یک بار</string>
-    <string name="repeat_min_only">فقط روز حداقلی</string>
-    <string name="row_with_alarm">%1$s · زنگ %2$s</string>
+    <string name="tasks_title">Tasks</string>
+    <string name="tasks_all">All</string>
+    <string name="tasks_once">One-off</string>
+    <string name="tasks_new">New task</string>
+    <string name="tasks_empty_title">No tasks here yet</string>
+    <string name="tasks_empty_text">Add your first task, like brushing your teeth in the morning. Then it shows on Today every day.</string>
+    <string name="tasks_part_empty">Nothing in this part yet.</string>
+    <string name="repeat_daily">Every day</string>
+    <string name="repeat_weekdays">Some days</string>
+    <string name="repeat_every_n">Every %1$s days</string>
+    <string name="repeat_once">Once</string>
+    <string name="repeat_min_only">Minimum day only</string>
+    <string name="row_with_alarm">%1$s · alarm %2$s</string>
     <string name="row_once">%1$s · %2$s</string>
-    <string name="today">امروز</string>
-    <string name="tomorrow">فردا</string>
-    <string name="editor_new">کار جدید</string>
-    <string name="editor_edit">ویرایش کار</string>
-    <string name="editor_name">اسم کار</string>
-    <string name="editor_icon">آیکن</string>
-    <string name="editor_part">بخش روز</string>
-    <string name="editor_repeat">تکرار</string>
-    <string name="editor_every_n_help">از آخرین باری که انجامش دادی حساب می‌شه.</string>
-    <string name="editor_anchor">بعد از…</string>
-    <string name="editor_anchor_hint">مثلاً بعد از صبحانه</string>
-    <string name="editor_anchor_help">توی یادآور کنار اسم کار میاد؛ کار رو به یه کار همیشگی می‌چسبونه.</string>
-    <string name="editor_alarm">زنگ</string>
-    <string name="editor_alarm_help">جدا از یادآور بخش روز، سر همین ساعت زنگ می‌زنه.</string>
-    <string name="editor_important">مهم</string>
-    <string name="editor_important_help">اگه انجام نشده بود، یه یادآور دوباره.</string>
-    <string name="editor_min_day">روز حداقلی</string>
-    <string name="editor_min_day_help">جزو حداقلِ روزهای سخت.</string>
-    <string name="save">ذخیره</string>
-    <string name="delete">حذف</string>
-    <string name="delete_title">این کار حذف بشه؟</string>
-    <string name="delete_text">از امروز دیگه توی «امروز» نمیاد. روزهای گذشته همون‌طور که بودن می‌مونن.</string>
-    <string name="delete_confirm">حذف کن</string>
-    <string name="error_title">اسم کار رو بنویس.</string>
-    <string name="error_weekdays">حداقل یه روز انتخاب کن.</string>
-    <string name="error_date">یه روز از امروز به بعد انتخاب کن.</string>
-    <string name="error_alarm_days">زنگ حداقل یه روز بزنه.</string>
-    <string name="cd_less">کمتر</string>
-    <string name="cd_more">بیشتر</string>
+    <string name="today">Today</string>
+    <string name="tomorrow">Tomorrow</string>
+    <string name="editor_new">New task</string>
+    <string name="editor_edit">Edit task</string>
+    <string name="editor_name">Task name</string>
+    <string name="editor_icon">Icon</string>
+    <string name="editor_part">Part of the day</string>
+    <string name="editor_repeat">Repeat</string>
+    <string name="editor_every_n_help">Counted from the last time you did it.</string>
+    <string name="editor_anchor">After…</string>
+    <string name="editor_anchor_hint">e.g. after breakfast</string>
+    <string name="editor_anchor_help">Shown next to the task in reminders; it ties the task to something you always do.</string>
+    <string name="editor_alarm">Alarm</string>
+    <string name="editor_alarm_help">Rings at this time, apart from the part-of-day reminder.</string>
+    <string name="editor_important">Important</string>
+    <string name="editor_important_help">A second reminder if it isn\'t done.</string>
+    <string name="editor_min_day">Minimum day</string>
+    <string name="editor_min_day_help">Part of the minimum for hard days.</string>
+    <string name="save">Save</string>
+    <string name="delete">Delete</string>
+    <string name="delete_title">Delete this task?</string>
+    <string name="delete_text">From today it won\'t show on Today. Past days stay as they were.</string>
+    <string name="delete_confirm">Delete</string>
+    <string name="error_title">Write the task\'s name.</string>
+    <string name="error_weekdays">Pick at least one day.</string>
+    <string name="error_date">Pick a day from today on.</string>
+    <string name="error_alarm_days">The alarm needs at least one day.</string>
+    <string name="cd_less">Less</string>
+    <string name="cd_more">More</string>
     <string-array name="weekdays_short">
-        <item>ش</item>
-        <item>ی</item>
-        <item>د</item>
-        <item>س</item>
-        <item>چ</item>
-        <item>پ</item>
-        <item>ج</item>
+        <item>Sa</item>
+        <item>Su</item>
+        <item>Mo</item>
+        <item>Tu</item>
+        <item>We</item>
+        <item>Th</item>
+        <item>Fr</item>
     </string-array>
     <!-- In TaskIcon order. -->
     <string-array name="task_icon_names">
-        <item>پوست</item>
-        <item>مسواک</item>
-        <item>مکمل</item>
-        <item>تخم‌مرغ</item>
-        <item>تمرین</item>
-        <item>کوه</item>
-        <item>ترازو</item>
-        <item>دوش</item>
-        <item>قیچی</item>
-        <item>خوراکی</item>
-        <item>آفتاب</item>
-        <item>تیک</item>
+        <item>Skin</item>
+        <item>Toothbrush</item>
+        <item>Supplement</item>
+        <item>Egg</item>
+        <item>Workout</item>
+        <item>Mountain</item>
+        <item>Scale</item>
+        <item>Shower</item>
+        <item>Scissors</item>
+        <item>Snack</item>
+        <item>Sun</item>
+        <item>Tick</item>
     </string-array>
 
     <!-- Slice 4a: task editor's workout switch (D117) -->
-    <string name="editor_workout">کار تمرین</string>
-    <string name="editor_workout_help">روزهای برنامه، کارت «تمرین امروز» جاش میاد و با اولین ست تیک می‌خوره.</string>
-    <string name="cd_start_workout">شروع تمرین</string>
+    <string name="editor_workout">Workout task</string>
+    <string name="editor_workout_help">On plan days the workout card takes its place and ticks it with the first set.</string>
 
-    <!-- 10 Workout plan editor (D105, D114) -->
-    <string name="plan_name_hint">اسم تمرین، مثلاً «بالاتنه A»</string>
-    <string name="plan_new_exercise">حرکت جدید</string>
-    <string name="today_no_plan_title">برنامه‌ی تمرینت رو بساز</string>
-    <string name="today_no_plan_body">روزها و حرکت‌هات رو یه بار بنویس؛ هر روز تمرینش همین‌جا میاد.</string>
-    <string name="plan_empty_title">این روز تمرینی نداره</string>
-    <string name="plan_empty_text">با «حرکت جدید» برنامه‌ی این روز رو بساز. روزی که حرکتی نداره روز استراحته.</string>
-    <string name="plan_drag_help">برای جابه‌جایی، دستگیره رو نگه دار و بکش</string>
-    <string name="cd_drag">جابه‌جا کردن</string>
-    <string name="ex_editor_new">حرکت جدید</string>
-    <string name="ex_editor_edit">ویرایش حرکت</string>
-    <string name="ex_name">اسم حرکت</string>
-    <string name="ex_kind">هر ست چی می‌شمره؟</string>
-    <string name="ex_kind_reps">تکرار</string>
-    <string name="ex_kind_seconds">ثانیه</string>
-    <string name="ex_sets">ست</string>
-    <string name="ex_sets_value">%1$s ست</string>
-    <string name="ex_range">بازه</string>
-    <string name="ex_max">حداکثر</string>
-    <string name="ex_max_help">بدون بازه؛ تا جایی که می‌تونی</string>
-    <string name="ex_from">از %1$s</string>
-    <string name="ex_to">تا %1$s</string>
-    <string name="ex_kg">وزنه</string>
-    <string name="ex_kg_help">توی تمرین از دفعه‌ی قبل پر می‌شه</string>
-    <string name="kg_value">%1$s کیلو</string>
-    <string name="ex_per_side">هر طرف</string>
-    <string name="ex_per_side_help">عدد هر ست برای یک طرفه</string>
-    <string name="ex_effort">سختی هدف</string>
-    <string name="ex_effort_value">سختی %1$s</string>
-    <string name="ex_rest">استراحت</string>
-    <string name="none_dash">—</string>
-    <string name="rest_seconds">%1$s ثانیه</string>
-    <string name="rest_minutes">%1$s دقیقه</string>
-    <string name="ex_note">یادداشت</string>
-    <string name="ex_note_hint">مثلاً «۵ ثانیه پایین آمدن»</string>
-    <string name="error_ex_name">اسم حرکت رو بنویس</string>
-    <string name="error_ex_duplicate">این حرکت همین الان توی این روز هست</string>
-    <string name="ex_remove">برداشتن از این روز</string>
-    <string name="chip_range">%1$s × %2$s–%3$s</string>
-    <string name="chip_max">%1$s × حداکثر</string>
-    <string name="unit_seconds_short">ث</string>
-
-    <!-- 04 Workout session (D103, D115, D116) -->
-    <string name="session_prev">قبلی %1$s</string>
-    <string name="session_effort">درجه سختی</string>
-    <string name="session_log">ثبت</string>
-    <string name="session_finish">پایان</string>
-    <string name="session_set_of">ست %1$s از %2$s</string>
-    <string name="session_exercise_of">حرکت %1$s از %2$s</string>
-    <string name="session_no_plan_title">امروز برنامه‌ای نیست</string>
-    <string name="session_no_plan_text">توی تنظیمات ← برنامه تمرین، تمرینِ این روز رو بساز.</string>
-    <string name="summary_title">تمرین تموم شد</string>
-    <string name="summary_partial">تا اینجا ثبت شد</string>
-    <string name="summary_sets">%1$s ست</string>
-    <string name="summary_records">%1$s رکورد</string>
-    <string name="summary_continue">ادامه‌ی تمرین</string>
-    <string name="cd_kg_less">نیم کیلو کمتر</string>
-    <string name="cd_kg_more">نیم کیلو بیشتر</string>
-    <string-array name="buddy_workout_done">
-        <item>دمت گرم! تمرین ثبت شد</item>
-        <item>اینه! یه تمرین دیگه رفت تو کارنامه</item>
-        <item>عالی بود، حالا یه آب بخور</item>
-    </string-array>
-
-    <!-- Slice 4b: ladders (D119), the progression offer (D120), round numbers (D121) -->
-    <string name="ex_harder">حرکت سخت‌تر</string>
-    <string name="ex_harder_hint">مثلاً «شنا شیب منفی»</string>
-    <string name="ex_harder_help">پله‌ی بعدی این حرکت. وقتی همه‌ی ست‌ها به سقف بازه رسید، پیشنهادش میاد.</string>
-    <string name="error_harder_loop">این یکی آسون‌تره؛ نمی‌تونه پله‌ی بعدی باشه</string>
-    <string name="ladder_rung">پله‌ی %1$s از %2$s</string>
-    <string name="ladder_next">بعدی: %1$s</string>
-    <string name="ladder_top">آخرین پله</string>
-    <string name="offer_next_rung">پله‌ی بعد: %1$s؟</string>
-    <string name="offer_next_rung_text">همه‌ی ست‌های %1$s به سقف بازه رسید.</string>
-    <string name="offer_raise">بازه بشه %1$s–%2$s؟</string>
-    <string name="offer_raise_text">همه‌ی ست‌های %1$s سقف بازه بود.</string>
-    <string name="offer_yes">بله</string>
-    <string name="offer_accepted">برنامه عوض شد</string>
-    <string name="round_reps">%1$s تکرار %2$s از روز صفر</string>
-    <string name="round_minutes">%1$s دقیقه %2$s از روز صفر</string>
-    <string name="round_workouts">%1$s تمرین از روز صفر</string>
-    <string name="round_days">%1$s روز حضور از روز صفر</string>
-    <string name="round_ok">دمت گرم</string>
-    <string-array name="buddy_round">
-        <item>عدد رُند! ببین چقدر اومدی</item>
-        <item>اینو قاب بگیریم!</item>
-        <item>روز به روز، رسیدی اینجا</item>
-    </string-array>
-
-    <!-- Slice 5: tabs, dashboard (02) and the day sheet (D1) -->
-    <string name="tab_today">امروز</string>
-    <string name="tab_goals">هدف‌ها</string>
+    <!-- Tabs, splash, characters, goals -->
+    <string name="tab_today">Today</string>
+    <string name="tab_goals">Goals</string>
     <string name="splash_en" translatable="false">LANTERN</string>
-    <string name="splash_line">یه چراغ برای هر روز</string>
-    <string name="char_knight">شوالیه</string>
-    <string name="char_vampire">ومپایر</string>
-    <string name="char_wizard">جادوگر</string>
-    <string name="char_goth">دختر گات</string>
-    <string name="goals_soon_title">در دست ساخت</string>
-    <string name="goals_soon_body">هدف‌ها به‌زودی اینجا میان.</string>
-    <string name="tab_dashboard">داشبورد</string>
-    <string name="dash_title">داشبورد</string>
-    <string name="dash_range">%1$s تا %2$s %3$s</string>
-    <string name="dash_shown_up_value">%1$s از %2$s</string>
-    <string name="dash_shown_up">روز حضور</string>
-    <string name="dash_special">روز ویژه</string>
-    <string name="dash_whole">کل مسیر</string>
-    <string name="dash_day_of">روز %1$s از %2$s</string>
-    <string name="dash_less">کمتر</string>
-    <string name="dash_more">بیشتر</string>
-    <string name="dash_legend_special">ویژه</string>
-    <string name="dash_before_app">قبل از اپ</string>
-    <string name="dash_weeks">هفته به هفته</string>
-    <string name="dash_week">هفته %1$s</string>
-    <string name="dash_week0">روز صفر</string>
-    <string name="dash_week_range">%1$s تا %2$s</string>
-    <string name="dash_current">جاری</string>
-    <string name="dash_score">%1$s٪</string>
-    <string name="cd_day_square">%1$s، %2$s</string>
-    <string name="level_words">سطح %1$s از ۴</string>
-    <string name="level_gap">چیزی ثبت نشد</string>
-    <string name="detail_counts">%1$s از %2$s</string>
-    <string name="detail_done">انجام شد</string>
-    <string name="detail_record">رکورد %1$s</string>
-    <string name="detail_before_app">این روز قبل از نصب اپ بود.</string>
-    <string name="detail_special_q">روز ویژه بود؟</string>
-    <string name="detail_special_full">سقف روزهای ویژه‌ی این هفته پره</string>
-    <string name="detail_edit_yesterday">ویرایش تیک‌های دیروز</string>
-    <string name="detail_yesterday_help">روی هر کار بزن تا تیکش عوض شه.</string>
-    <string name="detail_week">هفته %1$s</string>
-    <string name="special_sick">مریض</string>
-    <string name="special_travel">سفر</string>
-    <string name="special_off">استراحت</string>
-    <string name="special_day_kind">روز ویژه · %1$s</string>
-    <string name="yesterday">دیروز</string>
+    <string name="splash_line">A light for every day</string>
+    <string name="char_knight">Knight</string>
+    <string name="char_vampire">Vampire</string>
+    <string name="char_wizard">Wizard</string>
+    <string name="char_goth">Goth girl</string>
+    <string name="goals_soon_title">In development</string>
+    <string name="goals_soon_body">Goals are coming here soon.</string>
     <string-array name="gregorian_months">
-        <item>ژانویه</item>
-        <item>فوریه</item>
-        <item>مارس</item>
-        <item>آوریل</item>
-        <item>مه</item>
-        <item>ژوئن</item>
-        <item>ژوئیه</item>
-        <item>اوت</item>
-        <item>سپتامبر</item>
-        <item>اکتبر</item>
-        <item>نوامبر</item>
-        <item>دسامبر</item>
+        <item>January</item>
+        <item>February</item>
+        <item>March</item>
+        <item>April</item>
+        <item>May</item>
+        <item>June</item>
+        <item>July</item>
+        <item>August</item>
+        <item>September</item>
+        <item>October</item>
+        <item>November</item>
+        <item>December</item>
     </string-array>
 
-    <!-- Slice 5b: workout card, «هر وقت», simple sheet, calendar (D126–D130) -->
-    <string name="repeat_anytime">هر وقت</string>
-    <string name="tasks_anytime">هر وقت</string>
-    <string name="when_label">کِی؟</string>
-    <string name="when_day">یه روز…</string>
-    <string name="when_help_anytime">هر وقت انجامش دادی تیک بزن. توی «هر وقت» می‌مونه؛ نه یادآور داره، نه شمرده می‌شه.</string>
+    <!-- Slice 5b: «هر وقت», simple sheet, calendar (D126–D130) -->
+    <string name="repeat_anytime">Anytime</string>
+    <string name="tasks_anytime">Anytime</string>
+    <string name="when_label">When?</string>
+    <string name="when_day">A day…</string>
+    <string name="when_help_anytime">Tick it whenever you do it. It stays in Anytime; no reminder, not counted.</string>
     <string name="when_help_dated">%1$s · %2$s</string>
-    <string name="editor_more">تنظیمات بیشتر</string>
-    <string name="editor_date">روز</string>
-    <string name="alarm_on_day">همون روز</string>
-    <string name="alarm_when_due">روزهایی که موعدشه</string>
+    <string name="editor_more">More settings</string>
+    <string name="editor_date">Day</string>
+    <string name="alarm_on_day">On that day</string>
+    <string name="alarm_when_due">On the days it\'s due</string>
     <string name="calendar_picked">%1$s %2$s · %3$s</string>
     <string name="calendar_gregorian">%1$s %2$s</string>
-    <string name="cd_prev_month">ماه قبل</string>
-    <string name="cd_next_month">ماه بعد</string>
-    <string name="workout_today">تمرین امروز</string>
-    <string name="workout_default_name">تمرین</string>
-    <string name="workout_card_sub">%1$s حرکت، %2$s ست</string>
-    <string name="workout_card_done">انجام شد</string>
-    <string name="workout_rest_tomorrow">امروز استراحت. فردا: %1$s</string>
-    <string name="workout_rest_later">امروز استراحت. %1$s: %2$s</string>
-    <string name="cd_workout_tick">تیک تمرین بدون ثبت ست</string>
-    <string name="cd_open_plan">برنامه تمرین</string>
-    <string name="anytime_title">هر وقت</string>
-    <string name="anytime_add">یه چیز اضافه کن</string>
+    <string name="cd_prev_month">Previous month</string>
+    <string name="cd_next_month">Next month</string>
+    <string name="anytime_title">Anytime</string>
+    <string name="anytime_add">Add something</string>
 
     <!-- Slice 6: backup and restore (flows B1–B2, D132–D135) -->
-    <string name="backup_title">پشتیبان</string>
-    <string name="backup_last_today">آخرین پشتیبان: امروز</string>
-    <string name="backup_last_yesterday">آخرین پشتیبان: دیروز</string>
-    <string name="backup_last_days">آخرین پشتیبان: %1$s روز پیش</string>
-    <string name="backup_none_yet">هنوز پشتیبانی گرفته نشده</string>
-    <string name="backup_failed">پشتیبان آخر نشد</string>
-    <string name="backup_no_folder">پشتیبان هنوز جایی نداره</string>
-    <string name="backup_detail">%1$s · %2$s · %3$s عکس</string>
-    <string name="backup_failed_help">شاید پوشه جابه‌جا شده. دوباره امتحان کن یا پوشه رو دوباره انتخاب کن.</string>
-    <string name="backup_no_folder_help">یه پوشه انتخاب کن که Syncthing به کامپیوترت ببره.</string>
-    <string name="backup_now">همین الان پشتیبان بگیر</string>
-    <string name="backup_running">داره پشتیبان می‌گیره…</string>
-    <string name="backup_folder">پوشه</string>
-    <string name="backup_folder_none">انتخاب نشده</string>
-    <string name="backup_folder_pick">انتخاب کن</string>
-    <string name="backup_folder_change">عوض کن</string>
-    <string name="backup_auto">خودکار</string>
-    <string name="backup_auto_help">هر جمعه که اپ رو باز کنی، و هر وقت یه هفته گذشته باشه.</string>
-    <string name="backup_recent">%1$s تای آخر</string>
-    <string name="backup_reason_manual">دستی</string>
-    <string name="backup_reason_auto">خودکار</string>
-    <string name="backup_reason_before_restore">پیش از بازگردانی</string>
-    <string name="backup_restore">بازگردانی از فایل</string>
-    <string name="backup_privacy">همه‌چی روی همین گوشیه و فانوس اجازه‌ی اینترنت نداره. Syncthing پوشه رو به کامپیوترت می‌بره.</string>
-    <string name="backup_saved">پشتیبان گرفته شد.</string>
-    <string name="backup_restored">بازگردانی شد. همه‌چی سر جاشه.</string>
-    <string name="backup_not_ours">این فایل پشتیبان فانوس نیست.</string>
-    <string name="backup_newer">این پشتیبان مال نسخه‌ی جدیدتر فانوسه؛ اول اپ رو به‌روز کن.</string>
-    <string name="backup_damaged">این فایل خرابه و نمی‌شه ازش بازگردانی کرد.</string>
-    <string name="backup_restore_failed">بازگردانی نشد؛ داده‌ها همون‌طور که بودن موندن.</string>
-    <string name="size_mb">%1$s مگ</string>
-    <string name="size_kb">%1$s کیلوبایت</string>
-    <string name="restore_title">بازگردانی این فایل؟</string>
-    <string name="restore_date">تاریخ</string>
-    <string name="restore_version">نسخه‌ی اپ</string>
-    <string name="restore_days">روزهای ثبت‌شده</string>
-    <string name="restore_sessions">تمرین</string>
-    <string name="restore_sessions_value">%1$s جلسه</string>
-    <string name="restore_tasks">کارها</string>
-    <string name="restore_photos">عکس</string>
-    <string name="restore_note">اول از همه‌ی داده‌های فعلی یه پشتیبان می‌گیرم، بعد جایگزین می‌کنم. اگه چیزی وسطش خراب شد، همه‌چی همون‌طور که بود می‌مونه.</string>
-    <string name="restore_confirm">جایگزین کن</string>
-    <string name="restore_running">داره بازگردانی می‌کنه…</string>
-    <string name="restore_cancel">نه</string>
-    <string name="settings_backup_none">پوشه انتخاب نشده</string>
-    <string name="settings_backup_today">امروز</string>
-    <string name="settings_backup_days">%1$s روز پیش</string>
-    <string name="banner_backup_look">یه نگاه بنداز</string>
-    <!-- Slice 7a: Progress, metrics, the monthly check-in (DESIGN 03, flows C1–C3, S2). -->
-    <string name="tab_progress">پیشرفت</string>
-    <string name="progress_title">پیشرفت</string>
-    <string name="progress_empty_title">هنوز چیزی اندازه نمی‌گیری</string>
-    <string name="progress_empty_text">وزن، متر و تست‌های قدرت رو انتخاب کن تا از روز صفر ببینی چقدر جلو اومدی.</string>
-    <string name="progress_choose">انتخاب اندازه‌ها و تست‌ها</string>
-    <string name="progress_day0_title">روز صفر</string>
-    <string name="progress_day0_text">عددها و عکس‌های روز صفر (%1$s) رو ثبت کن تا هر تغییری از همون‌جا حساب بشه. عکس‌ها رو از گالری هم می‌شه برداشت.</string>
-    <string name="progress_day0_button">ثبت روز صفر</string>
-    <string name="checkin_card_title">چک‌این ماهانه: %1$s</string>
-    <string name="checkin_card_parts">وزن، متر، تست‌ها، ۳ عکس</string>
-    <string name="checkin_days_left">%1$s روز مونده</string>
-    <string name="checkin_today">امروزه</string>
-    <string name="checkin_still_open">هنوز وقتشه</string>
-    <string name="checkin_start">شروع چک‌این</string>
-    <string name="checkin_finish_line">خط پایان</string>
-    <string name="progress_since_day0">از روز صفر</string>
-    <string name="progress_start_value">اول: %1$s</string>
-    <string name="progress_one_reading">اولین عدد</string>
-    <string name="progress_add_weight">ثبت وزن</string>
-    <string name="progress_photos">عکس‌های ماهانه</string>
-    <string name="progress_photos_count">%1$s از %2$s</string>
-    <string name="progress_manage">اندازه‌ها و تست‌ها</string>
-    <string name="progress_no_reading">هنوز عددی نیست</string>
-    <string name="progress_record">رکورد</string>
-
-    <string name="value_kg">%1$s کیلو</string>
-    <string name="value_cm">%1$s سانت</string>
-    <string name="value_reps">%1$s تا</string>
-    <string name="value_seconds">%1$s ثانیه</string>
-    <string name="unit_kg">کیلو</string>
-    <string name="unit_cm">سانت</string>
-    <string name="unit_reps">تعداد</string>
-    <string name="unit_seconds">ثانیه</string>
-
-    <string name="metric_weight">وزن</string>
-    <string name="metric_waist">دور کمر</string>
-    <string name="metric_chest">دور سینه</string>
-    <string name="metric_arm">دور بازو</string>
-    <string name="metric_thigh">دور ران</string>
-    <string name="metric_shoulders">دور شانه</string>
-    <string name="metric_pullups">بارفیکس</string>
-    <string name="metric_pushups">شنا سوئدی</string>
-    <string name="metric_plank">پلانک</string>
-    <string name="metric_dead_hang">آویزان</string>
-    <string name="metric_toe_touch">فاصله‌ی دست تا پنجه</string>
-    <string name="metric_knee_wall_left">زانو تا دیوار، چپ</string>
-    <string name="metric_knee_wall_right">زانو تا دیوار، راست</string>
-    <string name="hint_waist">هم‌سطح ناف</string>
-    <string name="hint_chest">زیر بغل</string>
-    <string name="hint_arm">راست، منقبض</string>
-    <string name="hint_thigh">راست، وسط</string>
-    <string name="hint_shoulders">پهن‌ترین جا</string>
-    <string name="hint_toe_touch">کمتر بهتره</string>
-    <string name="hint_knee_wall">بزرگ‌ترین فاصله‌ی پنجه تا دیوار</string>
-
-    <string name="metrics_title">اندازه‌ها و تست‌ها</string>
-    <string name="metrics_suggested">پیشنهادها</string>
-    <string name="metrics_suggested_help">یه بار بزن تا اضافه بشه.</string>
-    <string name="metrics_kind_body">بدن</string>
-    <string name="metrics_kind_tape">متر</string>
-    <string name="metrics_kind_strength">تست قدرت</string>
-    <string name="metrics_add_own">یه تست یا اندازه‌ی دیگه</string>
-    <string name="metric_form_new">اندازه‌ی تازه</string>
-    <string name="metric_form_edit">ویرایش</string>
-    <string name="metric_form_name">اسم</string>
-    <string name="metric_form_name_hint">مثلاً اسکات یک‌پا</string>
-    <string name="metric_form_kind">نوع</string>
-    <string name="metric_form_unit">واحد</string>
-    <string name="metric_form_direction">کدوم بهتره؟</string>
-    <string name="metric_higher">بیشتر بهتره</string>
-    <string name="metric_lower">کمتر بهتره</string>
-    <string name="metric_name_empty">اسم رو بنویس.</string>
-    <string name="metric_remove_help">عددهای ثبت‌شده توی پشتیبان می‌مونن.</string>
-
-    <string name="metric_readings">عددها</string>
-    <string name="metric_add_reading">عدد تازه</string>
-    <string name="reading_date">تاریخ</string>
-    <string name="reading_value">عدد</string>
-    <string name="reading_value_bad">یه عدد بنویس، مثلاً ۷۶٫۸</string>
-    <string name="reading_guess">حدس %1$s</string>
-
-    <string name="checkin_title">چک‌این %1$s</string>
-    <string name="checkin_title_day0">روز صفر · %1$s</string>
-    <string name="step_weight">وزن</string>
-    <string name="step_tape">متر</string>
-    <string name="step_tests">تست‌ها</string>
-    <string name="step_photos">عکس</string>
-    <string name="weight_title">وزن</string>
-    <string name="weight_help">صبح، ناشتا، بعد از دستشویی</string>
-    <string name="weight_prev">قبلی %1$s (%2$s)</string>
-    <string name="tape_title">%1$s اندازه</string>
-    <string name="tape_help">متر نرم، روی پوست، بدون فشار</string>
-    <string name="tape_prefilled">هر عدد با آخری پر شده؛ فقط اونایی که فرق کردن رو عوض کن.</string>
-    <string name="prev_value">قبلی %1$s</string>
-    <string name="tests_title">تست‌های قدرت</string>
-    <string name="tests_help">گرم کن، فرم کامل. بین تست‌ها ۲ دقیقه استراحت.</string>
-    <string name="test_guess">حدس</string>
-    <string name="test_guess_help">اختیاری</string>
-    <string name="test_result">نتیجه</string>
-    <string name="guess_beat">از حدست بهتر</string>
-    <string name="guess_shown">حدس %1$s · واقعی %2$s</string>
-    <string name="photos_title">۳ عکس</string>
-    <string name="photos_checklist">همون جا · همون نور · همون فاصله · بی فلش · قبل صبحانه · همون لباس</string>
-    <string name="pose_front">جلو</string>
-    <string name="pose_side">بغل</string>
-    <string name="pose_back">پشت</string>
-    <string name="photo_camera">دوربین</string>
-    <string name="photo_gallery">گالری</string>
-    <string name="photo_saving">عکس داره ذخیره می‌شه…</string>
-    <string name="photo_failed">این عکس باز نشد. یکی دیگه رو امتحان کن.</string>
-    <string name="next">بعدی</string>
-    <string name="checkin_finish">تموم</string>
-    <string name="checkin_done_line">واای! روز صفرو ببین، الانو ببین.</string>
-    <string name="checkin_done_line_day0">روز صفر ثبت شد. از این‌جا هر تغییری دیده می‌شه.</string>
-    <string name="checkin_done_line_first">اولین عددها ثبت شد. ماه دیگه مقایسه می‌کنیم.</string>
-    <string name="checkin_compare">روز صفر · امروز</string>
-
-    <string name="cd_photo">عکس %1$s، %2$s</string>
-    <string name="weigh_title">وزن این هفته</string>
-    <string name="today_checkin_title">امروز چک‌این %1$s</string>
-    <string name="today_checkin_text">وزن، متر، تست‌ها و ۳ عکس · حدود ۲۰ دقیقه</string>
-    <string name="today_checkin_start">شروع</string>
-    <string name="today_weigh_text">وزن این هفته رو ثبت کن</string>
-    <string name="today_weigh_button">ثبت</string>
-
-    <!-- Slice 7b -->
-    <string name="line_title">مسیر</string>
-    <string name="line_end">نوروز</string>
-    <string name="totals_title">از روز صفر تا امروز</string>
-    <string name="totals_workouts">تمرین</string>
-    <string name="totals_minutes">دقیقه %1$s</string>
-    <string name="ladders_title">نردبان‌ها</string>
-    <string name="milestones_title">هدف‌ها</string>
-    <string name="milestone_add">یه هدف تازه</string>
-    <string name="milestone_new">هدف تازه</string>
-    <string name="milestone_title_label">چی؟</string>
-    <string name="milestone_title_hint">مثلاً اولین ۱۰ بارفیکس</string>
-    <string name="milestone_title_empty">اسم هدف رو بنویس؛ اگه به یه عدد وصله، مقدارش رو هم.</string>
-    <string name="milestone_metric">خودکار با یه عدد؟</string>
-    <string name="milestone_by_hand">خودم تیک می‌زنم</string>
-    <string name="milestone_target">مقدار هدف</string>
-    <string name="milestone_progress">بهترین %1$s · هدف %2$s</string>
-    <string name="backfill_row">ثبت تمرین‌های گذشته</string>
-    <string name="backfill_title">کدوم روز؟</string>
-    <string name="backfill_help">روزهایی که برنامه داشتن، از روز صفر تا دیروز. ست‌ها توی رکوردها و جمع‌ها حساب می‌شن؛ تیک روز عوض نمی‌شه.</string>
-    <string name="reveal_title">رونمایی</string>
-    <string name="reveal_day0">روز صفر</string>
-    <string name="reveal_last">ماه قبل</string>
-    <string name="reveal_today">این بار</string>
-    <string name="reveal_drag">خط وسط رو بکش</string>
-    <string name="camera_ghost">شبح %1$s</string>
-    <string name="camera_match">خودت رو با شبح جفت کن</string>
-    <string name="camera_timer">۱۰ث</string>
-    <string name="camera_flip">چرخش دوربین</string>
-    <string name="camera_shoot">عکس</string>
-    <string name="camera_no_permission">برای دوربین داخل اپ اجازه‌ی دوربین لازمه. می‌تونی از دوربین گوشی یا گالری استفاده کنی.</string>
-    <string name="photo_ghost_camera">با شبح</string>
-
-    <!-- Slice 8: the Week tab and the Friday ritual (M8, D140). Wins only; nothing is ever called missed. -->
-    <string name="tab_week">هفته</string>
-    <string name="week_title">هفته</string>
-    <string name="week_review_title">مرور هفته %1$s</string>
-    <string name="week_steps_review">مرور</string>
-    <string name="week_steps_plan">برنامه</string>
-    <string name="week_shown_up">%1$s روز حضور</string>
-    <string name="week_comebacks">%1$s بار برگشتی</string>
-    <string name="week_records">%1$s رکورد</string>
-    <string name="week_workouts">%1$s تمرین</string>
-    <string name="week_best_routines">بهترین روتین‌ها</string>
-    <string name="week_start">شروع هفته %1$s</string>
-    <string name="week_close_last">بستن هفته‌ی آخر</string>
-    <string name="week_plan_optional">برنامه‌ی هفته %1$s · اختیاری</string>
-    <string name="week_plan_title">برنامه‌ی هفته %1$s</string>
-    <string name="week_range">%1$s تا %2$s</string>
-    <string name="week_special_days">روزهای ویژه</string>
-    <string name="week_reserves">%1$s روز ذخیره</string>
-    <string name="week_reserves_none">ذخیره‌ی این هفته استفاده شد</string>
-    <string name="week_special_help">سفر، مریضی یا استراحت. اون روز از امتیاز هفته بیرون می‌مونه.</string>
-    <string name="week_special_clear">برداشتن</string>
-    <string name="week_snacks">میان‌وعده‌ها</string>
-    <string name="week_snack_hint">چی آماده کنی؟ (می‌تونه یه دستور کامل باشه)</string>
-    <string name="week_identity_title">من کسی‌ام که…</string>
-    <string name="week_identity_ask">یه جمله درباره‌ی آدمی که داری می‌سازی. یه بار می‌نویسی و هر جمعه اینجاست.</string>
-    <string name="week_identity_hint">مثلاً: من کسی‌ام که به خودش می‌رسه، حتی تو روزای شلوغ.</string>
-    <string name="week_identity_edit">ویرایش جمله</string>
-    <string name="week_next_ritual">مرور هفته: جمعه %1$s</string>
-    <string name="week_done_title">هفته %1$s شروع شد</string>
-    <string name="week_done_body">مرور ثبت شد و پشتیبان هفتگی داره گرفته می‌شه.</string>
-    <string name="week_done_body_no_folder">مرور ثبت شد.</string>
-    <string name="week_day_label">%1$s %2$s</string>
-    <string name="today_ritual_title">مرور هفته %1$s آماده‌ست</string>
-    <string name="today_ritual_body">یه دقیقه: مرور، بعد شروع هفته‌ی بعد.</string>
-    <string name="today_snack_title">میان‌وعده‌ی امروز</string>
-    <string name="notif_ritual_title">مرور هفته آماده‌ست</string>
-    <string name="notif_ritual_body">یه دقیقه وقت می‌بره. برنامه‌ی هفته‌ی بعد اختیاریه.</string>
-    <string-array name="week_win_records">
-        <item>رکورد زدی! این هفته قوی‌تر از قبل بودی.</item>
-        <item>رکورد جدید. بدنت داره جواب می‌ده.</item>
-    </string-array>
-    <string-array name="week_win_comebacks">
-        <item>برگشتنت از همه چی مهم‌تره. دمت گرم.</item>
-        <item>هر بار برگشتی. این یعنی ادامه‌دار.</item>
-    </string-array>
-    <string-array name="week_win_routines">
-        <item>روتین‌هات دارن جا می‌افتن. خفنه.</item>
-        <item>کارهای هر روزت محکم شدن. ادامه بده.</item>
-    </string-array>
-    <string-array name="week_win_workouts">
-        <item>تمرین‌هاتو رفتی. بازوها خبر دارن.</item>
-        <item>هر جلسه یه آجر. این هفته هم ساختی.</item>
-    </string-array>
-    <string-array name="week_win_showed_up">
-        <item>اومدی و ثبت کردی. همین پایه‌ست.</item>
-        <item>یه هفته‌ی دیگه کنار هم. بزن بریم.</item>
-    </string-array>
-
-    <!-- Slice 8b: the halfway recap (D52, flows R1–R3). Wins only; gaps are never counted out loud. -->
-    <string name="recap_tap_next">بزن برای بعدی</string>
-    <string name="recap_close">بستن</string>
-    <string name="recap_r1_title">نیمه‌ی راه</string>
-    <string name="recap_r1_body">از روز صفر تا یلدا، %1$s روز اومدی.</string>
-    <string name="recap_r1_special">%1$s روز ویژه هم داشتی. اونا هم جزو برنامه‌ان.</string>
-    <string name="recap_r2_title">از روز صفر تا امروز</string>
-    <string name="recap_records">رکورد</string>
-    <string name="recap_reached">رسیدی: %1$s</string>
-    <string name="recap_r2_empty">عددها از چک‌این‌ها و تمرین‌ها می‌آن. نیمه‌ی دوم جای پرشدنشونه.</string>
-    <string name="recap_r3_title">روز صفر و حالا</string>
-    <string name="recap_r3_own">جمله‌ی خودت</string>
-    <string name="recap_r3_no_photos">عکس‌های روز صفر و آخرین چک‌این اینجا کنار هم میان.</string>
-    <string name="recap_r4_title">نیمه‌ی دوم</string>
-    <string name="recap_r4_body">حالا نوبت فصل %1$s. %2$s هفته تا نوروز.</string>
-    <string name="recap_r4_done">بزن بریم</string>
-    <string name="today_recap_title">یلدا مبارک! مرور نیمه‌ی راه</string>
-    <string name="today_recap_body">نصف راهو اومدی. ببین چی ساختی.</string>
-    <string name="progress_recap_row">مرور نیمه‌ی راه</string>
+    <string name="backup_title">Backup</string>
+    <string name="backup_last_today">Last backup: today</string>
+    <string name="backup_last_yesterday">Last backup: yesterday</string>
+    <string name="backup_last_days">Last backup: %1$s days ago</string>
+    <string name="backup_none_yet">No backup yet</string>
+    <string name="backup_failed">The last backup didn\'t finish</string>
+    <string name="backup_no_folder">Backups have no folder yet</string>
+    <string name="backup_detail">%1$s · %2$s · %3$s photos</string>
+    <string name="backup_failed_help">The folder may have moved. Try again, or pick the folder again.</string>
+    <string name="backup_no_folder_help">Pick a folder that Syncthing carries to your computer.</string>
+    <string name="backup_now">Back up now</string>
+    <string name="backup_running">Backing up…</string>
+    <string name="backup_folder">Folder</string>
+    <string name="backup_folder_none">Not picked</string>
+    <string name="backup_folder_pick">Pick</string>
+    <string name="backup_folder_change">Change</string>
+    <string name="backup_auto">Automatic</string>
+    <string name="backup_auto_help">Every Friday you open the app, and whenever a week has passed.</string>
+    <string name="backup_recent">Last %1$s</string>
+    <string name="backup_reason_manual">Manual</string>
+    <string name="backup_reason_auto">Automatic</string>
+    <string name="backup_reason_before_restore">Before restore</string>
+    <string name="backup_restore">Restore from a file</string>
+    <string name="backup_privacy">Everything stays on this phone, and Lantern has no internet access. Syncthing carries the folder to your computer.</string>
+    <string name="backup_saved">Backed up.</string>
+    <string name="backup_restored">Restored. Everything is back.</string>
+    <string name="backup_not_ours">This isn\'t a Lantern backup.</string>
+    <string name="backup_newer">This backup is from a newer Lantern; update the app first.</string>
+    <string name="backup_damaged">This file is damaged and can\'t be restored.</string>
+    <string name="backup_restore_failed">Restore didn\'t work; your data is as it was.</string>
+    <string name="size_mb">%1$s MB</string>
+    <string name="size_kb">%1$s KB</string>
+    <string name="restore_title">Restore this file?</string>
+    <string name="restore_date">Date</string>
+    <string name="restore_version">App version</string>
+    <string name="restore_days">Days recorded</string>
+    <string name="restore_sessions">Workouts</string>
+    <string name="restore_sessions_value">%1$s sessions</string>
+    <string name="restore_tasks">Tasks</string>
+    <string name="restore_photos">Photos</string>
+    <string name="restore_note">First I back up all your current data, then replace it. If anything breaks halfway, everything stays as it was.</string>
+    <string name="restore_confirm">Replace</string>
+    <string name="restore_running">Restoring…</string>
+    <string name="restore_cancel">No</string>
+    <string name="settings_backup_none">No folder picked</string>
+    <string name="settings_backup_today">Today</string>
+    <string name="settings_backup_days">%1$s days ago</string>
+    <string name="banner_backup_look">Take a look</string>
 
     <!-- Slice 9: onboarding (flows O1–O5, D142). -->
-    <string name="onb_hello_title">سلام! به فانوس خوش اومدی.</string>
-    <string name="onb_hello_body">رفیق تمرینت تا نوروز. هر روز می‌گم چی کار کنی، یادت می‌ندازم و پیشرفتتو نشونت می‌دم. همه چی رو همین گوشی می‌مونه.</string>
-    <string name="onb_start">شروع</string>
-    <string name="onb_restore">بازگردانی از پشتیبان</string>
-    <string name="onb_restore_help">گوشی تازه‌ست؟ فایل پشتیبانتو انتخاب کن تا همه چی برگرده.</string>
-    <string name="onb_next">بعدی</string>
-    <string name="onb_later">بعداً</string>
-    <string name="onb_dates_title">مسیر</string>
-    <string name="onb_dates_body">از روز صفر تا خط پایان. هر ماه یه فصل تازه‌ست.</string>
-    <string name="onb_day0">روز صفر</string>
-    <string name="onb_finish">خط پایان</string>
-    <string name="onb_dates_summary">%1$s هفته · %2$s فصل</string>
-    <string name="onb_reminders_title">یادآورها</string>
-    <string name="onb_reminders_body">هر بخش روز یه یادآور داره. ساعت‌ها رو با روزت تنظیم کن؛ بعداً هم از تنظیمات عوض می‌شن.</string>
-    <string name="onb_reminders_edit">تنظیم ساعت‌ها</string>
-    <string name="onb_notifications">اجازه‌ی اعلان</string>
-    <string name="onb_notifications_on">اعلان‌ها روشنه</string>
-    <string name="onb_phone_title">رسیدن یادآورها</string>
-    <string name="onb_phone_body">شیائومی‌ها اپ‌ها رو می‌خوابونن. این چند تا تنظیم مطمئن می‌کنه هیچ یادآوری گم نشه.</string>
-    <string name="onb_phone_open">تنظیم گوشی</string>
-    <string name="onb_backup_title">پشتیبان</string>
-    <string name="onb_backup_body">یه پوشه انتخاب کن تا هر هفته خودکار پشتیبان بگیرم. اپ اینترنت نداره؛ چیزی از گوشیت بیرون نمی‌ره.</string>
-    <string name="onb_backup_open">انتخاب پوشه</string>
-    <string name="onb_done_title">آماده‌ایم!</string>
-    <string name="onb_done_body">کارهاتو از دکمه‌ی «یه چیز اضافه کن» بساز، برنامه‌ی تمرینو از تنظیمات وارد کن و روز صفرتو تو پیشرفت ثبت کن.</string>
-    <string name="onb_done_go">بریم سراغ امروز</string>
-    <string name="onb_step">%1$s از %2$s</string>
+    <string name="onb_hello_title">Hi! Welcome to Lantern.</string>
+    <string name="onb_hello_body">Every day I tell you what to do now and remind you on time. Everything stays on this phone.</string>
+    <string name="onb_start">Start</string>
+    <string name="onb_restore">Restore from a backup</string>
+    <string name="onb_restore_help">New phone? Pick your backup file and everything comes back.</string>
+    <string name="onb_next">Next</string>
+    <string name="onb_later">Later</string>
+    <string name="onb_reminders_title">Reminders</string>
+    <string name="onb_reminders_body">Each part of the day has a reminder. Set the times to fit your day; you can change them later in Settings.</string>
+    <string name="onb_reminders_edit">Set the times</string>
+    <string name="onb_notifications">Allow notifications</string>
+    <string name="onb_notifications_on">Notifications are on</string>
+    <string name="onb_phone_title">Getting reminders</string>
+    <string name="onb_phone_body">Xiaomi phones put apps to sleep. These few settings make sure no reminder gets lost.</string>
+    <string name="onb_phone_open">Set up the phone</string>
+    <string name="onb_backup_title">Backup</string>
+    <string name="onb_backup_body">Pick a folder and I\'ll back up there every week. The app has no internet; nothing leaves your phone.</string>
+    <string name="onb_backup_open">Pick a folder</string>
+    <string name="onb_done_title">All set!</string>
+    <string name="onb_done_body">Add your tasks with the “+” button. Every day I\'ll tell you here what\'s next.</string>
+    <string name="onb_done_go">Go to Today</string>
 
     <!-- Slice 10: the Today widget (D67, D143). -->
-    <string name="widget_label">امروز فانوس</string>
-    <string name="widget_description">کارهای این بخش روز، با یه تیک.</string>
-    <string name="widget_count">%1$s از %2$s</string>
-    <string name="widget_empty">هنوز کاری نساختی. از اپ اضافه کن.</string>
-    <string name="widget_day_done">امروز کامل شد!</string>
-    <string name="widget_part_done">%1$s تموم شد. دمت گرم.</string>
-    <string name="widget_next_part">بعدی: %1$s</string>
-    <string name="widget_more">و %1$s تای دیگه</string>
+    <string name="widget_label">Lantern Today</string>
+    <string name="widget_description">This part of the day\'s tasks, one tap each.</string>
+    <string name="widget_count">%1$s of %2$s</string>
+    <string name="widget_empty">No tasks yet. Add some in the app.</string>
+    <string name="widget_day_done">Today is complete!</string>
+    <string name="widget_part_done">%1$s is done. Nice.</string>
+    <string name="widget_next_part">Next: %1$s</string>
+    <string name="widget_more">and %1$s more</string>
 
-    <!-- Slice 10b: the reminder fade offer (D57). Never a failure frame. -->
-    <string name="fade_silence_title">«%1$s» دیگه جا افتاده!</string>
-    <string name="fade_silence_body">چند هفته‌ست مرتب انجامش می‌دی. یادآورش خاموش شه؟ تو امروز و امتیاز می‌مونه، فقط اعلانش نمیاد.</string>
-    <string name="fade_silence_yes">آره، خاموش</string>
-    <string name="fade_restore_title">یادآور «%1$s» برگرده؟</string>
-    <string name="fade_restore_body">این هفته شلوغ بود. یه یادآور کوچیک کمک می‌کنه دوباره راه بیفته.</string>
-    <string name="fade_restore_yes">آره، روشن</string>
-    <string name="fade_no">نه، بمونه</string>
-
-    <!-- Slice 10c: the finish recap and what comes after (D52, D61, flows F1). -->
-    <string name="recap_f_r1_body">از روز صفر تا خط پایان، %1$s روز اومدی.</string>
-    <string name="recap_f_date">%1$s %2$s · خط پایان</string>
-    <string name="recap_f_weeks">%1$s هفته! تو انجامش دادی.</string>
-    <string name="recap_f_days">%1$s روز</string>
-    <string name="recap_f_days_body">از %1$s روز، اومدی.</string>
-    <string name="recap_f_days_body_nowruz">از %1$s روز، اومدی. فردا نوروزه.</string>
-    <string name="recap_choice_title">بعدش چی؟</string>
-    <string name="recap_choice_keep">ادامه</string>
-    <string name="recap_choice_keep_body">کارهای هر روزت ادامه دارن، تمرین اختیاری. بدون فصل و شمارش هفته.</string>
-    <string name="recap_choice_new">برنامه‌ی تازه</string>
-    <string name="recap_choice_new_body">یه دور تازه تا نوروز بعد. کارها، برنامه‌ی تمرین و همه‌ی تاریخچه می‌مونن؛ قبلش یه پشتیبان گرفته می‌شه.</string>
-    <string name="today_finish_title">خط پایان! مرور کل مسیر</string>
-    <string name="today_finish_body">ببین از روز صفر تا اینجا چی ساختی.</string>
-    <string name="today_choice_title">بعد از خط پایان</string>
-    <string name="today_choice_body">ادامه بدیم یا یه برنامه‌ی تازه؟</string>
-    <string name="today_line_after">%1$s · بعد از خط پایان</string>
-    <string name="today_line_maintenance">%1$s · نگه‌داری</string>
-    <string name="progress_finish_row">مرور کل مسیر</string>
 </resources>

@@ -1,0 +1,329 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Persian (D174). English is the default in values/; every string lives in both. -->
+<resources>
+    <string name="app_name">فانوس</string>
+
+    <!-- Calendar -->
+    <string-array name="weekdays">
+        <item>شنبه</item>
+        <item>یکشنبه</item>
+        <item>دوشنبه</item>
+        <item>سه‌شنبه</item>
+        <item>چهارشنبه</item>
+        <item>پنجشنبه</item>
+        <item>جمعه</item>
+    </string-array>
+    <string-array name="jalali_months">
+        <item>فروردین</item>
+        <item>اردیبهشت</item>
+        <item>خرداد</item>
+        <item>تیر</item>
+        <item>مرداد</item>
+        <item>شهریور</item>
+        <item>مهر</item>
+        <item>آبان</item>
+        <item>آذر</item>
+        <item>دی</item>
+        <item>بهمن</item>
+        <item>اسفند</item>
+    </string-array>
+    <string name="date_day_month">%1$s %2$s</string>
+
+    <!-- Parts of the day -->
+    <string name="part_morning">صبح</string>
+    <string name="part_midday">ظهر</string>
+    <string name="part_evening">عصر</string>
+    <string name="part_night">شب</string>
+
+    <string name="today_part_empty">این بخش امروز کاری نداره.</string>
+    <string name="tag_important">مهم</string>
+    <string name="tag_due">موعدش رسیده</string>
+    <string name="cd_settings">تنظیمات</string>
+
+    <!-- Notifications: neutral, forward-looking, no character (SPEC §7.2, D84) -->
+    <string name="channel_blocks">یادآور بخش‌های روز</string>
+    <string name="channel_follow_ups">یادآور دوباره‌ی کارهای مهم</string>
+    <string name="channel_ritual">مرور هفته و چک‌این</string>
+    <string name="channel_system">سیستم</string>
+    <string name="notif_block_title">%1$s · %2$s کار</string>
+    <string name="notif_line_with_anchor">%1$s · %2$s</string>
+    <string name="list_separator">"، "</string>
+    <string name="notif_test_title">یادآورها کار می‌کنن</string>
+    <string name="notif_test_text">این یه یادآور آزمایشیه.</string>
+
+    <!-- Notifications, slice 2 -->
+    <string name="channel_task_alarms">زنگ کارها</string>
+    <string name="notif_follow_up_text">هنوز وقتش هست.</string>
+    <string name="notif_action_done">انجام شد</string>
+    <string name="notif_health_title">یادآورها شاید بسته شدن</string>
+    <string name="notif_health_text">بزن تا درستش کنیم.</string>
+
+    <string name="ring_of">از %1$s</string>
+    <string name="today_minimum_label">روز حداقلی</string>
+    <string name="cd_minimum_day">روز حداقلی</string>
+    <string name="cd_ring">%1$s از %2$s کار انجام شده</string>
+    <string name="banner_late">یه یادآور دیر رسید</string>
+    <string name="banner_blocked">یادآورها شاید بسته شدن</string>
+    <string name="banner_fix">درستش کن</string>
+
+    <string name="cd_back">برگشت</string>
+
+    <!-- Settings (06) -->
+    <string name="settings_title">تنظیمات</string>
+    <string name="health_ok">یادآورها سالم‌اند</string>
+    <string name="health_not_ok">یادآورها یه نگاه می‌خوان</string>
+    <string name="settings_tasks">کارها</string>
+    <string name="settings_reminders">یادآورها</string>
+    <string name="settings_backup">پشتیبان</string>
+    <string name="settings_phone">رسیدن یادآورها</string>
+    <string name="settings_version">نسخه %1$s · Lantern</string>
+
+    <!-- Reminders (09) -->
+    <string name="reminders_title">یادآورها</string>
+    <string name="reminders_test">آزمایش</string>
+    <string name="profile_normal">روزهای عادی</string>
+    <string name="profile_friday">جمعه</string>
+    <string name="task_alarms">زنگ‌های کارها</string>
+    <string name="task_alarms_empty">هنوز هیچ کاری زنگ خودش رو نداره. از «کارها» اضافه می‌شه.</string>
+    <string name="follow_up_delay">یادآور دوباره برای «مهم»</string>
+    <string name="minutes">%1$s دقیقه</string>
+    <string name="friday_review">مرور جمعه</string>
+    <string name="every_day">هر روز</string>
+    <string name="ok">باشه</string>
+    <string name="cancel">بی‌خیال</string>
+    <string name="test_scheduled">یه دقیقه دیگه می‌رسه. گوشی رو قفل کن.</string>
+    <string name="test_arrived">رسید! یادآورها کار می‌کنن.</string>
+    <string name="test_blocked">زنگ زد، ولی اعلان‌ها بسته‌ان.</string>
+
+    <!-- Phone setup (N2) -->
+    <string name="phone_title">رسیدن یادآورها</string>
+    <string name="phone_this_week">۷ روز اخیر</string>
+    <string name="phone_week_help">چند تا از یادآورهای ۷ روز اخیر سر وقت رسیدن.</string>
+    <string name="phone_on_time">%1$s از %2$s به‌موقع</string>
+    <string name="phone_nothing_yet">هنوز یادآوری نرسیده.</string>
+    <string name="phone_late_detail">یکی %1$s دقیقه دیر رسید: %2$s، %3$s. احتمالاً صرفه‌جویی باتری.</string>
+    <string name="phone_missed_detail">یکی نرسید: %1$s، %2$s. احتمالاً گوشی اپ رو بسته.</string>
+    <string name="phone_blocked_detail">یکی زنگ زد ولی اعلان‌ها بسته بودن: %1$s، %2$s.</string>
+    <string name="phone_all_good">همه به‌موقع رسیدن.</string>
+    <string name="row_notifications">اجازه‌ی اعلان</string>
+    <string name="row_exact">یادآور سر دقیقه</string>
+    <string name="row_autostart">شروع با روشن شدن گوشی</string>
+    <string name="row_battery">باتری، فانوس رو نبنده</string>
+    <string name="row_recents">قفل توی اپ‌های اخیر</string>
+    <string name="row_notifications_help">اعلان‌های فانوس روشن باشه.</string>
+    <string name="row_exact_help">توی تنظیمات اسمش «زنگ‌ها و یادآورها»ست.</string>
+    <string name="row_autostart_help">بعد از خاموش‌روشن، یادآورها دوباره راه بیفتن. توی تنظیمات اسمش «اجرای خودکار»ه.</string>
+    <string name="row_autostart_help_unknown">گوشی وضعیتش رو نمی‌گه؛ بعد از روشن کردن ازت می‌پرسم.</string>
+    <string name="row_battery_help">صرفه‌جویی باتری فانوس رو نبنده. توی تنظیمات: باتری ← «بدون محدودیت».</string>
+    <string name="row_battery_help_xiaomi">اول «اجازه بده»، بعد توی صرفه‌جویی باتری «بدون محدودیت».</string>
+    <string name="row_recents_help">«پاک کردن همه» فانوس رو نبنده.</string>
+    <string name="ask_autostart_title">اجرای خودکار</string>
+    <string name="ask_autostart_text">برای فانوس روشنش کردی؟</string>
+    <string name="ask_recents_title">قفل در اپ‌های اخیر</string>
+    <string name="ask_recents_text">صفحه‌ی اپ‌های اخیر رو باز کن (از پایین صفحه بکش بالا و نگه دار). کارت فانوس رو نگه دار و آیکن قفل رو بزن. با قفل، «پاک کردن همه» و پاک‌کننده‌ی گوشی فانوس رو نمی‌بندن، پس یادآورها سر جاشون می‌مونن.</string>
+    <string name="ask_yes_autostart">آره، روشنه</string>
+    <string name="ask_yes_recents">قفلش کردم</string>
+    <string name="ask_not_yet">هنوز نه</string>
+    <string name="open">باز کن</string>
+    <string name="test_notification">یه یادآور امتحانی (۱ دقیقه بعد)</string>
+
+    <!-- Tasks (07) and the task editor (08) -->
+    <string name="tasks_title">کارها</string>
+    <string name="tasks_all">همه</string>
+    <string name="tasks_once">یک‌باره</string>
+    <string name="tasks_new">کار جدید</string>
+    <string name="tasks_empty_title">هنوز کاری اینجا نیست</string>
+    <string name="tasks_empty_text">اولین کارت رو اضافه کن، مثلاً مسواک صبح. بعد هر روز توی «امروز» میاد.</string>
+    <string name="tasks_part_empty">این بخش هنوز کاری نداره.</string>
+    <string name="repeat_daily">هر روز</string>
+    <string name="repeat_weekdays">روزهای خاص</string>
+    <string name="repeat_every_n">هر %1$s روز</string>
+    <string name="repeat_once">یک بار</string>
+    <string name="repeat_min_only">فقط روز حداقلی</string>
+    <string name="row_with_alarm">%1$s · زنگ %2$s</string>
+    <string name="row_once">%1$s · %2$s</string>
+    <string name="today">امروز</string>
+    <string name="tomorrow">فردا</string>
+    <string name="editor_new">کار جدید</string>
+    <string name="editor_edit">ویرایش کار</string>
+    <string name="editor_name">اسم کار</string>
+    <string name="editor_icon">آیکن</string>
+    <string name="editor_part">بخش روز</string>
+    <string name="editor_repeat">تکرار</string>
+    <string name="editor_every_n_help">از آخرین باری که انجامش دادی حساب می‌شه.</string>
+    <string name="editor_anchor">بعد از…</string>
+    <string name="editor_anchor_hint">مثلاً بعد از صبحانه</string>
+    <string name="editor_anchor_help">توی یادآور کنار اسم کار میاد؛ کار رو به یه کار همیشگی می‌چسبونه.</string>
+    <string name="editor_alarm">زنگ</string>
+    <string name="editor_alarm_help">جدا از یادآور بخش روز، سر همین ساعت زنگ می‌زنه.</string>
+    <string name="editor_important">مهم</string>
+    <string name="editor_important_help">اگه انجام نشده بود، یه یادآور دوباره.</string>
+    <string name="editor_min_day">روز حداقلی</string>
+    <string name="editor_min_day_help">جزو حداقلِ روزهای سخت.</string>
+    <string name="save">ذخیره</string>
+    <string name="delete">حذف</string>
+    <string name="delete_title">این کار حذف بشه؟</string>
+    <string name="delete_text">از امروز دیگه توی «امروز» نمیاد. روزهای گذشته همون‌طور که بودن می‌مونن.</string>
+    <string name="delete_confirm">حذف کن</string>
+    <string name="error_title">اسم کار رو بنویس.</string>
+    <string name="error_weekdays">حداقل یه روز انتخاب کن.</string>
+    <string name="error_date">یه روز از امروز به بعد انتخاب کن.</string>
+    <string name="error_alarm_days">زنگ حداقل یه روز بزنه.</string>
+    <string name="cd_less">کمتر</string>
+    <string name="cd_more">بیشتر</string>
+    <string-array name="weekdays_short">
+        <item>ش</item>
+        <item>ی</item>
+        <item>د</item>
+        <item>س</item>
+        <item>چ</item>
+        <item>پ</item>
+        <item>ج</item>
+    </string-array>
+    <!-- In TaskIcon order. -->
+    <string-array name="task_icon_names">
+        <item>پوست</item>
+        <item>مسواک</item>
+        <item>مکمل</item>
+        <item>تخم‌مرغ</item>
+        <item>تمرین</item>
+        <item>کوه</item>
+        <item>ترازو</item>
+        <item>دوش</item>
+        <item>قیچی</item>
+        <item>خوراکی</item>
+        <item>آفتاب</item>
+        <item>تیک</item>
+    </string-array>
+
+    <!-- Slice 4a: task editor's workout switch (D117) -->
+    <string name="editor_workout">کار تمرین</string>
+    <string name="editor_workout_help">روزهای برنامه، کارت «تمرین امروز» جاش میاد و با اولین ست تیک می‌خوره.</string>
+
+    <!-- Slice 5: tabs, dashboard (02) and the day sheet (D1) -->
+    <string name="tab_today">امروز</string>
+    <string name="tab_goals">هدف‌ها</string>
+    <string name="splash_line">یه چراغ برای هر روز</string>
+    <string name="char_knight">شوالیه</string>
+    <string name="char_vampire">ومپایر</string>
+    <string name="char_wizard">جادوگر</string>
+    <string name="char_goth">دختر گات</string>
+    <string name="goals_soon_title">در دست ساخت</string>
+    <string name="goals_soon_body">هدف‌ها به‌زودی اینجا میان.</string>
+    <string-array name="gregorian_months">
+        <item>ژانویه</item>
+        <item>فوریه</item>
+        <item>مارس</item>
+        <item>آوریل</item>
+        <item>مه</item>
+        <item>ژوئن</item>
+        <item>ژوئیه</item>
+        <item>اوت</item>
+        <item>سپتامبر</item>
+        <item>اکتبر</item>
+        <item>نوامبر</item>
+        <item>دسامبر</item>
+    </string-array>
+
+    <!-- Slice 5b: workout card, «هر وقت», simple sheet, calendar (D126–D130) -->
+    <string name="repeat_anytime">هر وقت</string>
+    <string name="tasks_anytime">هر وقت</string>
+    <string name="when_label">کِی؟</string>
+    <string name="when_day">یه روز…</string>
+    <string name="when_help_anytime">هر وقت انجامش دادی تیک بزن. توی «هر وقت» می‌مونه؛ نه یادآور داره، نه شمرده می‌شه.</string>
+    <string name="when_help_dated">%1$s · %2$s</string>
+    <string name="editor_more">تنظیمات بیشتر</string>
+    <string name="editor_date">روز</string>
+    <string name="alarm_on_day">همون روز</string>
+    <string name="alarm_when_due">روزهایی که موعدشه</string>
+    <string name="calendar_picked">%1$s %2$s · %3$s</string>
+    <string name="calendar_gregorian">%1$s %2$s</string>
+    <string name="cd_prev_month">ماه قبل</string>
+    <string name="cd_next_month">ماه بعد</string>
+    <string name="anytime_title">هر وقت</string>
+    <string name="anytime_add">یه چیز اضافه کن</string>
+
+    <!-- Slice 6: backup and restore (flows B1–B2, D132–D135) -->
+    <string name="backup_title">پشتیبان</string>
+    <string name="backup_last_today">آخرین پشتیبان: امروز</string>
+    <string name="backup_last_yesterday">آخرین پشتیبان: دیروز</string>
+    <string name="backup_last_days">آخرین پشتیبان: %1$s روز پیش</string>
+    <string name="backup_none_yet">هنوز پشتیبانی گرفته نشده</string>
+    <string name="backup_failed">پشتیبان آخر نشد</string>
+    <string name="backup_no_folder">پشتیبان هنوز جایی نداره</string>
+    <string name="backup_detail">%1$s · %2$s · %3$s عکس</string>
+    <string name="backup_failed_help">شاید پوشه جابه‌جا شده. دوباره امتحان کن یا پوشه رو دوباره انتخاب کن.</string>
+    <string name="backup_no_folder_help">یه پوشه انتخاب کن که Syncthing به کامپیوترت ببره.</string>
+    <string name="backup_now">همین الان پشتیبان بگیر</string>
+    <string name="backup_running">داره پشتیبان می‌گیره…</string>
+    <string name="backup_folder">پوشه</string>
+    <string name="backup_folder_none">انتخاب نشده</string>
+    <string name="backup_folder_pick">انتخاب کن</string>
+    <string name="backup_folder_change">عوض کن</string>
+    <string name="backup_auto">خودکار</string>
+    <string name="backup_auto_help">هر جمعه که اپ رو باز کنی، و هر وقت یه هفته گذشته باشه.</string>
+    <string name="backup_recent">%1$s تای آخر</string>
+    <string name="backup_reason_manual">دستی</string>
+    <string name="backup_reason_auto">خودکار</string>
+    <string name="backup_reason_before_restore">پیش از بازگردانی</string>
+    <string name="backup_restore">بازگردانی از فایل</string>
+    <string name="backup_privacy">همه‌چی روی همین گوشیه و فانوس اجازه‌ی اینترنت نداره. Syncthing پوشه رو به کامپیوترت می‌بره.</string>
+    <string name="backup_saved">پشتیبان گرفته شد.</string>
+    <string name="backup_restored">بازگردانی شد. همه‌چی سر جاشه.</string>
+    <string name="backup_not_ours">این فایل پشتیبان فانوس نیست.</string>
+    <string name="backup_newer">این پشتیبان مال نسخه‌ی جدیدتر فانوسه؛ اول اپ رو به‌روز کن.</string>
+    <string name="backup_damaged">این فایل خرابه و نمی‌شه ازش بازگردانی کرد.</string>
+    <string name="backup_restore_failed">بازگردانی نشد؛ داده‌ها همون‌طور که بودن موندن.</string>
+    <string name="size_mb">%1$s مگ</string>
+    <string name="size_kb">%1$s کیلوبایت</string>
+    <string name="restore_title">بازگردانی این فایل؟</string>
+    <string name="restore_date">تاریخ</string>
+    <string name="restore_version">نسخه‌ی اپ</string>
+    <string name="restore_days">روزهای ثبت‌شده</string>
+    <string name="restore_sessions">تمرین</string>
+    <string name="restore_sessions_value">%1$s جلسه</string>
+    <string name="restore_tasks">کارها</string>
+    <string name="restore_photos">عکس</string>
+    <string name="restore_note">اول از همه‌ی داده‌های فعلی یه پشتیبان می‌گیرم، بعد جایگزین می‌کنم. اگه چیزی وسطش خراب شد، همه‌چی همون‌طور که بود می‌مونه.</string>
+    <string name="restore_confirm">جایگزین کن</string>
+    <string name="restore_running">داره بازگردانی می‌کنه…</string>
+    <string name="restore_cancel">نه</string>
+    <string name="settings_backup_none">پوشه انتخاب نشده</string>
+    <string name="settings_backup_today">امروز</string>
+    <string name="settings_backup_days">%1$s روز پیش</string>
+    <string name="banner_backup_look">یه نگاه بنداز</string>
+
+    <!-- Slice 9: onboarding (flows O1–O5, D142). -->
+    <string name="onb_hello_title">سلام! به فانوس خوش اومدی.</string>
+    <string name="onb_hello_body">هر روز می‌گم الان چی کار کنی و سر وقت یادت می‌ندازم. همه‌چی روی همین گوشی می‌مونه.</string>
+    <string name="onb_start">شروع</string>
+    <string name="onb_restore">بازگردانی از پشتیبان</string>
+    <string name="onb_restore_help">گوشی تازه‌ست؟ فایل پشتیبانتو انتخاب کن تا همه چی برگرده.</string>
+    <string name="onb_next">بعدی</string>
+    <string name="onb_later">بعداً</string>
+    <string name="onb_reminders_title">یادآورها</string>
+    <string name="onb_reminders_body">هر بخش روز یه یادآور داره. ساعت‌ها رو با روزت تنظیم کن؛ بعداً هم از تنظیمات عوض می‌شن.</string>
+    <string name="onb_reminders_edit">تنظیم ساعت‌ها</string>
+    <string name="onb_notifications">اجازه‌ی اعلان</string>
+    <string name="onb_notifications_on">اعلان‌ها روشنه</string>
+    <string name="onb_phone_title">رسیدن یادآورها</string>
+    <string name="onb_phone_body">شیائومی‌ها اپ‌ها رو می‌خوابونن. این چند تا تنظیم مطمئن می‌کنه هیچ یادآوری گم نشه.</string>
+    <string name="onb_phone_open">تنظیم گوشی</string>
+    <string name="onb_backup_title">پشتیبان</string>
+    <string name="onb_backup_body">یه پوشه انتخاب کن تا هر هفته خودکار پشتیبان بگیرم. اپ اینترنت نداره؛ چیزی از گوشیت بیرون نمی‌ره.</string>
+    <string name="onb_backup_open">انتخاب پوشه</string>
+    <string name="onb_done_title">آماده‌ایم!</string>
+    <string name="onb_done_body">کارهاتو از دکمه‌ی «+» بساز. هر روز همین‌جا می‌گم الان نوبت چیه.</string>
+    <string name="onb_done_go">بریم سراغ امروز</string>
+
+    <!-- Slice 10: the Today widget (D67, D143). -->
+    <string name="widget_label">امروز فانوس</string>
+    <string name="widget_description">کارهای این بخش روز، با یه تیک.</string>
+    <string name="widget_count">%1$s از %2$s</string>
+    <string name="widget_empty">هنوز کاری نساختی. از اپ اضافه کن.</string>
+    <string name="widget_day_done">امروز کامل شد!</string>
+    <string name="widget_part_done">%1$s تموم شد. دمت گرم.</string>
+    <string name="widget_next_part">بعدی: %1$s</string>
+    <string name="widget_more">و %1$s تای دیگه</string>
+
+</resources>

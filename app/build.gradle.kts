@@ -66,9 +66,9 @@ android {
         buildConfig = true
     }
 
-    // Persian only (D87): keep no other languages from libraries in the APK.
+    // English and Persian (D174): keep no other languages from libraries in the APK.
     androidResources {
-        localeFilters += listOf("fa")
+        localeFilters += listOf("en", "fa")
     }
 
     testOptions {

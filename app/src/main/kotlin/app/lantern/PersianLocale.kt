@@ -4,7 +4,10 @@ import android.content.Context
 import android.content.res.Configuration
 import java.util.Locale
 
-/** The app always runs in Persian, right to left, whatever the phone's language (D87). */
+/**
+ * For now the app runs in Persian, right to left, whatever the phone's language. The strings exist in
+ * English too (D174); the «زبان» switch in Settings (D176, L7) will choose between them.
+ */
 object PersianLocale {
     val LOCALE: Locale = Locale.forLanguageTag("fa-IR")
 
