@@ -29,8 +29,8 @@ PHONE=$("$ADB" devices | awk 'NR>1 && $2=="device" && $1 !~ /^emulator-/ {print 
 if [ -n "$PHONE" ]; then
   echo "Installing on $PHONE…"
   "$ADB" -s "$PHONE" install -r "$APK"
-  "$ADB" -s "$PHONE" shell am start -n app.beaesthetic/.MainActivity >/dev/null
-  echo "Installed and opened «پیکر»."
+  "$ADB" -s "$PHONE" shell am start -n app.lantern/.MainActivity >/dev/null
+  echo "Installed and opened «فانوس»."
 else
   echo "No phone over USB. Connect it with USB debugging on and run: adb install -r $APK"
 fi
