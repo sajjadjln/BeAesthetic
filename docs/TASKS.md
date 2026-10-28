@@ -2,6 +2,10 @@
 
 _Last updated: 2026-10-27 (Today redesign with the characters, the character pick, Settings, the new-task sheet, the splash and the name «فانوس» / Lantern, D186–D190)_
 
+## Lantern v1 (branch `lantern`, 2026-10-28)
+
+**The plan is `docs/LANTERN-ROADMAP.md`:** splash, onboarding, Today (both layouts), Settings; goals as «در دست ساخت»; no workout. Slices L0–L9. **Next:** you confirm Q1–Q6 in the roadmap, then L0 (clean the branch) in a session on the laptop.
+
 ## New identity: to-do + goals (2026-10-21)
 
 The app is no longer a workout program. It has two parts: the to-do list (as built) and goals (set, break down, monitor). Decisions D148–D171; the spec is `SPEC.md` v1.0 (draft). The workout tables below describe the v0.x build, which stays installed and in use until the migration ships.
