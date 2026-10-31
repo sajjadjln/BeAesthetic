@@ -1,0 +1,396 @@
+<!doctype html>
+<html lang="fa">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lantern History Grid</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Estedad:wght@400;500;600;700;800&display=swap">
+<style>
+:root {
+  --page: #e4e9ec;
+  --sky1: #0b1622; --sky2: #12283a; --glow: #5fd3e6;
+  --t1: #f2f7fa; --t2: #a9bccb; --t3: #6f8799;
+  --special: #8f96f0;
+  --rgb: 95,211,230; --box1: #0f2232; --box2: #0a1520; --rim: #2a6478; --rim-hi: #cdeff6; --ink: #06202a;
+  --line: rgba(255,255,255,.16); --card: rgba(255,255,255,.05);
+  --gap: rgba(255,255,255,.08);
+  --px: polygon(0 6px, 6px 6px, 6px 0, calc(100% - 6px) 0, calc(100% - 6px) 6px, 100% 6px, 100% calc(100% - 6px), calc(100% - 6px) calc(100% - 6px), calc(100% - 6px) 100%, 6px 100%, 6px calc(100% - 6px), 0 calc(100% - 6px));
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --page: #05090d; } }
+:root[data-theme="dark"] { --page: #05090d; }
+* { box-sizing: border-box; margin: 0; }
+body { background: var(--page); font-family: "Estedad", system-ui, sans-serif; min-height: 100vh;
+  display: flex; flex-direction: column; align-items: center; gap: 18px; padding: 24px 16px; color: #233; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) body { color: #cdd; } }
+:root[data-theme="dark"] body { color: #cdd; }
+.cap { max-width: 380px; font: 500 13px/1.6 system-ui, sans-serif; direction: ltr; }
+.cap b { display: block; font-size: 15px; margin-bottom: 4px; }
+.ctl { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; max-width: 380px; direction: ltr; }
+.ctl button { font: 600 12.5px system-ui, sans-serif; padding: 7px 12px; border-radius: 16px; border: 1px solid #8aa3; background: none; color: inherit; cursor: pointer; }
+.ctl button.on { background: #12283a; color: #5fd3e6; border-color: #5fd3e6; }
+
+/* each character's theme (D187) */
+.phone[data-c="vampire"] { --sky1: #14070b; --sky2: #2e0f17; --glow: #ff5a6a; --rgb: 255,90,106; --box1: #2a1016; --box2: #17080c; --rim: #7a2433; --rim-hi: #ffd6dc; --ink: #2a0509; --t2: #cbaab0; --t3: #92707a; --special: #a99bf5; }
+.phone[data-c="wizard"]  { --sky1: #0e1013; --sky2: #23272d; --glow: #cfd6dd; --rgb: 207,214,221; --box1: #23272e; --box2: #121417; --rim: #5b636e; --rim-hi: #eef2f6; --ink: #15181c; --t2: #b4bac2; --t3: #7c838c; }
+.phone[data-c="goth"]    { --sky1: #100a1c; --sky2: #24173c; --glow: #b98cff; --rgb: 185,140,255; --box1: #21153a; --box2: #120b20; --rim: #563a8a; --rim-hi: #e7dbff; --ink: #1a0b33; --t2: #bdb0d2; --t3: #85799c; --special: #7fa8f5; }
+.phone { width: 360px; max-width: 100%; height: 780px; border-radius: 38px; overflow: hidden; position: relative;
+  background: radial-gradient(120% 60% at 50% 8%, var(--sky2), var(--sky1) 70%);
+  color: var(--t1); display: flex; flex-direction: column; box-shadow: 0 20px 60px rgba(0,0,0,.35); }
+.status { display: flex; justify-content: space-between; padding: 14px 26px 0; font-size: 12px; color: var(--t2); }
+.screen { position: absolute; inset: 34px 0 0; display: flex; flex-direction: column; transition: transform .28s ease, opacity .28s; }
+.screen.off { transform: translateX(calc(var(--dir) * -100%)); opacity: 0; pointer-events: none; }
+.scroll { flex: 1; overflow-y: auto; padding-bottom: 40px; scrollbar-width: none; }
+.scroll::-webkit-scrollbar { display: none; }
+
+/* top bar */
+.bar { display: flex; align-items: center; gap: 10px; padding: 10px 16px 0; }
+.back { width: 36px; height: 36px; display: grid; place-items: center; cursor: pointer; color: var(--t2); }
+.back svg { width: 20px; height: 20px; fill: currentColor; }
+[dir="rtl"] .back svg { transform: scaleX(-1); }
+.bar h1 { font: 800 19px "Estedad"; color: var(--glow); }
+
+/* summary line (no streaks: only what was done) */
+.sum { margin: 14px 16px 0; padding: 14px 16px; background: linear-gradient(var(--box1), var(--box2)); clip-path: var(--px);
+  box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--glow) 40%, transparent); }
+.sum .big { font: 800 22px/1.3 "Estedad"; color: var(--glow); }
+.sum .s { font: 500 12.5px/1.6 "Estedad"; color: var(--t2); }
+
+.sec { padding: 22px 22px 8px; font: 800 12.5px "Estedad"; color: var(--t3); display: flex; gap: 8px; align-items: center; }
+.sec::after { content: ""; flex: 1; height: 2px; background: repeating-linear-gradient(90deg, var(--line) 0 4px, transparent 4px 8px); }
+
+/* the grid: weeks are columns, Saturday on top, time flows with the reading direction */
+.gridwrap { display: flex; gap: 6px; padding: 0 16px; }
+.dows { display: grid; grid-template-rows: 16px repeat(7, 13px); row-gap: 3px; font: 600 9.5px/13px "Estedad"; color: var(--t3); flex: none; }
+.gscroll { overflow-x: auto; scrollbar-width: none; flex: 1; }
+.gscroll::-webkit-scrollbar { display: none; }
+.grid { display: grid; grid-auto-flow: column; grid-template-rows: 16px repeat(7, 13px); grid-auto-columns: 13px; gap: 3px; width: max-content; }
+.mon { font: 700 9.5px/16px "Estedad"; color: var(--t2); white-space: nowrap; overflow: visible; }
+.c { width: 13px; height: 13px; background: var(--gap); cursor: pointer; border-radius: 2px; }
+.c.l1 { background: color-mix(in srgb, var(--glow) 30%, transparent); }
+.c.l2 { background: color-mix(in srgb, var(--glow) 55%, transparent); }
+.c.l3 { background: color-mix(in srgb, var(--glow) 80%, transparent); }
+.c.l4 { background: var(--glow); box-shadow: 0 0 5px rgba(var(--rgb), .5); }
+.c.sp { background: color-mix(in srgb, var(--special) 55%, transparent); }
+.c.pre { background: none; box-shadow: inset 0 0 0 1px rgba(255,255,255,.14); border-radius: 50%; transform: scale(.45); cursor: default; }
+.c.fut { background: none; cursor: default; }
+.c.today { outline: 1.5px solid var(--t1); outline-offset: 1px; }
+.c.nd { background: rgba(255,255,255,.025); cursor: default; }     /* task not due that day */
+.c.sel { outline: 2px solid var(--rim-hi); outline-offset: 1px; }
+
+.legend { display: flex; align-items: center; gap: 4px; padding: 10px 22px 0; font: 600 10.5px "Estedad"; color: var(--t3); flex-wrap: wrap; }
+.legend .c { cursor: default; width: 11px; height: 11px; }
+.legend span { margin-inline: 4px 8px; }
+
+/* repeating tasks, each with its own strip */
+.list { display: flex; flex-direction: column; gap: 8px; padding: 0 16px; }
+.tile { display: flex; flex-direction: column; gap: 8px; padding: 12px 14px; background: var(--card); clip-path: var(--px);
+  box-shadow: inset 0 0 0 2px rgba(255,255,255,.08); cursor: pointer; }
+.tile:hover { background: rgba(255,255,255,.08); }
+.tile .row { display: flex; align-items: baseline; gap: 8px; }
+.tile .t { font: 700 15px/1.5 "Estedad"; flex: 1; }
+.tile .n { font: 700 12px "Estedad"; color: var(--glow); }
+.tile .s { font: 500 11.5px "Estedad"; color: var(--t3); }
+.strip { display: grid; grid-auto-flow: column; grid-template-rows: repeat(7, 6px); grid-auto-columns: 6px; gap: 2px; direction: inherit; }
+.strip i { width: 6px; height: 6px; background: var(--gap); }
+.strip i.d { background: var(--glow); }
+.strip i.nd { background: rgba(255,255,255,.025); }
+.strip i.fut, .strip i.pre { background: none; }
+
+/* task track screen */
+.tbig { padding: 14px 22px 0; }
+.tbig .t { font: 800 20px/1.4 "Estedad"; }
+.tbig .s { font: 500 12.5px "Estedad"; color: var(--t3); }
+.facts { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 14px 16px 0; }
+.fact { padding: 12px 14px; background: var(--card); clip-path: var(--px); box-shadow: inset 0 0 0 2px rgba(255,255,255,.08); }
+.fact b { display: block; font: 800 20px "Estedad"; color: var(--glow); }
+.fact span { font: 500 11.5px "Estedad"; color: var(--t2); }
+.months { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; padding: 0 16px; align-items: end; height: 92px; }
+.mbar { display: flex; flex-direction: column; align-items: center; gap: 4px; height: 100%; justify-content: flex-end; }
+.mbar i { width: 100%; background: color-mix(in srgb, var(--glow) 70%, transparent); min-height: 2px; }
+.mbar span { font: 600 10px "Estedad"; color: var(--t3); }
+.mbar em { font: 700 10.5px "Estedad"; color: var(--t2); font-style: normal; }
+
+/* day sheet: only what was done (D37) */
+.scrim { position: absolute; inset: 0; background: rgba(0,0,0,.45); opacity: 0; pointer-events: none; transition: opacity .2s; z-index: 5; }
+.scrim.on { opacity: 1; pointer-events: auto; }
+.sheet { position: absolute; inset-inline: 0; bottom: 0; z-index: 6; padding: 10px 18px 28px; background: linear-gradient(var(--box1), var(--box2));
+  box-shadow: inset 0 2px 0 var(--rim), 0 -10px 30px rgba(0,0,0,.4); transform: translateY(105%); transition: transform .25s ease; max-height: 70%; overflow-y: auto; }
+.sheet.on { transform: none; }
+.sheet .grab { width: 40px; height: 4px; background: var(--line); margin: 0 auto 12px; }
+.sheet h2 { font: 800 17px "Estedad"; color: var(--glow); }
+.sheet .g { font: 500 12px "Estedad"; color: var(--t3); margin-bottom: 12px; }
+.sheet .lvl { font: 700 12.5px "Estedad"; color: var(--t2); margin-bottom: 10px; }
+.done { display: flex; align-items: center; gap: 10px; padding: 9px 0; border-top: 1px dashed var(--line); font: 600 14px "Estedad"; }
+.done i { width: 10px; height: 10px; background: var(--glow); flex: none; }
+.done span { flex: 1; }
+.done em { font: 500 12px "Estedad"; color: var(--t3); font-style: normal; }
+.none { font: 600 13.5px/1.8 "Estedad"; color: var(--t2); padding: 8px 0; }
+.chips { display: flex; gap: 6px; margin-top: 14px; flex-wrap: wrap; }
+.chip { font: 700 12px "Estedad"; padding: 6px 10px; box-shadow: inset 0 0 0 1.5px var(--line); color: var(--t2); cursor: pointer; }
+.chip.on { color: var(--special); box-shadow: inset 0 0 0 1.5px var(--special); }
+
+/* the Today header, to show the way in */
+.entry { width: 360px; max-width: 100%; padding: 12px 18px; border-radius: 18px; background: radial-gradient(120% 120% at 50% 0, #12283a, #0b1622);
+  color: #f2f7fa; display: flex; justify-content: space-between; align-items: center; cursor: pointer; box-shadow: 0 8px 30px rgba(0,0,0,.25); }
+.entry .d { font: 800 19px "Estedad"; color: #5fd3e6; }
+.entry .d small { font: 500 12px "Estedad"; color: #6f8799; margin-inline-start: 6px; }
+.entry .hint { font: 600 11.5px "Estedad"; color: #a9bccb; display: flex; gap: 4px; align-items: center; }
+.entry .wk { display: flex; gap: 3px; }
+.entry .wk i { width: 8px; height: 8px; background: rgba(255,255,255,.1); }
+.entry .wk i.a { background: #5fd3e6; }
+.entry .wk i.b { background: color-mix(in srgb, #5fd3e6 50%, transparent); }
+</style>
+</head>
+<body>
+
+<div class="cap"><b>History: the track record (D198)</b>
+Tap the date on Today to open it. One square per day, colored by the share of due tasks done, in the character's color. Tap a square for what was done that day. Tap a repeating task for its own grid. No streaks, no misses listed, never red.</div>
+
+<div class="ctl" id="ctlC">
+  <button data-c="knight" class="on">Knight</button><button data-c="vampire">Vampire</button><button data-c="goth">Goth</button><button data-c="wizard">Wizard</button>
+</div>
+<div class="ctl" id="ctlL">
+  <button data-l="fa" class="on">فارسی</button><button data-l="en">English</button>
+  <button data-t="now" class="on">Now (3 weeks in)</button><button data-t="later">Later (6 months in)</button>
+</div>
+
+<div class="entry" id="entry" dir="rtl">
+  <div class="d" id="entryD"></div>
+  <div class="hint"><span class="wk" id="entryWk"></span><span id="entryH"></span></div>
+</div>
+
+<div class="phone" id="phone" data-c="knight" dir="rtl">
+  <div class="status"><span>۹:۴۱</span><span>▮▮▮ ◔</span></div>
+
+  <section class="screen" id="sHist">
+    <div class="bar"><div class="back" id="backToday"><svg viewBox="0 0 24 24"><path d="M20 11H7.8l5.6-5.6L12 4l-8 8 8 8 1.4-1.4L7.8 13H20z"/></svg></div><h1 id="hTitle"></h1></div>
+    <div class="scroll">
+      <div class="sum"><div class="big" id="sumBig"></div><div class="s" id="sumS"></div></div>
+      <div class="sec" id="secGrid"></div>
+      <div class="gridwrap"><div class="dows" id="dows"></div><div class="gscroll" id="gs"><div class="grid" id="grid"></div></div></div>
+      <div class="legend" id="legend"></div>
+      <div class="sec" id="secTasks"></div>
+      <div class="list" id="tasks"></div>
+    </div>
+  </section>
+
+  <section class="screen off" id="sTask">
+    <div class="bar"><div class="back" id="backHist"><svg viewBox="0 0 24 24"><path d="M20 11H7.8l5.6-5.6L12 4l-8 8 8 8 1.4-1.4L7.8 13H20z"/></svg></div><h1 id="tTitleBar"></h1></div>
+    <div class="scroll">
+      <div class="tbig"><div class="t" id="tName"></div><div class="s" id="tRepeat"></div></div>
+      <div class="facts" id="facts"></div>
+      <div class="sec" id="secTGrid"></div>
+      <div class="gridwrap"><div class="dows" id="dows2"></div><div class="gscroll" id="gs2"><div class="grid" id="grid2"></div></div></div>
+      <div class="legend" id="legend2"></div>
+      <div class="sec" id="secMonths"></div>
+      <div class="months" id="months"></div>
+    </div>
+  </section>
+
+  <div class="scrim" id="scrim"></div>
+  <div class="sheet" id="sheet"></div>
+</div>
+
+<script>
+const S = {
+  fa: { title: "سابقه", shown: n => `${n} روز اومدی`, sumS: (a, b) => `از ${a} تا امروز · روزهایی که حداقل یک کار رو انجام دادی`,
+    grid: "روزها", tasks: "کارهای تکراری", times: n => `${n} بار`, dows: ["ش", "", "د", "", "چ", "", "ج"],
+    less: "کم", more: "زیاد", special: "روز خاص", gapL: "خالی", pre: "قبل از اپ", notDue: "روزش نبود",
+    nothing: "چیزی ثبت نشد.", doneOf: (d, n) => `${d} از ${n} کار`, setSpecial: "روز خاص:", sick: "مریض", travel: "سفر", off: "استراحت",
+    total: "کل دفعه‌ها", month: "این ماه", thisMonthOf: "", tgrid: "روزهای این کار", tmonths: "هر ماه",
+    entryH: "سابقه", repeat: { daily: "هر روز", every2: "هر ۲ روز", weekly: "جمعه‌ها", weekdays: "شنبه تا چهارشنبه" },
+    specialName: { sick: "مریض", travel: "سفر", off: "استراحت" } },
+  en: { title: "History", shown: n => `${n} days shown up`, sumS: (a, b) => `${a} to today · days with at least one thing done`,
+    grid: "Days", tasks: "Repeating tasks", times: n => `${n} times`, dows: ["Sa", "", "Mo", "", "We", "", "Fr"],
+    less: "Less", more: "More", special: "Special day", gapL: "Gap", pre: "Before the app", notDue: "Not due",
+    nothing: "Nothing logged.", doneOf: (d, n) => `${d} of ${n} tasks`, setSpecial: "Special day:", sick: "Sick", travel: "Travel", off: "Off",
+    total: "All times", month: "This month", tgrid: "Days for this task", tmonths: "Each month",
+    entryH: "History", repeat: { daily: "Every day", every2: "Every 2 days", weekly: "Fridays", weekdays: "Saturday to Wednesday" },
+    specialName: { sick: "Sick", travel: "Travel", off: "Off" } },
+};
+const TASKS = [
+  { id: 1, fa: "مسواک شب", en: "Brush teeth (night)", rep: "daily", p: .85, h: 23 },
+  { id: 2, fa: "روتین پوست", en: "Skincare", rep: "daily", p: .6, h: 22 },
+  { id: 3, fa: "شامپو", en: "Shampoo", rep: "every2", p: .75, h: 9 },
+  { id: 4, fa: "میان‌وعده‌ی فردا", en: "Prep tomorrow's snack", rep: "weekdays", p: .55, h: 21 },
+  { id: 5, fa: "کوتاه کردن ناخن", en: "Trim nails", rep: "weekly", p: .7, h: 18 },
+];
+const JM = ["فروردین","اردیبهشت","خرداد","تیر","مرداد","شهریور","مهر","آبان","آذر","دی","بهمن","اسفند"];
+const GM = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+const WD_FA = ["یکشنبه","دوشنبه","سه‌شنبه","چهارشنبه","پنجشنبه","جمعه","شنبه"];
+const WD_EN = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+
+let lang = "fa", when = "now", taskOpen = null, sel = null;
+const DAY = 864e5;
+const D = (y, m, d) => Date.UTC(y, m - 1, d);
+const INSTALL = D(2026, 10, 9);
+const today = () => when === "now" ? D(2026, 10, 31) : D(2027, 4, 28);
+
+function g2j(t) {
+  const x = new Date(t), gy = x.getUTCFullYear(), gm = x.getUTCMonth() + 1, gd = x.getUTCDate();
+  const gdm = [0,31,59,90,120,151,181,212,243,273,304,334], gy2 = gm > 2 ? gy + 1 : gy;
+  let days = 355666 + 365 * gy + Math.floor((gy2 + 3) / 4) - Math.floor((gy2 + 99) / 100) + Math.floor((gy2 + 399) / 400) + gd + gdm[gm - 1];
+  let jy = -1595 + 33 * Math.floor(days / 12053); days %= 12053; jy += 4 * Math.floor(days / 1461); days %= 1461;
+  if (days > 365) { jy += Math.floor((days - 1) / 365); days = (days - 1) % 365; }
+  const jm = days < 186 ? 1 + Math.floor(days / 31) : 7 + Math.floor((days - 186) / 30);
+  const jd = days < 186 ? 1 + days % 31 : 1 + (days - 186) % 30;
+  return [jy, jm, jd];
+}
+const num = n => lang === "fa" ? String(n).replace(/\d/g, d => "۰۱۲۳۴۵۶۷۸۹"[d]) : String(n);
+const fmtDate = t => {
+  const x = new Date(t), [jy, jm, jd] = g2j(t);
+  const g = `${x.getUTCDate()} ${GM[x.getUTCMonth()]} ${x.getUTCFullYear()}`;
+  return lang === "fa" ? [`${WD_FA[x.getUTCDay()]} ${num(jd)} ${JM[jm - 1]}`, g] : [`${WD_EN[x.getUTCDay()]}, ${g}`, `${num(jd)} ${JM[jm - 1]} ${num(jy)}`];
+};
+const fmtShort = t => { const x = new Date(t), [, jm, jd] = g2j(t); return lang === "fa" ? `${num(jd)} ${JM[jm - 1]}` : `${GM[x.getUTCMonth()]} ${x.getUTCDate()}`; };
+const row = t => (new Date(t).getUTCDay() + 1) % 7;   // Saturday = 0
+
+// a fixed pseudo-random so the mockup looks the same every time
+const rnd = (a, b) => { let h = (a * 2654435761 ^ b * 40503) >>> 0; h = Math.imul(h ^ h >>> 15, 2246822507) >>> 0; h = Math.imul(h ^ h >>> 13, 3266489909) >>> 0; return ((h ^ h >>> 16) >>> 0) / 4294967296; };
+const isDue = (task, t) => {
+  const r = row(t), n = Math.round((t - INSTALL) / DAY);
+  return task.rep === "daily" || (task.rep === "every2" && n % 2 === 0) || (task.rep === "weekly" && r === 6) || (task.rep === "weekdays" && r <= 4);
+};
+const SPECIAL = { [D(2026, 12, 3)]: "sick", [D(2026, 12, 4)]: "sick", [D(2027, 1, 22)]: "travel", [D(2027, 1, 23)]: "travel", [D(2027, 1, 24)]: "travel", [D(2027, 3, 21)]: "off", [D(2026, 10, 24)]: "off" };
+const skipDay = t => rnd(Math.round(t / DAY), 7) < .08;  // the app never opened that day: a gray gap
+function dayInfo(t) {
+  if (t < INSTALL) return { pre: true };
+  if (t > today()) return { fut: true };
+  const due = TASKS.filter(k => isDue(k, t));
+  const done = skipDay(t) ? [] : due.filter(k => rnd(Math.round(t / DAY), k.id) < k.p)
+    .map(k => ({ k, at: k.h * 60 + Math.floor(rnd(k.id, Math.round(t / DAY)) * 55) })).sort((a, b) => a.at - b.at);
+  return { due, done, special: SPECIAL[t] };
+}
+const level = i => !i.done.length ? 0 : Math.min(4, Math.ceil(i.done.length / i.due.length * 4));
+
+function weeks() {
+  const end = today() + (6 - row(today())) * DAY;
+  let start = INSTALL - row(INSTALL) * DAY;
+  const min = end - (20 * 7 - 1) * DAY;
+  if (start > min) start = min;                     // early on, pad with "before the app" dots (D56)
+  const out = []; for (let w = start; w <= end; w += 7 * DAY) out.push(w); return out;
+}
+
+function drawGrid(el, gs, cellFor, labelsEl) {
+  el.innerHTML = "";
+  const ws = weeks(); let lastLabel = null;
+  ws.forEach(w => {
+    const m = document.createElement("div"); m.className = "mon";
+    for (let r = 0; r < 7; r++) {             // label the week a new month starts in
+      const t = w + r * DAY, [, jm, jd] = g2j(t), x = new Date(t);
+      const key = lang === "fa" ? jm : x.getUTCMonth();
+      if ((lang === "fa" ? jd : x.getUTCDate()) === 1 || lastLabel === null) { if (key !== lastLabel) { m.textContent = lang === "fa" ? JM[jm - 1] : GM[x.getUTCMonth()]; lastLabel = key; } break; }
+    }
+    el.appendChild(m);
+    for (let r = 0; r < 7; r++) el.appendChild(cellFor(w + r * DAY));
+  });
+  labelsEl.innerHTML = "<div></div>" + S[lang].dows.map(d => `<div>${d}</div>`).join("");
+  requestAnimationFrame(() => { gs.scrollLeft = lang === "fa" ? -gs.scrollWidth : gs.scrollWidth; });  // today in view
+}
+
+function render() {
+  const s = S[lang], ph = document.getElementById("phone");
+  ph.dir = lang === "fa" ? "rtl" : "ltr"; ph.style.setProperty("--dir", lang === "fa" ? -1 : 1);
+  document.getElementById("entry").dir = ph.dir;
+  const [d1, d2] = fmtDate(today());
+  document.getElementById("entryD").innerHTML = `${d1}<small>${d2}</small>`;
+  document.getElementById("entryH").textContent = s.entryH + (lang === "fa" ? " ←" : " →");
+  document.getElementById("entryWk").innerHTML = "<i class=a></i><i class=b></i><i class=a></i><i></i><i class=a></i><i class=b></i><i></i>";
+  document.getElementById("hTitle").textContent = s.title;
+
+  let shown = 0;
+  for (let t = INSTALL; t <= today(); t += DAY) if (dayInfo(t).done.length) shown++;
+  document.getElementById("sumBig").textContent = s.shown(num(shown));
+  document.getElementById("sumS").textContent = s.sumS(fmtShort(INSTALL));
+  document.getElementById("secGrid").textContent = s.grid;
+  drawGrid(document.getElementById("grid"), document.getElementById("gs"), t => {
+    const c = document.createElement("div"), i = dayInfo(t);
+    c.className = "c " + (i.pre ? "pre" : i.fut ? "fut" : i.special ? "sp" : "l" + level(i));
+    if (t === today()) c.classList.add("today");
+    if (!i.pre && !i.fut) c.onclick = () => openDay(t, null, c);
+    return c;
+  }, document.getElementById("dows"));
+  document.getElementById("legend").innerHTML =
+    `<span style="margin-inline-start:0">${s.less}</span><i class="c"></i><i class="c l1"></i><i class="c l2"></i><i class="c l3"></i><i class="c l4"></i><span>${s.more}</span>` +
+    `<i class="c sp"></i><span>${s.special}</span><i class="c pre" style="transform:scale(.6)"></i><span>${s.pre}</span>`;
+
+  document.getElementById("secTasks").textContent = s.tasks;
+  const list = document.getElementById("tasks"); list.innerHTML = "";
+  TASKS.forEach(k => {
+    let n = 0; for (let t = INSTALL; t <= today(); t += DAY) if (!dayInfo(t).pre && dayInfo(t).done.some(x => x.k === k)) n++;
+    const el = document.createElement("div"); el.className = "tile";
+    const ws = weeks().slice(-12);
+    const strip = ws.map(w => [0,1,2,3,4,5,6].map(r => { const t = w + r * DAY, i = dayInfo(t);
+      return `<i class="${i.pre ? "pre" : i.fut ? "fut" : i.done.some(x => x.k === k) ? "d" : isDue(k, t) ? "" : "nd"}"></i>`; }).join("")).join("");
+    el.innerHTML = `<div class="row"><div class="t">${k[lang]}</div><div class="n">${s.times(num(n))}</div></div><div class="s">${s.repeat[k.rep]}</div><div class="strip">${strip}</div>`;
+    el.onclick = () => openTask(k);
+    list.appendChild(el);
+  });
+  if (taskOpen) openTask(taskOpen, true);
+}
+
+function openTask(k, keep) {
+  taskOpen = k; const s = S[lang];
+  document.getElementById("sHist").classList.add("off"); document.getElementById("sTask").classList.remove("off");
+  document.getElementById("tTitleBar").textContent = s.title;
+  document.getElementById("tName").textContent = k[lang];
+  document.getElementById("tRepeat").textContent = s.repeat[k.rep];
+  let n = 0, nm = 0; const [ty, tm] = g2j(today()), byMonth = {};
+  for (let t = INSTALL; t <= today(); t += DAY) if (dayInfo(t).done.some(x => x.k === k)) {
+    n++; const [jy, jm] = g2j(t), key = lang === "fa" ? jy * 12 + jm : new Date(t).getUTCFullYear() * 12 + new Date(t).getUTCMonth() + 1;
+    byMonth[key] = (byMonth[key] || 0) + 1;
+    if (lang === "fa" ? (jy === ty && jm === tm) : (new Date(t).getUTCMonth() === new Date(today()).getUTCMonth())) nm++;
+  }
+  document.getElementById("facts").innerHTML = `<div class="fact"><b>${num(n)}</b><span>${s.total}</span></div><div class="fact"><b>${num(nm)}</b><span>${s.month}</span></div>`;
+  document.getElementById("secTGrid").textContent = s.tgrid;
+  drawGrid(document.getElementById("grid2"), document.getElementById("gs2"), t => {
+    const c = document.createElement("div"), i = dayInfo(t);
+    const did = !i.pre && !i.fut && i.done.some(x => x.k === k);
+    c.className = "c " + (i.pre ? "pre" : i.fut ? "fut" : did ? "l4" : i.special ? "sp" : isDue(k, t) ? "" : "nd");
+    if (t === today()) c.classList.add("today");
+    if (!i.pre && !i.fut) c.onclick = () => openDay(t, k, c);
+    return c;
+  }, document.getElementById("dows2"));
+  document.getElementById("legend2").innerHTML =
+    `<i class="c l4"></i><span>${lang === "fa" ? "انجام شد" : "Done"}</span><i class="c"></i><span>${s.gapL}</span><i class="c nd" style="box-shadow:inset 0 0 0 1px rgba(255,255,255,.1)"></i><span>${s.notDue}</span>`;
+  document.getElementById("secMonths").textContent = s.tmonths;
+  const keys = []; const [jy0, jm0] = g2j(today()); const x = new Date(today());
+  for (let i = 5; i >= 0; i--) {
+    if (lang === "fa") { let m = jm0 - i, y = jy0; while (m < 1) { m += 12; y--; } keys.push([y * 12 + m, JM[m - 1]]); }
+    else { let m = x.getUTCMonth() + 1 - i, y = x.getUTCFullYear(); while (m < 1) { m += 12; y--; } keys.push([y * 12 + m, GM[m - 1]]); }
+  }
+  const max = Math.max(1, ...keys.map(([kk]) => byMonth[kk] || 0));
+  document.getElementById("months").innerHTML = keys.map(([kk, name]) => { const v = byMonth[kk] || 0;
+    return `<div class="mbar">${v ? `<em>${num(v)}</em>` : ""}<i style="height:${v / max * 56}px;${v ? "" : "background:var(--gap)"}"></i><span>${name}</span></div>`; }).join("");
+}
+
+function openDay(t, k, cell) {
+  const s = S[lang], i = dayInfo(t), [a, b] = fmtDate(t), sh = document.getElementById("sheet");
+  document.querySelectorAll(".c.sel").forEach(e => e.classList.remove("sel")); cell.classList.add("sel");
+  const done = k ? i.done.filter(x => x.k === k) : i.done;
+  const hm = m => num(String(Math.floor(m / 60) % 24).padStart(2, "0") + ":" + String(m % 60).padStart(2, "0"));
+  const editable = today() - t <= DAY;  // the edit window: today and yesterday (D17)
+  sh.innerHTML = `<div class="grab"></div><h2>${a}</h2><div class="g">${b}</div>` +
+    (i.special ? `<div class="lvl" style="color:var(--special)">${s.specialName[i.special]}</div>` : "") +
+    (done.length ? (!k ? `<div class="lvl">${s.doneOf(num(i.done.length), num(i.due.length))}</div>` : "") +
+      done.map(x => `<div class="done"><i></i><span>${x.k[lang]}</span><em>${hm(x.at)}</em></div>`).join("")
+      : `<div class="none">${s.nothing}</div>`) +
+    (editable && !k ? `<div class="chips"><span class="chip" style="box-shadow:none;cursor:default">${s.setSpecial}</span>` +
+      ["sick", "travel", "off"].map(x => `<span class="chip${i.special === x ? " on" : ""}">${s[x]}</span>`).join("") + "</div>" : "");
+  sh.classList.add("on"); document.getElementById("scrim").classList.add("on");
+}
+function closeDay() { document.getElementById("sheet").classList.remove("on"); document.getElementById("scrim").classList.remove("on"); document.querySelectorAll(".c.sel").forEach(e => e.classList.remove("sel")); }
+document.getElementById("scrim").onclick = closeDay;
+document.getElementById("backHist").onclick = () => { taskOpen = null; closeDay(); document.getElementById("sTask").classList.add("off"); document.getElementById("sHist").classList.remove("off"); };
+document.getElementById("backToday").onclick = () => document.getElementById("entry").animate([{ transform: "scale(1)" }, { transform: "scale(1.03)" }, { transform: "scale(1)" }], 400);
+document.getElementById("entry").onclick = () => { taskOpen = null; closeDay(); document.getElementById("sTask").classList.add("off"); document.getElementById("sHist").classList.remove("off"); };
+document.getElementById("ctlC").onclick = e => { const c = e.target.dataset.c; if (!c) return;
+  document.querySelectorAll("#ctlC button").forEach(b => b.classList.toggle("on", b === e.target)); document.getElementById("phone").dataset.c = c; };
+document.getElementById("ctlL").onclick = e => { const { l, t } = e.target.dataset; if (!l && !t) return;
+  if (l) { lang = l; document.querySelectorAll("#ctlL [data-l]").forEach(b => b.classList.toggle("on", b === e.target)); }
+  if (t) { when = t; document.querySelectorAll("#ctlL [data-t]").forEach(b => b.classList.toggle("on", b === e.target)); }
+  closeDay(); render(); };
+render();
+</script>
+</body>
+</html>

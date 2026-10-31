@@ -120,6 +120,8 @@ data class TodayActions(
     val openBackup: () -> Unit = {},
     /** «+ کار جدید» (today-v3/v4 A, D146): the simple sheet on «امروز» in the part being looked at. */
     val addTask: () -> Unit = {},
+    /** Tapping the date opens History (D198). */
+    val openHistory: () -> Unit = {},
 )
 
 @Composable
@@ -128,6 +130,7 @@ fun TodayRoute(
     onOpenSettings: () -> Unit,
     onFixReminders: () -> Unit,
     onOpenBackup: () -> Unit,
+    onOpenHistory: () -> Unit = {},
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     // «یه چیز اضافه کن» opens the simple sheet on «هر وقت» in the part being looked at (D128).
@@ -146,6 +149,7 @@ fun TodayRoute(
             addAnytime = { adding = (state?.selectedPart ?: Part.MORNING) to RepeatKind.ANYTIME },
             addTask = { adding = (state?.selectedPart ?: Part.MORNING) to RepeatKind.ONCE },
             openBackup = onOpenBackup,
+            openHistory = onOpenHistory,
         ),
     )
     val s = state

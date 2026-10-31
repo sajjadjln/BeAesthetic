@@ -32,6 +32,10 @@ interface TaskDao {
     @Query("SELECT * FROM task WHERE archivedAt IS NULL ORDER BY part, sortOrder, id")
     suspend fun active(): List<TaskEntity>
 
+    /** Archived tasks too, so history keeps their names. */
+    @Query("SELECT * FROM task")
+    fun observeAll(): Flow<List<TaskEntity>>
+
     @Insert
     suspend fun insertAll(tasks: List<TaskEntity>)
 

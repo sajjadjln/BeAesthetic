@@ -150,7 +150,7 @@ private fun Header(state: TodayUiState, actions: TodayActions) {
             weekdays[Weekdays.index(state.date.dayOfWeek)] + " " + jalaliDayMonth(state.date),
             style = Ba.type.headline,
             color = c.glow,
-            modifier = Modifier.weight(1f),
+            modifier = Modifier.weight(1f).clip(Px.Small).clickable(role = Role.Button, onClickLabel = stringResource(R.string.cd_open_history), onClick = actions.openHistory),
         )
         RoundIconButton(BaIcons.Leaf, stringResource(R.string.cd_minimum_day), actions.toggleMinimum, selected = state.minimumMode)
         RoundIconButton(BaIcons.Gear, stringResource(R.string.cd_settings), actions.openSettings)

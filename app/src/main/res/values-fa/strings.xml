@@ -422,4 +422,31 @@
         <item>گربه‌م خوابیده. فردا.</item>
     </string-array>
 
+    <!-- History (D198) -->
+    <string name="history_title">سابقه</string>
+    <string name="cd_open_history">باز کردن سابقه</string>
+    <string name="history_shown_up">%1$s روز اومدی</string>
+    <string name="history_since">از %1$s · روزهایی که حداقل یک کار رو انجام دادی</string>
+    <string name="history_days">روزها</string>
+    <string name="history_repeating">کارهای تکراری</string>
+    <string name="history_no_repeating">کارهای تکراری اینجا با سابقه‌ی خودشون می‌آن.</string>
+    <string name="history_times">%1$s بار</string>
+    <string name="history_less">کم</string>
+    <string name="history_more">زیاد</string>
+    <string name="history_special">روز خاص</string>
+    <string name="history_before_app">قبل از اپ</string>
+    <string name="history_done">انجام شد</string>
+    <string name="history_gap">خالی</string>
+    <string name="history_not_due">روزش نبود</string>
+    <string name="history_nothing">چیزی ثبت نشد.</string>
+    <string name="history_done_of">%1$s از %2$s کار</string>
+    <string name="history_set_special">روز خاص:</string>
+    <string name="history_all_times">کل دفعه‌ها</string>
+    <string name="history_this_month">این ماه</string>
+    <string name="history_task_days">روزهای این کار</string>
+    <string name="history_each_month">هر ماه</string>
+    <string name="special_sick">مریض</string>
+    <string name="special_travel">سفر</string>
+    <string name="special_off">استراحت</string>
+
 </resources>

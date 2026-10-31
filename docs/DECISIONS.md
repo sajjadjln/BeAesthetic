@@ -365,3 +365,9 @@ Research: `docs/research/plugin-platform-research.md` («research §n»). Plan: 
 - "RTL and Persian digits" in the plugin UI standard (D172) → follow the app's language and direction (D175).
 - Plugin code sandboxed by Zipline/QuickJS alone (D166) → Zipline inside an isolated process with no permissions (D177).
 - The plugin's own UI as a likely sandboxed WebView (D172) → a host-drawn free layout; a WebView only as a possible later level ③ (D178).
+
+## History (2026-10-31)
+
+| # | Decision | Why | Status |
+|---|---|---|---|
+| D198 | **History: the track record.** Tapping the date on Today opens «سابقه» / History (Goals isn't built, so D160's entry point waits). ① A GitHub-style grid of days from install to today: weeks as columns, Saturday on top, time flowing with the reading direction (newest at the left in Persian), scrolls, opens on today; early on it pads to 20 weeks with «قبل از اپ» dots (D56). Squares in the character's theme color, 4 levels by the share of due tasks done; special days indigo; a day with nothing done is a gray gap. A summary «N روز اومدی», no streak. ② Tap a square: a sheet with only what was done, with times (D37); today and yesterday can be set as a special day there. ③ Each repeating task has a 12-week strip in a list; tap it for its own grid: done = theme color, due and not done = gray gap, not due = faint. Plus all-time count, this month's count and a 6-month bar chart. Built from the existing `completion` and `day` tables; nothing new is stored. Mockup `docs/design/history.html`. | User: "that GitHub kinda looking track record" for each repeating task and each day; picked the theme color for done and all recommended options. | Built; checked on an emulator, not yet on the phone |

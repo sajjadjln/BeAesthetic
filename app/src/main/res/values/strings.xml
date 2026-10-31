@@ -423,4 +423,31 @@
         <item>The cat is already asleep. Tomorrow.</item>
     </string-array>
 
+    <!-- History (D198) -->
+    <string name="history_title">History</string>
+    <string name="cd_open_history">Open history</string>
+    <string name="history_shown_up">%1$s days shown up</string>
+    <string name="history_since">Since %1$s · days with at least one thing done</string>
+    <string name="history_days">Days</string>
+    <string name="history_repeating">Repeating tasks</string>
+    <string name="history_no_repeating">Tasks that repeat show up here with their own track record.</string>
+    <string name="history_times">%1$s times</string>
+    <string name="history_less">Less</string>
+    <string name="history_more">More</string>
+    <string name="history_special">Special day</string>
+    <string name="history_before_app">Before the app</string>
+    <string name="history_done">Done</string>
+    <string name="history_gap">Gap</string>
+    <string name="history_not_due">Not due</string>
+    <string name="history_nothing">Nothing logged.</string>
+    <string name="history_done_of">%1$s of %2$s tasks</string>
+    <string name="history_set_special">Special day:</string>
+    <string name="history_all_times">All times</string>
+    <string name="history_this_month">This month</string>
+    <string name="history_task_days">Days for this task</string>
+    <string name="history_each_month">Each month</string>
+    <string name="special_sick">Sick</string>
+    <string name="special_travel">Travel</string>
+    <string name="special_off">Off</string>
+
 </resources>

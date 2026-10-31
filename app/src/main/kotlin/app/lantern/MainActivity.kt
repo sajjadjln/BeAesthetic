@@ -62,6 +62,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import app.lantern.ui.backup.BackupRoute as BackupScreenRoute
 import app.lantern.ui.backup.BackupViewModel
+import app.lantern.ui.history.HistoryRoute as HistoryScreenRoute
+import app.lantern.ui.history.TaskHistoryRoute as TaskHistoryScreenRoute
+import app.lantern.ui.history.HistoryViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import app.lantern.ui.theme.LanternCharacter
 import app.lantern.ui.theme.BaMotion
@@ -86,6 +89,8 @@ import kotlinx.serialization.Serializable
 @Serializable object BackupRoute
 @Serializable object GoalsTab
 @Serializable object OnboardingRoute
+@Serializable object HistoryRoute
+@Serializable data class TaskHistoryRoute(val taskId: Long)
 
 class MainActivity : ComponentActivity() {
 
@@ -165,6 +170,7 @@ class MainActivity : ComponentActivity() {
                                 onOpenSettings = { nav.navigate(SettingsRoute) },
                                 onFixReminders = { nav.navigate(PhoneRoute) },
                                 onOpenBackup = { nav.navigate(BackupRoute) },
+                                onOpenHistory = { nav.navigate(HistoryRoute) },
                             )
                         }
                     }
@@ -194,6 +200,12 @@ class MainActivity : ComponentActivity() {
                     composable<RemindersRoute> { RemindersScreen(container, onBack = nav::popBackStack) }
                     composable<PhoneRoute> { PhoneScreen(container, onBack = nav::popBackStack) }
                     composable<BackupRoute> { BackupScreenRoute(viewModel { BackupViewModel(container) }, onBack = nav::popBackStack) }
+                    composable<HistoryRoute> {
+                        HistoryScreenRoute(viewModel { HistoryViewModel(container) }, onBack = nav::popBackStack, onOpenTask = { nav.navigate(TaskHistoryRoute(it)) })
+                    }
+                    composable<TaskHistoryRoute> { entry ->
+                        TaskHistoryScreenRoute(viewModel { HistoryViewModel(container) }, entry.toRoute<TaskHistoryRoute>().taskId, onBack = nav::popBackStack)
+                    }
                     composable<DebugRoute> { DebugMenu.Screen(container, onClose = nav::popBackStack) }
                 }
                 // One bar for every tab: it stays put while the tabs slide, and slides away under pushed screens.
