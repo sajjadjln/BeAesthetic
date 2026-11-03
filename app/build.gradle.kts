@@ -20,8 +20,8 @@ android {
         minSdk = 26
         targetSdk = 36
         // Lantern (D191): versionName = 0.<slice>.<fix> until 1.0.0; versionCode = major × 10000 + minor × 100 + patch.
-        versionCode = 900
-        versionName = "0.9.0"
+        versionCode = 903
+        versionName = "0.9.3"
     }
 
     // The release key lives outside the repo (ARCHITECTURE §13). Its passwords never go in a file the

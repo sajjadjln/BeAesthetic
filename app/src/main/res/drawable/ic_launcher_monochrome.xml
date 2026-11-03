@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Themed icons (Android 13+): the lantern's shape in one color. -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="108dp" android:height="108dp"
     android:viewportWidth="108" android:viewportHeight="108">
-    <path android:fillColor="#FFFFFFFF" android:pathData="M48,26h12v3h3v6h-3v-3h-12v3h-3v-6h3z"/>
-    <path android:fillColor="#FFFFFFFF" android:pathData="M42,35h24v4h3v3h-30v-3h3z"/>
-    <path android:fillColor="#FFFFFFFF" android:fillType="evenOdd" android:pathData="M39,42h30v30h-30z M42,45v24h24v-24z"/>
-    <path android:fillColor="#FFFFFFFF" android:pathData="M51,50h6v3h3v9h-3v3h-6v-3h-3v-9h3z"/>
-    <path android:fillColor="#FFFFFFFF" android:pathData="M39,72h30v3h-3v3h-24v-3h-3z"/>
+    <!-- Matching silhouette with an open handle and chamber for themed icons. -->
+    <path android:fillColor="#FFFFFFFF" android:pathData="M45,24h18v3h3v9h-6v-6h-12v6h-6v-9h3z"/>
+    <path android:fillColor="#FFFFFFFF" android:pathData="M42,36h24v3h6v9h-36v-9h6z M36,48h6v24h-6z M66,48h6v24h-6z"/>
+    <path android:fillColor="#FFFFFFFF" android:pathData="M54,48h3v9h3v3h3v9h-3v3h-12v-3h-3v-6h3v-6h3v-3h3z"/>
+    <path android:fillColor="#FFFFFFFF" android:pathData="M36,72h36v6h-3v3h-30v-3h-3z"/>
 </vector>

@@ -1,6 +1,13 @@
 package app.lantern.ui.today
 
 import androidx.compose.foundation.Canvas
+import kotlinx.coroutines.delay
+import app.lantern.ui.theme.BaMotion
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.composed
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.key
+import androidx.compose.animation.core.Animatable
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -63,7 +70,7 @@ private fun PartIcon(part: Part, color: Color, modifier: Modifier) {
  * comes in from the left in RTL. A small green square under a part means it's all done.
  */
 @Composable
-internal fun PartsSlider(state: TodayUiState, onSelect: (Part) -> Unit, onTick: (TileUi) -> Unit) {
+internal fun PartsSlider(state: TodayUiState, onSelect: (Part) -> Unit, fresh: Set<Long>, onTick: (TileUi) -> Unit) {
     val c = Ba.colors
     val scope = rememberCoroutineScope()
     val pager = rememberPagerState(initialPage = state.selectedPart.ordinal) { Part.entries.size }
@@ -76,7 +83,7 @@ internal fun PartsSlider(state: TodayUiState, onSelect: (Part) -> Unit, onTick: 
             Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp, vertical = 10.dp)
-                .height(56.dp)
+                .height(70.dp)
                 .clip(Px.Card)
                 .background(c.surface)
                 .border(2.dp, Color.White.copy(alpha = 0.08f), Px.Card),
@@ -107,9 +114,9 @@ internal fun PartsSlider(state: TodayUiState, onSelect: (Part) -> Unit, onTick: 
                             .clickable(role = Role.Tab) { scope.launch { pager.animateScrollToPage(part.ordinal) } }
                             .semantics { selected = on },
                     ) {
-                        PartIcon(part, color, Modifier.size(20.dp))
-                        Text(stringResource(partNames[part.ordinal]), style = Ba.type.caption, color = color)
-                        Box(Modifier.size(4.dp).background(if (full) c.accent else Color.Transparent))
+                        PartIcon(part, color, Modifier.size(22.dp).partMotion(part, on))
+                        Text(stringResource(partNames[part.ordinal]), style = Ba.type.subtitle, color = color, maxLines = 1)
+                        DoneDot(full)
                     }
                 }
             }
@@ -120,14 +127,56 @@ internal fun PartsSlider(state: TodayUiState, onSelect: (Part) -> Unit, onTick: 
                 if (list.isEmpty()) {
                     Text(
                         stringResource(R.string.today_part_empty),
-                        style = Ba.type.label,
+                        style = Ba.type.body,
                         color = c.text3,
                         textAlign = TextAlign.Center,
                         modifier = Modifier.fillMaxWidth().padding(24.dp),
                     )
                 }
-                list.forEach { tile -> PixelTile(tile) { onTick(tile) } }
+                list.forEach { tile -> key(tile.taskId) { PixelTile(tile, fresh = tile.taskId in fresh) { onTick(tile) } } }
             }
         }
     }
+}
+
+/**
+ * T7: the part just picked moves its icon: the sunrise rises, the sun turns, the sunset sinks, the moon
+ * tilts, then it settles with a bounce.
+ */
+private fun Modifier.partMotion(part: Part, on: Boolean): Modifier = composed {
+    val move = remember { Animatable(0f) }
+    val was = remember { booleanArrayOf(on) }
+    LaunchedEffect(on) {
+        val picked = on && !was[0]
+        was[0] = on
+        if (!picked) return@LaunchedEffect
+        move.snapTo(1f)
+        move.animateTo(0f, BaMotion.bouncy())
+    }
+    graphicsLayer {
+        val m = move.value
+        when (part) {
+            Part.MORNING -> translationY = 3.dp.toPx() * m
+            Part.MIDDAY -> { scaleX = 1 - 0.25f * m; scaleY = 1 - 0.25f * m; rotationZ = -45f * m }
+            Part.EVENING -> translationY = -3.dp.toPx() * m
+            Part.NIGHT -> rotationZ = -25f * m
+        }
+    }
+}
+
+/** T7: the small green square under a part pops in when the part becomes all done. */
+@Composable
+private fun DoneDot(full: Boolean) {
+    val c = Ba.colors
+    val scale = remember { Animatable(if (full) 1f else 0f) }
+    val was = remember { booleanArrayOf(full) }
+    LaunchedEffect(full) {
+        val became = full && !was[0]
+        was[0] = full
+        when {
+            became -> { scale.snapTo(0f); delay(150); scale.animateTo(1f, BaMotion.bouncy()) }
+            !full -> scale.snapTo(0f)
+        }
+    }
+    Box(Modifier.size(4.dp).graphicsLayer { scaleX = scale.value; scaleY = scale.value }.background(c.accent))
 }

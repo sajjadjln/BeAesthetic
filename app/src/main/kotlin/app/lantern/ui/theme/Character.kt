@@ -17,6 +17,16 @@ enum class LanternCharacter(@StringRes val nameRes: Int) {
     }
 }
 
+/** The palette's name in Simple (D200), where colors are picked by color, not by character. */
+@get:StringRes
+val LanternCharacter.colorRes: Int
+    get() = when (this) {
+        LanternCharacter.KNIGHT -> R.string.color_knight
+        LanternCharacter.VAMPIRE -> R.string.color_vampire
+        LanternCharacter.WIZARD -> R.string.color_wizard
+        LanternCharacter.GOTH -> R.string.color_goth
+    }
+
 /** The looks Today uses (D186): never nervous, cross or asleep. Night uses [CALM]. */
 enum class Mood { CALM, BUSY, HAPPY }
 

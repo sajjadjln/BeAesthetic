@@ -71,6 +71,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.lantern.AppContainer
 import app.lantern.BuildConfig
 import app.lantern.R
+import app.lantern.ui.components.ColorSwatches
+import app.lantern.ui.components.LookOptions
 import app.lantern.data.db.ReminderOutcome
 import app.lantern.data.db.SettingsEntity
 import app.lantern.data.repo.toDomain
@@ -169,7 +171,15 @@ fun SettingsScreen(container: AppContainer, debugAvailable: Boolean, onBack: () 
     SettingsPage(stringResource(R.string.settings_title), onBack) {
         HealthLine(remindersOk)
 
-        // «همراه» (D189): the current character with a line, and the four; a tap re-themes the app at once.
+        // «ظاهر» (D200): with a companion or Simple. With one, «همراه»: the current character with a line, and
+        // the four (D189); in Simple, «رنگ»: the four palettes by color. A tap re-themes the app at once.
+        val companion = settings?.showBuddy ?: true
+        SectionLabel(R.string.settings_look)
+        LookOptions(companion, { on -> scope.launch { container.db.settings().setCompanion(on) } })
+        if (!companion) {
+            SectionLabel(R.string.settings_color)
+            ColorSwatches(character, { who -> scope.launch { container.db.settings().setCharacter(who.name); app.lantern.widget.TodayWidget.refresh(context) } })
+        } else {
         SectionLabel(R.string.settings_companion)
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -208,6 +218,7 @@ fun SettingsScreen(container: AppContainer, debugAvailable: Boolean, onBack: () 
                 }
             }
         }
+        }
 
         // «صفحه‌ی امروز» (D188): the two layouts; Today swaps at once.
         SectionLabel(R.string.settings_today_layout)
@@ -240,6 +251,7 @@ fun SettingsScreen(container: AppContainer, debugAvailable: Boolean, onBack: () 
             val pick = AppLanguage.Choice.entries[i]
             if (pick != language) {
                 AppLanguage.set(context, pick)
+                container.notifier.createChannels() // The channel names in the new language.
                 (context as? android.app.Activity)?.recreate()
             }
         }

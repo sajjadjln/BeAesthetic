@@ -118,8 +118,6 @@ data class TodayActions(
     val setAnytimeOpen: (Boolean) -> Unit = {},
     val addAnytime: () -> Unit = {},
     val openBackup: () -> Unit = {},
-    /** «+ کار جدید» (today-v3/v4 A, D146): the simple sheet on «امروز» in the part being looked at. */
-    val addTask: () -> Unit = {},
     /** Tapping the date opens History (D198). */
     val openHistory: () -> Unit = {},
 )
@@ -136,6 +134,12 @@ fun TodayRoute(
     // «یه چیز اضافه کن» opens the simple sheet on «هر وقت» in the part being looked at (D128).
     var adding by remember { mutableStateOf<Pair<Part, RepeatKind>?>(null) }
     LaunchedEffect(Unit) { viewModel.screenShown() }
+    val addAsked by viewModel.addRequested.collectAsStateWithLifecycle()
+    LaunchedEffect(addAsked) {
+        if (!addAsked) return@LaunchedEffect
+        viewModel.addHandled()
+        adding = (state?.selectedPart ?: Part.MORNING) to RepeatKind.ONCE
+    }
     LifecycleEventEffect(Lifecycle.Event.ON_RESUME) { viewModel.refreshSystemState() }
     TodayScreen(
         state,
@@ -147,7 +151,6 @@ fun TodayRoute(
             fixReminders = onFixReminders,
             setAnytimeOpen = viewModel::setAnytimeOpen,
             addAnytime = { adding = (state?.selectedPart ?: Part.MORNING) to RepeatKind.ANYTIME },
-            addTask = { adding = (state?.selectedPart ?: Part.MORNING) to RepeatKind.ONCE },
             openBackup = onOpenBackup,
             openHistory = onOpenHistory,
         ),
@@ -169,17 +172,22 @@ fun TodayRoute(
 @Composable
 fun TodayScreen(state: TodayUiState?, actions: TodayActions) {
     val haptics = rememberHaptics()
-    // The 100% moment (D76): once, when the day reaches 100% while the screen is open.
+    // The 100% moment (D76): when the day reaches 100% while the screen is open. The light across the blocks,
+    // the rings and the hop (T3, D196) play once a day; ticking the last task again doesn't repeat them.
     var wasComplete by remember { mutableStateOf<Boolean?>(null) }
+    var celebrate by remember { mutableIntStateOf(0) }
+    var celebratedOn by rememberSaveable { mutableStateOf<String?>(null) }
     LaunchedEffect(state?.dayComplete, state?.date) {
         val complete = state?.dayComplete ?: return@LaunchedEffect
         if (wasComplete == false && complete) {
             haptics.medium()
+            val day = state.date.toString()
+            if (celebratedOn != day) { celebratedOn = day; celebrate++ }
         }
         wasComplete = complete
     }
 
-    if (state != null) TodayBody(state, actions)
+    if (state != null) TodayBody(state, actions, celebrate)
 }
 
 @Composable

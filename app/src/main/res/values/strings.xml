@@ -2,6 +2,9 @@
 <!-- English, the default (D174). Persian is in values-fa/; every string lives in both. -->
 <resources>
     <string name="app_name">Lantern</string>
+    <!-- The launcher labels when the language is picked in Settings (D194): fixed, whatever the phone's language. -->
+    <string name="app_name_en" translatable="false">Lantern</string>
+    <string name="app_name_fa" translatable="false">فانوس</string>
 
     <!-- Calendar -->
     <string-array name="weekdays">
@@ -216,8 +219,6 @@
     <!-- Tabs, splash, characters, goals -->
     <string name="tab_today">Today</string>
     <string name="tab_goals">Goals</string>
-    <string name="splash_en" translatable="false">LANTERN</string>
-    <string name="splash_line">A light for every day</string>
     <string name="char_knight">Knight</string>
     <string name="char_vampire">Vampire</string>
     <string name="char_wizard">Wizard</string>
@@ -450,4 +451,25 @@
     <string name="special_travel">Travel</string>
     <string name="special_off">Off</string>
 
+    <!-- Simple, the look with no character (D200), and «+» in the bar (D201) -->
+    <string name="look_companion">With a companion</string>
+    <string name="look_simple">Simple</string>
+    <string name="look_companion_help">A character keeps you company and says what to do now.</string>
+    <string name="look_simple_help">Just your tasks. No character, clean and calm.</string>
+    <string name="settings_look">Look</string>
+    <string name="settings_color">Color</string>
+    <string name="color_knight">Cyan</string>
+    <string name="color_vampire">Red</string>
+    <string name="color_wizard">Silver</string>
+    <string name="color_goth">Purple</string>
+    <string name="onb_look_title">How do you want Lantern?</string>
+    <string name="onb_look_sub">You can change it later in Settings.</string>
+    <string name="onb_color_title">Pick a color</string>
+    <string name="simple_of">of %1$s</string>
+    <string name="simple_start">One at a time, from the top.</string>
+    <string name="simple_half">Halfway there.</string>
+    <string name="editor_name_hint">e.g. Two glasses of water</string>
+    <string name="editor_hi_simple">A name and when; the rest is optional.</string>
+    <string name="editor_ok_simple">Saved.</string>
+    <string name="goals_soon_body_simple">This part is being built. Your goals will live here soon.</string>
 </resources>

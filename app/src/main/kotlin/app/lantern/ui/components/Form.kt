@@ -1,5 +1,16 @@
 package app.lantern.ui.components
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.SizeTransform
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.togetherWith
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.graphics.Color
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -95,30 +106,48 @@ fun InputBox(
     )
 }
 
+/**
+ * A choice pill. In a [ChoiceGroup] pass [drawSelection] false: the group's sliding highlight marks the
+ * chosen one (S1), and the pill only turns its text to the accent.
+ */
 @Composable
-fun PickPill(text: String, selected: Boolean, small: Boolean = false, onClick: () -> Unit) {
+fun PickPill(text: String, selected: Boolean, modifier: Modifier = Modifier, small: Boolean = false, drawSelection: Boolean = true, onClick: () -> Unit) {
     val c = Ba.colors
+    val ink by animateColorAsState(if (selected) c.glow else c.text1, tween(200), label = "pillText")
+    val own = selected && drawSelection
     Box(
         contentAlignment = Alignment.Center,
-        modifier = Modifier
+        modifier = modifier
             .height(if (small) 34.dp else 40.dp)
             .clip(app.lantern.ui.theme.Px.Small)
-            .background(if (selected) c.glow.copy(alpha = 0.18f) else c.surface2)
-            .then(if (selected) Modifier.border(2.dp, c.glow, app.lantern.ui.theme.Px.Small) else Modifier)
+            .background(if (own) c.glow.copy(alpha = 0.18f) else if (selected) Color.Transparent else Color.White.copy(alpha = 0.06f))
+            .then(if (own) Modifier.border(2.dp, c.glow, app.lantern.ui.theme.Px.Small) else Modifier)
             .selectable(selected, role = Role.RadioButton, onClick = onClick)
             .padding(horizontal = 14.dp),
     ) {
-        Text(text, style = if (small) Ba.type.caption else Ba.type.label, color = if (selected) c.glow else c.text1)
+        Text(text, style = if (small) Ba.type.caption else Ba.type.label, color = ink)
     }
 }
 
+/** A − / + stepper. The label rolls up on + and down on − (S4); [label] gives it for a value. */
 @Composable
-fun Stepper(value: Int, range: IntRange, label: String, onChange: (Int) -> Unit) {
+fun Stepper(value: Int, range: IntRange, label: @Composable (Int) -> String, onChange: (Int) -> Unit) {
     val c = Ba.colors
     Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
         StepButton(BaIcons.Minus, stringResource(R.string.cd_less), enabled = value > range.first) { onChange(value - 1) }
-        // A minimum width keeps the buttons in place while the label grows («—» → «۱۵ ثانیه»).
-        Text(label, style = Ba.type.subtitle, color = c.text1, textAlign = TextAlign.Center, modifier = Modifier.widthIn(min = 72.dp))
+        AnimatedContent(
+            value,
+            transitionSpec = {
+                val up = targetState > initialState
+                (slideInVertically(tween(240)) { if (up) it else -it } + fadeIn(tween(240)))
+                    .togetherWith(slideOutVertically(tween(200)) { if (up) -it else it } + fadeOut(tween(200)))
+                    .using(SizeTransform(clip = true))
+            },
+            label = "stepper",
+        ) { n ->
+            // A minimum width keeps the buttons in place while the label grows («—» → «۱۵ ثانیه»).
+            Text(label(n), style = Ba.type.subtitle, color = c.text1, textAlign = TextAlign.Center, modifier = Modifier.widthIn(min = 72.dp))
+        }
         StepButton(BaIcons.Plus, stringResource(R.string.cd_more), enabled = value < range.last) { onChange(value + 1) }
     }
 }

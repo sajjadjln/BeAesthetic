@@ -43,8 +43,11 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import app.lantern.R
+import app.lantern.ui.components.ColorSwatches
+import app.lantern.ui.components.LookOptions
 import app.lantern.ui.theme.Ba
 import app.lantern.ui.theme.CharacterPortrait
 import app.lantern.ui.theme.LanternCharacter
@@ -62,8 +65,24 @@ private fun LanternCharacter.lines(): Pair<Int, Int> = when (this) {
     LanternCharacter.GOTH -> R.string.intro_goth_1 to R.string.intro_goth_2
 }
 
+/** Step ①: with a companion or Simple (D200). The app changes at once. */
+@Composable
+internal fun LookStep(companion: Boolean, onPick: (Boolean) -> Unit) {
+    val c = Ba.colors
+    Text(stringResource(R.string.onb_look_title), style = Ba.type.headline, color = c.text1, textAlign = TextAlign.Center)
+    Text(stringResource(R.string.onb_look_sub), style = Ba.type.body, color = c.text2, textAlign = TextAlign.Center)
+    LookOptions(companion, onPick)
+}
+
+/** Step ② in Simple: the four palettes, named by color (D200). */
+@Composable
+internal fun ColorStep(picked: LanternCharacter, onPick: (LanternCharacter) -> Unit) {
+    Text(stringResource(R.string.onb_color_title), style = Ba.type.headline, color = Ba.colors.text1, textAlign = TextAlign.Center)
+    ColorSwatches(picked, onPick)
+}
+
 /**
- * Step ①: the big portrait, its name tag, its hello in the dialog box, and the four as pixel cards (D186).
+ * Step ② with a companion: the big portrait, its name tag, its hello in the dialog box, and the four as pixel cards (D186).
  * A tap picks (and the whole app re-themes at once, D187); tapping the picked one again makes it smile.
  */
 @Composable
@@ -77,7 +96,7 @@ internal fun CharacterStep(picked: LanternCharacter, onPick: (LanternCharacter) 
         }
         Text(
             stringResource(picked.nameRes),
-            style = Ba.type.label,
+            style = Ba.type.label.copy(fontWeight = FontWeight.Bold),
             color = c.onGlow,
             modifier = Modifier.background(c.glow).padding(horizontal = 11.dp, vertical = 5.dp),
         )
@@ -116,12 +135,13 @@ internal fun CharacterStep(picked: LanternCharacter, onPick: (LanternCharacter) 
     }
 }
 
-/** Step ②: Today's two layouts as pixel cards with a sketch each (D188); the character explains the picked one. */
+/** Step ③: Today's two layouts as pixel cards with a sketch each (D188); the character explains the picked one. */
 @Composable
-internal fun LayoutStep(character: LanternCharacter, picked: TodayLayout, onPick: (TodayLayout) -> Unit) {
+internal fun LayoutStep(character: LanternCharacter, companion: Boolean, picked: TodayLayout, onPick: (TodayLayout) -> Unit) {
     val c = Ba.colors
     Text(stringResource(R.string.onb_layout_title), style = Ba.type.headline, color = c.text1, textAlign = TextAlign.Center)
-    Row(horizontalArrangement = Arrangement.spacedBy(12.dp), verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth()) {
+    // In Simple there's no character to explain it; each card's own line does.
+    if (companion) Row(horizontalArrangement = Arrangement.spacedBy(12.dp), verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth()) {
         CharacterPortrait(character, Mood.HAPPY, Modifier.size(76.dp))
         PixelDialog(
             stringResource(if (picked == TodayLayout.LIST) R.string.layout_list_line else R.string.layout_parts_line),

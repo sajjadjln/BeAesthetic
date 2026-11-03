@@ -1,6 +1,8 @@
 package app.lantern
 
+import android.content.ComponentName
 import android.content.Context
+import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.content.res.Resources
 import app.lantern.domain.text.PersianDigits
@@ -22,6 +24,34 @@ object AppLanguage {
 
     fun set(context: Context, choice: Choice) {
         prefs(context).edit().putString(KEY, choice.name).apply()
+        syncLauncher(context)
+    }
+
+    /**
+     * The launcher shows the label of whichever launcher alias is on (D194), and launchers read labels in
+     * the phone's language only. So the alias follows the choice: the phone's language, or a fixed
+     * «فانوس» / "Lantern". The new one is turned on before the old ones go off, so there is always an entry.
+     * Some launchers move the icon once when this happens.
+     */
+    fun syncLauncher(context: Context) {
+        val pm = context.packageManager
+        val want = when (choice(context)) {
+            Choice.SYSTEM -> LAUNCHER_SYSTEM
+            Choice.FA -> LAUNCHER_FA
+            Choice.EN -> LAUNCHER_EN
+        }
+        fun set(alias: String, on: Boolean) {
+            val component = ComponentName(context.packageName, alias)
+            // The manifest has the system alias on and the other two off; "default" is used when it matches.
+            val value = when {
+                on == (alias == LAUNCHER_SYSTEM) -> PackageManager.COMPONENT_ENABLED_STATE_DEFAULT
+                on -> PackageManager.COMPONENT_ENABLED_STATE_ENABLED
+                else -> PackageManager.COMPONENT_ENABLED_STATE_DISABLED
+            }
+            if (pm.getComponentEnabledSetting(component) != value) pm.setComponentEnabledSetting(component, value, PackageManager.DONT_KILL_APP)
+        }
+        set(want, true)
+        listOf(LAUNCHER_SYSTEM, LAUNCHER_FA, LAUNCHER_EN).filter { it != want }.forEach { set(it, false) }
     }
 
     /** Persian when picked, or when the phone is in Persian; English otherwise. */
@@ -46,6 +76,10 @@ object AppLanguage {
     }
 
     private fun prefs(context: Context) = context.applicationContext.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
+
+    private const val LAUNCHER_SYSTEM = "app.lantern.LauncherSystem"
+    private const val LAUNCHER_FA = "app.lantern.LauncherFa"
+    private const val LAUNCHER_EN = "app.lantern.LauncherEn"
 
     private val FA: Locale = Locale.forLanguageTag("fa-IR")
     private val EN: Locale = Locale.forLanguageTag("en")

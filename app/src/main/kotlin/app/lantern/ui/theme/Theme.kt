@@ -49,6 +49,9 @@ object BaMotion {
     const val MEDIUM = 350
     const val LONG = 600
     val Standard = CubicBezierEasing(0.2f, 0f, 0f, 1f)
+    /** For things that open (Material's emphasized decelerate) and close (emphasized accelerate). */
+    val Open = CubicBezierEasing(0.05f, 0.7f, 0.1f, 1f)
+    val Close = CubicBezierEasing(0.3f, 0f, 0.8f, 0.15f)
 
     fun <T> spring(): SpringSpec<T> = spring(dampingRatio = 0.7f, stiffness = Spring.StiffnessMediumLow)
     fun <T> settle(): SpringSpec<T> = spring(dampingRatio = 0.85f, stiffness = Spring.StiffnessMediumLow)
@@ -61,15 +64,24 @@ val LocalBaType = staticCompositionLocalOf { BaType() }
 /** The picked character, for screens that show it (Today, the task sheet). */
 val LocalCharacter = staticCompositionLocalOf { LanternCharacter.KNIGHT }
 
+/**
+ * False in Simple (D200): no character anywhere and flat, rounded shapes; the character then only lends
+ * its palette. True with a companion: the pixel design.
+ */
+val LocalCompanion = staticCompositionLocalOf { true }
+
 object Ba {
     val colors: BaColors @Composable get() = LocalBaColors.current
+    /** False in Simple (D200). */
+    val companion: Boolean @Composable get() = LocalCompanion.current
     val type: BaType @Composable get() = LocalBaType.current
 }
 
-/** The app's theme: always the night sky, in the picked character's colors (D187, D189). */
+/** The app's theme: always the night sky, in the picked character's colors (D187, D189); flat in Simple (D200). */
 @Composable
 fun LanternTheme(
     character: LanternCharacter = LanternCharacter.KNIGHT,
+    companion: Boolean = true,
     content: @Composable () -> Unit,
 ) {
     val colors = lanternColors(character)
@@ -80,7 +92,7 @@ fun LanternTheme(
         onSurfaceVariant = colors.text2, outline = colors.border, error = colors.amber,
     )
     val type = BaType()
-    CompositionLocalProvider(LocalBaColors provides colors, LocalBaType provides type, LocalCharacter provides character) {
+    CompositionLocalProvider(LocalBaColors provides colors, LocalBaType provides type, LocalCharacter provides character, LocalCompanion provides companion) {
         MaterialTheme(colorScheme = scheme, typography = MaterialTheme.typography.copy(bodyLarge = type.body), content = content)
     }
 }

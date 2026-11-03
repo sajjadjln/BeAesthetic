@@ -216,7 +216,6 @@
     <!-- Slice 5: tabs, dashboard (02) and the day sheet (D1) -->
     <string name="tab_today">امروز</string>
     <string name="tab_goals">هدف‌ها</string>
-    <string name="splash_line">یه چراغ برای هر روز</string>
     <string name="char_knight">شوالیه</string>
     <string name="char_vampire">ومپایر</string>
     <string name="char_wizard">جادوگر</string>
@@ -449,4 +448,25 @@
     <string name="special_travel">سفر</string>
     <string name="special_off">استراحت</string>
 
+    <!-- Simple, the look with no character (D200), and «+» in the bar (D201) -->
+    <string name="look_companion">با همراه</string>
+    <string name="look_simple">ساده</string>
+    <string name="look_companion_help">یه شخصیت کنارته، حرف می‌زنه و کار الان رو می‌گه.</string>
+    <string name="look_simple_help">فقط کارهات. بدون شخصیت، تمیز و آروم.</string>
+    <string name="settings_look">ظاهر</string>
+    <string name="settings_color">رنگ</string>
+    <string name="color_knight">فیروزه‌ای</string>
+    <string name="color_vampire">قرمز</string>
+    <string name="color_wizard">نقره‌ای</string>
+    <string name="color_goth">بنفش</string>
+    <string name="onb_look_title">فانوس رو چطور می‌خوای؟</string>
+    <string name="onb_look_sub">بعداً هم توی تنظیمات عوضش می‌کنی.</string>
+    <string name="onb_color_title">یه رنگ انتخاب کن</string>
+    <string name="simple_of">از %1$s</string>
+    <string name="simple_start">یکی‌یکی، از همین بالایی.</string>
+    <string name="simple_half">نصفش رفت.</string>
+    <string name="editor_name_hint">مثلاً دو لیوان آب</string>
+    <string name="editor_hi_simple">اسم و زمانش، بقیه اختیاری.</string>
+    <string name="editor_ok_simple">ذخیره شد.</string>
+    <string name="goals_soon_body_simple">این بخش در دست ساخته. به‌زودی هدف‌هات اینجا میان.</string>
 </resources>

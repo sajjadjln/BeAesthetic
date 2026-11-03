@@ -22,9 +22,10 @@ import java.time.LocalDate
  * digits even when the phone is set to another language (ARCHITECTURE §7.4). No character, no guilt
  * wording (SPEC §7.2).
  */
-class Notifier(appContext: Context) {
+class Notifier(private val appContext: Context) {
 
-    private val context = AppLanguage.wrap(appContext)
+    /** Wrapped on each use, so a language switch in Settings reaches the next notification without a restart. */
+    private val context: Context get() = AppLanguage.wrap(appContext)
     private val manager = NotificationManagerCompat.from(appContext)
 
     /**

@@ -133,6 +133,13 @@ class TodayViewModel(private val container: AppContainer) : ViewModel() {
         pickedPart.value = part
     }
 
+    private val addAsked = MutableStateFlow(false)
+
+    /** «+» in the bar was tapped (D201): Today opens the new-task sheet, even if it wasn't on screen yet. */
+    val addRequested: StateFlow<Boolean> = addAsked
+    fun requestAdd() { addAsked.value = true }
+    fun addHandled() { addAsked.value = false }
+
     fun toggle(taskId: Long) {
         val current = state.value ?: return
         viewModelScope.launch {

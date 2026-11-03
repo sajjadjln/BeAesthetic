@@ -32,12 +32,44 @@
             android:name=".MainActivity"
             android:exported="true"
             android:launchMode="singleTop"
-            android:windowSoftInputMode="adjustResize">
+            android:windowSoftInputMode="adjustResize" />
+
+        <!-- The launcher entry (D194): the label under the icon follows the app's language, not only the
+             phone's. One alias is on at a time (AppLanguage.syncLauncher): the phone's language by default,
+             or a fixed «فانوس» / "Lantern" when a language is picked in Settings. -->
+        <activity-alias
+            android:name=".LauncherSystem"
+            android:targetActivity=".MainActivity"
+            android:label="@string/app_name"
+            android:exported="true"
+            android:enabled="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
+        </activity-alias>
+        <activity-alias
+            android:name=".LauncherFa"
+            android:targetActivity=".MainActivity"
+            android:label="@string/app_name_fa"
+            android:exported="true"
+            android:enabled="false">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+        <activity-alias
+            android:name=".LauncherEn"
+            android:targetActivity=".MainActivity"
+            android:label="@string/app_name_en"
+            android:exported="true"
+            android:enabled="false">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
 
         <!-- The system camera writes check-in photos into the app's cache through this (slice 7a). -->
         <provider

@@ -1,5 +1,6 @@
 package app.lantern.ui.theme
 
+import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
@@ -14,6 +15,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.ReadOnlyComposable
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -69,10 +72,18 @@ class PixelShape(private val step: Dp, private val levels: Int = 1) : Shape {
     }
 }
 
+/** The app's shapes: stepped pixel corners with a companion, plain rounded ones in Simple (D200). */
 object Px {
-    val Card = PixelShape(6.dp)
-    val Small = PixelShape(3.dp)
-    val Dialog = PixelShape(4.dp, levels = 2)
+    private val pixelCard = PixelShape(6.dp)
+    private val pixelSmall = PixelShape(3.dp)
+    private val pixelDialog = PixelShape(4.dp, levels = 2)
+    private val roundCard = RoundedCornerShape(14.dp)
+    private val roundSmall = RoundedCornerShape(10.dp)
+    private val roundDialog = RoundedCornerShape(22.dp)
+
+    val Card: Shape @Composable @ReadOnlyComposable get() = if (LocalCompanion.current) pixelCard else roundCard
+    val Small: Shape @Composable @ReadOnlyComposable get() = if (LocalCompanion.current) pixelSmall else roundSmall
+    val Dialog: Shape @Composable @ReadOnlyComposable get() = if (LocalCompanion.current) pixelDialog else roundDialog
 }
 
 /** The night sky behind every screen: [BaColors.sky2] glowing from the top, [BaColors.bg] at the edges. */
@@ -91,7 +102,9 @@ fun Modifier.sky(): Modifier {
 @Composable
 fun PixelDialog(text: String, modifier: Modifier = Modifier, typing: Boolean = true) {
     val c = Ba.colors
-    var shown by remember(text) { mutableIntStateOf(if (typing) 0 else text.length) }
+    // With "Remove animations" on, the whole line shows at once.
+    val animate = rememberAnimationsOn()
+    var shown by remember(text) { mutableIntStateOf(if (typing && animate) 0 else text.length) }
     LaunchedEffect(text, typing) {
         while (shown < text.length) { delay(38); shown++ }
     }
@@ -128,34 +141,68 @@ fun PixelDialog(text: String, modifier: Modifier = Modifier, typing: Boolean = t
 
 /**
  * A character's round portrait with its glow (D185): the dark backdrop fades out at the edge, and it
- * breathes gently. Purely decorative unless the caller adds a description.
+ * breathes gently. A new mood crossfades in (T6). Purely decorative unless the caller adds a description.
  */
 @Composable
 fun CharacterPortrait(character: LanternCharacter, mood: Mood, modifier: Modifier = Modifier, breathe: Boolean = true) {
     val c = Ba.colors
+    val moving = breathe && rememberAnimationsOn()
     val t = rememberInfiniteTransition(label = "breathe")
     val lift by t.animateFloat(0f, 1f, infiniteRepeatable(tween(2500, easing = FastOutSlowInEasing), RepeatMode.Reverse), label = "lift")
     Box(modifier, contentAlignment = Alignment.Center) {
         Box(Modifier.fillMaxSize().drawBehind {
             drawCircle(Brush.radialGradient(listOf(c.glow.copy(alpha = 0.32f), Color.Transparent), radius = size.minDimension * 0.62f), radius = size.minDimension * 0.62f)
         })
-        Image(
-            painterResource(character.art(mood)),
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .fillMaxSize()
-                .graphicsLayer {
-                    compositingStrategy = CompositingStrategy.Offscreen
-                    if (breathe) translationY = -lift * 4.dp.toPx()
-                }
-                .drawWithContent {
-                    drawContent()
-                    drawRect(
-                        Brush.radialGradient(0f to Color.Black, 0.78f to Color.Black, 1f to Color.Transparent, radius = size.minDimension / 2),
-                        blendMode = BlendMode.DstIn,
-                    )
-                },
-        )
+        Crossfade(character to mood, animationSpec = tween(420), label = "mood") { (who, m) ->
+            Image(
+                painterResource(who.art(m)),
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .graphicsLayer {
+                        compositingStrategy = CompositingStrategy.Offscreen
+                        if (moving) translationY = -lift * 4.dp.toPx()
+                    }
+                    .drawWithContent {
+                        drawContent()
+                        drawRect(
+                            Brush.radialGradient(0f to Color.Black, 0.78f to Color.Black, 1f to Color.Transparent, radius = size.minDimension / 2),
+                            blendMode = BlendMode.DstIn,
+                        )
+                    },
+            )
+        }
+    }
+}
+
+/**
+ * A tick: five pixels with a companion, a plain stroked check in Simple (D200). [progress] runs 0 → 1 while
+ * it draws in.
+ */
+fun androidx.compose.ui.graphics.drawscope.DrawScope.drawTick(color: Color, progress: Float = 1f, pixel: Boolean = true) {
+    if (pixel) return drawPixelTick(color, progress)
+    val w = size.width
+    val p = Path().apply { moveTo(w * 0.2f, w * 0.52f); lineTo(w * 0.42f, w * 0.72f); lineTo(w * 0.8f, w * 0.3f) }
+    val m = androidx.compose.ui.graphics.PathMeasure().apply { setPath(p, false) }
+    val part = Path()
+    m.getSegment(0f, m.length * progress.coerceIn(0f, 1f), part, true)
+    drawPath(part, color, style = Stroke(w * 0.13f, cap = androidx.compose.ui.graphics.StrokeCap.Round, join = androidx.compose.ui.graphics.StrokeJoin.Round))
+}
+
+/** The five pixels of a tick on an 8 × 8 grid, shared by the task checks and the saved button. */
+private val tickPixels = listOf(1f to 4f, 2f to 5f, 3f to 4f, 4f to 3f, 5f to 2f)
+
+/**
+ * A pixel tick (T1, S7). [progress] runs 0 → 1 while the pixels draw in one after another; 1 shows it whole.
+ * Drawn in [DrawScope] so it can be animated without recomposing.
+ */
+fun androidx.compose.ui.graphics.drawscope.DrawScope.drawPixelTick(color: Color, progress: Float = 1f) {
+    val u = size.width / 8f
+    tickPixels.forEachIndexed { i, (x, y) ->
+        val f = (progress * tickPixels.size - i).coerceIn(0f, 1f)
+        if (f <= 0f) return@forEachIndexed
+        val side = u * 1.2f * f
+        drawRect(color, Offset(x * u + (u * 1.2f - side) / 2, y * u + (u * 1.2f - side) / 2), Size(side, side))
     }
 }

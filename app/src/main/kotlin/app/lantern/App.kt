@@ -21,6 +21,7 @@ class App : Application() {
         super.onCreate()
         container = AppContainer(this)
         container.notifier.createChannels()
+        AppLanguage.syncLauncher(this)
         ReconcileWorker.enqueue(this)
         ProcessLifecycleOwner.get().lifecycle.addObserver(OpenObserver())
     }

@@ -104,6 +104,7 @@ data class SettingsEntity(
     val alarmMode: String = "ALARM_CLOCK",
     val accentColor: String = "GREEN",
     val themeMode: String = "SYSTEM",
+    /** With a companion (true) or Simple, no character (false, D200). [character] still picks the palette. */
     val showBuddy: Boolean = true,
     val backupTreeUri: String? = null,
     val lastOpenedAt: Instant? = null,

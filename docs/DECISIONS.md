@@ -321,6 +321,47 @@ Research: `docs/research/plugin-platform-research.md` («research §n»). Plan: 
 | D190 | **The app is named «فانوس» in Persian and "Lantern" in English, and the splash is "Gather".** The splash: stars come out, the four portraits drift in from the dark one by one in their own glow and meet in one light at the center; the name rises under them with a shine through the four colors, then "LANTERN", the line «یه چراغ برای هر روز» and a pixel bar (about 4 s). Settles D158 (the new name) and D183 ④ (the knight is named with the app). Mockup: `docs/design/splash.html` (the other animations and names stay on the page for reference). | User picked from 10 names and 4 animations: "gather portraits and the فانوس with the english word lantern". | Final |
 | D191 | **Lantern v1 is built on the `lantern` branch; `main` keeps «پیکر».** Scope: splash, onboarding, Today (both layouts), the new-task sheet, Settings and its screens; Goals as «در دست ساخت»; no workout. ① A new application ID and package, `app.lantern`, installed next to «پیکر». ② No import from «پیکر»: Lantern starts empty. ③ The splash is full (~4 s) on the first launch and short (~1.2 s) after; a tap skips it. ④ The package is renamed in L0. ⑤ Persian and English from the first slice. ⑥ Lantern starts at 0.1.0. Plan: `docs/LANTERN-ROADMAP.md` (L0–L9). | User: "i just want the app to have 2 branches"; Q1–Q6 answered yes, except ② ("peykar never got installed on nobodies phones"). | Final |
 
+## Launcher polish (2026-10-28)
+
+| # | Decision | Why | Status |
+|---|---|---|---|
+| D192 | **Launcher icon refinement:** a wider pixel lantern, stronger cyan frame, warm amber flame, smooth night-sky glow and matching monochrome silhouette. Essential artwork stays within the central 66 dp circle of the 108 dp adaptive layers. The system splash keeps its original art. Preview: `docs/design/launcher-icon-preview.png`. | User reported that the launcher image does not look good. Wider framing and simpler lighting improve recognition at small sizes. | Final (user approved 2026-10-29: "use the launcher-icon-preview.png in the app") |
+
+## Splash revision (2026-10-28)
+
+| # | Decision | Why | Status |
+|---|---|---|---|
+| D193 | **Splash direction: option 6, Follow the firefly, with the text at the top and the new launcher lantern.** A warm firefly lands inside the cyan frame and lights its amber flame. Preview: `docs/design/splash-options.html`, opens on option 6. Supersedes Gather as the selected design direction in D190; the app still uses Gather until implementation. | User: "number 6 but the text should be at top also the lanter should be the new lantern you created". | Selected; revised preview ready, app implementation pending |
+
+## Fixes after trying Lantern on the phone (2026-10-30)
+
+| # | Decision | Why | Status |
+|---|---|---|---|
+| D194 | **Phone fixes.** ① The splash plays in full on every cold start (2.6 s, then a 0.9 s hold on the name); a tap still skips it. Reverses D191 ③. ② The notification icon is the lantern silhouette (from the monochrome launcher layer). ③ The «+ کار جدید» button sits bottom-right in both languages. ④ The launcher label follows the app's language: three launcher aliases (the phone's language, fixed «فانوس», fixed "Lantern"), one on at a time; some launchers move the icon once on a switch. ⑤ A language switch applies the layout direction at once (taken from the activity's own configuration) and renames the notification channels. ⑥ The character portrait on Today has no clip or ripple, so its round glow no longer shows a square. ⑦ Bigger text for the parts of the day: the parts bar labels 12 → 16 sp (bar 56 → 70 dp), list section headers 13 → 18 sp, task titles 15 → 17 sp. | User, after using it on the phone: "splash screen too short", "notification icon is still the peykar", "add task button should always stay at right side", "name of the app should be فانوس in farsi" (picked "follow app language"), "i have to kill the app so the layout alignment take place", "characters picture seems like they are in a square", "texts in the parts of the day sections are too small". | Built; not yet seen on the phone |
+
+## Motion and the pinned Save (2026-10-30)
+
+| # | Decision | Why | Status |
+|---|---|---|---|
+| D196 | **All 17 animations from the motion study go into the app**: T1–T10 on Today and S1–S7 in the task sheet, as in `docs/design/today-motion.html`, plus "Remove animations" respected. The 100% moment's light and rings play once a day. **In the task sheet, «ذخیره» is pinned at the bottom and the rest scrolls.** | User, after the motion study: "build them all"; "the save button should be fixed and not goes under it should be always showing and the rest should be scrollable". | Built (0.9.3); checked on an emulator, not yet on the phone |
+
+| D197 | **The splash uses the user's logo** (the «فانوس» logotype with the lantern on the «ف», 2026-10-31), concept 1 "Light the lantern": only the lantern shows, dim; its flame catches, then its light sweeps across in reading order and writes the name, in gold. Persian sweeps right to left; English shows "Lantern" (Fredoka, rendered to an image, so the APK still bundles only Estedad) with the lantern on the «L», sweeping left to right. No text under the logo in either language. Replaces the firefly (D193). Previews: `docs/design/splash-logo.html`, `splash-logo-en.html`. | User: "i will like to use for the splash screen instead of the word فانوس"; picked concept 1; "remove the word lantern … at the bottom of the screen, do the same for the english version". | Built; not yet seen on the phone |
+| D198 | **History: the track record.** Tapping the date on Today opens «سابقه» / History (Goals isn't built, so D160's entry point waits). ① A GitHub-style grid of days from install to today: weeks as columns, Saturday on top, time flowing with the reading direction (newest at the left in Persian), scrolls, opens on today; early on it pads to 20 weeks with «قبل از اپ» dots (D56). Squares in the character's theme color, 4 levels by the share of due tasks done; special days indigo; a day with nothing done is a gray gap. A summary «N روز اومدی», no streak. ② Tap a square: a sheet with only what was done, with times (D37); today and yesterday can be set as a special day there. ③ Each repeating task has a 12-week strip in a list; tap it for its own grid: done = theme color, due and not done = gray gap, not due = faint. Plus all-time count, this month's count and a 6-month bar chart. Built from the existing `completion` and `day` tables; nothing new is stored. Mockup `docs/design/history.html`. | User: "that GitHub kinda looking track record" for each repeating task and each day; picked the theme color for done and all recommended options. | Default |
+
+## Store releases, planned (2026-10-30)
+
+| # | Decision | Why | Status |
+|---|---|---|---|
+| D195 | **One language per store.** Cafe Bazaar gets Persian only and three characters (no goth woman); Google Play gets English only with all four. Done later with product flavors (`personal`, `bazaar`, `play`); the personal build keeps both languages and all four. Checklist: `docs/STORE-RELEASE-CHECKLIST.md`. | User: "for the bazaar release should remove the english language and the goth girl character and for play store should remove the farsi language… but its not happening now". | Planned, not now (the goth woman stays on Bazaar: D199) |
+| D199 | **The first Bazaar release** (`docs/BAZAAR-ROADMAP.md`, slices B0–B8). ① **The goth woman stays**: Bazaar gets all four characters (reverses that part of D195; Persian only still holds). ② **The Goals tab stays** with its «در دست ساخت» page. ③ **Soft update only** in 1.0, through the Bazaar app; a hard minimum version waits for a server. ④ **No server** for 1.0; the app stays fully offline with no `INTERNET`. ⑤ **The personal build gets its own ID `app.lantern.me`**; your data moves once with backup → restore; Bazaar gets `app.lantern`. ⑥ **A beta** with 3–5 people on different phones for two weeks before publishing. | User, 2026-11-03: "keep the goth woman for bazaar… keep the in develop page for goals tab… soft only… no server… okey to rest". ⑤ keeps Bazaar from "updating" your build into the Persian-only one; ⑥ because reminders on phones you don't own are the biggest unknown. | Planned, after the personal 1.0.0 |
+
+## Simple and the + in the bar (2026-11-03)
+
+| # | Decision | Why | Status |
+|---|---|---|---|
+| D200 | **Simple: a look with no character.** The user picks «با همراه» or «ساده» in onboarding (a new first step) and in Settings → «ظاهر». Simple shows no character anywhere (Today gets a count card «۳ از ۹» with one line; the sheet gets a title and a line; Goals gets its icon) and uses flat, rounded shapes instead of pixel ones. Its color is one of the four palettes, picked by color and stored as the character. Same font (Estedad) and same rules: done green, amber for due, nothing red. Stored in the unused `showBuddy` column, so no migration. Mockup `docs/design/simple-mode.html`. | User: "users that dont want to choose any characters they want simple design with no characters… the user should be able to choose". | Built; seen on the emulator |
+| D201 | **«+» moves to the middle of the bottom bar (Today · + · Goals), and it is the one thing each character changes.** Knight: pixel key; vampire: coffin; wizard: crystal orb; goth girl: bitten moon; Simple: rounded square. Everything else is one shared design, with Estedad only (per-character fonts and styles were tried and dropped). The new-task sheet takes the flat layout (title, filled name field, «کِی؟» and «بخش روز» chips, pinned «ذخیره») in every look. Mockup `docs/design/character-styles.html`. | User: "the buttom sheet menu this way is way better"; "dont change the font… everything in the desing is the same for them just the new task button and thats in the middle of the bottom nav bar"; the vampire's wax seal was "bad", the coffin approved. | Built; seen on the emulator |
+
 ## Superseded
 
 - Weekly focus sentence (Phase 2) → removed in D24.
@@ -365,9 +406,7 @@ Research: `docs/research/plugin-platform-research.md` («research §n»). Plan: 
 - "RTL and Persian digits" in the plugin UI standard (D172) → follow the app's language and direction (D175).
 - Plugin code sandboxed by Zipline/QuickJS alone (D166) → Zipline inside an isolated process with no permissions (D177).
 - The plugin's own UI as a likely sandboxed WebView (D172) → a host-drawn free layout; a WebView only as a possible later level ③ (D178).
-
-## History (2026-10-31)
-
-| # | Decision | Why | Status |
-|---|---|---|---|
-| D198 | **History: the track record.** Tapping the date on Today opens «سابقه» / History (Goals isn't built, so D160's entry point waits). ① A GitHub-style grid of days from install to today: weeks as columns, Saturday on top, time flowing with the reading direction (newest at the left in Persian), scrolls, opens on today; early on it pads to 20 weeks with «قبل از اپ» dots (D56). Squares in the character's theme color, 4 levels by the share of due tasks done; special days indigo; a day with nothing done is a gray gap. A summary «N روز اومدی», no streak. ② Tap a square: a sheet with only what was done, with times (D37); today and yesterday can be set as a special day there. ③ Each repeating task has a 12-week strip in a list; tap it for its own grid: done = theme color, due and not done = gray gap, not due = faint. Plus all-time count, this month's count and a 6-month bar chart. Built from the existing `completion` and `day` tables; nothing new is stored. Mockup `docs/design/history.html`. | User: "that GitHub kinda looking track record" for each repeating task and each day; picked the theme color for done and all recommended options. | Built; checked on an emulator, not yet on the phone |
+- Bazaar without the goth woman, three characters (D195) → all four characters on Bazaar (D199).
+- «+» at the bottom right, stepping aside on scroll (D194, T8) → in the middle of the bar, one shape per character (D201).
+- The new-task sheet with the character in a pixel dialog box at the top and the name over an underline (D189) → the flat layout with a title and a filled name field (D201).
+- No «ظاهر» in Settings (D189) → «ظاهر»: with a companion or Simple (D200).

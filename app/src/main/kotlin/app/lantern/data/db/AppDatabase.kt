@@ -186,6 +186,10 @@ interface SettingsDao {
     @Query("UPDATE settings SET character = :character WHERE id = 1")
     suspend fun setCharacter(character: String)
 
+    /** With a companion or Simple (D200). */
+    @Query("UPDATE settings SET showBuddy = :on WHERE id = 1")
+    suspend fun setCompanion(on: Boolean)
+
     @Query("UPDATE settings SET todayLayout = :layout WHERE id = 1")
     suspend fun setTodayLayout(layout: String)
 
