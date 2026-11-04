@@ -362,6 +362,14 @@ Research: `docs/research/plugin-platform-research.md` («research §n»). Plan: 
 | D200 | **Simple: a look with no character.** The user picks «با همراه» or «ساده» in onboarding (a new first step) and in Settings → «ظاهر». Simple shows no character anywhere (Today gets a count card «۳ از ۹» with one line; the sheet gets a title and a line; Goals gets its icon) and uses flat, rounded shapes instead of pixel ones. Its color is one of the four palettes, picked by color and stored as the character. Same font (Estedad) and same rules: done green, amber for due, nothing red. Stored in the unused `showBuddy` column, so no migration. Mockup `docs/design/simple-mode.html`. | User: "users that dont want to choose any characters they want simple design with no characters… the user should be able to choose". | Built; seen on the emulator |
 | D201 | **«+» moves to the middle of the bottom bar (Today · + · Goals), and it is the one thing each character changes.** Knight: pixel key; vampire: coffin; wizard: crystal orb; goth girl: bitten moon; Simple: rounded square. Everything else is one shared design, with Estedad only (per-character fonts and styles were tried and dropped). The new-task sheet takes the flat layout (title, filled name field, «کِی؟» and «بخش روز» chips, pinned «ذخیره») in every look. Mockup `docs/design/character-styles.html`. | User: "the buttom sheet menu this way is way better"; "dont change the font… everything in the desing is the same for them just the new task button and thats in the middle of the bottom nav bar"; the vampire's wax seal was "bad", the coffin approved. | Built; seen on the emulator |
 
+## New «+» for the knight, the goth girl and the wizard (2026-11-04)
+
+| # | Decision | Why | Status |
+|---|---|---|---|
+| D208 | **The knight's «+» is a pixel sword.** A glowing sword stands point down in the middle of the bar, so the guard and blade still read as «+». Pressed, it lifts 10 dp like it's being drawn; a shine runs down the blade every 4 s (off when the phone's animations are off). The other characters and Simple keep their buttons. Mockup `docs/design/knight-sword.html` (option 2). | User, 2026-11-04: "the new task button for the knight i want it to look like a sword"; picked option 2 over a sword glyph on the square and a hilt in a stone. | Built |
+| D209 | **The goth girl's «+» is a cat head.** A cat head in her purple with the dark «+» on its face, two inner ears and whiskers. Pressed, it squashes from the chin; every 5 s its right ear twitches (off when the phone's animations are off). Mockup `docs/design/goth-cat.html` (option 1). | User, 2026-11-04: "a cat for button of the character goth girl"; picked the cat head over a cat on the moon and a cat sitting on the bar. | Built |
+| D210 | **The wizard's «+» is an open spell book.** A glowing «+» rune floats above its pages and bobs 4 dp; two small stars twinkle. Pressed, the book squashes. Motion is off when the phone's animations are off. Mockup `docs/design/wizard-options.html` (option 3). | User, 2026-11-04: picked the spell book over a hat, a sparkle and a potion. | Built |
+
 ## Superseded
 
 - Weekly focus sentence (Phase 2) → removed in D24.
@@ -410,3 +418,6 @@ Research: `docs/research/plugin-platform-research.md` («research §n»). Plan: 
 - «+» at the bottom right, stepping aside on scroll (D194, T8) → in the middle of the bar, one shape per character (D201).
 - The new-task sheet with the character in a pixel dialog box at the top and the name over an underline (D189) → the flat layout with a title and a filled name field (D201).
 - No «ظاهر» in Settings (D189) → «ظاهر»: with a companion or Simple (D200).
+- The knight's «+» as a pixel key (D201) → a pixel sword standing in the bar (D208).
+- The goth girl's «+» as a bitten moon (D201) → a cat head (D209).
+- The wizard's «+» as a crystal orb (D201) → an open spell book (D210).

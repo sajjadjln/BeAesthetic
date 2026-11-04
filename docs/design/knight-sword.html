@@ -1,0 +1,175 @@
+<title>Knight Sword Button</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Estedad:wght@400;600;800&display=swap">
+<style>
+/* Layout: page (light/dark) → intro → four cards (current + three sword options), each the bottom of the knight's Today with the bar → big sprite zoom. Phones are always dark. */
+:root {
+  --page: #e5e9ed; --ink: #1d2830; --mute: #56636e; --rule: #c3ccd4; --card: #f3f6f8; --pick: #1f8aa0;
+  --est: "Estedad", Tahoma, system-ui, sans-serif;
+  /* knight palette (Colors.kt) */
+  --bg: #0b1622; --sky2: #12283a; --glow: #5fd3e6; --rgb: 95,211,230; --box1: #0f2232; --box2: #0a1520; --rimD: #2a6478; --rimL: #cdeff6; --onGlow: #06202a;
+  --t1: #f2f7fa; --t2: #a9bccb; --t3: #6f8799; --done: #3fbf7f;
+  --px: polygon(0 6px, 6px 6px, 6px 0, calc(100% - 6px) 0, calc(100% - 6px) 6px, 100% 6px, 100% calc(100% - 6px), calc(100% - 6px) calc(100% - 6px), calc(100% - 6px) 100%, 6px 100%, 6px calc(100% - 6px), 0 calc(100% - 6px));
+  --pxs: polygon(0 3px,3px 3px,3px 0,calc(100% - 3px) 0,calc(100% - 3px) 3px,100% 3px,100% calc(100% - 3px),calc(100% - 3px) calc(100% - 3px),calc(100% - 3px) 100%,3px 100%,3px calc(100% - 3px),0 calc(100% - 3px));
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --page: #070b0f; --ink: #d4dde4; --mute: #8a98a3; --rule: #27323b; --card: #0e151b; --pick: #5fd3e6; color-scheme: dark; } }
+:root[data-theme="dark"] { --page: #070b0f; --ink: #d4dde4; --mute: #8a98a3; --rule: #27323b; --card: #0e151b; --pick: #5fd3e6; color-scheme: dark; }
+* { box-sizing: border-box; margin: 0; }
+body { background: var(--page); color: var(--ink); font-family: system-ui, sans-serif; padding: 22px 16px 48px; }
+.page { max-width: 1120px; margin: 0 auto; display: flex; flex-direction: column; gap: 22px; }
+h1 { font: 800 22px/1.3 var(--est); }
+.intro p { font-size: 14px; line-height: 1.65; color: var(--mute); margin-top: 6px; max-width: 72ch; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
+.opt { background: var(--card); border: 1px solid var(--rule); border-radius: 14px; padding: 12px; display: flex; flex-direction: column; gap: 10px; }
+.opt.rec { border-color: var(--pick); box-shadow: 0 0 0 1px var(--pick); }
+.opt h2 { font: 700 15px/1.3 system-ui, sans-serif; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.badge { font: 700 10.5px/1 system-ui; letter-spacing: .06em; text-transform: uppercase; padding: 4px 7px; border-radius: 6px; background: var(--pick); color: var(--card); }
+.opt p { font-size: 13px; line-height: 1.55; color: var(--mute); }
+
+/* phone crop: bottom of Today */
+.phone { position: relative; height: 250px; border-radius: 0 0 28px 28px; overflow: hidden; color: var(--t1); font-family: var(--est);
+  background: radial-gradient(130% 120% at 50% -20%, var(--sky2), var(--bg) 75%); }
+.tile { margin: 12px 14px 0; display: flex; align-items: center; gap: 10px; padding: 12px 14px; background: var(--box2); clip-path: var(--px); box-shadow: inset 0 0 0 2px rgba(255,255,255,.08); font: 600 14px var(--est); }
+.tile i { width: 22px; height: 22px; clip-path: var(--pxs); box-shadow: inset 0 0 0 2px rgba(255,255,255,.28); flex: none; }
+.tile.done i { background: var(--done); box-shadow: none; }
+.tile.done { color: var(--t2); }
+.bar { position: absolute; bottom: 0; inset-inline: 0; height: 61px; background: var(--box2); display: flex; z-index: 2; }
+.bar::before { content: ""; position: absolute; top: 0; inset-inline: 0; height: 2px; background: rgba(var(--rgb),.25); }
+.bar b { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; color: var(--t3); }
+.bar b.on { color: var(--glow); }
+.bar b.on::after { content: ""; width: 5px; height: 5px; background: var(--glow); }
+.bar b:not(.on)::after { content: ""; width: 5px; height: 5px; }
+.bar svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.bar .mid { flex: 0 0 84px; }
+.fab { position: absolute; left: 50%; border: 0; padding: 0; background: none; cursor: pointer; color: var(--onGlow); -webkit-tap-highlight-color: transparent; }
+.fab:focus-visible { outline: 2px solid var(--glow); outline-offset: 4px; }
+svg.spr { display: block; shape-rendering: crispEdges; overflow: visible; }
+
+/* 0: today's pixel square */
+.f0, .f1 { width: 56px; height: 56px; margin-left: -28px; bottom: 24px; z-index: 3; }
+.f0::before, .f1::before { content: ""; position: absolute; inset: 4px 0 -4px; clip-path: var(--px); background: color-mix(in srgb, var(--glow) 45%, #000); }
+.f0 .face, .f1 .face { position: absolute; inset: 0; display: grid; place-items: center; background: var(--glow); clip-path: var(--px); transition: transform .12s; }
+.f0 .face svg { width: 24px; height: 24px; stroke: currentColor; stroke-width: 2.6; stroke-linecap: round; fill: none; }
+.press .face { transform: translateY(3px) scale(.96); }
+
+/* 2: the whole sword stands on the bar */
+.f2 { width: 64px; height: 96px; margin-left: -32px; bottom: 6px; z-index: 3; display: grid; place-items: end center; }
+.f2::before { content: ""; position: absolute; left: 50%; top: 4px; width: 90px; height: 70px; margin-left: -45px; background: radial-gradient(closest-side, rgba(var(--rgb),.35), transparent); pointer-events: none; }
+.f2 .sw { position: relative; transition: transform .18s cubic-bezier(.3,1.6,.5,1); filter: drop-shadow(0 3px 0 rgba(0,0,0,.45)); }
+.f2.press .sw { transform: translateY(-10px); }
+
+/* 3: only the hilt, the blade sunk into a stone in the bar */
+.f3 { width: 64px; height: 86px; margin-left: -32px; bottom: 0; z-index: 3; }
+.f3 .clip { position: absolute; inset: 0 0 34px; overflow: hidden; }
+.f3 .sw { position: absolute; left: 50%; top: 0; transform: translateX(-50%); transition: transform .22s cubic-bezier(.3,1.6,.5,1); filter: drop-shadow(0 3px 0 rgba(0,0,0,.45)); }
+.f3.press .sw { transform: translate(-50%, -14px); }
+.f3 .stone { position: absolute; left: 50%; bottom: 14px; width: 60px; height: 24px; margin-left: -30px; background: #1a3142; clip-path: var(--px);
+  box-shadow: inset 0 3px 0 rgba(255,255,255,.12), inset 0 -4px 0 rgba(0,0,0,.35); }
+.f3 .stone::before { content: ""; position: absolute; left: 50%; top: 0; width: 10px; height: 6px; margin-left: -5px; background: #050c12; }
+.f3::after { content: ""; position: absolute; left: 50%; top: -6px; width: 84px; height: 70px; margin-left: -42px; background: radial-gradient(closest-side, rgba(var(--rgb),.3), transparent); pointer-events: none; z-index: -1; }
+
+/* blade shine travels down every 4 s */
+.shine { animation: shine 4s linear infinite; }
+@keyframes shine { 0%, 8%, 100% { fill: var(--c); } 3% { fill: #fff; } }
+@media (prefers-reduced-motion: reduce) { .shine { animation: none; } .sw, .face { transition: none !important; } }
+
+.zoom { background: var(--card); border: 1px solid var(--rule); border-radius: 14px; padding: 16px; display: flex; gap: 28px; flex-wrap: wrap; align-items: flex-end; }
+.zoom figure { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.zoom .dark { background: radial-gradient(circle, var(--sky2), var(--bg)); padding: 18px 26px; border-radius: 12px; }
+.zoom figcaption { font-size: 12px; color: var(--mute); }
+.notes { font-size: 13.5px; line-height: 1.65; color: var(--mute); max-width: 76ch; }
+.notes b { color: var(--ink); }
+</style>
+
+<div class="page">
+  <div class="intro">
+    <h1>The knight's + button as a sword</h1>
+    <p>Three pixel-art swords for the knight's new-task button, next to the current one. The sword points down, so its crossguard and blade still make a +. Tap each button to see its press animation. A shine runs down the blade every 4 seconds.</p>
+  </div>
+  <div class="grid" id="grid"></div>
+  <div class="zoom" id="zoom"></div>
+  <p class="notes">
+    <b>Why it still reads as "add":</b> point-down, the guard is the + bar and the blade is the + stem. The sword is the same in RTL and LTR, so nothing flips.<br>
+    <b>Tap target:</b> options 2 and 3 are narrower than they look, but the button around them is 64 dp wide, above the 48 dp minimum.<br>
+    <b>Other characters:</b> this is knight-only. The vampire keeps its coffin, and the wizard and the goth keep the pixel square until each gets its own idea.<br>
+    <b>Build cost:</b> all three are one vector drawable (pixel rects) plus a translate animation in Compose. No bitmap.
+  </p>
+</div>
+
+<script>
+// Pixel sprites. o outline, p pommel, w white, h grip, g guard, G guard shade, b blade, e blade edge, '#' a filled pixel for the one-color glyph.
+const SWORD = [
+  "......ooo......",
+  ".....opwpo.....",
+  ".....opppo.....",
+  "......oho......",
+  "......oho......",
+  "......oho......",
+  ".ooooooooooooo.",
+  "ogwgggggggggggo",
+  "oGGGGGGGGGGGGGo",
+  ".ooooooooooooo.",
+  ...Array(12).fill(".....owbeo....."),
+  "......obo......",
+  "......obo......",
+  ".......o.......",
+];
+const GLYPH = [
+  "....###....",
+  "....###....",
+  ".....#.....",
+  ".....#.....",
+  "###########",
+  "###########",
+  ...Array(8).fill("....###...."),
+  ".....#.....",
+];
+const COL = { o: "#04101a", p: "#5fd3e6", w: "#ffffff", h: "#2a6478", g: "#5fd3e6", G: "#2f8a9c", b: "#cdeff6", e: "#8fe3f0", "#": "currentColor" };
+
+function sprite(rows, s, shine) {
+  const h = rows.length, w = rows[0].length;
+  let r = "";
+  rows.forEach((row, y) => [...row].forEach((c, x) => {
+    if (c === ".") return;
+    const anim = shine && (c === "b" || c === "w") ? ` class="shine" style="--c:${COL[c]};animation-delay:${(y * 0.035).toFixed(3)}s"` : "";
+    r += `<rect x="${x * s}" y="${y * s}" width="${s}" height="${s}" fill="${COL[c]}"${anim}/>`;
+  }));
+  return `<svg class="spr" width="${w * s}" height="${h * s}" viewBox="0 0 ${w * s} ${h * s}">${r}</svg>`;
+}
+
+const I = {
+  today: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l3 3 5-6"/></svg>',
+  grid: '<svg viewBox="0 0 24 24"><rect x="4" y="4" width="7" height="7" rx="1"/><rect x="13" y="4" width="7" height="7" rx="1"/><rect x="4" y="13" width="7" height="7" rx="1"/><rect x="13" y="13" width="7" height="7" rx="1"/></svg>',
+};
+
+const OPTS = [
+  { t: "Now: pixel square", d: "Today's button, for comparison.",
+    fab: `<button class="fab f0" aria-label="New task"><span class="face"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></span></button>` },
+  { t: "1 · Sword on the square", d: "Keeps the square; the + becomes a small dark sword. Safest, but the sword is tiny and reads as a cross from afar.",
+    fab: `<button class="fab f1" aria-label="New task"><span class="face">${sprite(GLYPH, 2)}</span></button>` },
+  { t: "2 · Sword on the bar", rec: true, d: "No square: the whole glowing sword stands in the middle of the bar, point down. Tap lifts it like it's being drawn. The strongest knight look, still clearly a +.",
+    fab: `<button class="fab f2" aria-label="New task"><span class="sw">${sprite(SWORD, 3, true)}</span></button>` },
+  { t: "3 · Sword in the stone", d: "Only the hilt and guard show; the blade sits in a stone set into the bar. Tap pulls it out a little. Smaller and calmer, but the guard alone is a weaker +.",
+    fab: `<button class="fab f3" aria-label="New task"><span class="clip"><span class="sw">${sprite(SWORD, 3, true)}</span></span><span class="stone"></span></button>` },
+];
+
+document.getElementById("grid").innerHTML = OPTS.map(o => `
+  <section class="opt${o.rec ? " rec" : ""}">
+    <h2>${o.t}${o.rec ? '<span class="badge">Recommended</span>' : ""}</h2>
+    <div class="phone">
+      <div class="tile done"><i></i>Brush teeth</div>
+      <div class="tile"><i></i>Skincare</div>
+      <nav class="bar"><b class="on">${I.today}</b><span class="mid"></span><b>${I.grid}</b></nav>
+      ${o.fab}
+    </div>
+    <p>${o.d}</p>
+  </section>`).join("");
+
+document.getElementById("zoom").innerHTML = `
+  <figure><div class="dark">${sprite(SWORD, 8, true)}</div><figcaption>The sword, 15 × 25 pixels (shown 8×)</figcaption></figure>
+  <figure><div class="dark" style="color:var(--glow)">${sprite(GLYPH, 8)}</div><figcaption>The glyph for option 1 (shown 8×)</figcaption></figure>`;
+
+document.querySelectorAll(".fab").forEach(b => b.addEventListener("click", () => {
+  b.classList.add("press");
+  setTimeout(() => b.classList.remove("press"), 260);
+}));
+</script>

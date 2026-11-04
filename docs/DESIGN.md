@@ -33,10 +33,10 @@ _Lantern v1, on the `lantern` branch (2026-10-28). The v0.x design of «پیکر
 
 - The bottom bar is Today · **+** · Goals. «+» sits in the middle and rises 20 dp above the bar. It opens the new-task sheet on Today from either tab.
 - **«+» is the one thing each character changes.** Everything else is the same design in every character:
-  - **Knight:** a pixel key on its shadow; pressed, it sinks 3 dp.
+  - **Knight:** a glowing pixel sword standing point down in the bar, its guard and blade making the «+» (D208). Pressed, it lifts 10 dp; a shine runs down the blade every 4 s. Mockup: `docs/design/knight-sword.html`.
   - **Vampire:** a coffin in his red with a carved inner rim, on its shadow; pressed, it sinks.
-  - **Wizard:** a glowing crystal orb with a soft halo and a small twinkling star.
-  - **Goth girl:** a moon with a bite out of its top corner and two small stars.
+  - **Wizard:** an open spell book with a glowing «+» rune floating above its pages and two twinkling stars (D210). The rune bobs; pressed, the book squashes. Mockup: `docs/design/wizard-options.html`.
+  - **Goth girl:** a cat head in her purple with the «+» on its face and whiskers (D209). Pressed, it squashes from the chin; every 5 s one ear twitches. Mockup: `docs/design/goth-cat.html`.
   - **Simple:** a rounded square.
 - Code: `ui/components/BottomBar.kt`. Mockup: `docs/design/character-styles.html`.
 
