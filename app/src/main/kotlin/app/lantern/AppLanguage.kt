@@ -37,8 +37,16 @@ object AppLanguage {
      * Some launchers move the icon once when this happens. A one-language build has only the one alias.
      */
     fun syncLauncher(context: Context) {
-        if (only != null) return
         val pm = context.packageManager
+        if (only != null) {
+            // An update from a build with the language aliases can leave the one alias left here disabled
+            // (a language was picked there), and then there's no launcher icon. Put it back to the manifest's "on".
+            val system = ComponentName(context.packageName, LAUNCHER_SYSTEM)
+            if (pm.getComponentEnabledSetting(system) != PackageManager.COMPONENT_ENABLED_STATE_DEFAULT) {
+                pm.setComponentEnabledSetting(system, PackageManager.COMPONENT_ENABLED_STATE_DEFAULT, PackageManager.DONT_KILL_APP)
+            }
+            return
+        }
         val want = when (choice(context)) {
             Choice.SYSTEM -> LAUNCHER_SYSTEM
             Choice.FA -> LAUNCHER_FA
