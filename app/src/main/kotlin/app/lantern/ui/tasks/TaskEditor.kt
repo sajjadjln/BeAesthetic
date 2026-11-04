@@ -194,7 +194,9 @@ internal fun TaskEditorSheet(
         if (full && openedByTap) scroll.animateScrollTo((formTop - keepName).coerceAtLeast(0), tween(560, easing = BaMotion.Open))
     }
 
-    ModalBottomSheet(onDismissRequest = onDismiss, sheetState = sheet, containerColor = c.surface2, shape = Px.Dialog) {
+    // The sheet is its own window, and Material3 picks its system bar icons from contentColor. Without it the
+    // default is black, so the sheet counted as light and the phone's navigation bar turned light (user, 2026-11-04).
+    ModalBottomSheet(onDismissRequest = onDismiss, sheetState = sheet, containerColor = c.surface2, contentColor = c.text1, shape = Px.Dialog) {
         // Everything scrolls; «ذخیره» stays pinned under it, always in reach.
         Column(
             verticalArrangement = Arrangement.spacedBy(16.dp),

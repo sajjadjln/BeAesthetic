@@ -39,8 +39,10 @@ import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.setValue
@@ -120,6 +122,8 @@ data class TodayActions(
     val openBackup: () -> Unit = {},
     /** Tapping the date opens History (D198). */
     val openHistory: () -> Unit = {},
+    /** Holding a task asks to delete it (user, 2026-11-04). */
+    val askDelete: (taskId: Long, title: String) -> Unit = { _, _ -> },
 )
 
 @Composable
@@ -133,6 +137,7 @@ fun TodayRoute(
     val state by viewModel.state.collectAsStateWithLifecycle()
     // «یه چیز اضافه کن» opens the simple sheet on «هر وقت» in the part being looked at (D128).
     var adding by remember { mutableStateOf<Pair<Part, RepeatKind>?>(null) }
+    var deleting by remember { mutableStateOf<Pair<Long, String>?>(null) }
     LaunchedEffect(Unit) { viewModel.screenShown() }
     val addAsked by viewModel.addRequested.collectAsStateWithLifecycle()
     LaunchedEffect(addAsked) {
@@ -153,8 +158,12 @@ fun TodayRoute(
             addAnytime = { adding = (state?.selectedPart ?: Part.MORNING) to RepeatKind.ANYTIME },
             openBackup = onOpenBackup,
             openHistory = onOpenHistory,
+            askDelete = { id, title -> deleting = id to title },
         ),
     )
+    deleting?.let { (id, title) ->
+        DeleteTaskDialog(title, onDismiss = { deleting = null }, onDelete = { deleting = null; viewModel.delete(id) })
+    }
     val s = state
     val add = adding
     if (s != null && add != null) {
@@ -188,6 +197,25 @@ fun TodayScreen(state: TodayUiState?, actions: TodayActions) {
     }
 
     if (state != null) TodayBody(state, actions, celebrate)
+}
+
+/** The same question as the editor's «حذف», with the task's name; deleting archives it (D109). */
+@Composable
+private fun DeleteTaskDialog(title: String, onDismiss: () -> Unit, onDelete: () -> Unit) {
+    val c = Ba.colors
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        containerColor = c.surface,
+        title = { Text(stringResource(R.string.delete_title), style = Ba.type.title, color = c.text1) },
+        text = {
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                Text(title, style = Ba.type.subtitle, color = c.text1)
+                Text(stringResource(R.string.delete_text), style = Ba.type.body, color = c.text2)
+            }
+        },
+        confirmButton = { TextButton(onClick = onDelete) { Text(stringResource(R.string.delete_confirm), color = c.text1) } },
+        dismissButton = { TextButton(onClick = onDismiss) { Text(stringResource(R.string.cancel), color = c.text2) } },
+    )
 }
 
 @Composable
@@ -270,7 +298,7 @@ internal fun AnytimeCard(items: List<AnytimeUi>, open: Boolean, actions: TodayAc
                         horizontalArrangement = Arrangement.spacedBy(12.dp),
                         modifier = Modifier
                             .fillMaxWidth()
-                            .toggleable(item.done, role = Role.Checkbox) { nowDone -> if (nowDone) haptics.light(); actions.toggle(item.taskId) }
+                            .tickOrHold(item.done, onHold = { actions.askDelete(item.taskId, item.title) }) { if (!item.done) haptics.light(); actions.toggle(item.taskId) }
                             .heightIn(min = 48.dp)
                             .padding(horizontal = 16.dp, vertical = 10.dp)
                             .graphicsLayer { this.alpha = alpha },

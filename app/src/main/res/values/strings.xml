@@ -37,7 +37,6 @@
 
     <string name="today_part_empty">Nothing in this part today.</string>
     <string name="tag_important">Important</string>
-    <string name="tag_due">Due</string>
     <string name="cd_settings">Settings</string>
 
     <!-- Notifications: neutral, forward-looking, no character (SPEC §7.2, D84) -->
@@ -212,10 +211,10 @@
     <!-- Tabs, splash, characters, goals -->
     <string name="tab_today">Today</string>
     <string name="tab_goals">Goals</string>
-    <string name="char_knight">Knight</string>
-    <string name="char_vampire">Vampire</string>
-    <string name="char_wizard">Wizard</string>
-    <string name="char_goth">Goth girl</string>
+    <string name="char_knight">Torin</string>
+    <string name="char_vampire">Dracula</string>
+    <string name="char_wizard">Morpheus</string>
+    <string name="char_goth">Violet</string>
     <string name="goals_soon_title">In development</string>
     <string name="goals_soon_body">I\'m building this place. Your goals will live here soon.</string>
     <string-array name="gregorian_months">
@@ -304,7 +303,7 @@
     <!-- Slice 9: onboarding (flows O1–O5, D142). -->
     <string name="onb_char_title">Pick your companion</string>
     <string name="onb_char_go">Let\'s go with the %1$s</string>
-    <string name="intro_knight_1">I\'m the knight. I don\'t talk much; I just stand by you.</string>
+    <string name="intro_knight_1">I\'m Torin. I don\'t talk much; I just stand by you.</string>
     <string name="intro_knight_2">Small steps, but every day. Deal?</string>
     <string name="intro_vampire_1">I\'m up at night, and I keep the scroll of your tasks.</string>
     <string name="intro_vampire_2">I promise not to grumble. Much.</string>
