@@ -21,6 +21,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.withFrameNanos
+import androidx.compose.ui.AbsoluteAlignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.drawWithContent
@@ -107,7 +108,9 @@ fun Splash(onDone: () -> Unit) {
             .semantics { contentDescription = name },
     ) {
         Stars(phase(t, 0f, 0.3f))
-        BoxWithConstraints(Modifier.fillMaxSize()) {
+        // Top-left in both directions: in RTL a Box starts its children at the right edge, and the absolute
+        // offsets below would then push the word and the lantern off the screen.
+        BoxWithConstraints(Modifier.fillMaxSize(), contentAlignment = AbsoluteAlignment.TopLeft) {
             val w = maxWidth * logo.widthOfScreen
             val h = w / logo.aspect
             val left = (maxWidth - w) / 2
