@@ -1,6 +1,6 @@
 # Lantern on Cafe Bazaar: roadmap to the first release
 
-_Written 2026-11-03 on the `lantern` branch. Questions answered the same day (D199). Not started. The full list of items is `STORE-RELEASE-CHECKLIST.md`; this file puts them in order._
+_Written 2026-11-03 on the `lantern` branch. Questions answered the same day (D199). Work happens on the `bazaar` branch (D207); B1 built 2026-11-04. The full list of items is `STORE-RELEASE-CHECKLIST.md`; this file puts them in order._
 
 ## What the first Bazaar release is
 
@@ -32,7 +32,8 @@ Each slice ends as in Phase 5: a build, "what works, what's next", your feedback
 - The L9 checks in `LANTERN-ROADMAP.md`: a week of real use on the Poco, backup → reinstall → restore, reminders after a reboot and with battery saver on.
 - Tag the signed 1.0.0. **The Room schema at 1.0.0 is the baseline**: from here on every change needs a tested migration.
 
-### B1. Flavors
+### B1. Flavors ✅ built 2026-11-04 on branch `bazaar` (D207)
+_Done: flavors `personal` (`app.lantern.me`) and `bazaar` (`app.lantern`); the Bazaar build has Persian as `values/` (copied from `values-fa/` at build time), `fa` only, the language fixed (`BuildConfig.ONLY_LANGUAGE`), no language switch, one launcher alias; `BazaarStringsTest` fails on any string with Latin letters (only "Syncthing" is allowed). `check` lints both; `FLAVOR=bazaar scripts/release.sh` builds the signed Bazaar APK without installing it. Not yet seen on a phone._
 - Product flavors `personal` and `bazaar` (`play` later). `personal` keeps today's build; it gets its own ID (Q4).
 - `bazaar`: `localeFilters = ["fa"]`, Persian becomes `values/`; the language switch is hidden; one launcher alias; `app_name` «فانوس» only, no "Lantern" in any string.
 - `check` builds and lints both flavors; a test reads the Bazaar APK and fails if an English string is inside.

@@ -36,35 +36,14 @@
 
         <!-- The launcher entry (D194): the label under the icon follows the app's language, not only the
              phone's. One alias is on at a time (AppLanguage.syncLauncher): the phone's language by default,
-             or a fixed «فانوس» / "Lantern" when a language is picked in Settings. -->
+             or a fixed «فانوس» / "Lantern" when a language is picked in Settings. Those two aliases are in the
+             personal build only (src/personal); the Bazaar build is Persian only and has just this one (D207). -->
         <activity-alias
             android:name=".LauncherSystem"
             android:targetActivity=".MainActivity"
             android:label="@string/app_name"
             android:exported="true"
             android:enabled="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity-alias>
-        <activity-alias
-            android:name=".LauncherFa"
-            android:targetActivity=".MainActivity"
-            android:label="@string/app_name_fa"
-            android:exported="true"
-            android:enabled="false">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity-alias>
-        <activity-alias
-            android:name=".LauncherEn"
-            android:targetActivity=".MainActivity"
-            android:label="@string/app_name_en"
-            android:exported="true"
-            android:enabled="false">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

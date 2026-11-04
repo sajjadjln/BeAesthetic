@@ -72,11 +72,7 @@
     <string name="health_not_ok">یادآورها یه نگاه می‌خوان</string>
     <string name="settings_companion">همراه</string>
     <string name="settings_today_layout">صفحه‌ی امروز</string>
-    <string name="settings_language">زبان</string>
     <string name="settings_more">بقیه</string>
-    <string name="lang_system">مثل گوشی</string>
-    <string name="lang_fa">فارسی</string>
-    <string name="lang_en">English</string>
     <string name="companion_knight">کنارتم. هر وقت خواستی عوضم کن.</string>
     <string name="companion_vampire">طومار کارهات هنوز دست منه.</string>
     <string name="companion_wizard">هوم… صبرم هنوز زیاده.</string>
@@ -85,7 +81,7 @@
     <string name="settings_reminders">یادآورها</string>
     <string name="settings_backup">پشتیبان</string>
     <string name="settings_phone">رسیدن یادآورها</string>
-    <string name="settings_version">نسخه %1$s · Lantern</string>
+    <string name="settings_version">نسخه‌ی %1$s · فانوس</string>
 
     <!-- Reminders (09) -->
     <string name="reminders_title">یادآورها</string>

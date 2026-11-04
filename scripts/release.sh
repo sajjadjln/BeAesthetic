@@ -1,9 +1,16 @@
 #!/bin/bash
-# Builds the signed release APK (ARCHITECTURE §13) and installs it on a phone connected over USB.
-# Usage: scripts/release.sh [path/to/keystore.jks] [alias]
+# Builds the signed release APK (ARCHITECTURE §13). The personal build is installed on a phone connected
+# over USB; the Bazaar build is only built, for the upload or the beta (D207).
+# Usage: [FLAVOR=personal|bazaar] scripts/release.sh [path/to/keystore.jks] [alias]
 # The password is asked here, never stored, and only passed to Gradle for this one build.
 set -euo pipefail
 cd "$(dirname "$0")/.."
+FLAVOR="${FLAVOR:-personal}"
+case "$FLAVOR" in
+  personal) PACKAGE=app.lantern.me; TASK=assemblePersonalRelease ;;
+  bazaar)   PACKAGE=app.lantern;    TASK=assembleBazaarRelease ;;
+  *) echo "FLAVOR is personal or bazaar"; exit 1 ;;
+esac
 
 # With keystore.properties (made once by scripts/save-signing.sh) nothing is asked; Gradle reads it.
 if [ ! -f keystore.properties ]; then
@@ -17,19 +24,23 @@ fi
 
 export JAVA_HOME="${JAVA_HOME:-/Applications/Android Studio.app/Contents/jbr/Contents/Home}"
 # No configuration cache here: it would store the build's inputs, passwords included, on disk.
-./gradlew :app:assembleRelease --no-configuration-cache --console=plain -q
+./gradlew ":app:$TASK" --no-configuration-cache --console=plain -q
 
-APK=app/build/outputs/apk/release/app-release.apk
+APK="app/build/outputs/apk/$FLAVOR/release/app-$FLAVOR-release.apk"
 [ -f "$APK" ] || { echo "No signed APK: is the password right?"; exit 1; }
 "$JAVA_HOME/bin/keytool" -printcert -jarfile "$APK" | grep -m1 "SHA256" || true
 echo "Signed: $APK"
+if [ "$FLAVOR" = bazaar ]; then
+  echo "Bazaar build: not installed here (it would replace your own app.lantern install). Upload it or send it to the beta."
+  exit 0
+fi
 
 ADB="$HOME/Library/Android/sdk/platform-tools/adb"
 PHONE=$("$ADB" devices | awk 'NR>1 && $2=="device" && $1 !~ /^emulator-/ {print $1; exit}')
 if [ -n "$PHONE" ]; then
   echo "Installing on $PHONE…"
   "$ADB" -s "$PHONE" install -r "$APK"
-  "$ADB" -s "$PHONE" shell am start -n app.lantern/.MainActivity >/dev/null
+  "$ADB" -s "$PHONE" shell am start -n "$PACKAGE/app.lantern.MainActivity" >/dev/null
   echo "Installed and opened «فانوس»."
 else
   echo "No phone over USB. Connect it with USB debugging on and run: adb install -r $APK"

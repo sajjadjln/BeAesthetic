@@ -19,8 +19,11 @@ object AppLanguage {
     private const val PREFS = "lantern_prefs"
     private const val KEY = "language"
 
+    /** A store build with one language (D207: Bazaar is Persian only); null in the personal build. */
+    private val only: Choice? = BuildConfig.ONLY_LANGUAGE?.let { Choice.valueOf(it.uppercase()) }
+
     fun choice(context: Context): Choice =
-        runCatching { Choice.valueOf(prefs(context).getString(KEY, null) ?: "") }.getOrDefault(Choice.SYSTEM)
+        only ?: runCatching { Choice.valueOf(prefs(context).getString(KEY, null) ?: "") }.getOrDefault(Choice.SYSTEM)
 
     fun set(context: Context, choice: Choice) {
         prefs(context).edit().putString(KEY, choice.name).apply()
@@ -31,9 +34,10 @@ object AppLanguage {
      * The launcher shows the label of whichever launcher alias is on (D194), and launchers read labels in
      * the phone's language only. So the alias follows the choice: the phone's language, or a fixed
      * «فانوس» / "Lantern". The new one is turned on before the old ones go off, so there is always an entry.
-     * Some launchers move the icon once when this happens.
+     * Some launchers move the icon once when this happens. A one-language build has only the one alias.
      */
     fun syncLauncher(context: Context) {
+        if (only != null) return
         val pm = context.packageManager
         val want = when (choice(context)) {
             Choice.SYSTEM -> LAUNCHER_SYSTEM

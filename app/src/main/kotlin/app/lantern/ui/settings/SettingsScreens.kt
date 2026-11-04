@@ -1,6 +1,5 @@
 package app.lantern.ui.settings
 
-import app.lantern.AppLanguage
 import app.lantern.ui.theme.CharacterPortrait
 import app.lantern.ui.theme.LanternCharacter
 import app.lantern.ui.theme.Mood
@@ -241,20 +240,8 @@ fun SettingsScreen(container: AppContainer, debugAvailable: Boolean, onBack: () 
             }
         }
 
-        // «زبان» (D176): like the phone, Persian or English. The screen is redrawn in the new language.
-        SectionLabel(R.string.settings_language)
-        val language = remember { AppLanguage.choice(context) }
-        Segmented(
-            listOf(stringResource(R.string.lang_system), stringResource(R.string.lang_fa), stringResource(R.string.lang_en)),
-            AppLanguage.Choice.entries.indexOf(language),
-        ) { i ->
-            val pick = AppLanguage.Choice.entries[i]
-            if (pick != language) {
-                AppLanguage.set(context, pick)
-                container.notifier.createChannels() // The channel names in the new language.
-                (context as? android.app.Activity)?.recreate()
-            }
-        }
+        // «زبان» (D176): in the personal build only; the Bazaar build is Persian only (D207).
+        LanguageSection(container)
 
         SectionLabel(R.string.settings_more)
         val rows = listOf(
@@ -296,7 +283,7 @@ fun SettingsScreen(container: AppContainer, debugAvailable: Boolean, onBack: () 
 }
 
 @Composable
-private fun SectionLabel(text: Int) {
+internal fun SectionLabel(text: Int) {
     Text(stringResource(text), style = Ba.type.label, color = Ba.colors.text3, modifier = Modifier.padding(top = 10.dp))
 }
 

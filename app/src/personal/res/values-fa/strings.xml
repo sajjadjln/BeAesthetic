@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Only in the personal build, which has both languages (D207). -->
+<resources>
+    <string name="settings_language">زبان</string>
+    <string name="lang_system">مثل گوشی</string>
+    <string name="lang_fa">فارسی</string>
+    <string name="lang_en">English</string>
+</resources>

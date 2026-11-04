@@ -6,7 +6,7 @@ Lantern is personal for now (D49, D173). This is the list to work through when i
 
 ## Both stores
 
-- [ ] Product flavors `personal`, `bazaar`, `play`; CI/`check` builds all three.
+- [ ] Product flavors `personal`, `bazaar`, `play`; CI/`check` builds all three. _(`personal` and `bazaar` done 2026-11-04, D207; `play` later.)_
 - [ ] One language per store: hide the language switch in Settings, drop the three launcher aliases down to one (D194 ④), and drop the date order and digits code paths the store doesn't use.
 - [ ] The app starts empty; nothing personal is seeded (D100). Remove the debug menu from release (`DebugMenu.AVAILABLE`).
 - [ ] Remove leftover permissions from «پیکر»: `CAMERA` (the check-in camera is gone; still in the manifest on 2026-11-03). Re-check every permission in the merged manifest.
@@ -46,9 +46,9 @@ Lantern is personal for now (D49, D173). This is the list to work through when i
 
 ## Cafe Bazaar
 
-- [ ] **Persian only.** Remove English: `localeFilters = ["fa"]`, no `values/` English copy shipped (Persian becomes the default `values/`).
+- [x] **Persian only** (2026-11-04, D207). Remove English: `localeFilters = ["fa"]`, no `values/` English copy shipped (Persian becomes the default `values/`).
 - [ ] **All four characters, the goth woman included** (D199, reverses that part of D195). Check her lines read well in Persian.
-- [ ] **The app's name is Persian: «فانوس».** The launcher label, the splash word, notifications and the Bazaar listing all say «فانوس»; no "Lantern" anywhere in the Bazaar build (one launcher alias, `app_name` in Persian only).
+- [x] **The app's name is Persian: «فانوس».** _(In the build, 2026-11-04; the listing is still to do.)_ The launcher label, the splash word, notifications and the Bazaar listing all say «فانوس»; no "Lantern" anywhere in the Bazaar build (one launcher alias, `app_name` in Persian only).
 - [ ] Persian title with the words people search for, Persian description.
 - [ ] Check Bazaar's current rules on target SDK and on `USE_EXACT_ALARM` / `SCHEDULE_EXACT_ALARM` and `REQUEST_IGNORE_BATTERY_OPTIMIZATIONS`.
 - [ ] Bazaar takes an APK; the signed APK from `scripts/release.sh` is the upload.

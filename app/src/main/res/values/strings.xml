@@ -2,9 +2,6 @@
 <!-- English, the default (D174). Persian is in values-fa/; every string lives in both. -->
 <resources>
     <string name="app_name">Lantern</string>
-    <!-- The launcher labels when the language is picked in Settings (D194): fixed, whatever the phone's language. -->
-    <string name="app_name_en" translatable="false">Lantern</string>
-    <string name="app_name_fa" translatable="false">فانوس</string>
 
     <!-- Calendar -->
     <string-array name="weekdays">
@@ -75,11 +72,7 @@
     <string name="health_not_ok">Reminders need a look</string>
     <string name="settings_companion">Companion</string>
     <string name="settings_today_layout">Today\'s layout</string>
-    <string name="settings_language">Language</string>
     <string name="settings_more">More</string>
-    <string name="lang_system">Like the phone</string>
-    <string name="lang_fa">فارسی</string>
-    <string name="lang_en">English</string>
     <string name="companion_knight">By your side. Change me whenever you like.</string>
     <string name="companion_vampire">I still hold the scroll of your tasks.</string>
     <string name="companion_wizard">Hmm… my patience is still plenty.</string>

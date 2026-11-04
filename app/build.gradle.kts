@@ -24,6 +24,22 @@ android {
         versionName = "0.9.4"
     }
 
+    // One codebase, one build per place it's installed from (D195, D199, D207). `personal` is the
+    // user's own phone: both languages, its own ID so a store build never "updates" it. `bazaar` is
+    // Persian only and keeps `app.lantern`, which is permanent once published.
+    flavorDimensions += "store"
+    productFlavors {
+        create("personal") {
+            dimension = "store"
+            applicationId = "app.lantern.me"
+            buildConfigField("String", "ONLY_LANGUAGE", "null")
+        }
+        create("bazaar") {
+            dimension = "store"
+            buildConfigField("String", "ONLY_LANGUAGE", "\"fa\"")
+        }
+    }
+
     // The release key lives outside the repo (ARCHITECTURE §13). Its passwords never go in a file the
     // repo can see: scripts/release.sh asks for them and passes them as environment variables.
     // (A git-ignored keystore.properties with storeFile, storePassword, keyAlias, keyPassword also works.)
@@ -66,7 +82,7 @@ android {
         buildConfig = true
     }
 
-    // English and Persian (D174): keep no other languages from libraries in the APK.
+    // English and Persian (D174): keep no other languages from libraries in the APK. Bazaar: Persian only (below).
     androidResources {
         localeFilters += listOf("en", "fa")
     }
@@ -183,9 +199,39 @@ abstract class CheckDependenciesTask : DefaultTask() {
     }
 }
 
+/**
+ * The Bazaar build is Persian only (D207): the Persian strings become the default `values/`, so no
+ * English copy of any string ships. Every name in `values/` must also be in `values-fa/`;
+ * BazaarStringsTest fails otherwise.
+ */
+abstract class PersianDefaultStringsTask : DefaultTask() {
+    @get:InputFile
+    abstract val persian: RegularFileProperty
+
+    @get:OutputDirectory
+    abstract val outputDir: DirectoryProperty
+
+    @TaskAction
+    fun copy() {
+        val values = outputDir.get().dir("values").asFile
+        values.deleteRecursively()
+        values.mkdirs()
+        persian.get().asFile.copyTo(values.resolve("strings.xml"))
+    }
+}
+
 androidComponents {
-    // Unit tests run once, on the debug variant (it carries the Room schemas the migration tests read).
+    // Unit tests run once per flavor, on the debug variant (it carries the Room schemas the migration tests read).
     beforeVariants(selector().withBuildType("release")) { it.enableUnitTest = false }
+
+    onVariants(selector().withFlavor("store" to "bazaar")) { variant ->
+        variant.androidResources.localeFilters.set(setOf("fa"))
+        val name = variant.name.replaceFirstChar { it.uppercase() }
+        val persianDefault = tasks.register<PersianDefaultStringsTask>("persianDefaultStrings$name") {
+            persian.set(layout.projectDirectory.file("src/main/res/values-fa/strings.xml"))
+        }
+        variant.sources.res?.addGeneratedSourceDirectory(persianDefault, PersianDefaultStringsTask::outputDir)
+    }
 
     onVariants { variant ->
         val name = variant.name.replaceFirstChar { it.uppercase() }
@@ -217,3 +263,6 @@ androidComponents {
         tasks.matching { it.name == "assemble$name" }.configureEach { dependsOn(manifestCheck, dependencyCheck) }
     }
 }
+
+// `lint` alone checks one variant; every flavor gets linted (BAZAAR-ROADMAP B1).
+tasks.named("check") { dependsOn("lintPersonalDebug", "lintBazaarDebug") }

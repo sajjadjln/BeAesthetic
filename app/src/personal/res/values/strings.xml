@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Only in the personal build, which has both languages (D207). The Bazaar build is Persian only. -->
+<resources>
+    <!-- The launcher labels when the language is picked in Settings (D194): fixed, whatever the phone's language. -->
+    <string name="app_name_en" translatable="false">Lantern</string>
+    <string name="app_name_fa" translatable="false">فانوس</string>
+    <string name="settings_language">Language</string>
+    <string name="lang_system">Like the phone</string>
+    <string name="lang_fa">فارسی</string>
+    <string name="lang_en">English</string>
+</resources>

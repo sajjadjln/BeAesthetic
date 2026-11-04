@@ -362,6 +362,23 @@ Research: `docs/research/plugin-platform-research.md` («research §n»). Plan: 
 | D200 | **Simple: a look with no character.** The user picks «با همراه» or «ساده» in onboarding (a new first step) and in Settings → «ظاهر». Simple shows no character anywhere (Today gets a count card «۳ از ۹» with one line; the sheet gets a title and a line; Goals gets its icon) and uses flat, rounded shapes instead of pixel ones. Its color is one of the four palettes, picked by color and stored as the character. Same font (Estedad) and same rules: done green, amber for due, nothing red. Stored in the unused `showBuddy` column, so no migration. Mockup `docs/design/simple-mode.html`. | User: "users that dont want to choose any characters they want simple design with no characters… the user should be able to choose". | Built; seen on the emulator |
 | D201 | **«+» moves to the middle of the bottom bar (Today · + · Goals), and it is the one thing each character changes.** Knight: pixel key; vampire: coffin; wizard: crystal orb; goth girl: bitten moon; Simple: rounded square. Everything else is one shared design, with Estedad only (per-character fonts and styles were tried and dropped). The new-task sheet takes the flat layout (title, filled name field, «کِی؟» and «بخش روز» chips, pinned «ذخیره») in every look. Mockup `docs/design/character-styles.html`. | User: "the buttom sheet menu this way is way better"; "dont change the font… everything in the desing is the same for them just the new task button and thats in the middle of the bottom nav bar"; the vampire's wax seal was "bad", the coffin approved. | Built; seen on the emulator |
 
+## The plugin standard and the release scope (2026-11-03)
+
+| # | Decision | Why | Status |
+|---|---|---|---|
+| D202 | **v1.0 is the to-do and goals only.** No plugin, no store, no plugin runtime in the first release. The installed workout data stays untouched in its tables; the plugin link (D180) comes later. | User: "the first release is just to-do and the goals". Keeps v1.0 small. | Final |
+| D203 | **Store policy rules C1–C10 sit next to the UI rules (plan §9).** A plugin does what its listing says; reviewed code is what runs; no banned categories; no medical or diet claims; finance plugins track only, never advise or move money; no ads, payments or links out; no data export; no impersonation; a kill switch through revocation; approval per channel (Bazaar, Play). | Play's interpreter exception holds the app responsible for downloaded scripts (research §4). User: "we should have rules … that a plugin not gonna break the rules". | Final |
+| D204 | **Our own plugin framework, written as a standard like RahaBanking's `PLUGIN-ARCHITECTURE.md`:** host facts, one canonical structure, naming, one pattern per thing, anti-patterns, mandatory tests in the starter, a review checklist, a version. It lives in `docs/plugins/PLUGIN-STANDARD.md` in this repo, moved to the SDK repo later. A v0 draft now (host facts, structure, naming, anti-patterns, checklist); patterns and tests after the S0 spike and the reading-log plugin, citing real code. | User: "we also need our own framework so we can control what is being created". Patterns written before real code are guesses. | Final |
+| D205 | **The gym plugin follows the standard too** (same layering and tests); it may still use its own Compose screens (D180). | Otherwise the standard is only proven on a sample. | Final |
+| D206 | **Every check runs where the author can't skip it.** The author's build (Gradle plugin) is early feedback only; the store server re-runs every check on the uploaded bundle, and any failed automatic check blocks review; the app checks signature, permissions, quotas and timeouts at install and at runtime. | Plugin authors are strangers and can delete tests from their own repo. | Final |
+
+## The Bazaar build starts (2026-11-04)
+
+| # | Decision | Why | Status |
+|---|---|---|---|
+| D207 | **Bazaar 1.0 ships the Goals tab as the «در دست ساخت» page, not the goal flow** (D199 ②; D202's "goals" means v1.0 of the product, not this first store build). B1 (flavors) starts before the personal 1.0.0, on its own branch `bazaar`. The `bazaar` flavor is Persian only: Persian strings become `values/`, the language is fixed, the Settings switch and the two extra launcher aliases are in `personal` only, and a test fails if a string with Latin letters is in the Bazaar build. | User: "Placeholder, start B1", "create a branch for bazaar". The goal flow is bigger than every other release item together. | Final |
+
+
 ## Superseded
 
 - Weekly focus sentence (Phase 2) → removed in D24.
