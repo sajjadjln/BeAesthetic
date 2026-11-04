@@ -70,7 +70,7 @@ private fun PartIcon(part: Part, color: Color, modifier: Modifier) {
  * comes in from the left in RTL. A small green square under a part means it's all done.
  */
 @Composable
-internal fun PartsSlider(state: TodayUiState, onSelect: (Part) -> Unit, fresh: Set<Long>, onTick: (TileUi) -> Unit) {
+internal fun PartsSlider(state: TodayUiState, onSelect: (Part) -> Unit, fresh: Set<Long>, onTick: (TileUi) -> Unit, onHold: (TileUi) -> Unit) {
     val c = Ba.colors
     val scope = rememberCoroutineScope()
     val pager = rememberPagerState(initialPage = state.selectedPart.ordinal) { Part.entries.size }
@@ -133,7 +133,7 @@ internal fun PartsSlider(state: TodayUiState, onSelect: (Part) -> Unit, fresh: S
                         modifier = Modifier.fillMaxWidth().padding(24.dp),
                     )
                 }
-                list.forEach { tile -> key(tile.taskId) { PixelTile(tile, fresh = tile.taskId in fresh) { onTick(tile) } } }
+                list.forEach { tile -> key(tile.taskId) { PixelTile(tile, fresh = tile.taskId in fresh, onHold = { onHold(tile) }) { onTick(tile) } } }
             }
         }
     }

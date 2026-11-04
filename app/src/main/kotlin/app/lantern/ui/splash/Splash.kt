@@ -14,7 +14,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.absoluteOffset
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -139,7 +139,9 @@ fun Splash(onDone: () -> Unit) {
                 contentScale = ContentScale.FillBounds,
                 colorFilter = ColorFilter.tint(Gold),
                 modifier = Modifier
-                    .offset(left, top).size(w, h)
+                    // absoluteOffset: the logo's fractions are measured from the left in both languages; a plain
+                    // offset mirrors in RTL and put the Persian lantern at the end of the word (on the «س»).
+                    .absoluteOffset(left, top).size(w, h)
                     .drawWithContent {
                         val x = size.width * sweep
                         if (rtl) clipRect(left = size.width - x) { this@drawWithContent.drawContent() }
@@ -151,7 +153,7 @@ fun Splash(onDone: () -> Unit) {
                 contentScale = ContentScale.FillBounds,
                 colorFilter = ColorFilter.tint(Gold),
                 modifier = Modifier
-                    .offset { IntOffset((left + w * lx).roundToPx(), (top + h * ly).roundToPx()) }
+                    .absoluteOffset { IntOffset((left + w * lx).roundToPx(), (top + h * ly).roundToPx()) }
                     .size(w * lw, h * lh)
                     .graphicsLayer { alpha = lampAlpha(t) },
             )

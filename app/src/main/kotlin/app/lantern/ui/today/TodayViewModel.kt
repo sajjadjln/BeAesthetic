@@ -150,6 +150,15 @@ class TodayViewModel(private val container: AppContainer) : ViewModel() {
         }
     }
 
+    /** Held on Today and confirmed: archives the task from today on, like «حذف» in the editor (D109). */
+    fun delete(taskId: Long) {
+        val current = state.value ?: return
+        viewModelScope.launch {
+            container.tasks.archive(taskId, current.date, container.clock.now())
+            container.scheduler.reconcile("task-delete")
+        }
+    }
+
     /** Opens or closes the «هر وقت» card; remembered (D127). */
     fun setAnytimeOpen(open: Boolean) {
         viewModelScope.launch { container.db.settings().setAnytimeOpen(open) }

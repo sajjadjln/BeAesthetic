@@ -37,7 +37,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.selection.toggleable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -70,6 +70,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.toggleableState
+import androidx.compose.ui.state.ToggleableState
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.LayoutDirection
@@ -202,24 +204,25 @@ internal fun TodayBody(state: TodayUiState, actions: TodayActions, celebrate: In
             }
             item(key = "progress") { Progress(state.done, state.total, celebrate, Modifier.riseIn(2)) }
             val tick = { tile: TileUi -> if (!tile.done) haptics.light(); actions.toggle(tile.taskId) }
+            val hold = { tile: TileUi -> actions.askDelete(tile.taskId, tile.title) }
             when {
                 state.minimumMode -> {
                     item(key = "minimum") { SectionHeader(stringResource(R.string.today_minimum_label), current = true, Modifier.animateItem()) }
-                    items(floor, key = { it.taskId }) { tile -> PixelTile(tile, Modifier.animateItem(), fresh = tile.taskId in fresh) { tick(tile) } }
+                    items(floor, key = { it.taskId }) { tile -> PixelTile(tile, Modifier.animateItem(), fresh = tile.taskId in fresh, onHold = { hold(tile) }) { tick(tile) } }
                 }
                 state.layout == TodayLayout.LIST -> {
-                    item(key = "now") { NowCard(now, state, Modifier.riseIn(3).animateItem(), onTick = { id -> haptics.light(); actions.toggle(id) }) }
+                    item(key = "now") { NowCard(now, state, Modifier.riseIn(3).animateItem(), onHold = hold, onTick = { id -> haptics.light(); actions.toggle(id) }) }
                     var order = 4
                     Part.entries.forEach { part ->
                         val list = tiles[part].orEmpty()
                         if (list.isNotEmpty()) {
                             val rise = order++
                             item(key = "h$part") { SectionHeader(stringResource(partNames[part.ordinal]), current = part == state.currentPart, Modifier.riseIn(rise).animateItem()) }
-                            items(list, key = { it.taskId }) { tile -> PixelTile(tile, Modifier.riseIn(rise).animateItem(), fresh = tile.taskId in fresh) { tick(tile) } }
+                            items(list, key = { it.taskId }) { tile -> PixelTile(tile, Modifier.riseIn(rise).animateItem(), fresh = tile.taskId in fresh, onHold = { hold(tile) }) { tick(tile) } }
                         }
                     }
                 }
-                else -> item(key = "parts") { Box(Modifier.riseIn(3)) { PartsSlider(state, actions.selectPart, fresh, tick) } }
+                else -> item(key = "parts") { Box(Modifier.riseIn(3)) { PartsSlider(state, actions.selectPart, fresh, tick, hold) } }
             }
             if (state.anytime.isNotEmpty()) {
                 item(key = "anytime") { AnytimeCard(state.anytime, state.anytimeOpen, actions, Modifier.animateItem().padding(start = 16.dp, end = 16.dp, top = 20.dp)) }
@@ -389,7 +392,7 @@ private fun RowScope.ProgressBlock(on: Boolean, isNew: Boolean, wave: Int, index
  * card glows once.
  */
 @Composable
-private fun NowCard(now: TileUi?, state: TodayUiState, modifier: Modifier, onTick: (Long) -> Unit) {
+private fun NowCard(now: TileUi?, state: TodayUiState, modifier: Modifier, onHold: (TileUi) -> Unit, onTick: (Long) -> Unit) {
     val c = Ba.colors
     val night = now != null && state.currentPart == Part.NIGHT && now.part != Part.NIGHT
     val shownId: Long = when { now == null -> ALL_DONE; night -> NIGHT_REST; else -> now.taskId }
@@ -432,13 +435,12 @@ private fun NowCard(now: TileUi?, state: TodayUiState, modifier: Modifier, onTic
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
                     modifier = Modifier
                         .fillMaxWidth()
-                        .toggleable(tile.done, role = Role.Checkbox) { if (!tile.done) onTick(tile.taskId) }
+                        .tickOrHold(tile.done, onHold = { onHold(tile) }) { if (!tile.done) onTick(tile.taskId) }
                         .padding(horizontal = 16.dp, vertical = 14.dp),
                 ) {
                     Column(Modifier.weight(1f)) {
                         Text(stringResource(R.string.today_now), style = Ba.type.caption, color = c.glow)
                         Text(tile.title, style = Ba.type.title, color = c.text1)
-                        if (tile.due) Text(stringResource(R.string.tag_due), style = Ba.type.caption, color = c.amber)
                     }
                     PixelCheck(tile.done, Modifier.size(34.dp))
                 }
@@ -469,11 +471,11 @@ internal fun SectionHeader(text: String, current: Boolean, modifier: Modifier = 
 }
 
 /**
- * A task row: pixel corners, green when done, amber «موعدش رسیده» when due, «مهم» when important. A [fresh]
+ * A task row: pixel corners, green when done, amber «مهم» when important. A [fresh]
  * one (just added) glows once in the character's color (T5).
  */
 @Composable
-internal fun PixelTile(tile: TileUi, modifier: Modifier = Modifier, fresh: Boolean = false, onToggle: () -> Unit) {
+internal fun PixelTile(tile: TileUi, modifier: Modifier = Modifier, fresh: Boolean = false, onHold: () -> Unit = {}, onToggle: () -> Unit) {
     val c = Ba.colors
     val bg by animateColorAsState(if (tile.done) c.accent.copy(alpha = 0.14f) else Color.White.copy(alpha = 0.05f), tween(250), label = "tileBg")
     val glow = remember { Animatable(if (fresh) 1f else 0f) }
@@ -493,19 +495,24 @@ internal fun PixelTile(tile: TileUi, modifier: Modifier = Modifier, fresh: Boole
             .background(bg)
             .drawBehind { if (glow.value > 0f) drawRect(c.glow.copy(alpha = 0.32f * glow.value)) }
             .border(2.dp, lerp(edge, c.glow, glow.value), Px.Card)
-            .toggleable(tile.done, role = Role.Checkbox) { onToggle() }
+            .tickOrHold(tile.done, onHold) { onToggle() }
             .padding(horizontal = 14.dp, vertical = 12.dp),
     ) {
         Column(Modifier.weight(1f)) {
             Text(tile.title, style = Ba.type.tile.copy(fontSize = 17.sp, lineHeight = 26.sp), color = if (tile.done) c.text2 else c.text1)
-            when {
-                tile.done -> Unit
-                tile.due -> Text(stringResource(R.string.tag_due), style = Ba.type.label, color = c.amber)
-                tile.important -> Text(stringResource(R.string.tag_important), style = Ba.type.label, color = c.amber)
-            }
+            // No «موعدش رسیده» label: being on Today already says it's due (user, 2026-11-04).
+            if (!tile.done && tile.important) Text(stringResource(R.string.tag_important), style = Ba.type.label, color = c.amber)
         }
         PixelCheck(tile.done, Modifier.size(26.dp))
     }
+}
+
+/** A tap ticks or unticks; holding asks to delete the task (user, 2026-11-04). Still a checkbox for TalkBack. */
+@Composable
+internal fun Modifier.tickOrHold(done: Boolean, onHold: () -> Unit, onTick: () -> Unit): Modifier {
+    val holdLabel = stringResource(R.string.delete)
+    return semantics { toggleableState = ToggleableState(done) }
+        .combinedClickable(role = Role.Checkbox, onLongClickLabel = holdLabel, onLongClick = onHold, onClick = onTick)
 }
 
 /**

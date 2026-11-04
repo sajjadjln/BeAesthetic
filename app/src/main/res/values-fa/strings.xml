@@ -37,7 +37,6 @@
 
     <string name="today_part_empty">این بخش امروز کاری نداره.</string>
     <string name="tag_important">مهم</string>
-    <string name="tag_due">موعدش رسیده</string>
     <string name="cd_settings">تنظیمات</string>
 
     <!-- Notifications: neutral, forward-looking, no character (SPEC §7.2, D84) -->
@@ -216,10 +215,10 @@
     <!-- Slice 5: tabs, dashboard (02) and the day sheet (D1) -->
     <string name="tab_today">امروز</string>
     <string name="tab_goals">هدف‌ها</string>
-    <string name="char_knight">شوالیه</string>
-    <string name="char_vampire">ومپایر</string>
-    <string name="char_wizard">جادوگر</string>
-    <string name="char_goth">دختر گات</string>
+    <string name="char_knight">آریاسب</string>
+    <string name="char_vampire">دراکولا</string>
+    <string name="char_wizard">زال</string>
+    <string name="char_goth">وایولت</string>
     <string name="goals_soon_title">در دست ساخت</string>
     <string name="goals_soon_body">اینجا رو دارم می‌سازم. به‌زودی هدف‌هات اینجا زندگی می‌کنن.</string>
     <string-array name="gregorian_months">
@@ -308,7 +307,7 @@
     <!-- Slice 9: onboarding (flows O1–O5, D142). -->
     <string name="onb_char_title">همراهت رو انتخاب کن</string>
     <string name="onb_char_go">با %1$s بریم</string>
-    <string name="intro_knight_1">من شوالیه‌ام. حرف زیاد نمی‌زنم، فقط کنارت می‌ایستم.</string>
+    <string name="intro_knight_1">من آریاسبم. حرف زیاد نمی‌زنم، فقط کنارت می‌ایستم.</string>
     <string name="intro_knight_2">قدم کوچیک، ولی هر روز. قبول؟</string>
     <string name="intro_vampire_1">شب‌ها بیدارم و طومار کارهات دستمه.</string>
     <string name="intro_vampire_2">قول می‌دم غر نزنم. زیاد.</string>
