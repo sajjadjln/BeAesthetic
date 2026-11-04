@@ -378,6 +378,13 @@ Research: `docs/research/plugin-platform-research.md` («research §n»). Plan: 
 |---|---|---|---|
 | D207 | **Bazaar 1.0 ships the Goals tab as the «در دست ساخت» page, not the goal flow** (D199 ②; D202's "goals" means v1.0 of the product, not this first store build). B1 (flavors) starts before the personal 1.0.0, on its own branch `bazaar`. The `bazaar` flavor is Persian only: Persian strings become `values/`, the language is fixed, the Settings switch and the two extra launcher aliases are in `personal` only, and a test fails if a string with Latin letters is in the Bazaar build. | User: "Placeholder, start B1", "create a branch for bazaar". The goal flow is bigger than every other release item together. | Final |
 
+## New «+» for the knight, the goth girl and the wizard (2026-11-04)
+
+| # | Decision | Why | Status |
+|---|---|---|---|
+| D208 | **The knight's «+» is a pixel sword.** A glowing sword stands point down in the middle of the bar, so the guard and blade still read as «+». Pressed, it lifts 10 dp like it's being drawn; a shine runs down the blade every 4 s (off when the phone's animations are off). The other characters and Simple keep their buttons. Mockup `docs/design/knight-sword.html` (option 2). | User, 2026-11-04: "the new task button for the knight i want it to look like a sword"; picked option 2 over a sword glyph on the square and a hilt in a stone. | Built |
+| D209 | **The goth girl's «+» is a cat head.** A cat head in her purple with the dark «+» on its face, two inner ears and whiskers. Pressed, it squashes from the chin; every 5 s its right ear twitches (off when the phone's animations are off). Mockup `docs/design/goth-cat.html` (option 1). | User, 2026-11-04: "a cat for button of the character goth girl"; picked the cat head over a cat on the moon and a cat sitting on the bar. | Built |
+| D210 | **The wizard's «+» is an open spell book.** A glowing «+» rune floats above its pages and bobs 4 dp; two small stars twinkle. Pressed, the book squashes. Motion is off when the phone's animations are off. Mockup `docs/design/wizard-options.html` (option 3). | User, 2026-11-04: picked the spell book over a hat, a sparkle and a potion. | Built |
 
 ## Superseded
 
@@ -427,3 +434,6 @@ Research: `docs/research/plugin-platform-research.md` («research §n»). Plan: 
 - «+» at the bottom right, stepping aside on scroll (D194, T8) → in the middle of the bar, one shape per character (D201).
 - The new-task sheet with the character in a pixel dialog box at the top and the name over an underline (D189) → the flat layout with a title and a filled name field (D201).
 - No «ظاهر» in Settings (D189) → «ظاهر»: with a companion or Simple (D200).
+- The knight's «+» as a pixel key (D201) → a pixel sword standing in the bar (D208).
+- The goth girl's «+» as a bitten moon (D201) → a cat head (D209).
+- The wizard's «+» as a crystal orb (D201) → an open spell book (D210).

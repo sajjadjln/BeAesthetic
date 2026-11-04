@@ -1,9 +1,11 @@
 package app.lantern.ui.components
 
+import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.keyframes
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -38,11 +40,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.graphics.PathOperation
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.TransformOrigin
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -57,7 +62,6 @@ import app.lantern.ui.theme.Ba
 import app.lantern.ui.theme.BaMotion
 import app.lantern.ui.theme.LanternCharacter
 import app.lantern.ui.theme.LocalCharacter
-import app.lantern.ui.theme.Px
 import app.lantern.ui.theme.rememberAnimationsOn
 import kotlin.math.roundToInt
 
@@ -75,7 +79,7 @@ val ADD_RISE = 20.dp
 
 /**
  * The bar with «+ کار جدید» in its middle (D201). The button is the one thing each character changes: a pixel
- * key for the knight, a coffin for the vampire, a crystal orb for the wizard, a bitten moon for the goth girl,
+ * sword for the knight (D208), a coffin for the vampire, a spell book for the wizard (D210), a cat for the goth girl (D209),
  * a rounded square in Simple. Everything else is the same in every look.
  */
 @Composable
@@ -131,10 +135,10 @@ private fun AddButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
         when {
             !Ba.companion -> SimpleAdd(press)
             else -> when (LocalCharacter.current) {
-                LanternCharacter.KNIGHT -> KeyAdd(press, Px.Card, Modifier.size(56.dp))
+                LanternCharacter.KNIGHT -> SwordAdd(press)
                 LanternCharacter.VAMPIRE -> KeyAdd(press, Coffin, Modifier.size(50.dp, 62.dp), rim = true)
-                LanternCharacter.WIZARD -> OrbAdd(press)
-                LanternCharacter.GOTH -> MoonAdd(press)
+                LanternCharacter.WIZARD -> BookAdd(press)
+                LanternCharacter.GOTH -> CatAdd(press)
             }
         }
     }
@@ -157,10 +161,7 @@ private fun SimpleAdd(press: Float) {
     ) { PlusIcon(c.onGlow) }
 }
 
-/**
- * A key standing on its own darker shadow that sinks 3 dp onto it: the knight's pixel key (T8), and the
- * vampire's coffin with a carved inner rim.
- */
+/** The vampire's coffin with a carved inner rim, standing on its own darker shadow that sinks 3 dp onto it (T8). */
 @Composable
 private fun KeyAdd(press: Float, shape: androidx.compose.ui.graphics.Shape, modifier: Modifier, rim: Boolean = false) {
     val c = Ba.colors
@@ -181,6 +182,79 @@ private fun KeyAdd(press: Float, shape: androidx.compose.ui.graphics.Shape, modi
     }
 }
 
+/**
+ * The knight's sword (D208): a pixel sword standing point down in the middle of the bar, so its guard and blade
+ * still read as «+». Pressed, it lifts 10 dp like it's being drawn. A shine runs down the blade every 4 s.
+ * One sprite pixel is 3 dp; the sword reaches from the top of the button almost to the bottom of the bar.
+ */
+@Composable
+private fun SwordAdd(press: Float) {
+    val c = Ba.colors
+    val clock = if (rememberAnimationsOn()) {
+        rememberInfiniteTransition(label = "sword").animateFloat(0f, SHINE_MS, infiniteRepeatable(tween(SHINE_MS.toInt(), easing = LinearEasing)), label = "shine").value
+    } else -1f
+    val ink = mapOf(
+        'o' to lerp(c.glow, Color.Black, 0.92f), 'p' to c.glow, 'g' to c.glow, 'G' to lerp(c.glow, Color.Black, 0.5f),
+        'w' to Color.White, 'h' to c.rimDeep, 'b' to c.rimLight, 'e' to lerp(c.glow, c.rimLight, 0.5f),
+    )
+    Box(
+        Modifier
+            .size(64.dp)
+            .graphicsLayer { translationY = -10.dp.toPx() * press }
+            .drawBehind {
+                val s = 3.dp.toPx()
+                val left = (size.width - SWORD[0].length * s) / 2
+                // The glow behind the hilt and guard.
+                drawCircle(Brush.radialGradient(listOf(c.glow.copy(alpha = 0.35f), Color.Transparent), center = Offset(size.width / 2, 8 * s), radius = 15 * s), 15 * s, Offset(size.width / 2, 8 * s))
+                SWORD.forEachIndexed { y, row ->
+                    row.forEachIndexed { x, k ->
+                        if (k == '.') return@forEachIndexed
+                        // A hard 3 dp shadow under the sword first, then the pixel.
+                        drawRect(Color.Black.copy(alpha = 0.45f), Offset(left + x * s, y * s + s), Size(s, s))
+                    }
+                }
+                SWORD.forEachIndexed { y, row ->
+                    row.forEachIndexed { x, k ->
+                        if (k == '.') return@forEachIndexed
+                        val base = ink.getValue(k)
+                        val color = if ((k == 'b' || k == 'w') && clock >= 0f) lerp(base, Color.White, shine(clock - y * 35f)) else base
+                        drawRect(color, Offset(left + x * s, y * s), Size(s, s))
+                    }
+                }
+            },
+    )
+}
+
+private const val SHINE_MS = 4000f
+
+/** How white a blade row is, [ms] after the shine started: up over 120 ms, back down over 200 ms. */
+private fun shine(ms: Float): Float {
+    val t = ((ms % SHINE_MS) + SHINE_MS) % SHINE_MS
+    return when {
+        t < 120f -> t / 120f
+        t < 320f -> 1 - (t - 120f) / 200f
+        else -> 0f
+    }
+}
+
+/** The sword, point down: o outline, p pommel, w white, h grip, g/G guard and its shade, b/e blade and its edge. */
+private val SWORD = listOf(
+    "......ooo......",
+    ".....opwpo.....",
+    ".....opppo.....",
+    "......oho......",
+    "......oho......",
+    "......oho......",
+    ".ooooooooooooo.",
+    "ogwgggggggggggo",
+    "oGGGGGGGGGGGGGo",
+    ".ooooooooooooo.",
+) + List(12) { ".....owbeo....." } + listOf(
+    "......obo......",
+    "......obo......",
+    ".......o.......",
+)
+
 /** The vampire's coffin: wide at the shoulders, narrow at the head and the feet. */
 private val Coffin = GenericShape { size, _ ->
     val w = size.width
@@ -188,32 +262,52 @@ private val Coffin = GenericShape { size, _ ->
     moveTo(w * 0.3f, 0f); lineTo(w * 0.7f, 0f); lineTo(w, h * 0.26f); lineTo(w * 0.8f, h); lineTo(w * 0.2f, h); lineTo(0f, h * 0.26f); close()
 }
 
-/** The wizard's crystal orb: lit from the top corner, a soft halo and a small twinkling star. */
+/**
+ * The wizard's spell book (D210): an open book with a glowing «+» rune floating above its pages and two small
+ * twinkling stars. The rune bobs 4 dp; pressed, the book squashes. Drawn on a 64-unit grid, like the mockup.
+ */
 @Composable
-private fun OrbAdd(press: Float) {
+private fun BookAdd(press: Float) {
     val c = Ba.colors
-    val twinkle = if (rememberAnimationsOn()) {
-        rememberInfiniteTransition(label = "orb").animateFloat(0.35f, 1f, infiniteRepeatable(tween(1200), RepeatMode.Reverse), label = "star").value
-    } else 1f
+    val (bob, twinkle) = if (rememberAnimationsOn()) {
+        val t = rememberInfiniteTransition(label = "book")
+        t.animateFloat(0f, 1f, infiniteRepeatable(tween(1300), RepeatMode.Reverse), label = "rune").value to
+            t.animateFloat(0.35f, 1f, infiniteRepeatable(tween(1200), RepeatMode.Reverse), label = "star").value
+    } else 0f to 1f
     Box(
-        contentAlignment = Alignment.Center,
-        modifier = Modifier
-            .size(56.dp)
-            .graphicsLayer { scaleX = 1 - 0.08f * press; scaleY = 1 - 0.08f * press }
-            .drawBehind {
-                drawCircle(c.glow.copy(alpha = 0.16f), radius = size.minDimension / 2 + 5.dp.toPx())
-                drawCircle(c.glow.copy(alpha = 0.08f), radius = size.minDimension / 2 + 10.dp.toPx())
+        Modifier
+            .size(64.dp)
+            .graphicsLayer {
+                transformOrigin = TransformOrigin(0.5f, 0.9f)
+                scaleX = 1 + 0.06f * press; scaleY = 1 - 0.12f * press
             }
             .drawBehind {
-                drawCircle(Brush.radialGradient(listOf(Color.White, c.glow, lerp(c.glow, Color.Black, 0.55f)), center = Offset(size.width * 0.34f, size.height * 0.3f), radius = size.width * 0.85f))
+                val u = size.width / 64f
+                fun p(x: Float, y: Float) = Offset(x * u, y * u)
+                drawOval(c.glow.copy(alpha = 0.1f), p(-2f, 0f), Size(68 * u, 60 * u))
+                // The cover, then the two pages, each a curved sheet.
+                drawPath(Path().apply {
+                    moveTo(2 * u, 40 * u); quadraticTo(16 * u, 34 * u, 32 * u, 40 * u); quadraticTo(48 * u, 34 * u, 62 * u, 40 * u)
+                    lineTo(62 * u, 58 * u); quadraticTo(48 * u, 52 * u, 32 * u, 58 * u); quadraticTo(16 * u, 52 * u, 2 * u, 58 * u); close()
+                }, c.rimDeep)
+                for (x0 in listOf(5f, 33f)) drawPath(Path().apply {
+                    moveTo(x0 * u, 37 * u); quadraticTo((x0 + 13) * u, 31 * u, (x0 + 26) * u, 37 * u)
+                    lineTo((x0 + 26) * u, 54 * u); quadraticTo((x0 + 13) * u, 48 * u, x0 * u, 54 * u); close()
+                }, c.glow)
+                // Two lines of writing on each page.
+                for (x0 in listOf(10f, 38f)) for (y0 in listOf(42f, 46f)) drawPath(
+                    Path().apply { moveTo(x0 * u, y0 * u); quadraticTo((x0 + 8) * u, (y0 - 3) * u, (x0 + 16) * u, y0 * u) },
+                    c.rimDeep.copy(alpha = 0.7f), style = Stroke(1.4f * u, cap = StrokeCap.Round),
+                )
+                // The rune.
+                val ry = (17 - 4 * bob) * u
+                drawCircle(c.glow.copy(alpha = 0.25f), 13 * u, Offset(32 * u, ry))
+                drawLine(c.rimLight, Offset(23 * u, ry), Offset(41 * u, ry), 3.4f * u, StrokeCap.Round)
+                drawLine(c.rimLight, Offset(32 * u, ry - 9 * u), Offset(32 * u, ry + 9 * u), 3.4f * u, StrokeCap.Round)
+                drawPath(star(p(10f, 14f), 3 * u), c.glow.copy(alpha = twinkle))
+                drawPath(star(p(55f, 9f), 3.6f * u), c.glow.copy(alpha = 1.35f - twinkle))
             },
-    ) { PlusIcon(c.onGlow) }
-    // The star sits on the orb's top corner, outside its clip.
-    Box(Modifier.size(64.dp).drawBehind {
-        val r = 6.dp.toPx() * (0.8f + 0.2f * twinkle)
-        val at = Offset(size.width - 9.dp.toPx(), 7.dp.toPx())
-        drawPath(star(at, r), c.glow.copy(alpha = twinkle))
-    })
+    )
 }
 
 private fun star(at: Offset, r: Float): Path = Path().apply {
@@ -226,27 +320,46 @@ private fun star(at: Offset, r: Float): Path = Path().apply {
     close()
 }
 
-/** The goth girl's moon with a bite out of its top corner, and two small stars beside it. */
+/**
+ * The goth girl's cat (D209): a cat head in her color with the dark «+» on its face and whiskers beside it.
+ * Pressed, it squashes from the chin. Every 5 s its right ear twitches. Drawn on a 64-unit grid, like the mockup.
+ */
 @Composable
-private fun MoonAdd(press: Float) {
+private fun CatAdd(press: Float) {
     val c = Ba.colors
+    val ear = if (rememberAnimationsOn()) {
+        rememberInfiniteTransition(label = "cat").animateFloat(
+            0f, 0f,
+            infiniteRepeatable(keyframes { durationMillis = 5000; 0f at 4400; 14f at 4550; -4f at 4700; 0f at 4850 }),
+            label = "ear",
+        ).value
+    } else 0f
+    val inner = c.rimDeep
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
-            .size(56.dp)
-            .graphicsLayer { scaleX = 1 - 0.08f * press; scaleY = 1 - 0.08f * press }
-            .clip(BittenMoon)
-            .background(c.glow),
-    ) { PlusIcon(c.onGlow, Modifier.offset(x = (-3).dp, y = 3.dp)) }
-    Box(Modifier.size(64.dp).drawBehind {
-        drawCircle(c.glow.copy(alpha = 0.8f), 2.5.dp.toPx(), Offset(size.width - 3.dp.toPx(), 3.dp.toPx()))
-        drawCircle(c.glow.copy(alpha = 0.6f), 1.8.dp.toPx(), Offset(size.width - 12.dp.toPx(), 7.dp.toPx()))
-    })
-}
-
-private val BittenMoon = GenericShape { size, _ ->
-    val full = Path().apply { addOval(Rect(0f, 0f, size.width, size.height)) }
-    val r = size.width * 0.24f
-    val bite = Path().apply { addOval(Rect(Offset(size.width * 0.8f, size.height * 0.18f), r)) }
-    addPath(Path().apply { op(full, bite, PathOperation.Difference) })
+            .size(64.dp)
+            .graphicsLayer {
+                transformOrigin = TransformOrigin(0.5f, 0.9f)
+                scaleX = 1 + 0.06f * press; scaleY = 1 - 0.12f * press
+            }
+            .drawBehind {
+                val u = size.width / 64f
+                fun tri(a: Float, b: Float, x: Float, y: Float, p: Float, q: Float) = Path().apply { moveTo(a * u, b * u); lineTo(x * u, y * u); lineTo(p * u, q * u); close() }
+                drawCircle(c.glow.copy(alpha = 0.14f), 34 * u, Offset(32 * u, 36 * u))
+                drawPath(tri(9f, 32f, 12f, 4f, 28f, 17f), c.glow)
+                drawPath(tri(13f, 25f, 14.5f, 10f, 23f, 17f), inner)
+                rotate(ear, Offset(46 * u, 20 * u)) {
+                    drawPath(tri(55f, 32f, 52f, 4f, 36f, 17f), c.glow)
+                    drawPath(tri(51f, 25f, 49.5f, 10f, 41f, 17f), inner)
+                }
+                drawOval(c.glow, Offset(6 * u, 14 * u), Size(52 * u, 46 * u))
+                val whisker = c.glow.copy(alpha = 0.7f)
+                val w = 1.6f * u
+                drawLine(whisker, Offset(6 * u, 40 * u), Offset(0f, 38 * u), w, StrokeCap.Round)
+                drawLine(whisker, Offset(6 * u, 44 * u), Offset(-1 * u, 44 * u), w, StrokeCap.Round)
+                drawLine(whisker, Offset(58 * u, 40 * u), Offset(64 * u, 38 * u), w, StrokeCap.Round)
+                drawLine(whisker, Offset(58 * u, 44 * u), Offset(65 * u, 44 * u), w, StrokeCap.Round)
+            },
+    ) { PlusIcon(c.onGlow, Modifier.offset(y = 6.dp)) }
 }

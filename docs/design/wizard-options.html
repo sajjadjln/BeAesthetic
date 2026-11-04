@@ -1,0 +1,160 @@
+<title>Wizard Button Options</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Estedad:wght@400;600;800&display=swap">
+<style>
+/* Layout: page (light/dark) → intro → four cards (current orb + four ideas), each the bottom of the wizard's Today with the bar. Phones are always dark. */
+:root {
+  --page: #e6e8ea; --ink: #1f2327; --mute: #5a6168; --rule: #c7ccd1; --card: #f4f5f6; --pick: #4d5864;
+  --est: "Estedad", Tahoma, system-ui, sans-serif;
+  /* wizard palette (Colors.kt) */
+  --bg: #0e1013; --sky2: #23272d; --glow: #cfd6dd; --rgb: 207,214,221; --box2: #121417; --rimD: #5b636e; --rimL: #eef2f6; --onGlow: #15181c;
+  --t1: #f2f4f6; --t2: #b4bac2; --t3: #7c838c; --done: #3fbf7f; --liq: #9fe0ff;
+  --px: polygon(0 6px, 6px 6px, 6px 0, calc(100% - 6px) 0, calc(100% - 6px) 6px, 100% 6px, 100% calc(100% - 6px), calc(100% - 6px) calc(100% - 6px), calc(100% - 6px) 100%, 6px 100%, 6px calc(100% - 6px), 0 calc(100% - 6px));
+  --pxs: polygon(0 3px,3px 3px,3px 0,calc(100% - 3px) 0,calc(100% - 3px) 3px,100% 3px,100% calc(100% - 3px),calc(100% - 3px) calc(100% - 3px),calc(100% - 3px) 100%,3px 100%,3px calc(100% - 3px),0 calc(100% - 3px));
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --page: #08090a; --ink: #d9dde1; --mute: #8f969d; --rule: #2a2e33; --card: #121416; --pick: #cfd6dd; color-scheme: dark; } }
+:root[data-theme="dark"] { --page: #08090a; --ink: #d9dde1; --mute: #8f969d; --rule: #2a2e33; --card: #121416; --pick: #cfd6dd; color-scheme: dark; }
+* { box-sizing: border-box; margin: 0; }
+body { background: var(--page); color: var(--ink); font-family: system-ui, sans-serif; padding: 22px 16px 48px; }
+.page { max-width: 1120px; margin: 0 auto; display: flex; flex-direction: column; gap: 22px; }
+h1 { font: 800 22px/1.3 var(--est); }
+.intro p { font-size: 14px; line-height: 1.65; color: var(--mute); margin-top: 6px; max-width: 72ch; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 16px; }
+.opt { background: var(--card); border: 1px solid var(--rule); border-radius: 14px; padding: 12px; display: flex; flex-direction: column; gap: 10px; }
+.opt.rec { border-color: var(--pick); box-shadow: 0 0 0 1px var(--pick); }
+.opt h2 { font: 700 15px/1.3 system-ui, sans-serif; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.badge { font: 700 10.5px/1 system-ui; letter-spacing: .06em; text-transform: uppercase; padding: 4px 7px; border-radius: 6px; background: var(--pick); color: var(--card); }
+.opt p { font-size: 13px; line-height: 1.55; color: var(--mute); }
+.notes { font-size: 13.5px; line-height: 1.65; color: var(--mute); max-width: 76ch; }
+.notes b { color: var(--ink); }
+
+.phone { position: relative; height: 250px; border-radius: 0 0 28px 28px; overflow: hidden; color: var(--t1); font-family: var(--est);
+  background: radial-gradient(130% 120% at 50% -20%, var(--sky2), var(--bg) 75%); }
+.tile { margin: 12px 14px 0; display: flex; align-items: center; gap: 10px; padding: 12px 14px; background: var(--box2); clip-path: var(--px); box-shadow: inset 0 0 0 2px rgba(255,255,255,.08); font: 600 14px var(--est); }
+.tile i { width: 22px; height: 22px; clip-path: var(--pxs); box-shadow: inset 0 0 0 2px rgba(255,255,255,.28); flex: none; }
+.tile.done i { background: var(--done); box-shadow: none; }
+.tile.done { color: var(--t2); }
+.bar { position: absolute; bottom: 0; inset-inline: 0; height: 61px; background: var(--box2); display: flex; z-index: 2; }
+.bar::before { content: ""; position: absolute; top: 0; inset-inline: 0; height: 2px; background: rgba(var(--rgb),.25); }
+.bar b { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; color: var(--t3); }
+.bar b.on { color: var(--glow); }
+.bar b::after { content: ""; width: 5px; height: 5px; }
+.bar b.on::after { background: var(--glow); }
+.bar svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.bar .mid { flex: 0 0 84px; }
+
+.fab { position: absolute; left: 50%; width: 64px; height: 64px; margin-left: -32px; bottom: 21px; border: 0; padding: 0; background: none; cursor: pointer; z-index: 3; -webkit-tap-highlight-color: transparent; }
+.fab:focus-visible { outline: 2px solid var(--glow); outline-offset: 4px; }
+.fab svg.art { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; transition: transform .2s cubic-bezier(.3,1.6,.5,1); transform-origin: 50% 90%; }
+.fab.press svg.art { transform: scale(1.06, .88); }
+.fab.tall { height: 96px; bottom: 8px; }
+
+/* idle life */
+.sway { transform-origin: 32px 46px; animation: sway 4s ease-in-out infinite; }
+@keyframes sway { 0%, 100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg); } }
+.tw { animation: tw 2.4s ease-in-out infinite alternate; }
+@keyframes tw { from { opacity: .3; } to { opacity: 1; } }
+.pulse { transform-origin: 32px 32px; animation: pulse 3s ease-in-out infinite; }
+@keyframes pulse { 0%, 100% { transform: scale(.94); } 50% { transform: scale(1.04); } }
+.orbit { transform-origin: 32px 32px; animation: spin 9s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.float { animation: float 2.6s ease-in-out infinite; }
+@keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+.bub { animation: bub 2.4s ease-in infinite; }
+@keyframes bub { 0% { transform: translateY(0); opacity: 0; } 20% { opacity: 1; } 100% { transform: translateY(-16px); opacity: 0; } }
+.fab.press .spin45 { transform: rotate(45deg); }
+.spin45 { transform-origin: 32px 32px; transition: transform .3s cubic-bezier(.3,1.6,.5,1); }
+@media (prefers-reduced-motion: reduce) { .sway, .tw, .pulse, .orbit, .float, .bub { animation: none; } .fab svg.art, .spin45 { transition: none; } }
+</style>
+
+<div class="page">
+  <div class="intro">
+    <h1>The wizard's + button: options</h1>
+    <p>Four ideas for the elderly wizard's new-task button, next to the crystal orb he has now. All are drawn smooth in his silver, like the orb. Tap each button to see its press. Each one also moves a little while idle.</p>
+  </div>
+  <div class="grid" id="grid"></div>
+  <p class="notes">
+    <b>Reading as "add":</b> the hat, the book and the potion carry a dark or glowing +. The sparkle is itself a + shape, so it needs no extra mark.<br>
+    <b>Idle motion:</b> stars twinkle, the hat tip sways, the rune floats or bubbles rise. All of it stops when the phone's animations are off.<br>
+    <b>Color:</b> everything is his silver except the potion, which adds a pale blue liquid. That would be the only second color on any character's button.<br>
+    <b>Build cost:</b> each is a few Compose paths, like the orb today. No bitmap.
+  </p>
+</div>
+
+<script>
+const I = {
+  today: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l3 3 5-6"/></svg>',
+  grid: '<svg viewBox="0 0 24 24"><rect x="4" y="4" width="7" height="7" rx="1"/><rect x="13" y="4" width="7" height="7" rx="1"/><rect x="4" y="13" width="7" height="7" rx="1"/><rect x="13" y="13" width="7" height="7" rx="1"/></svg>',
+};
+const plus = (x, y, r, w, c = "var(--onGlow)") => `<path d="M${x - r} ${y}h${2 * r}M${x} ${y - r}v${2 * r}" stroke="${c}" stroke-width="${w}" stroke-linecap="round"/>`;
+const spark = (x, y, r, cls = "tw", d = 0, c = "var(--glow)") => `<path class="${cls}" style="animation-delay:${d}s" d="M${x} ${y - r}Q${x + r * .25} ${y - r * .25} ${x + r} ${y}Q${x + r * .25} ${y + r * .25} ${x} ${y + r}Q${x - r * .25} ${y + r * .25} ${x - r} ${y}Q${x - r * .25} ${y - r * .25} ${x} ${y - r}Z" fill="${c}"/>`;
+
+// Today: the crystal orb (BottomBar.kt OrbAdd).
+const orb = `<svg class="art" viewBox="0 0 64 64">
+  <defs><radialGradient id="og" cx="34%" cy="30%" r="85%"><stop offset="0" stop-color="#fff"/><stop offset=".45" stop-color="var(--glow)"/><stop offset="1" stop-color="#4c5156"/></radialGradient></defs>
+  <circle cx="32" cy="32" r="38" fill="rgba(var(--rgb),.08)"/><circle cx="32" cy="32" r="33" fill="rgba(var(--rgb),.16)"/>
+  <circle cx="32" cy="32" r="28" fill="url(#og)"/>${plus(32, 32, 9, 2.6)}${spark(55, 7, 6)}</svg>`;
+
+// 1: the wizard's hat, a + on the cone.
+const hat = `<svg class="art" viewBox="0 0 64 64">
+  <ellipse cx="32" cy="36" rx="36" ry="30" fill="rgba(var(--rgb),.1)"/>
+  <g class="sway">
+    <path d="M14 47 C21 32 26 18 33 4 C38 2 45 5 48 11 C44 8 40 9 38 12 C42 25 46 36 50 47 Z" fill="var(--glow)"/>
+    <path d="M17 41 C27 44 38 44 47 41 L49 46 C38 49 26 49 15 46 Z" fill="var(--rimD)"/>
+    ${spark(24, 24, 3, "tw", -.6, "var(--rimD)")}${spark(41, 20, 2.4, "tw", -1.4, "var(--rimD)")}
+  </g>
+  <ellipse cx="32" cy="50" rx="30" ry="7.5" fill="var(--glow)"/><ellipse cx="32" cy="48.5" rx="20" ry="3.5" fill="var(--rimD)" opacity=".55"/>
+  ${plus(32, 32, 7, 2.6)}${spark(57, 8, 4.5)}${spark(6, 16, 3, "tw", -1)}</svg>`;
+
+// 2: a four-point sparkle that is itself the +.
+const sparkle = `<svg class="art" viewBox="0 0 64 64">
+  <circle cx="32" cy="32" r="30" fill="rgba(var(--rgb),.13)"/>
+  <g class="orbit">${spark(32, 1, 3.4, "tw", 0)}${spark(61, 40, 2.6, "tw", -.8)}${spark(8, 50, 2.2, "tw", -1.6)}</g>
+  <g class="spin45"><g class="pulse">${spark(32, 32, 27, "", 0)}<circle cx="32" cy="32" r="4" fill="#fff"/></g></g></svg>`;
+
+// 3: an open spell book, a + rune floating over it.
+const book = `<svg class="art" viewBox="0 0 64 64">
+  <ellipse cx="32" cy="30" rx="34" ry="30" fill="rgba(var(--rgb),.1)"/>
+  <path d="M2 40 Q16 34 32 40 Q48 34 62 40 L62 58 Q48 52 32 58 Q16 52 2 58 Z" fill="var(--rimD)"/>
+  <path d="M5 37 Q18 31 31 37 L31 54 Q18 48 5 54 Z M33 37 Q46 31 59 37 L59 54 Q46 48 33 54 Z" fill="var(--glow)"/>
+  <path d="M10 42 Q18 39 26 42 M10 46 Q18 43 26 46 M38 42 Q46 39 54 42 M38 46 Q46 43 54 46" stroke="var(--rimD)" stroke-width="1.4" fill="none" stroke-linecap="round" opacity=".7"/>
+  <g class="float"><circle cx="32" cy="17" r="13" fill="rgba(var(--rgb),.25)"/>${plus(32, 17, 9, 3.4, "var(--rimL)")}</g>
+  ${spark(10, 14, 3, "tw", -.4)}${spark(55, 9, 3.6, "tw", -1.3)}</svg>`;
+
+// 4: a round potion flask with glowing liquid and rising bubbles.
+const potion = `<svg class="art" viewBox="0 0 64 64">
+  <defs><clipPath id="fl"><circle cx="32" cy="40" r="21"/></clipPath></defs>
+  <circle cx="32" cy="40" r="30" fill="rgba(159,224,255,.12)"/>
+  <rect x="25" y="4" width="14" height="7" rx="2" fill="var(--rimD)"/>
+  <rect x="26" y="10" width="12" height="12" fill="var(--glow)" opacity=".85"/>
+  <circle cx="32" cy="40" r="21" fill="var(--glow)" opacity=".35"/>
+  <g clip-path="url(#fl)"><path d="M8 34 Q20 30 32 34 T56 34 V64 H8 Z" fill="var(--liq)"/>
+    <circle class="bub" cx="22" cy="54" r="2" fill="#fff" opacity=".8"/><circle class="bub" style="animation-delay:-1.2s" cx="42" cy="56" r="1.5" fill="#fff"/></g>
+  <circle cx="32" cy="40" r="21" fill="none" stroke="var(--glow)" stroke-width="2.5"/>
+  <path d="M19 30 Q22 24 28 22" stroke="#fff" stroke-width="2.5" fill="none" stroke-linecap="round" opacity=".7"/>
+  ${plus(32, 45, 7, 2.6)}${spark(56, 12, 4)}</svg>`;
+
+const OPTS = [
+  { t: "Now: crystal orb", d: "Today's button, for comparison.", fab: orb },
+  { t: "1 · Wizard hat", rec: true, d: "His pointed hat with a bent tip, a band and two small stars, the dark + on the cone. Says \"wizard\" at a glance and fits the other characters' signature objects (sword, cat). The tip sways; pressed, it squashes.", fab: hat },
+  { t: "2 · Sparkle", d: "One big four-point sparkle that is itself the +, with small sparkles circling it. The purest +, and tapping turns it 45° like a spell. Less clearly his, since a sparkle could belong to anyone.", fab: sparkle },
+  { t: "3 · Spell book", d: "An open book with a glowing + rune floating above its pages. Fits \"plan and write down\" well, but it's wide and flat, and the + floats apart from the shape.", fab: book },
+  { t: "4 · Potion", d: "A round flask of glowing blue liquid with bubbles rising and the + on the glass. Lively, but it adds a second color, and a potion reads more alchemist than old wizard.", fab: potion },
+];
+
+document.getElementById("grid").innerHTML = OPTS.map(o => `
+  <section class="opt${o.rec ? " rec" : ""}">
+    <h2>${o.t}${o.rec ? '<span class="badge">Recommended</span>' : ""}</h2>
+    <div class="phone">
+      <div class="tile done"><i></i>Morning walk</div>
+      <div class="tile"><i></i>Read 20 pages</div>
+      <nav class="bar"><b class="on">${I.today}</b><span class="mid"></span><b>${I.grid}</b></nav>
+      <button class="fab" aria-label="New task">${o.fab}</button>
+    </div>
+    <p>${o.d}</p>
+  </section>`).join("");
+
+document.querySelectorAll(".fab").forEach(b => b.addEventListener("click", () => {
+  b.classList.add("press");
+  setTimeout(() => b.classList.remove("press"), 260);
+}));
+</script>

@@ -1,0 +1,146 @@
+<title>Goth Cat Button</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Estedad:wght@400;600;800&display=swap">
+<style>
+/* Layout: page (light/dark) → intro → four cards (current moon + three cats), each the bottom of the goth girl's Today with the bar. Phones are always dark. */
+:root {
+  --page: #e8e6ee; --ink: #221d2c; --mute: #5d5769; --rule: #cbc6d6; --card: #f5f4f8; --pick: #7a4fd0;
+  --est: "Estedad", Tahoma, system-ui, sans-serif;
+  /* goth palette (Colors.kt) */
+  --bg: #100a1c; --sky2: #24173c; --glow: #b98cff; --rgb: 185,140,255; --box2: #120b20; --rimD: #563a8a; --rimL: #e7dbff; --onGlow: #1a0b33;
+  --t1: #f2eefa; --t2: #bdb0d2; --t3: #85799c; --done: #3fbf7f; --fur: #1d1230;
+  --px: polygon(0 6px, 6px 6px, 6px 0, calc(100% - 6px) 0, calc(100% - 6px) 6px, 100% 6px, 100% calc(100% - 6px), calc(100% - 6px) calc(100% - 6px), calc(100% - 6px) 100%, 6px 100%, 6px calc(100% - 6px), 0 calc(100% - 6px));
+  --pxs: polygon(0 3px,3px 3px,3px 0,calc(100% - 3px) 0,calc(100% - 3px) 3px,100% 3px,100% calc(100% - 3px),calc(100% - 3px) calc(100% - 3px),calc(100% - 3px) 100%,3px 100%,3px calc(100% - 3px),0 calc(100% - 3px));
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --page: #09070d; --ink: #dcd6e6; --mute: #958ca3; --rule: #2c2638; --card: #13101a; --pick: #b98cff; color-scheme: dark; } }
+:root[data-theme="dark"] { --page: #09070d; --ink: #dcd6e6; --mute: #958ca3; --rule: #2c2638; --card: #13101a; --pick: #b98cff; color-scheme: dark; }
+* { box-sizing: border-box; margin: 0; }
+body { background: var(--page); color: var(--ink); font-family: system-ui, sans-serif; padding: 22px 16px 48px; }
+.page { max-width: 1120px; margin: 0 auto; display: flex; flex-direction: column; gap: 22px; }
+h1 { font: 800 22px/1.3 var(--est); }
+.intro p { font-size: 14px; line-height: 1.65; color: var(--mute); margin-top: 6px; max-width: 72ch; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 16px; }
+.opt { background: var(--card); border: 1px solid var(--rule); border-radius: 14px; padding: 12px; display: flex; flex-direction: column; gap: 10px; }
+.opt.rec { border-color: var(--pick); box-shadow: 0 0 0 1px var(--pick); }
+.opt h2 { font: 700 15px/1.3 system-ui, sans-serif; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.badge { font: 700 10.5px/1 system-ui; letter-spacing: .06em; text-transform: uppercase; padding: 4px 7px; border-radius: 6px; background: var(--pick); color: var(--card); }
+.opt p { font-size: 13px; line-height: 1.55; color: var(--mute); }
+.notes { font-size: 13.5px; line-height: 1.65; color: var(--mute); max-width: 76ch; }
+.notes b { color: var(--ink); }
+
+.phone { position: relative; height: 250px; border-radius: 0 0 28px 28px; overflow: hidden; color: var(--t1); font-family: var(--est);
+  background: radial-gradient(130% 120% at 50% -20%, var(--sky2), var(--bg) 75%); }
+.tile { margin: 12px 14px 0; display: flex; align-items: center; gap: 10px; padding: 12px 14px; background: var(--box2); clip-path: var(--px); box-shadow: inset 0 0 0 2px rgba(255,255,255,.08); font: 600 14px var(--est); }
+.tile i { width: 22px; height: 22px; clip-path: var(--pxs); box-shadow: inset 0 0 0 2px rgba(255,255,255,.28); flex: none; }
+.tile.done i { background: var(--done); box-shadow: none; }
+.tile.done { color: var(--t2); }
+.bar { position: absolute; bottom: 0; inset-inline: 0; height: 61px; background: var(--box2); display: flex; z-index: 2; }
+.bar::before { content: ""; position: absolute; top: 0; inset-inline: 0; height: 2px; background: rgba(var(--rgb),.25); }
+.bar b { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; color: var(--t3); }
+.bar b.on { color: var(--glow); }
+.bar b::after { content: ""; width: 5px; height: 5px; }
+.bar b.on::after { background: var(--glow); }
+.bar svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.bar .mid { flex: 0 0 84px; }
+
+.fab { position: absolute; left: 50%; width: 64px; height: 64px; margin-left: -32px; bottom: 21px; border: 0; padding: 0; background: none; cursor: pointer; z-index: 3; -webkit-tap-highlight-color: transparent; }
+.fab:focus-visible { outline: 2px solid var(--glow); outline-offset: 4px; }
+.fab svg.art { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; transition: transform .2s cubic-bezier(.3,1.6,.5,1); transform-origin: 50% 90%; }
+.fab.press svg.art { transform: scale(1.06, .88); }
+.fab.tall { height: 96px; bottom: 8px; }
+
+/* idle life */
+.earR { transform-origin: 46px 20px; animation: twitch 5s ease-in-out infinite; }
+@keyframes twitch { 0%, 88%, 100% { transform: none; } 91% { transform: rotate(14deg); } 94% { transform: rotate(-4deg); } }
+.blink { transform-box: fill-box; transform-origin: center; animation: blink 4.5s infinite; }
+@keyframes blink { 0%, 94%, 100% { transform: none; } 96% { transform: scaleY(.1); } }
+.tail { transform-origin: 44px 76px; animation: swish 3.2s ease-in-out infinite; }
+@keyframes swish { 0%, 100% { transform: rotate(0); } 50% { transform: rotate(-12deg); } }
+.tw { animation: tw 2.4s ease-in-out infinite alternate; }
+@keyframes tw { from { opacity: .35; } to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .earR, .blink, .tail, .tw { animation: none; } .fab svg.art { transition: none; } }
+</style>
+
+<div class="page">
+  <div class="intro">
+    <h1>The goth girl's + button as a cat</h1>
+    <p>Three cats for the goth girl's new-task button, next to the current bitten moon. They're drawn smooth like the moon, not in pixels, and use her purple. Tap each button to see its press. Each cat also moves a little while idle.</p>
+  </div>
+  <div class="grid" id="grid"></div>
+  <p class="notes">
+    <b>Reading as "add":</b> option 1 keeps a big dark + in the middle of the face. In options 2 and 3 the + is smaller, so they rely more on the button's place in the middle of the bar.<br>
+    <b>Idle motion:</b> one ear twitches, the eyes blink or the tail swishes, every few seconds. All of it stops when the phone's animations are off.<br>
+    <b>Build cost:</b> each is a few Compose paths, like the moon today. No bitmap.
+  </p>
+</div>
+
+<script>
+const I = {
+  today: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l3 3 5-6"/></svg>',
+  grid: '<svg viewBox="0 0 24 24"><rect x="4" y="4" width="7" height="7" rx="1"/><rect x="13" y="4" width="7" height="7" rx="1"/><rect x="4" y="13" width="7" height="7" rx="1"/><rect x="13" y="13" width="7" height="7" rx="1"/></svg>',
+};
+const plus = (x, y, r, w) => `<path d="M${x - r} ${y}h${2 * r}M${x} ${y - r}v${2 * r}" stroke="var(--onGlow)" stroke-width="${w}" stroke-linecap="round"/>`;
+const stars = `<circle class="tw" cx="61" cy="3" r="2.5" fill="var(--glow)"/><circle class="tw" style="animation-delay:-1.2s" cx="52" cy="7" r="1.8" fill="var(--glow)" opacity=".7"/>`;
+
+// The bitten moon, as built today (BottomBar.kt MoonAdd).
+const moon = `<svg class="art" viewBox="0 0 64 64">
+  <defs><mask id="bite"><rect width="64" height="64" fill="#fff"/><circle cx="48.8" cy="14" r="13.4" fill="#000"/></mask></defs>
+  <circle cx="32" cy="32" r="28" fill="var(--glow)" mask="url(#bite)"/>${plus(29, 35, 9, 2.6)}${stars}</svg>`;
+
+// 1: a cat head in her purple, the + on its face.
+const head = `<svg class="art" viewBox="0 0 64 64">
+  <circle cx="32" cy="36" r="34" fill="rgba(var(--rgb),.14)"/>
+  <path d="M9 32 L12 4 L28 17 Z" fill="var(--glow)"/><path d="M13 25 L14.5 10 L23 17 Z" fill="var(--rimD)"/>
+  <g class="earR"><path d="M55 32 L52 4 L36 17 Z" fill="var(--glow)"/><path d="M51 25 L49.5 10 L41 17 Z" fill="var(--rimD)"/></g>
+  <ellipse cx="32" cy="37" rx="26" ry="23" fill="var(--glow)"/>
+  <path d="M6 40 l-6 -2 M6 44 h-7 M58 40 l6 -2 M58 44 h7" stroke="var(--glow)" stroke-width="1.6" stroke-linecap="round" opacity=".7"/>
+  ${plus(32, 38, 9, 2.8)}</svg>`;
+
+// 2: the moon stays, a black cat sits on it.
+const onMoon = `<svg class="art" viewBox="0 0 64 64">
+  <defs><mask id="bite2"><rect width="64" height="64" fill="#fff"/><circle cx="48.8" cy="14" r="13.4" fill="#000"/></mask></defs>
+  <circle cx="32" cy="32" r="28" fill="var(--glow)" mask="url(#bite2)"/>
+  <g transform="translate(10 -16)" stroke="var(--glow)" stroke-width="1.2" stroke-linejoin="round">
+    <path d="M2 24 C0 14 4 10 10 10 C16 10 20 14 18 24 Z" fill="var(--fur)"/>
+    <circle cx="10" cy="7" r="6" fill="var(--fur)"/><path d="M4.5 4 L5 -3 L9 2 Z M15.5 4 L15 -3 L11 2 Z" fill="var(--fur)"/>
+    <path d="M17 22 C26 24 26 32 21 36" stroke="var(--fur)" stroke-width="3.4" fill="none" stroke-linecap="round"/>
+    <ellipse class="blink" cx="7.7" cy="7" rx="1.4" ry="1.6" fill="var(--glow)" stroke="none"/><ellipse class="blink" cx="12.3" cy="7" rx="1.4" ry="1.6" fill="var(--glow)" stroke="none"/>
+  </g>
+  ${plus(32, 38, 9, 2.6)}${stars}</svg>`;
+
+// 3: a black cat sits on the bar, a glowing + tag on its collar.
+const sitting = `<svg class="art" viewBox="0 0 64 96">
+  <ellipse cx="32" cy="34" rx="34" ry="30" fill="rgba(var(--rgb),.16)"/>
+  <path class="tail" d="M44 76 C60 74 62 56 53 50" stroke="var(--fur)" stroke-width="6" fill="none" stroke-linecap="round"/>
+  <path d="M15 84 C12 56 19 40 32 39 C45 40 52 56 49 84 Z" fill="var(--fur)" stroke="rgba(var(--rgb),.45)" stroke-width="1.5"/>
+  <path d="M17 22 L18 2 L28 13 Z M47 22 L46 2 L36 13 Z" fill="var(--fur)" stroke="rgba(var(--rgb),.45)" stroke-width="1.5" stroke-linejoin="round"/>
+  <circle cx="32" cy="25" r="16" fill="var(--fur)" stroke="rgba(var(--rgb),.45)" stroke-width="1.5"/>
+  <path d="M21 6 L22 15 L26 13 Z M43 6 L42 15 L38 13 Z" fill="var(--rimD)"/>
+  <ellipse class="blink" cx="25" cy="24" rx="3.6" ry="4" fill="var(--glow)"/><ellipse class="blink" cx="39" cy="24" rx="3.6" ry="4" fill="var(--glow)"/>
+  <rect x="24.6" y="21" width="0.8" height="6" rx=".4" fill="var(--onGlow)"/><rect x="38.6" y="21" width="0.8" height="6" rx=".4" fill="var(--onGlow)"/>
+  <path d="M19 41 Q32 47 45 41" stroke="var(--rimD)" stroke-width="2.5" fill="none"/>
+  <circle cx="32" cy="53" r="11" fill="var(--glow)"/>${plus(32, 53, 5.5, 2.4)}</svg>`;
+
+const OPTS = [
+  { t: "Now: bitten moon", d: "Today's button, for comparison.", fab: moon },
+  { t: "1 · Cat head", rec: true, d: "A cat head in her purple with a big dark + on its face. Clearest as a button and closest in size to the others. Pressed, it squashes; one ear twitches now and then.", fab: head },
+  { t: "2 · Cat on the moon", d: "The moon stays, and a small black cat sits on its edge with its tail hanging over the front. Keeps her moon, but the cat is small at this size.", fab: onMoon },
+  { t: "3 · Cat on the bar", d: "A black cat sits in the middle of the bar, with glowing eyes and a + tag on its collar. The most charming, but the + is small and the cat is dark on a dark bar.", fab: sitting, tall: true },
+];
+
+document.getElementById("grid").innerHTML = OPTS.map(o => `
+  <section class="opt${o.rec ? " rec" : ""}">
+    <h2>${o.t}${o.rec ? '<span class="badge">Recommended</span>' : ""}</h2>
+    <div class="phone">
+      <div class="tile done"><i></i>Skincare</div>
+      <div class="tile"><i></i>Read 20 pages</div>
+      <nav class="bar"><b class="on">${I.today}</b><span class="mid"></span><b>${I.grid}</b></nav>
+      <button class="fab${o.tall ? " tall" : ""}" aria-label="New task">${o.fab}</button>
+    </div>
+    <p>${o.d}</p>
+  </section>`).join("");
+
+document.querySelectorAll(".fab").forEach(b => b.addEventListener("click", () => {
+  b.classList.add("press");
+  setTimeout(() => b.classList.remove("press"), 220);
+}));
+</script>
