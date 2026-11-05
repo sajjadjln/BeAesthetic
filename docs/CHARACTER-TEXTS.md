@@ -42,7 +42,7 @@ Today pools: **calm** (nothing done yet), **busy** (some done), **happy** (all d
 | `lines_vampire_happy (1)` | کل طومار تموم شد. تحت تأثیر قرار گرفتم. | The whole scroll is done. I'm impressed. |
 | `lines_vampire_happy (2)` | حالا می‌تونی شب رو بی‌خیال بگذرونی. | Now you can enjoy the night. |
 | `lines_vampire_night (1)` | اخ‌جون شب شد، ولی تو برو بخواب | Yay, night's here. But you go to sleep. |
-| `lines_vampire_night (2)` | طومار تا فردا صبر می{Z}کنه. | The scroll can wait till tomorrow. |
+| `lines_vampire_night (2)` | طومار تا فردا صبر می‌کنه. | The scroll can wait till tomorrow. |
 
 ## Wizard — Morpheus / زال
 
