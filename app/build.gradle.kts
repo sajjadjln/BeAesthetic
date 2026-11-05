@@ -20,8 +20,8 @@ android {
         minSdk = 26
         targetSdk = 36
         // Lantern (D191): versionName = 0.<slice>.<fix> until 1.0.0; versionCode = major × 10000 + minor × 100 + patch.
-        versionCode = 910
-        versionName = "0.9.10"
+        versionCode = 911
+        versionName = "0.9.11"
     }
 
     // One codebase, one build per place it's installed from (D195, D199, D207). `personal` is the
