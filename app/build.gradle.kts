@@ -80,6 +80,7 @@ android {
     buildFeatures {
         compose = true
         buildConfig = true
+        aidl = true // The Bazaar update check (B4): src/bazaar/aidl.
     }
 
     // English and Persian (D174): keep no other languages from libraries in the APK. Bazaar: Persian only (below).

@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The what's-new texts are looked up by name (B4), so the resource shrinker must keep them. -->
+<resources xmlns:tools="http://schemas.android.com/tools" tools:keep="@string/whats_new_*" />

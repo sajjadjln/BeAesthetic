@@ -272,6 +272,8 @@ fun SettingsScreen(container: AppContainer, debugAvailable: Boolean, onBack: () 
             // B3 (D213): one calm line after a week with no backup. Settings only; Today has its own row.
             if (dest == SettingsDestination.BACKUP && backup?.nudge == true) BackupNudge(backup!!.daysSince) { onOpen(SettingsDestination.BACKUP) }
         }
+        // B4: «بررسی به‌روزرسانی», in the Bazaar build only.
+        app.lantern.ui.store.SettingsStoreRow(container)
         // «پاک کردن همه‌چیز» (B3, D213): quieter than the rows above; it opens a page that offers a backup first.
         Row(
             verticalAlignment = Alignment.CenterVertically,

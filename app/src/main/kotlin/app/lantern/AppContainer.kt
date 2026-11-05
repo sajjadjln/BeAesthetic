@@ -15,6 +15,7 @@ import app.lantern.domain.time.ProgramCalendar
 import app.lantern.events.EventLog
 import app.lantern.reminders.AlarmScheduler
 import app.lantern.reminders.Notifier
+import app.lantern.store.StorePrefs
 import app.lantern.widget.TodayWidget
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -41,6 +42,7 @@ class AppContainer(context: Context) {
     val scheduler = AlarmScheduler(appContext, db, tasks, clock)
     val crashes = crashLog(appContext)
     val backup = BackupService(appContext, db, clock, crashes)
+    val store = StorePrefs(appContext)
 
     private val readyLock = Mutex()
     @Volatile private var ready = false
@@ -73,6 +75,7 @@ class AppContainer(context: Context) {
             listOf(File(appContext.filesDir, "photos"), File(appContext.filesDir, "safety")).forEach { it.deleteRecursively() }
             appContext.cacheDir.listFiles().orEmpty().forEach { it.deleteRecursively() }
             AppLanguage.reset(appContext)
+            store.reset()
             readyLock.withLock { ready = false }
         }
         ensureReady()

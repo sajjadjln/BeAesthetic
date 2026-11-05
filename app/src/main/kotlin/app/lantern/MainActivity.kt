@@ -24,6 +24,10 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.foundation.layout.BoxScope
+import app.lantern.store.WhatsNewSheet
+import app.lantern.ui.store.TodayStore
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.platform.LocalLayoutDirection
@@ -189,6 +193,11 @@ class MainActivity : ComponentActivity() {
                                 onOpenBackup = { nav.navigate(BackupRoute) },
                                 onOpenHistory = { nav.navigate(HistoryRoute) },
                             )
+                            // B4: «تازه‌ها» once after an update; the Bazaar build adds the update line and the rating ask.
+                            var whatsNew by rememberSaveable { mutableIntStateOf(-1) }
+                            LaunchedEffect(Unit) { if (whatsNew < 0) whatsNew = container.store.takeWhatsNew() }
+                            if (whatsNew > 0) WhatsNewSheet(whatsNew) { whatsNew = 0 }
+                            TodayStore(container, quiet = whatsNew != 0, modifier = Modifier.align(Alignment.BottomCenter))
                         }
                     }
                     composable<GoalsTab> { WithTabs { GoalsPlaceholder() } }
@@ -298,7 +307,7 @@ class MainActivity : ComponentActivity() {
      * with the tab); the screen keeps clear of it and doesn't pad for the navigation bar again.
      */
     @Composable
-    private fun WithTabs(content: @Composable () -> Unit) {
+    private fun WithTabs(content: @Composable BoxScope.() -> Unit) {
         Box(
             Modifier.fillMaxSize()
                 .navigationBarsPadding()

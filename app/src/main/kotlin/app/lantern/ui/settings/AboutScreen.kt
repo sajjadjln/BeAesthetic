@@ -80,6 +80,9 @@ fun AboutScreen(container: AppContainer, onBack: () -> Unit, onOpenCrash: (Strin
             modifier = Modifier.fillMaxWidth().clip(Px.Card).background(c.surface).padding(16.dp),
         )
 
+        // B4: «امتیاز بده تو بازار», in the Bazaar build only.
+        app.lantern.ui.store.AboutStoreRows()
+
         SectionLabel(R.string.about_crashes)
         Text(stringResource(R.string.about_crashes_help), style = Ba.type.caption, color = c.text3, modifier = Modifier.padding(horizontal = 4.dp))
         val list = crashes

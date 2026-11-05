@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Bazaar build (B4): see the Bazaar app, to ask it for a newer version and open the app's page. -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <queries>
+        <package android:name="com.farsitel.bazaar" />
+    </queries>
+</manifest>

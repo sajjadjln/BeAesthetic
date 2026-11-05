@@ -50,6 +50,7 @@ _Done: flavors `personal` (`app.lantern.me`) and `bazaar` (`app.lantern`); the B
 - ✅ No good backup in 7 days: one calm line under «پشتیبان» in Settings. Today already has its own backup row (no folder, a failed try, or more than 10 days), unchanged.
 
 ### B4. Updates and the store links
+- ✅ **Done 2026-11-05 (D214).** Bazaar's update service is called directly over its AIDL (no library, no `INTERNET`); «بررسی به‌روزرسانی» in Settings, a once-per-version line on Today, «تازه‌ها» from `whats_new_<versionCode>`, the rating ask (`StoreRules` in `:domain`), «امتیاز بده تو بازار» in «درباره».
 - BazaarUpdater: «نسخهٔ تازه آمده» as one quiet line in Settings and once on Today, with a button to the Bazaar page. Verify the library first; if it's gone, the button alone («بررسی به‌روزرسانی» opens the Bazaar page).
 - «تازه‌ها» (what's new) sheet, once after each update. The text lives in resources per version.
 - «امتیاز بده»: `ACTION_EDIT` on `bazaar://details?id=app.lantern`. One ask, after the 7th day with ticks, never after a gap, "don't ask again" honored.

@@ -494,4 +494,19 @@
     <string name="crash_title">گزارش خطا</string>
     <string name="crash_copy">کپی</string>
     <string name="crash_copied">کپی شد</string>
+    <!-- B4: updates, what's new, rating. whats_new_<versionCode> is looked up by name. -->
+    <string name="update_check">بررسی به‌روزرسانی</string>
+    <string name="update_new">نسخه‌ی تازه اومده</string>
+    <string name="update_open">ببین</string>
+    <string name="update_later">بعداً</string>
+    <string name="store_open_failed">بازار باز نشد. یه وقت دیگه امتحان کن.</string>
+    <string name="whats_new_title">تازه‌ها</string>
+    <string name="whats_new_ok">باشه</string>
+    <string name="whats_new_908">• نسخه‌ی نهایی تمیزتر و سبک‌تر شد؛ دیگه دسترسی دوربین نمی‌خواد.\n• «پاک کردن همه‌چیز» تو تنظیمات: از اول شروع کن، پشتیبان‌هات سر جاشون می‌مونن.\n• داده‌هات از هر نسخه‌ی قبلی سالم باز می‌شن، پشتیبان‌های قدیمی هم.\n• اگه برنامه یهو بسته شد، گزارشش تو «درباره» هست. با «کپی» برامون بفرست. هیچی خودبه‌خود فرستاده نمی‌شه.</string>
+    <string name="rate_title">فانوس به کارت اومده؟</string>
+    <string name="rate_text">اگه دوستش داری، یه امتیاز تو بازار کمک می‌کنه بقیه هم پیداش کنن. فقط همین یه بار می‌پرسیم.</string>
+    <string name="rate_yes">امتیاز بده</string>
+    <string name="rate_later">الان نه</string>
+    <string name="rate_never">دیگه نپرس</string>
+    <string name="about_rate">امتیاز بده تو بازار</string>
 </resources>

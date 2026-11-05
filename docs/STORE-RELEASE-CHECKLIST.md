@@ -19,10 +19,10 @@ Lantern is personal for now (D49, D173). This is the list to work through when i
 
 ### Updates (added 2026-11-03, open: see TASKS.md)
 
-- [ ] **Soft update:** tell the user a newer version is out, with one button to the store page. Never blocks anything.
+- [x] **Soft update:** tell the user a newer version is out, with one button to the store page. Never blocks anything.
 - [ ] **Force update:** a minimum-version flag. Below it, the app shows one calm screen with an update button. **Even then, «پشتیبان‌گیری» (export a backup) still works on that screen** (never lose data). No red, no countdown.
-- [ ] Where the flag lives. The app is offline (D164), so it can't ask our own server. Proposal: the store client tells us (Bazaar: `BazaarUpdater` talks to the Bazaar app, so our app needs no `INTERNET`; Play: In-App Updates). The hard minimum comes from the plugin store's index once `:store` exists (D167). Verify the Bazaar library still exists and what it reports.
-- [ ] **What's new** («تازه‌ها»): one sheet after an update, shown once.
+- [ ] Where the flag lives. The app is offline (D164), so it can't ask our own server. Proposal: the store client tells us (Bazaar: `BazaarUpdater` talks to the Bazaar app, so our app needs no `INTERNET`; Play: In-App Updates). The hard minimum comes from the plugin store's index once `:store` exists (D167). Verify the Bazaar library still exists and what it reports. (B4, D214: it does; we call its service directly, it reports the newest version code. The force-update minimum is still open.)
+- [x] **What's new** («تازه‌ها»): one sheet after an update, shown once.
 - [x] **Old data always opens:** Room migrations from every version ever shipped, tested; never `fallbackToDestructiveMigration`. A backup from any older version restores into the newest (B3: `MigrationTest`, `BackupSamplesTest`).
 - [ ] Never ship a version that can't be rolled back without data loss: keep the schema change and the feature that needs it in separate releases when possible.
 
@@ -53,8 +53,8 @@ Lantern is personal for now (D49, D173). This is the list to work through when i
 - [ ] Check Bazaar's current rules on target SDK and on `USE_EXACT_ALARM` / `SCHEDULE_EXACT_ALARM` and `REQUEST_IGNORE_BATTERY_OPTIMIZATIONS`.
 - [ ] Bazaar takes an APK; the signed APK from `scripts/release.sh` is the upload.
 - [ ] Developer account on the Bazaar panel (identity check with a national ID; done by you).
-- [ ] Store links go to Bazaar only: the update button and «امتیاز بده» open `bazaar://details?id=app.lantern` (rating: `ACTION_EDIT` on the same URI, package `com.farsitel.bazaar`). No link or mention of Google Play anywhere in the Bazaar build.
-- [ ] A rating ask, at most once, after a good moment (e.g. the 7th day with ticks), never after a gap. Easy to dismiss forever.
+- [x] Store links go to Bazaar only: the update button and «امتیاز بده» open `bazaar://details?id=app.lantern` (rating: `ACTION_EDIT` on the same URI, package `com.farsitel.bazaar`). No link or mention of Google Play anywhere in the Bazaar build.
+- [x] A rating ask, at most once, after a good moment (e.g. the 7th day with ticks), never after a gap. Easy to dismiss forever.
 - [ ] Privacy policy page in Persian at a URL you own (a static page is enough).
 - [ ] Listing assets: 512×512 icon, Persian screenshots, a cover image, category (likely «بهره‌وری» or «سبک زندگی»), age rating.
 - [ ] Review notes for Bazaar's reviewers: why exact alarms and the battery exception are needed (reminders on Xiaomi).
