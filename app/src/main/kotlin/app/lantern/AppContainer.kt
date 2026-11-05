@@ -2,6 +2,7 @@ package app.lantern
 
 import android.content.Context
 import app.lantern.backup.BackupService
+import app.lantern.crash.crashLog
 import app.lantern.data.db.AppDatabase
 import app.lantern.data.repo.Seed
 import app.lantern.data.repo.TaskRepository
@@ -33,7 +34,8 @@ class AppContainer(context: Context) {
     val events = EventLog(db.events(), clock)
     val notifier = Notifier(appContext)
     val scheduler = AlarmScheduler(appContext, db, tasks, clock)
-    val backup = BackupService(appContext, db, clock)
+    val crashes = crashLog(appContext)
+    val backup = BackupService(appContext, db, clock, crashes)
 
     private val readyLock = Mutex()
     @Volatile private var ready = false

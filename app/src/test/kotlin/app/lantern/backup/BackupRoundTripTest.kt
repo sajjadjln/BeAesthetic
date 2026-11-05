@@ -122,6 +122,26 @@ class BackupRoundTripTest {
     }
 
     @Test
+    fun `crash reports ride along under crashes, and restore leaves this phone's own alone`() {
+        val crashes = app.lantern.crash.CrashLog(File(dir, "crashes"))
+        crashes.record(Thread.currentThread(), RuntimeException("boom"), null, Instant.parse("2026-11-05T10:00:00Z"))
+        val zip = File(dir, "backup.zip")
+        val manifest = zip.outputStream().use {
+            BackupArchive.write(sql, null, File(dir, "none"), "0.9.6", schema, "MANUAL", Instant.now(), it, crashes.files())
+        }
+        BackupArchive.verify(zip, manifest, schema)
+        ZipFile(zip).use { z ->
+            val name = crashes.files().single().name
+            val entry = z.getEntry(BackupArchive.CRASHES + name)
+            assertEquals(crashes.files().single().readText(), z.getInputStream(entry).bufferedReader().readText())
+        }
+
+        crashes.clear()
+        BackupArchive.restore(sql, zip, File(dir, "photos"), schema) { block -> db.runInTransaction(block) }
+        assertTrue(crashes.list().isEmpty())
+    }
+
+    @Test
     fun `a backup from a newer app or another file is refused before anything changes`() {
         val zip = File(dir, "backup.zip")
         zip.outputStream().use { BackupArchive.write(sql, null, File(dir, "none"), "0.6.0", schema, "MANUAL", Instant.now(), it) }

@@ -54,6 +54,7 @@ object BaIcons {
         "M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.9 0 1.7-.8 1.7-1.7 0-.4-.2-.8-.4-1.1-.3-.3-.4-.7-.4-1.1 0-.9.8-1.7 1.7-1.7h2c3 0 5.5-2.5 5.5-5.5C22 6 17.5 2 12 2z",
     )
     val Phone = stroke(roundRect(6f, 2f, 12f, 20f, 2f), "M11 18h2")
+    val Info = stroke(circle(12f, 12f, 10f), "M12 16v-4M12 8h.01")
     val Shield = stroke("M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z", "m9 12 2 2 4-4")
     val Lock = stroke(roundRect(4f, 11f, 16f, 10f, 2f), "M8 11V7a4 4 0 0 1 8 0v4")
     val Mail = stroke(roundRect(3f, 5f, 18f, 14f, 2f), "m3 7 9 6 9-6")

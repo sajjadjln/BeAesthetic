@@ -19,6 +19,8 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        // First, so a crash anywhere after this is written down (B5, D211).
+        app.lantern.crash.installCrashHandler(this)
         container = AppContainer(this)
         container.notifier.createChannels()
         AppLanguage.syncLauncher(this)

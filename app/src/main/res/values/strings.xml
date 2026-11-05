@@ -464,4 +464,17 @@
     <string name="editor_hi_simple">A name and when; the rest is optional.</string>
     <string name="editor_ok_simple">Saved.</string>
     <string name="goals_soon_body_simple">This part is being built. Your goals will live here soon.</string>
+
+    <!-- About and the crash log (B5, D211) -->
+    <string name="settings_about">About</string>
+    <string name="about_crashes">Crash reports</string>
+    <string name="about_crashes_help">If the app closes by itself, what happened is written here, on this phone only. Nothing is sent. Copy one and send it to the developer.</string>
+    <string name="about_no_crashes">No crashes recorded</string>
+    <string name="about_clear">Clear</string>
+    <string name="about_clear_title">Clear the crash reports?</string>
+    <string name="about_clear_text">They are only here to help fix the app.</string>
+    <string name="about_clear_yes">Clear</string>
+    <string name="crash_title">Crash report</string>
+    <string name="crash_copy">Copy</string>
+    <string name="crash_copied">Copied</string>
 </resources>

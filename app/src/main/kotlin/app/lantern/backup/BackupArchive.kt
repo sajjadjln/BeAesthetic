@@ -46,7 +46,8 @@ class BackupException(val kind: Kind, message: String, cause: Throwable? = null)
 
 /**
  * The backup zip (ARCHITECTURE §9, docs/BACKUP_FORMAT.md): `manifest.json`, `data.json` (every table, row
- * by row: the source of truth for restore), `photos/` and `db/lantern.db` (a raw copy, a fallback only).
+ * by row: the source of truth for restore), `photos/`, `crashes/` (the crash log, read by people only) and
+ * `db/lantern.db` (a raw copy, a fallback only).
  *
  * It only needs the open database and the photos folder, so the round trip runs in a unit test. Schema
  * changes stay additive (new tables, new columns with defaults), so an older `data.json` inserts into the
@@ -59,6 +60,9 @@ object BackupArchive {
     const val DATA = "data.json"
     const val PHOTOS = "photos/"
     const val RAW_DB = "db/lantern.db"
+
+    /** This phone's crash reports (B5, D211). Optional: older backups have none, and restore never reads them. */
+    const val CRASHES = "crashes/"
 
     /** Kept on this phone only: a restore never replaces them (D132). */
     val LOCAL_TABLES = setOf("backup_record")
@@ -83,6 +87,7 @@ object BackupArchive {
     /**
      * Writes the whole backup to [out]. The tables are read in one transaction, so the copy is consistent.
      * [dbFile] is the raw database for the fallback copy (checkpointed first); null leaves it out.
+     * [crashFiles] are copied as they are under `crashes/`.
      */
     fun write(
         db: SupportSQLiteDatabase,
@@ -93,6 +98,7 @@ object BackupArchive {
         reason: String,
         now: Instant,
         out: OutputStream,
+        crashFiles: List<File> = emptyList(),
     ): BackupManifest {
         val counts = linkedMapOf<String, Int>()
         val data: JsonObject
@@ -127,6 +133,13 @@ object BackupArchive {
             for ((path, file) in photoFiles(photosDir)) {
                 zip.putNextEntry(ZipEntry(PHOTOS + path))
                 file.inputStream().use { it.copyTo(zip) }
+                zip.closeEntry()
+            }
+            for (file in crashFiles) {
+                // A crash file that vanished or can't be read is left out; it never fails the backup.
+                val bytes = try { file.readBytes() } catch (_: Exception) { continue }
+                zip.putNextEntry(ZipEntry(CRASHES + file.name))
+                zip.write(bytes)
                 zip.closeEntry()
             }
             if (dbFile != null && dbFile.exists()) {

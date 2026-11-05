@@ -28,7 +28,7 @@ Lantern is personal for now (D49, D173). This is the list to work through when i
 
 ### Quality without SDKs (D63)
 
-- [ ] **Local crash log:** an `UncaughtExceptionHandler` writes the stack trace to a file (last 20). Settings → «درباره» shows it with a «کپی» button, so a user can paste it in a message. It goes in the backup too. Nothing is sent.
+- [x] **Local crash log** (D211): an `UncaughtExceptionHandler` writes the stack trace to a file (last 20). Settings → «درباره» shows it with a «کپی» button, so a user can paste it in a message. It goes in the backup too. Nothing is sent.
 - [ ] Bazaar's developer panel shows crashes and ANRs from its own client; read it after each release.
 - [ ] Test the release build (R8 on) end to end, not only debug: reflection in serialization, Room, the widget, receivers.
 - [ ] Test on Android 8 (minSdk 26) and the newest Android, and on a Samsung (the most common non-Xiaomi phone in Iran). Battery guides for Samsung and Huawei/Honor next to the Xiaomi one.
