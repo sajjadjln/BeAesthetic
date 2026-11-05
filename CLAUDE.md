@@ -12,6 +12,7 @@
 | `docs/DESIGN.md` | Design system and the screen-by-screen design that is current | Visual or screen design changes |
 | `docs/ARCHITECTURE.md` | Stack, modules, reminders, Room schema, backup, testing, build order | Technical design changes |
 | `docs/design/screens.html` + `flows.html` | **The current design**, interactive HTML mockups: the main screens, then every flow (onboarding, check-in, tests, backup, letters, recaps) | Screens change |
+| `docs/research/bazaar-developer-guide.md` | Cafe Bazaar's developer docs (read 2026-11-06): account, upload and listing specs, review, alpha/staged release, update check AIDL, intents, rules, permissions; and what they mean for «فانوس» | Bazaar's docs or our Bazaar plan change |
 | `research/FINAL-REPORT.md` | Market, competitor and gamification research (2026-10-10); the evidence behind D48–D69, and the experiment plan (`research/10`) | New research is done |
 | `~/Documents/aesthetic/research/research-goalsetting.pdf` (outside the repo) | Goal-setting research (2026-10-21): the evidence behind D148–D157 and SPEC v1.0 §5 («R§n») | New research is done |
 
