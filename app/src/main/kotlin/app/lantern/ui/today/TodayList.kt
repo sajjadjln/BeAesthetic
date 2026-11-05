@@ -132,7 +132,8 @@ internal fun TodayBody(state: TodayUiState, actions: TodayActions, celebrate: In
     val pool = TodayPick.lines(state.done, state.total, state.currentPart)
     var tap by remember(pool) { mutableIntStateOf(0) }
     val lines = stringArrayResource(linesRes(state.character, pool))
-    val line = lines[tap.mod(lines.size)].format(now?.title ?: "")
+    // Lines no longer name the task (D216), so they are shown as written: no format(), so a stray "%" can't crash.
+    val line = lines[tap.mod(lines.size)]
     val listState = rememberLazyListState()
 
     // T5: a task that appears while Today is open (just saved in the sheet) glows once and scrolls into view.

@@ -42,7 +42,7 @@ _Lantern v1, on the `lantern` branch (2026-10-28). The v0.x design of «پیکر
 
 ## The characters
 
-Four characters in one style (D182, D184): the **knight**, the **vampire**, the **wizard** and the **goth girl**. Art in `characters/`: a full figure, a portrait and a sheet of 6 moods each.
+Four characters in one style (D182, D184): the **knight** (Torin, «دلاور»), the **vampire** (Dracula, «دراکولا»), the **wizard** (Morpheus, «زال») and the **goth girl** (Violet, «وایولت»; no cat in her texts, D216). Every line: `docs/CHARACTER-TEXTS.md`. Art in `characters/`: a full figure, a portrait and a sheet of 6 moods each.
 
 - **The user picks one** on first launch and can change it in Settings (D186, D189).
 - **The app uses three moods:** calm, busy, happy (`res/drawable-nodpi/char_<character>_<mood>.jpg`, cut by `scripts/cut-character.swift`). Nervous, cross and asleep are never shown in v1.
@@ -85,7 +85,7 @@ Stars come out; the four portraits drift in from the dark one by one, each in it
 ### Today (D186–D188)
 Today shows today only: no week row, no history.
 - **Header:** the weekday and date in the character's color; the minimum-day and Settings buttons.
-- **The character** with its line in the dialog box; the line names the task to do now. Tap for the next line. In Simple, a card with the count «۳ از ۹» and one quiet line instead.
+- **The character** with its line in the dialog box; the line doesn't name the task; the «الان» card does (D216). Tap for the next line. In Simple, a card with the count «۳ از ۹» and one quiet line instead.
 - **Progress:** one pixel block per task, green when done, and «۲ از ۷».
 - **Layout 1, the list:**
   - The «الان» card: the first open task in the current part, then later parts, then anything still open from earlier. One tap ticks it.

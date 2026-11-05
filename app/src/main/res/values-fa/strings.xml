@@ -76,10 +76,10 @@
     <string name="lang_system">مثل گوشی</string>
     <string name="lang_fa">فارسی</string>
     <string name="lang_en">English</string>
-    <string name="companion_knight">کنارتم. هر وقت خواستی عوضم کن.</string>
+    <string name="companion_knight">کاااارت درسته به مولا</string>
     <string name="companion_vampire">طومار کارهات هنوز دست منه.</string>
-    <string name="companion_wizard">هوم… صبرم هنوز زیاده.</string>
-    <string name="companion_goth">من و گربه‌م هنوز همه‌چی رو می‌نویسیم.</string>
+    <string name="companion_wizard">شاید باورت نشه، ولی هزار سالمه به‌خدا</string>
+    <string name="companion_goth">بهم نمی‌خوره، ولی خیلی آرومم</string>
     <string name="settings_tasks">کارها</string>
     <string name="settings_reminders">یادآورها</string>
     <string name="settings_backup">پشتیبان</string>
@@ -159,7 +159,7 @@
     <string name="editor_hi_wizard">هوم… یه جادوی کوچیک تازه؟</string>
     <string name="editor_ok_wizard">هاها! اضافه شد.</string>
     <string name="editor_hi_goth">دفترم بازه. چی بنویسم؟</string>
-    <string name="editor_ok_goth">نوشتمش. گربه‌م تأیید کرد.</string>
+    <string name="editor_ok_goth">خوبه، نوشتمش</string>
     <string name="editor_edit">ویرایش کار</string>
     <string name="editor_name">اسم کار</string>
     <string name="editor_icon">آیکن</string>
@@ -215,7 +215,7 @@
     <!-- Slice 5: tabs, dashboard (02) and the day sheet (D1) -->
     <string name="tab_today">امروز</string>
     <string name="tab_goals">هدف‌ها</string>
-    <string name="char_knight">آریاسب</string>
+    <string name="char_knight">دلاور</string>
     <string name="char_vampire">دراکولا</string>
     <string name="char_wizard">زال</string>
     <string name="char_goth">وایولت</string>
@@ -307,21 +307,21 @@
     <!-- Slice 9: onboarding (flows O1–O5, D142). -->
     <string name="onb_char_title">همراهت رو انتخاب کن</string>
     <string name="onb_char_go">با %1$s بریم</string>
-    <string name="intro_knight_1">من آریاسبم. حرف زیاد نمی‌زنم، فقط کنارت می‌ایستم.</string>
-    <string name="intro_knight_2">قدم کوچیک، ولی هر روز. قبول؟</string>
+    <string name="intro_knight_1">سازندم خلاقیتش ته کشید، اسممو گذاشت دلاور</string>
+    <string name="intro_knight_2">یه بزرگی می‌گه نادانی که در حرکته از دانای نشسته پیش‌تر می‌ره.</string>
     <string name="intro_vampire_1">شب‌ها بیدارم و طومار کارهات دستمه.</string>
     <string name="intro_vampire_2">قول می‌دم غر نزنم. زیاد.</string>
-    <string name="intro_wizard_1">هوم… یه شاگرد تازه! من صبرم زیاده.</string>
+    <string name="intro_wizard_1">جوون، بیا بشین کنارم یکم یاد بگیری</string>
     <string name="intro_wizard_2">هر جادوی بزرگی از یه حرکت کوچیک شروع می‌شه.</string>
-    <string name="intro_goth_1">من و گربه‌م همه‌چی رو تو دفترم می‌نویسیم.</string>
-    <string name="intro_goth_2">گربه‌م ازت خوشش اومد. این کم پیش میاد.</string>
+    <string name="intro_goth_1">من از همه‌چیز خبر دارم. از همه‌چیز</string>
+    <string name="intro_goth_2">ازت خوشم اومد. این کم پیش میاد.</string>
     <string name="onb_layout_title">امروزت چه شکلی باشه؟</string>
     <string name="layout_list">فهرست</string>
     <string name="layout_parts">بخش‌های روز</string>
     <string name="layout_list_help">همه‌ی کارهای امروز، پشت سر هم</string>
     <string name="layout_parts_help">صبح، ظهر، عصر، شب؛ با کشیدن عوض می‌شه</string>
-    <string name="layout_list_line">همه‌ی کارها تو یه فهرست. اولیش همونیه که الان باید انجام بدی.</string>
-    <string name="layout_parts_line">روز رو چهار تیکه می‌کنیم؛ همون بخشی که الانه باز می‌شه.</string>
+    <string name="layout_list_line">همه کارهات تو یه لیست قرار می‌گیره که می‌تونی همه‌شونو ببینی</string>
+    <string name="layout_parts_line">روز رو چهار تیکه می‌کنیم؛ و کارهات رو تو هر تیکه قرار می‌دیم</string>
     <string name="onb_restore">بازگردانی از پشتیبان</string>
     <string name="onb_next">بعدی</string>
     <string name="onb_later">بعداً</string>
@@ -356,44 +356,44 @@
     <string name="today_all_done">امروز کاری نمونده. ✦</string>
     <string name="today_night_rest">بقیه‌ش مال فردا. شب بخیر.</string>
     <string-array name="lines_knight_calm">
-        <item>صبح بخیر. اول از همه: %1$s.</item>
-        <item>قدم کوچیک، ولی امروز. با %1$s شروع کن.</item>
+        <item>صبح بخیر.</item>
+        <item>قدم کوچیک، ولی امروز.</item>
     </string-array>
     <string-array name="lines_knight_busy">
-        <item>خوبه. بعدی: %1$s.</item>
-        <item>شمشیر تیزه، ادامه بده. بعدی: %1$s.</item>
+        <item>خوبه. هزار ماشالله</item>
+        <item>در حال نبرد هستم، شما ادامه بده</item>
     </string-array>
     <string-array name="lines_knight_happy">
-        <item>همه‌ش انجام شد. امروز مال تو بود.</item>
-        <item>استراحت هم بخشی از نبرده.</item>
+        <item>بگردمت، باریکلا</item>
+        <item>همیشه در حال حرکت، حتی کوچیک</item>
     </string-array>
     <string-array name="lines_knight_night">
-        <item>امروز تموم شد. فردا با هم.</item>
-        <item>نگهبانی شب با من. تو برو استراحت کن.</item>
+        <item>امروزمون هم تموم شد</item>
+        <item>شما بخواب، من امشب نگهبانی دارم.</item>
     </string-array>
     <string-array name="lines_vampire_calm">
-        <item>هنوز آفتابه… ولی خب، اول %1$s.</item>
-        <item>طومار امروز کوتاهه. با %1$s شروع کن.</item>
+        <item>هنوز آفتابه… ولی خب، شروع کن.</item>
+        <item>طومار امروز کوتاهه. شروع کن.</item>
     </string-array>
     <string-array name="lines_vampire_busy">
-        <item>یکی از طومار خط خورد. بعدی: %1$s.</item>
-        <item>بد نیست. اصلاً بد نیست. بعدی: %1$s.</item>
+        <item>یکی از طومار خط خورد. بعدی.</item>
+        <item>بد نیست. اصلاً بد نیست. بعدی.</item>
     </string-array>
     <string-array name="lines_vampire_happy">
         <item>کل طومار تموم شد. تحت تأثیر قرار گرفتم.</item>
         <item>حالا می‌تونی شب رو بی‌خیال بگذرونی.</item>
     </string-array>
     <string-array name="lines_vampire_night">
-        <item>شب، وقت منه. ولی تو برو استراحت کن.</item>
-        <item>طومار تا فردا صبر می‌کنه.</item>
+        <item>اخ‌جون شب شد، ولی تو برو بخواب</item>
+        <item>طومار تا فردا صبر می{Z}کنه.</item>
     </string-array>
     <string-array name="lines_wizard_calm">
-        <item>هوم… امروز با %1$s شروع کن.</item>
-        <item>هر جادوی بزرگی از یه حرکت کوچیک شروع می‌شه. %1$s.</item>
+        <item>هوم… امروز رو شروع کن.</item>
+        <item>هر جادوی بزرگی از یه حرکت کوچیک شروع می‌شه.</item>
     </string-array>
     <string-array name="lines_wizard_busy">
-        <item>آها! حالا %1$s.</item>
-        <item>ساعت‌شنی هنوز پره، عجله‌ای نیست. بعدی: %1$s.</item>
+        <item>آها! حالا بعدی.</item>
+        <item>ساعت‌شنی هنوز پره، عجله‌ای نیست.</item>
     </string-array>
     <string-array name="lines_wizard_happy">
         <item>هاها! همه‌ش! من تو جوونی این‌قدر منظم نبودم.</item>
@@ -404,20 +404,20 @@
         <item>جادوگرها هم می‌خوابن. فردا.</item>
     </string-array>
     <string-array name="lines_goth_calm">
-        <item>تو دفترم نوشتم: اول %1$s.</item>
-        <item>گربه‌م هم موافقه: اول %1$s.</item>
+        <item>تو دفترم نوشتمش. شروع کن.</item>
+        <item>منم موافقم: از اولی شروع کن.</item>
     </string-array>
     <string-array name="lines_goth_busy">
-        <item>یکی رو تیک زدم. بعدی: %1$s.</item>
-        <item>جوهرم هنوز خشک نشده. بعدی: %1$s.</item>
+        <item>یکی رو تیک زدم. بعدی.</item>
+        <item>جوهرم هنوز خشک نشده. بعدی.</item>
     </string-array>
     <string-array name="lines_goth_happy">
-        <item>همه تیک خوردن. گربه‌م خوشحاله، منم یه‌کم.</item>
+        <item>همه تیک خوردن. منم یه‌کم خوشحالم.</item>
         <item>صفحه‌ی امروز قشنگ شد.</item>
     </string-array>
     <string-array name="lines_goth_night">
         <item>صفحه‌ی امروز رو می‌بندم. فردا.</item>
-        <item>گربه‌م خوابیده. فردا.</item>
+        <item>وقت خوابه دیگه، شب بخیر</item>
     </string-array>
 
     <!-- History (D198) -->
@@ -451,7 +451,7 @@
     <string name="look_companion">با همراه</string>
     <string name="look_simple">ساده</string>
     <string name="look_companion_help">یه شخصیت کنارته، حرف می‌زنه و کار الان رو می‌گه.</string>
-    <string name="look_simple_help">فقط کارهات. بدون شخصیت، تمیز و آروم.</string>
+    <string name="look_simple_help">فقط کارهات. بدون شخصیت.</string>
     <string name="settings_look">ظاهر</string>
     <string name="settings_color">رنگ</string>
     <string name="color_knight">فیروزه‌ای</string>
