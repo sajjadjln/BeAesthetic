@@ -50,7 +50,7 @@ Lantern is personal for now (D49, D173). This is the list to work through when i
 - [ ] **All four characters, the goth woman included** (D199, reverses that part of D195). Check her lines read well in Persian.
 - [x] **The app's name is Persian: «فانوس».** _(In the build, 2026-11-04; the listing is still to do.)_ The launcher label, the splash word, notifications and the Bazaar listing all say «فانوس»; no "Lantern" anywhere in the Bazaar build (one launcher alias, `app_name` in Persian only).
 - [ ] Persian title with the words people search for, Persian description.
-- [ ] Check Bazaar's current rules on target SDK and on `USE_EXACT_ALARM` / `SCHEDULE_EXACT_ALARM` and `REQUEST_IGNORE_BATTERY_OPTIMIZATIONS`.
+- [x] Check Bazaar's current rules on target SDK and on `USE_EXACT_ALARM` / `SCHEDULE_EXACT_ALARM` and `REQUEST_IGNORE_BATTERY_OPTIMIZATIONS`. _(2026-11-06: target SDK ≥ 32; the three permissions aren't mentioned; every permission needs a reason for the reviewer. See below.)_
 - [ ] Bazaar takes an APK; the signed APK from `scripts/release.sh` is the upload.
 - [ ] Developer account on the Bazaar panel (identity check with a national ID; done by you).
 - [x] Store links go to Bazaar only: the update button and «امتیاز بده» open `bazaar://details?id=app.lantern` (rating: `ACTION_EDIT` on the same URI, package `com.farsitel.bazaar`). No link or mention of Google Play anywhere in the Bazaar build.
@@ -60,6 +60,23 @@ Lantern is personal for now (D49, D173). This is the list to work through when i
 - [ ] Review notes for Bazaar's reviewers: why exact alarms and the battery exception are needed (reminders on Xiaomi).
 - [ ] If the workout plugin ships in the Bazaar build, check whether Bazaar files it as health and asks for a license.
 - [ ] Later, only if something is paid (plugins): Bazaar's in-app billing (Poolakey). Not for 1.0.
+
+### From Bazaar's developer docs (read 2026-11-06, `docs/research/bazaar-developer-guide.md` §16)
+
+- [x] _(docs)_ Target SDK ≥ 32 (we're on 36); no min SDK rule; APK ≤150 MB accepted; `app.lantern` is a valid package name. Exact alarms, battery exception and "no internet" have no rule of their own.
+- [x] _(docs)_ Rating intent (`ACTION_EDIT`, `bazaar://details?id=app.lantern`, package `com.farsitel.bazaar`) and the update-check bind action match the docs; the AIDL's first two methods match BazaarUpdater 1.2.0's order.
+- [ ] _(docs)_ **Set `about_contact` before the first upload.** The contract (6-11 ز) calls missing in-app contact channels a violation; the panel requires a support email. Use the same address for both; add `about_contact` to `BazaarStringsTest`'s skip list.
+- [ ] _(docs)_ **Listing name «فانوس» only**: it must equal the launcher label. Search words go in «توضیحات کوتاه فارسی» (≤60 chars) and the description (≤800 chars). No future features (goals, plugins) in the description.
+- [ ] _(docs)_ Category **«ابزارها»** (Bazaar has no «بهره‌وری»; «ابزارها» names reminders and task apps).
+- [ ] _(docs)_ Asset specs: icon PNG 512×512, ≤3 MB, square with no rounded corners or shadow, same as the launcher icon; 1–12 screenshots ≤1 MB each; header image PNG ≥720×288 at 5:2, ≤1 MB; optional promo images JPG 1152×648; optional Aparat video ≤10 min.
+- [ ] _(docs)_ **Character art letter in Bazaar's format**: written confirmation naming the developer email and `app.lantern`; from a private person also their ID details and ID copies. Upload it with the reviewer notes. Same check for the per-character fonts.
+- [ ] _(docs)_ Reviewer notes («توضیحات بیشتر برای بررسی‌کننده») with a reason for every permission, including WorkManager's `ACCESS_NETWORK_STATE`, `WAKE_LOCK`, `FOREGROUND_SERVICE`; mention the clearly labelled «در دست ساخت» Goals tab.
+- [ ] _(docs)_ Beta through Bazaar's **alpha release** (≤100 testers per group by mobile number) instead of hand-sent APKs. Staged rollout needs 5,000 active installs, so not for 1.0.
+- [ ] _(docs)_ Account (you): mobile number in your own name; the email is permanent; pay the 400,000-rial yearly subscription before publishing; developer title ≤32 chars; turn on two-step login. Max 10 publish requests a day; review takes up to 3 working days.
+- [ ] _(docs)_ After launch: Bazaar documents install health and reviews, **not** a crash/ANR view; check the panel for one, and keep the local crash log as the main source.
+- [ ] _(docs, optional)_ Update check on Bazaar older than 24.7.0 (`versionCode < 2400700`): fall back to `getVersionCode` (returns the newer code or −1). `bazaar://details/modal?id=app.lantern` opens Bazaar's in-app update sheet on newer Bazaar.
+- [ ] _(docs)_ Age rating: documented for games only (ESRA, optional). Skip for the app unless the panel asks. A privacy-policy URL isn't required by Bazaar (the in-app note is); keep it for Play.
+- [ ] _(docs, later)_ Plugin store on Bazaar: paid content must use Bazaar billing; apps may not offer access to apps from other sources or update outside Bazaar, nor change their nature after publishing. Ask Bazaar support before shipping `:store` in the `bazaar` flavor.
 
 ## Google Play
 
