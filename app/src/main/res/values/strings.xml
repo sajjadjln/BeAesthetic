@@ -503,6 +503,7 @@
     <string name="whats_new_title">What\'s new</string>
     <string name="whats_new_ok">Got it</string>
     <string name="whats_new_908">• A cleaner release build: no camera access, smaller.\n• «Erase everything» in Settings: start over; your backups stay where they are.\n• Your data opens from every older version, and old backups restore too.\n• If the app ever closes by itself, the report is in «About». Tap «Copy» and send it to us. Nothing is sent on its own.</string>
+    <string name="whats_new_909">• Settings now checks Bazaar for a new version, with one tap to update.\n• «Erase everything» in Settings: start over; your backups stay where they are.\n• Your data opens from every older version, and old backups restore too.\n• No camera access any more.\n• If the app ever closes by itself, the report is in «About». Tap «Copy» and send it to us. Nothing is sent on its own.</string>
     <string name="rate_title">Is Lantern helping?</string>
     <string name="rate_text">If you like it, a rating on Bazaar helps others find it. We only ask this once.</string>
     <string name="rate_yes">Rate</string>
