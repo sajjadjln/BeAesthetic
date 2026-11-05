@@ -478,6 +478,18 @@
     <string name="about_clear_title">گزارش‌های خطا پاک بشن؟</string>
     <string name="about_clear_text">فقط برای درست کردن ایرادهای برنامه نگه داشته شدن.</string>
     <string name="about_clear_yes">پاک کن</string>
+    <!-- Privacy, contact and licenses (B5, D215). about_contact is only in values/ (not translated). -->
+    <string name="about_privacy">حریم خصوصی</string>
+    <string name="about_privacy_text">فانوس هیچ اطلاعاتی ازت جمع نمی‌کنه. اجازه‌ی اینترنت نداره، پس چیزی جایی نمی‌فرسته: نه حساب کاربری، نه تبلیغ، نه آمارگیری. کارها و تنظیماتت فقط روی همین گوشی می‌مونن. پشتیبان‌ها فقط می‌رن توی پوشه‌ای که خودت انتخاب کردی. گزارش‌های خطا هم روی گوشی (و توی پشتیبان‌هات) می‌مونن، تا وقتی خودت یکی رو کپی کنی.</string>
+    <string name="about_contact_row">تماس با سازنده</string>
+    <string name="about_licenses">مجوزها</string>
+    <string name="licenses_help">فانوس با این بخش‌های متن‌باز ساخته شده. روی هر مجوز بزنی، متن کاملش رو می‌بینی.</string>
+    <string name="licenses_read">خوندن متن مجوز</string>
+    <string name="licenses_font">فونت</string>
+    <string name="licenses_libraries">کتابخانه‌ها</string>
+    <string name="licenses_art">تصویرها</string>
+    <string name="licenses_art_name">تصویرهای شخصیت‌ها</string>
+    <string name="licenses_art_note">با اجازه استفاده شده. متن‌باز نیست.</string>
 
     <!-- B3 (D213): erase everything, and Settings' calm backup line. Nothing red, no blame. -->
     <string name="erase_row">پاک کردن همه‌چیز</string>

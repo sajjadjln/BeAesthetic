@@ -481,6 +481,21 @@
     <string name="about_clear_title">Clear the crash reports?</string>
     <string name="about_clear_text">They are only here to help fix the app.</string>
     <string name="about_clear_yes">Clear</string>
+    <!-- Privacy, contact and licenses (B5, D215) -->
+    <string name="about_privacy">Privacy</string>
+    <string name="about_privacy_text">Lantern collects nothing about you. It has no internet permission, so it sends nothing anywhere: no accounts, no ads, no analytics. Your tasks and settings stay on this phone. Backups go only to the folder you pick. Crash reports stay on the phone, and in your backups, until you copy one yourself.</string>
+    <!-- The developer's email address, or a link (https://…). Empty hides the row. Set it here only: it is
+         not translated. Note: the bazaar branch's BazaarStringsTest flags Latin letters, so skip this name there. -->
+    <string name="about_contact" translatable="false"></string>
+    <string name="about_contact_row">Contact the developer</string>
+    <string name="about_licenses">Licenses</string>
+    <string name="licenses_help">Lantern is built with these open-source parts. Tap a license to read it in full.</string>
+    <string name="licenses_read">Read the license</string>
+    <string name="licenses_font">Font</string>
+    <string name="licenses_libraries">Libraries</string>
+    <string name="licenses_art">Pictures</string>
+    <string name="licenses_art_name">The character pictures</string>
+    <string name="licenses_art_note">Used with permission. Not open source.</string>
 
     <!-- B3 (D213): erase everything, and Settings' calm backup line. Nothing red, no blame. -->
     <string name="erase_row">Erase everything</string>

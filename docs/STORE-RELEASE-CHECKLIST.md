@@ -11,7 +11,7 @@ Lantern is personal for now (D49, D173). This is the list to work through when i
 - [x] The app starts empty; nothing personal is seeded (D100). Remove the debug menu from release (`DebugMenu.AVAILABLE`).
 - [x] Remove leftover permissions from «پیکر»: `CAMERA` (removed with CameraX and the camera `FileProvider`, B2). Every permission in the merged manifest re-checked (D212).
 - [ ] `INTERNET` only if the plugin store ships (D164, D167); otherwise keep the no-`INTERNET` check.
-- [ ] Privacy note: the app collects nothing; the usage log never leaves the phone (D59). Both stores want a privacy policy URL.
+- [x] Privacy note in «درباره» (D215): the app collects nothing, no internet permission, everything stays on the phone (D59). Both stores still want a privacy policy URL (below).
 - [ ] Same release key as the personal install (ARCHITECTURE §13), so a store build can update it. On Play this means **Play App Signing with your own key uploaded**, not a Google-generated one.
 - [ ] Version 1.0.0 only after the L9 checks (LANTERN-ROADMAP.md): a week of use, backup → reinstall → restore, reminders after reboot and battery saver.
 - [ ] Reminder checklist on at least one non-Xiaomi phone too.
@@ -37,9 +37,9 @@ Lantern is personal for now (D49, D173). This is the list to work through when i
 ### Legal and content
 
 - [ ] **Rights to the character art** (`characters/`) and the per-character fonts (`characters/fonts/`): confirm each may be shipped in a public, possibly paid, app.
-- [ ] Estedad is under the OFL: ship its license. An «مجوزها» screen in Settings → «درباره» lists Estedad and every open-source library (AndroidX, Kotlin, Room…).
+- [x] Estedad is under the OFL: ship its license. An «مجوزها» screen in Settings → «درباره» lists Estedad and every open-source library (AndroidX, Kotlin, Room…), with the full texts (D215).
 - [x] Settings → «پاک کردن همه‌چیز» (erase all data), with a backup offered first (B3).
-- [ ] Settings → «درباره»: version, contact (an email or a Telegram/Eitaa channel you own), privacy note.
+- [x] Settings → «درباره»: version, contact, privacy note (D215). **You:** set the contact address in `about_contact` (`res/values/strings.xml`); the row is hidden while it's empty.
 - [x] Turn off any debug logging in release (`Log.d` and `Log.v` stripped by R8 rules, B2).
 - [ ] `applicationId` `app.lantern` is permanent once published. Check it's free on Bazaar before the first upload.
 - [ ] The release key: two backups in two places (the file and the password). Losing it means a new app and every user starting over.

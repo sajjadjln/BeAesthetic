@@ -51,6 +51,8 @@ import app.lantern.ui.settings.SettingsDestination
 import app.lantern.ui.settings.AboutScreen
 import app.lantern.ui.settings.EraseScreen
 import app.lantern.ui.settings.CrashScreen
+import app.lantern.ui.settings.LicenseTextScreen
+import app.lantern.ui.settings.LicensesScreen
 import app.lantern.ui.settings.SettingsScreen
 import app.lantern.ui.tasks.TasksRoute as TasksScreenRoute
 import app.lantern.ui.tasks.TasksViewModel
@@ -98,6 +100,8 @@ import kotlinx.serialization.Serializable
 @Serializable object AboutRoute
 @Serializable object EraseRoute
 @Serializable data class CrashRoute(val name: String)
+@Serializable object LicensesRoute
+@Serializable data class LicenseTextRoute(val asset: String)
 @Serializable object GoalsTab
 @Serializable object OnboardingRoute
 @Serializable object HistoryRoute
@@ -228,7 +232,11 @@ class MainActivity : ComponentActivity() {
                     composable<EraseRoute> {
                         EraseScreen(container, viewModel { BackupViewModel(container) }, onBack = nav::popBackStack, onErased = ::restartFresh)
                     }
-                    composable<AboutRoute> { AboutScreen(container, onBack = nav::popBackStack, onOpenCrash = { nav.navigate(CrashRoute(it)) }) }
+                    composable<AboutRoute> {
+                        AboutScreen(container, onBack = nav::popBackStack, onOpenCrash = { nav.navigate(CrashRoute(it)) }, onOpenLicenses = { nav.navigate(LicensesRoute) })
+                    }
+                    composable<LicensesRoute> { LicensesScreen(onBack = nav::popBackStack, onOpenLicense = { nav.navigate(LicenseTextRoute(it)) }) }
+                    composable<LicenseTextRoute> { entry -> LicenseTextScreen(entry.toRoute<LicenseTextRoute>().asset, onBack = nav::popBackStack) }
                     composable<CrashRoute> { entry -> CrashScreen(container, entry.toRoute<CrashRoute>().name, onBack = nav::popBackStack) }
                     composable<DebugRoute> { DebugMenu.Screen(container, onClose = nav::popBackStack) }
                 }
