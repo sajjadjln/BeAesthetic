@@ -37,10 +37,10 @@ Each slice ends as in Phase 5: a build, "what works, what's next", your feedback
 - `bazaar`: `localeFilters = ["fa"]`, Persian becomes `values/`; the language switch is hidden; one launcher alias; `app_name` «فانوس» only, no "Lantern" in any string.
 - `check` builds and lints both flavors; a test reads the Bazaar APK and fails if an English string is inside.
 
-### B2. Clean release build
-- Remove `CAMERA`; re-check every permission in the merged manifest. The no-`INTERNET` check stays on.
-- Debug menu out of release; `Log.d`/`Log.v` stripped by R8.
-- Install the **release** APK (R8 on) and walk every screen: serialization, Room, receivers, the widget.
+### B2. Clean release build ✅ (done 2026-11-05, D212)
+- ✅ `CAMERA`, `android.hardware.camera.any`, CameraX and the camera `FileProvider` removed. The merged release manifest now asks for: `POST_NOTIFICATIONS`, `RECEIVE_BOOT_COMPLETED`, `USE_EXACT_ALARM`, `SCHEDULE_EXACT_ALARM`, `VIBRATE`, `REQUEST_IGNORE_BATTERY_OPTIMIZATIONS` (ours), and `WAKE_LOCK`, `ACCESS_NETWORK_STATE`, `FOREGROUND_SERVICE` (WorkManager's; kept, see D212). The no-`INTERNET` check stays on.
+- ✅ The debug menu was already out of release (`src/release/.../DebugMenu.kt`); `Log.d`/`Log.v` are stripped by R8 (`proguard-rules.pro`).
+- ✅ The signed release APK (R8 on) was walked on the emulator: splash, onboarding, Today (both layouts), add/edit/tick/hold-to-delete, History, Settings and its sub-screens, «درباره», backup and restore, the widget (shows and ticks), a test reminder and a task alarm with its «انجام شد» action. R8 broke nothing.
 
 ### B3. Data that never gets lost
 - Migration tests from the 1.0.0 schema, run on every build.

@@ -8,8 +8,8 @@ Lantern is personal for now (D49, D173). This is the list to work through when i
 
 - [ ] Product flavors `personal`, `bazaar`, `play`; CI/`check` builds all three.
 - [ ] One language per store: hide the language switch in Settings, drop the three launcher aliases down to one (D194 ④), and drop the date order and digits code paths the store doesn't use.
-- [ ] The app starts empty; nothing personal is seeded (D100). Remove the debug menu from release (`DebugMenu.AVAILABLE`).
-- [ ] Remove leftover permissions from «پیکر»: `CAMERA` (the check-in camera is gone; still in the manifest on 2026-11-03). Re-check every permission in the merged manifest.
+- [x] The app starts empty; nothing personal is seeded (D100). Remove the debug menu from release (`DebugMenu.AVAILABLE`).
+- [x] Remove leftover permissions from «پیکر»: `CAMERA` (removed with CameraX and the camera `FileProvider`, B2). Every permission in the merged manifest re-checked (D212).
 - [ ] `INTERNET` only if the plugin store ships (D164, D167); otherwise keep the no-`INTERNET` check.
 - [ ] Privacy note: the app collects nothing; the usage log never leaves the phone (D59). Both stores want a privacy policy URL.
 - [ ] Same release key as the personal install (ARCHITECTURE §13), so a store build can update it. On Play this means **Play App Signing with your own key uploaded**, not a Google-generated one.
@@ -30,7 +30,7 @@ Lantern is personal for now (D49, D173). This is the list to work through when i
 
 - [x] **Local crash log** (D211): an `UncaughtExceptionHandler` writes the stack trace to a file (last 20). Settings → «درباره» shows it with a «کپی» button, so a user can paste it in a message. It goes in the backup too. Nothing is sent.
 - [ ] Bazaar's developer panel shows crashes and ANRs from its own client; read it after each release.
-- [ ] Test the release build (R8 on) end to end, not only debug: reflection in serialization, Room, the widget, receivers.
+- [x] Test the release build (R8 on) end to end, not only debug: reflection in serialization, Room, the widget, receivers (B2, 2026-11-05, on the emulator).
 - [ ] Test on Android 8 (minSdk 26) and the newest Android, and on a Samsung (the most common non-Xiaomi phone in Iran). Battery guides for Samsung and Huawei/Honor next to the Xiaomi one.
 - [ ] TalkBack labels on every tappable thing, and big font sizes (1.3×) don't break Today or the task sheet.
 
@@ -40,7 +40,7 @@ Lantern is personal for now (D49, D173). This is the list to work through when i
 - [ ] Estedad is under the OFL: ship its license. An «مجوزها» screen in Settings → «درباره» lists Estedad and every open-source library (AndroidX, Kotlin, Room…).
 - [ ] Settings → «پاک کردن همه‌چیز» (erase all data), with a backup offered first.
 - [ ] Settings → «درباره»: version, contact (an email or a Telegram/Eitaa channel you own), privacy note.
-- [ ] Turn off any debug logging in release (`Log.d` stripped by R8 rules).
+- [x] Turn off any debug logging in release (`Log.d` and `Log.v` stripped by R8 rules, B2).
 - [ ] `applicationId` `app.lantern` is permanent once published. Check it's free on Bazaar before the first upload.
 - [ ] The release key: two backups in two places (the file and the password). Losing it means a new app and every user starting over.
 

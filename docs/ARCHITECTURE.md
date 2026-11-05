@@ -161,10 +161,13 @@ The scheduler has one switch (setting `alarmMode`), so we can move to `setExactA
 ### 7.3 Permissions
 
 - `USE_EXACT_ALARM` (API 33+): granted at install and can't be revoked. Google Play limits it to alarm and calendar apps, but that rule doesn't apply to a sideloaded APK.
-- `SCHEDULE_EXACT_ALARM` with `maxSdkVersion="32"` for Android 12–12L.
+- `SCHEDULE_EXACT_ALARM` on every version, so the system "Alarms and reminders" switch exists if a phone refuses the first.
 - `POST_NOTIFICATIONS` (API 33+), asked during onboarding.
 - `RECEIVE_BOOT_COMPLETED`.
 - `REQUEST_IGNORE_BATTERY_OPTIMIZATIONS`: opens the system "don't optimize" prompt directly. Also Play-restricted, also fine for an APK.
+- `VIBRATE`, for the reminder pattern.
+- From WorkManager's own manifest, kept on purpose (D212): `WAKE_LOCK`, `ACCESS_NETWORK_STATE`, `FOREGROUND_SERVICE`. All are normal permissions, with no prompt.
+- No `CAMERA` (removed in B2 with CameraX) and never `INTERNET` (§13).
 - If exact alarms are ever unavailable, the scheduler falls back to inexact alarms and Today shows the "Fix reminders" banner.
 
 ### 7.4 Receivers
@@ -323,7 +326,7 @@ No UI screenshot tests in the MVP. Compose previews with fake state cover visual
 - **No CI in the MVP.** A GitHub Actions workflow that runs the tests can be added later if it's wanted; it changes nothing in the code.
 - **Signing:** Lantern uses the same release key as «پیکر» (a different app ID, so no clash). With the git-ignored `keystore.properties`, `./gradlew assembleRelease` signs on its own. The user created the release keystore once (`keytool`, at `~/peykar-release.jks`, alias `peykar`) and keeps it in a password manager and on a second disk. `scripts/release.sh` builds the signed APK: it asks for the password, passes it to Gradle as an environment variable for that one build (configuration cache off), and installs on a phone connected over USB. No password is ever stored in the repo or on disk. An update only installs over the app when it's signed with the same key, and that includes the later Bazaar release. Debug builds use the debug key and the `.debug` app ID, so they never clash with the real install.
 - **Versions:** Lantern started at 0.1.0 (D191); 0.9.0 is the release candidate, 1.0.0 after the L9 checks. `versionCode` = major × 10000 + minor × 100 + patch.
-- R8 minify and resource shrinking on release builds, with keep rules for kotlinx.serialization.
+- R8 minify and resource shrinking on release builds, with keep rules for kotlinx.serialization. R8 also strips `Log.d` and `Log.v` (`app/proguard-rules.pro`); `Log.w` and `Log.e` stay. Walk the release APK on a phone or emulator before a store upload: R8 can break what debug never shows.
 - A **banned-dependency check** runs as part of `./gradlew check` (no Google Play Services, Firebase or analytics).
 - A **manifest check** fails the build if `android.permission.INTERNET` appears in the merged manifest (D60).
 
