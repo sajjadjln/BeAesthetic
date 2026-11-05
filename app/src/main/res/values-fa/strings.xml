@@ -468,4 +468,17 @@
     <string name="editor_hi_simple">اسم و زمانش، بقیه اختیاری.</string>
     <string name="editor_ok_simple">ذخیره شد.</string>
     <string name="goals_soon_body_simple">این بخش در دست ساخته. به‌زودی هدف‌هات اینجا میان.</string>
+
+    <!-- About and the crash log (B5, D211) -->
+    <string name="settings_about">درباره</string>
+    <string name="about_crashes">گزارش خطا</string>
+    <string name="about_crashes_help">اگه برنامه یهو بسته شد، چیزی که پیش اومده همین‌جا روی گوشیت ثبت می‌شه. چیزی جایی فرستاده نمی‌شه. کپیش کن و برای سازنده بفرست.</string>
+    <string name="about_no_crashes">خطایی ثبت نشده</string>
+    <string name="about_clear">پاک کردن</string>
+    <string name="about_clear_title">گزارش‌های خطا پاک بشن؟</string>
+    <string name="about_clear_text">فقط برای درست کردن ایرادهای برنامه نگه داشته شدن.</string>
+    <string name="about_clear_yes">پاک کن</string>
+    <string name="crash_title">گزارش خطا</string>
+    <string name="crash_copy">کپی</string>
+    <string name="crash_copied">کپی شد</string>
 </resources>

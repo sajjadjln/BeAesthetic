@@ -248,6 +248,7 @@ A day the app never saw has no row, which is a gray gap, which is exactly right.
 manifest.json     formatVersion, appVersion, dbSchemaVersion, createdAt, counts per table, photo list with sizes
 data.json         every table as plain JSON, row by row (docs/BACKUP_FORMAT.md, D132)
 photos/           0-front.jpg, 0-side.jpg … 6-back.jpg
+crashes/          the local crash log as it is (optional; restore never reads it, §9.1)
 db/lantern.db raw database copy, an emergency fallback only
 ```
 
@@ -275,6 +276,14 @@ db/lantern.db raw database copy, an emergency fallback only
 A test exports, wipes, restores and compares every table and photo (`BackupRoundTripTest`, Robolectric on the real schema), plus an older backup with missing tables and columns, a newer one refused, and the phone's own settings kept. A manual round trip on the phone (backup, restore from the file) confirms the folder side.
 
 Android's own cloud backup (`allowBackup`) is **off**: it would send data to Google Drive, and it can't be trusted on phones without Google services anyway.
+
+### 9.1 Local crash log (B5, D211)
+
+No crash SDK (D63), so the app keeps its own. `App.onCreate` first installs `CrashHandler` (`crash/CrashLog.kt`) in front of the default handler. On a crash it writes one text file to `files/crashes/crash-<epoch ms>.txt`: time, app version name and code, Android version, phone model, thread, and the full stack trace. It keeps the newest 20, then passes the crash to the old handler, so Android still ends the app the normal way. The write is synchronous and wrapped so it can never throw.
+
+Settings → «درباره» lists the crashes newest first (date and the exception line). One opens the whole text with «کپی» (the clipboard) and the list has «پاک کردن». Nothing is sent: a tester copies one and pastes it in a message.
+
+The backup copies the files under `crashes/`. Restore leaves them alone: they describe the phone they happened on. `CrashLogTest` (plain JVM) covers writing, keeping 20, the order, and corrupt files. The debug menu has "Crash the app now" to try it on a phone.
 
 ## 10. Photos
 

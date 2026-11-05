@@ -48,6 +48,8 @@ import app.lantern.domain.time.Part
 import app.lantern.ui.settings.PhoneScreen
 import app.lantern.ui.settings.RemindersScreen
 import app.lantern.ui.settings.SettingsDestination
+import app.lantern.ui.settings.AboutScreen
+import app.lantern.ui.settings.CrashScreen
 import app.lantern.ui.settings.SettingsScreen
 import app.lantern.ui.tasks.TasksRoute as TasksScreenRoute
 import app.lantern.ui.tasks.TasksViewModel
@@ -92,6 +94,8 @@ import kotlinx.serialization.Serializable
 @Serializable object PhoneRoute
 @Serializable object DebugRoute
 @Serializable object BackupRoute
+@Serializable object AboutRoute
+@Serializable data class CrashRoute(val name: String)
 @Serializable object GoalsTab
 @Serializable object OnboardingRoute
 @Serializable object HistoryRoute
@@ -202,6 +206,7 @@ class MainActivity : ComponentActivity() {
                                 SettingsDestination.REMINDERS -> nav.navigate(RemindersRoute)
                                 SettingsDestination.PHONE -> nav.navigate(PhoneRoute)
                                 SettingsDestination.BACKUP -> nav.navigate(BackupRoute)
+                                SettingsDestination.ABOUT -> nav.navigate(AboutRoute)
                                 SettingsDestination.DEBUG -> nav.navigate(DebugRoute)
                                 else -> Unit
                             }
@@ -217,6 +222,8 @@ class MainActivity : ComponentActivity() {
                     composable<TaskHistoryRoute> { entry ->
                         TaskHistoryScreenRoute(viewModel { HistoryViewModel(container) }, entry.toRoute<TaskHistoryRoute>().taskId, onBack = nav::popBackStack)
                     }
+                    composable<AboutRoute> { AboutScreen(container, onBack = nav::popBackStack, onOpenCrash = { nav.navigate(CrashRoute(it)) }) }
+                    composable<CrashRoute> { entry -> CrashScreen(container, entry.toRoute<CrashRoute>().name, onBack = nav::popBackStack) }
                     composable<DebugRoute> { DebugMenu.Screen(container, onClose = nav::popBackStack) }
                 }
                 // One bar for every tab: it stays put while the tabs slide, and slides away under pushed screens.

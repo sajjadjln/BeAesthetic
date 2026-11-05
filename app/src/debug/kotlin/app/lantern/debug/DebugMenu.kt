@@ -108,6 +108,10 @@ object DebugMenu {
                         OutlinedButton(onClick = {
                             scope.launch { container.scheduler.reconcile("debug"); message = "Reconciled." }
                         }, modifier = Modifier.fillMaxWidth()) { Text("Reconcile now") }
+                        // B5: a real crash on the main thread, to see it in Settings → About after a relaunch.
+                        OutlinedButton(onClick = {
+                            throw IllegalStateException("Debug crash from the debug menu (B5 test)")
+                        }, modifier = Modifier.fillMaxWidth()) { Text("Crash the app now") }
                         // Fake "now" (ARCHITECTURE §4) to see chapter starts and the countdown. Alarms are not
                         // re-planned while the clock is shifted; "Real clock" puts everything back.
                         Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {

@@ -107,7 +107,7 @@ import java.time.ZoneId
 
 /** A settings sub-screen: top bar and a scrolling column. */
 @Composable
-private fun SettingsPage(title: String, onBack: () -> Unit, content: @Composable () -> Unit) {
+internal fun SettingsPage(title: String, onBack: () -> Unit, content: @Composable () -> Unit) {
     Column(Modifier.fillMaxSize().sky().safeDrawingPadding()) {
         TopBar(title, onBack, stringResource(R.string.cd_back))
         Column(
@@ -157,7 +157,7 @@ private fun HealthLine(ok: Boolean, action: (@Composable () -> Unit)? = null) {
 
 // ---------------------------------------------------------------- 06 Settings
 
-enum class SettingsDestination { TASKS, REMINDERS, BACKUP, PHONE, DEBUG }
+enum class SettingsDestination { TASKS, REMINDERS, BACKUP, PHONE, ABOUT, DEBUG }
 
 @Composable
 fun SettingsScreen(container: AppContainer, debugAvailable: Boolean, onBack: () -> Unit, onOpen: (SettingsDestination) -> Unit) {
@@ -262,6 +262,7 @@ fun SettingsScreen(container: AppContainer, debugAvailable: Boolean, onBack: () 
             Triple(SettingsDestination.REMINDERS, BaIcons.Bell, R.string.settings_reminders),
             Triple(SettingsDestination.BACKUP, BaIcons.Cloud, R.string.settings_backup),
             Triple(SettingsDestination.PHONE, BaIcons.Phone, R.string.settings_phone),
+            Triple(SettingsDestination.ABOUT, BaIcons.Info, R.string.settings_about),
         )
         val backup by remember { container.backup.observeStatus() }.collectAsStateWithLifecycle(null)
         rows.forEach { (dest, icon, label) ->
@@ -296,7 +297,7 @@ fun SettingsScreen(container: AppContainer, debugAvailable: Boolean, onBack: () 
 }
 
 @Composable
-private fun SectionLabel(text: Int) {
+internal fun SectionLabel(text: Int) {
     Text(stringResource(text), style = Ba.type.label, color = Ba.colors.text3, modifier = Modifier.padding(top = 10.dp))
 }
 

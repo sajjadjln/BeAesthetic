@@ -45,7 +45,12 @@ data class RestorePreview(val file: File, val displayName: String, val manifest:
  * Backups and restore (ARCHITECTURE §9, slice 6). One at a time: a backup and a restore never overlap.
  * Every try is written to `backup_record`, so Settings and Today can tell when the folder needs a look.
  */
-class BackupService(private val context: Context, private val db: AppDatabase, private val clock: ProgramClock) {
+class BackupService(
+    private val context: Context,
+    private val db: AppDatabase,
+    private val clock: ProgramClock,
+    private val crashes: app.lantern.crash.CrashLog,
+) {
 
     val folder = BackupFolder(context.contentResolver)
     private val mutex = Mutex()
@@ -87,7 +92,7 @@ class BackupService(private val context: Context, private val db: AppDatabase, p
 
     private fun writeTo(file: File, reason: BackupReason): BackupManifest =
         file.outputStream().use { out ->
-            BackupArchive.write(db.openHelper.writableDatabase, dbFile, photosDir, BuildConfig.VERSION_NAME, schema, reason.name, clock.now(), out)
+            BackupArchive.write(db.openHelper.writableDatabase, dbFile, photosDir, BuildConfig.VERSION_NAME, schema, reason.name, clock.now(), out, crashes.files())
         }
 
     /** Copies the picked file into the cache and reads its manifest. Throws [BackupException] if it isn't usable. */

@@ -56,7 +56,7 @@ Each slice ends as in Phase 5: a build, "what works, what's next", your feedback
 
 ### B5. «درباره» (About)
 - Version, a contact (an email or a channel you own), the privacy note in one paragraph.
-- **Crash log:** an `UncaughtExceptionHandler` keeps the last 20 stack traces in a file; «درباره» shows them with «کپی». They go in the backup. Nothing is sent.
+- ✅ **Crash log** (done 2026-11-05, D211): an `UncaughtExceptionHandler` keeps the last 20 stack traces, one file each; «درباره» shows them with «کپی». They go in the backup. Nothing is sent. The «درباره» screen exists now (version + crash reports); the contact, the privacy note and «مجوزها» are still to add.
 - «مجوزها»: Estedad (OFL) and every library's license.
 
 ### B6. Other people's phones

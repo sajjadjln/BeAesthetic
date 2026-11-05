@@ -15,6 +15,7 @@ A backup is one zip file. It is meant to be read by the app on any phone, and la
 | `manifest.json` | What the backup holds. Read first, before anything changes. |
 | `data.json` | Every table, row by row. **The source of truth for restore.** |
 | `photos/…` | The app's photos, same paths as in the app's `files/photos/` folder: `<checkIn>-<pose>.jpg` (slice 7a, schema 7). |
+| `crashes/…` | Optional (added with the crash log, D211). The local crash log as plain text files, `crash-<epoch ms>.txt`, the newest 20. For people to read; restore never reads it, so a backup without it is fine. |
 | `db/beaesthetic.db` | A raw copy of the SQLite database, checkpointed first. An emergency fallback only; restore never reads it. |
 
 ## manifest.json
@@ -67,6 +68,7 @@ The tables and columns are the ones in `ARCHITECTURE.md` §8. Two things are lef
 2. Make a safety backup of the current data: into the backup folder, or, with no usable folder, into the app's private storage (the newest two are kept). If the safety backup fails, stop.
 3. In one transaction: empty every table (except `backup_record`), insert every row from `data.json`, then put back this phone's backup settings. Any error rolls the whole thing back.
 4. Unpack the photos to a side folder first, and swap it in only after the data is in.
+   `crashes/` is not unpacked: crash reports belong to the phone they happened on, so this phone keeps its own.
 5. Plan reminders again.
 
 **Old backups restore into newer apps** because schema changes stay additive: new tables, and new columns that have defaults. A table the backup doesn't have ends up empty; a column it doesn't have takes its default. A change that renames or drops a column must add a mapping step here and raise `formatVersion`.
