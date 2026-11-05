@@ -72,10 +72,10 @@
     <string name="settings_companion">Companion</string>
     <string name="settings_today_layout">Today\'s layout</string>
     <string name="settings_more">More</string>
-    <string name="companion_knight">By your side. Change me whenever you like.</string>
+    <string name="companion_knight">You\'re doing grrreat, I swear.</string>
     <string name="companion_vampire">I still hold the scroll of your tasks.</string>
-    <string name="companion_wizard">Hmm… my patience is still plenty.</string>
-    <string name="companion_goth">My cat and I still write everything down.</string>
+    <string name="companion_wizard">You may not believe it, but I\'m a thousand years old, I swear.</string>
+    <string name="companion_goth">Doesn\'t look like it, but I\'m really calm.</string>
     <string name="settings_tasks">Tasks</string>
     <string name="settings_reminders">Reminders</string>
     <string name="settings_backup">Backup</string>
@@ -155,7 +155,7 @@
     <string name="editor_hi_wizard">Hmm… a small new spell?</string>
     <string name="editor_ok_wizard">Haha! Added.</string>
     <string name="editor_hi_goth">My journal is open. What shall I write?</string>
-    <string name="editor_ok_goth">Written. My cat approves.</string>
+    <string name="editor_ok_goth">Good, I wrote it down.</string>
     <string name="editor_edit">Edit task</string>
     <string name="editor_name">Task name</string>
     <string name="editor_icon">Icon</string>
@@ -303,21 +303,21 @@
     <!-- Slice 9: onboarding (flows O1–O5, D142). -->
     <string name="onb_char_title">Pick your companion</string>
     <string name="onb_char_go">Let\'s go with the %1$s</string>
-    <string name="intro_knight_1">I\'m Torin. I don\'t talk much; I just stand by you.</string>
-    <string name="intro_knight_2">Small steps, but every day. Deal?</string>
+    <string name="intro_knight_1">My maker ran out of ideas and named me Torin.</string>
+    <string name="intro_knight_2">An idiot in motion will get further than a genius at rest.</string>
     <string name="intro_vampire_1">I\'m up at night, and I keep the scroll of your tasks.</string>
     <string name="intro_vampire_2">I promise not to grumble. Much.</string>
-    <string name="intro_wizard_1">Hmm… a new apprentice! I have plenty of patience.</string>
+    <string name="intro_wizard_1">Young one, come sit by me and learn a little.</string>
     <string name="intro_wizard_2">Every great spell starts with one small move.</string>
-    <string name="intro_goth_1">My cat and I write everything down in my journal.</string>
-    <string name="intro_goth_2">My cat likes you. That doesn\'t happen often.</string>
+    <string name="intro_goth_1">I know about everything. Everything.</string>
+    <string name="intro_goth_2">I like you. That doesn\'t happen often.</string>
     <string name="onb_layout_title">How should your Today look?</string>
     <string name="layout_list">List</string>
     <string name="layout_parts">Parts of the day</string>
     <string name="layout_list_help">All of today\'s tasks, one after another</string>
     <string name="layout_parts_help">Morning, midday, evening, night; swipe to switch</string>
-    <string name="layout_list_line">All your tasks in one list. The first is the one to do now.</string>
-    <string name="layout_parts_line">We split the day in four; the part you\'re in opens first.</string>
+    <string name="layout_list_line">All your tasks go in one list, so you can see them all.</string>
+    <string name="layout_parts_line">We split the day in four and put your tasks in each part.</string>
     <string name="onb_restore">Restore from a backup</string>
     <string name="onb_next">Next</string>
     <string name="onb_later">Later</string>
@@ -352,44 +352,44 @@
     <string name="today_all_done">Nothing left today. ✦</string>
     <string name="today_night_rest">The rest is for tomorrow. Good night.</string>
     <string-array name="lines_knight_calm">
-        <item>Good morning. First of all: %1$s.</item>
-        <item>A small step, but today. Start with %1$s.</item>
+        <item>Good morning.</item>
+        <item>A small step, but today.</item>
     </string-array>
     <string-array name="lines_knight_busy">
-        <item>Good. Next: %1$s.</item>
-        <item>The sword is sharp; keep going. Next: %1$s.</item>
+        <item>Good. Well done, really.</item>
+        <item>I\'m in battle; you keep going.</item>
     </string-array>
     <string-array name="lines_knight_happy">
-        <item>All done. Today was yours.</item>
-        <item>Rest is part of the battle too.</item>
+        <item>Bless you, bravo.</item>
+        <item>Always moving, even if small.</item>
     </string-array>
     <string-array name="lines_knight_night">
-        <item>The day is over. Tomorrow, together.</item>
-        <item>Night watch is mine. Go rest.</item>
+        <item>Our day is over too.</item>
+        <item>You sleep; I\'m on night watch tonight.</item>
     </string-array>
     <string-array name="lines_vampire_calm">
-        <item>The sun is still up… but fine, first %1$s.</item>
-        <item>Today\'s scroll is short. Start with %1$s.</item>
+        <item>The sun is still up… but fine, get started.</item>
+        <item>Today\'s scroll is short. Get started.</item>
     </string-array>
     <string-array name="lines_vampire_busy">
-        <item>One line crossed off the scroll. Next: %1$s.</item>
-        <item>Not bad. Not bad at all. Next: %1$s.</item>
+        <item>One line crossed off the scroll. Next.</item>
+        <item>Not bad. Not bad at all. Next.</item>
     </string-array>
     <string-array name="lines_vampire_happy">
         <item>The whole scroll is done. I\'m impressed.</item>
         <item>Now you can enjoy the night.</item>
     </string-array>
     <string-array name="lines_vampire_night">
-        <item>Night is my time. But you go rest.</item>
+        <item>Yay, night\'s here. But you go to sleep.</item>
         <item>The scroll can wait till tomorrow.</item>
     </string-array>
     <string-array name="lines_wizard_calm">
-        <item>Hmm… start today with %1$s.</item>
-        <item>Every great spell starts small. Try %1$s.</item>
+        <item>Hmm… start your day.</item>
+        <item>Every great spell starts with one small move.</item>
     </string-array>
     <string-array name="lines_wizard_busy">
-        <item>Aha! Now %1$s.</item>
-        <item>The hourglass is still full, no rush. Next: %1$s.</item>
+        <item>Aha! Now the next one.</item>
+        <item>The hourglass is still full, no rush.</item>
     </string-array>
     <string-array name="lines_wizard_happy">
         <item>Haha! All of it! I wasn\'t this tidy when I was young.</item>
@@ -400,20 +400,20 @@
         <item>Even wizards sleep. Tomorrow.</item>
     </string-array>
     <string-array name="lines_goth_calm">
-        <item>I wrote it in my journal: first %1$s.</item>
-        <item>My cat agrees: %1$s first.</item>
+        <item>It\'s in my journal. Get started.</item>
+        <item>I agree: start with the first one.</item>
     </string-array>
     <string-array name="lines_goth_busy">
-        <item>Ticked one. Next: %1$s.</item>
-        <item>My ink isn\'t dry yet. Next: %1$s.</item>
+        <item>Ticked one. Next.</item>
+        <item>My ink isn\'t dry yet. Next.</item>
     </string-array>
     <string-array name="lines_goth_happy">
-        <item>All ticked. My cat is happy, and so am I, a little.</item>
+        <item>All ticked. I\'m a little happy too.</item>
         <item>Today\'s page turned out pretty.</item>
     </string-array>
     <string-array name="lines_goth_night">
         <item>I\'m closing today\'s page. Tomorrow.</item>
-        <item>The cat is already asleep. Tomorrow.</item>
+        <item>It\'s bedtime now. Good night.</item>
     </string-array>
 
     <!-- History (D198) -->
@@ -447,7 +447,7 @@
     <string name="look_companion">With a companion</string>
     <string name="look_simple">Simple</string>
     <string name="look_companion_help">A character keeps you company and says what to do now.</string>
-    <string name="look_simple_help">Just your tasks. No character, clean and calm.</string>
+    <string name="look_simple_help">Just your tasks. No character.</string>
     <string name="settings_look">Look</string>
     <string name="settings_color">Color</string>
     <string name="color_knight">Cyan</string>
