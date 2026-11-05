@@ -27,6 +27,12 @@ object AppLanguage {
         syncLauncher(context)
     }
 
+    /** Back to "like the phone" (erase everything, B3): the preferences file is emptied and the launcher follows. */
+    fun reset(context: Context) {
+        prefs(context).edit().clear().commit()
+        syncLauncher(context)
+    }
+
     /**
      * The launcher shows the label of whichever launcher alias is on (D194), and launchers read labels in
      * the phone's language only. So the alias follows the choice: the phone's language, or a fixed

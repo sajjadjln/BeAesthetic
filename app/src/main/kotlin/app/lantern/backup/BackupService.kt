@@ -149,6 +149,7 @@ class BackupService(
                 hasFolder = s.backupTreeUri != null,
                 lastOk = ok,
                 daysSince = okDate?.let { ChronoUnit.DAYS.between(it, today).coerceAtLeast(0) },
+                nudge = BackupRules.nudge(okDate, today),
             )
         }.distinctUntilChanged()
 
@@ -170,6 +171,9 @@ class BackupService(
         val last = db.backups().lastOk()?.at?.let { LocalDateTime.ofInstant(it, clock.zone()) }
         return BackupRules.autoDue(s.autoBackup, s.backupTreeUri != null, last, clock.localNow())
     }
+
+    /** Runs [block] while no backup or restore runs, and keeps them out until it ends (erase everything, B3). */
+    suspend fun <T> exclusive(block: suspend () -> T): T = mutex.withLock { busy { block() } }
 
     private suspend fun <T> busy(block: suspend () -> T): T {
         _running.value = true
@@ -195,6 +199,11 @@ class BackupWorker(context: Context, params: WorkerParameters) : CoroutineWorker
     companion object {
         private const val NAME = "backup"
         private const val KEY_REASON = "reason"
+
+        /** Drops a queued backup (erase everything, B3). */
+        fun cancel(context: Context) {
+            WorkManager.getInstance(context).cancelUniqueWork(NAME)
+        }
 
         fun enqueue(context: Context, reason: BackupReason) {
             val request = OneTimeWorkRequestBuilder<BackupWorker>().setInputData(workDataOf(KEY_REASON to reason.name)).build()

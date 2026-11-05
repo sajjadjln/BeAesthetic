@@ -23,7 +23,7 @@ Lantern is personal for now (D49, D173). This is the list to work through when i
 - [ ] **Force update:** a minimum-version flag. Below it, the app shows one calm screen with an update button. **Even then, «پشتیبان‌گیری» (export a backup) still works on that screen** (never lose data). No red, no countdown.
 - [ ] Where the flag lives. The app is offline (D164), so it can't ask our own server. Proposal: the store client tells us (Bazaar: `BazaarUpdater` talks to the Bazaar app, so our app needs no `INTERNET`; Play: In-App Updates). The hard minimum comes from the plugin store's index once `:store` exists (D167). Verify the Bazaar library still exists and what it reports.
 - [ ] **What's new** («تازه‌ها»): one sheet after an update, shown once.
-- [ ] **Old data always opens:** Room migrations from every version ever shipped, tested; never `fallbackToDestructiveMigration`. A backup from any older version restores into the newest.
+- [x] **Old data always opens:** Room migrations from every version ever shipped, tested; never `fallbackToDestructiveMigration`. A backup from any older version restores into the newest (B3: `MigrationTest`, `BackupSamplesTest`).
 - [ ] Never ship a version that can't be rolled back without data loss: keep the schema change and the feature that needs it in separate releases when possible.
 
 ### Quality without SDKs (D63)
@@ -38,7 +38,7 @@ Lantern is personal for now (D49, D173). This is the list to work through when i
 
 - [ ] **Rights to the character art** (`characters/`) and the per-character fonts (`characters/fonts/`): confirm each may be shipped in a public, possibly paid, app.
 - [ ] Estedad is under the OFL: ship its license. An «مجوزها» screen in Settings → «درباره» lists Estedad and every open-source library (AndroidX, Kotlin, Room…).
-- [ ] Settings → «پاک کردن همه‌چیز» (erase all data), with a backup offered first.
+- [x] Settings → «پاک کردن همه‌چیز» (erase all data), with a backup offered first (B3).
 - [ ] Settings → «درباره»: version, contact (an email or a Telegram/Eitaa channel you own), privacy note.
 - [x] Turn off any debug logging in release (`Log.d` and `Log.v` stripped by R8 rules, B2).
 - [ ] `applicationId` `app.lantern` is permanent once published. Check it's free on Bazaar before the first upload.

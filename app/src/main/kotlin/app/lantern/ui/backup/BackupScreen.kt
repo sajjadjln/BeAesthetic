@@ -136,7 +136,7 @@ fun BackupScreen(
 
 /** Accent when all is well; amber («موعدش رسیده» tone, never red) when the folder needs a look (SPEC §8). */
 @Composable
-private fun StatusCard(status: BackupStatus) {
+internal fun StatusCard(status: BackupStatus) {
     val c = Ba.colors
     val fine = status.notice == BackupNotice.NONE
     val title = when (status.notice) {
@@ -171,7 +171,7 @@ private fun lastText(days: Long?): String = when (days) {
 }
 
 @Composable
-private fun MessageLine(message: BackupMessage) {
+internal fun MessageLine(message: BackupMessage) {
     val c = Ba.colors
     val good = message == BackupMessage.SAVED || message == BackupMessage.RESTORED
     val text = when (message) {

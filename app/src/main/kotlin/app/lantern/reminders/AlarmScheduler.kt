@@ -116,6 +116,11 @@ class AlarmScheduler(
         Log.d(TAG, "boot: ${off.size} alarms fell while the phone was off")
     }
 
+    /** Erase everything (B3, D213): every alarm still ahead is cancelled. Its log goes with the database. */
+    suspend fun cancelAll() = mutex.withLock {
+        db.reminderLog().upcoming(clock.now()).forEach { cancel(it.key) }
+    }
+
     fun canScheduleExact(): Boolean =
         Build.VERSION.SDK_INT < Build.VERSION_CODES.S || alarmManager.canScheduleExactAlarms()
 

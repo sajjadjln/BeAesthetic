@@ -18,6 +18,8 @@ _Last updated: 2026-10-27 (Today redesign with the characters, the character pic
 
 **Bazaar B2 (2026-11-05, D212):** clean release build. `CAMERA` and CameraX gone, every permission explained, `Log.d`/`Log.v` stripped by R8. The signed release APK was walked on the emulator end to end; R8 broke nothing. Not merged into `lantern` or `bazaar` yet.
 
+**Bazaar B3 (2026-11-05, D213):** migration tests for every schema, a sample backup per shipped version restored in a test, Settings → «پاک کردن همه‌چیز» (backup first, then one calm confirmation, then onboarding), and a calm line in Settings after 7 days with no backup. Checked on the emulator. On the same branch as B2, not merged yet. **Next:** B4.
+
 **Launcher polish (2026-10-28, D192):** revised adaptive foreground, background and monochrome artwork; comparison in `docs/design/launcher-icon-preview.png`. Debug APK build and Android lint passed; the rendered comparison was visually checked at 48 px and under circle, squircle and rounded-square masks. User approved the proposed icon on 2026-10-29; the adaptive resources are wired to both launcher icon references. Still needs a look on the Poco.
 
 **Splash exploration (2026-10-28):** `docs/design/splash-options.html` compares six new animated directions with the current Gather splash. Includes companion colors, Persian/English, full/quick timing, reduced motion and timeline scrubbing. User selected option 6, Follow the firefly, with text at the top and the revised launcher lantern (D193). The preview now opens on this revision; the Android implementation still uses Gather. Script syntax and 202 revised full/quick animation frames passed; visual browser review is pending because Chrome was disconnected.

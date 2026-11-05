@@ -238,7 +238,7 @@ A day the app never saw has no row, which is a gray gap, which is exactly right.
 
 - Schemas are exported to `app/schemas/` and committed.
 - Additive changes use Room auto-migrations; anything else gets a hand-written migration.
-- Every hand-written migration needs a test that opens the old schema with real-looking data. Lantern has only the auto-migration 1 → 2 so far; the v0.x migration tests went with the old schema.
+- `MigrationTest` (Robolectric, `MigrationTestHelper`, schemas from the debug assets) runs in every `check` (B3, D213). It migrates **every** exported schema to the newest with real-looking rows and opens the result through the app's own Room builder, so a new version is covered as soon as its schema is exported. Every hand-written migration also gets its own test there with the rows it changes. Lantern has only the auto-migration 1 → 2 so far; the v0.x migration tests went with the old schema.
 - **Never** `fallbackToDestructiveMigration`.
 
 ## 9. Backup and restore
@@ -276,6 +276,14 @@ db/lantern.db raw database copy, an emergency fallback only
 3. On confirm: **first make a backup of the current data**, then replace everything in one transaction, copy the photos, and re-plan reminders.
 4. Anything that fails rolls back; the old data stays.
 
+**Old backups (B3, D213):** `app/src/test/resources/backups/` keeps one sample zip per shipped backup format and database schema, with a README saying where each comes from. `BackupSamplesTest` restores each into the newest schema and compares every row; it fails when a new format or schema has no sample. When either changes, make a backup with the new build and add it there. «پیکر» (v0.x) backups come from another database and don't restore into Lantern.
+
+### Erase everything (B3, D213)
+
+Settings → «پاک کردن همه‌چیز» opens a page that offers a backup first (the status card and «همین الان پشتیبان بگیر», or a folder pick that backs up at once), then asks once in a plain dialog. `AppContainer.eraseEverything()` runs in the app's scope and holds the backup lock: it cancels every alarm still ahead and a queued backup, clears the notifications, lets go of the folder permission, empties every table (`clearAllTables`), the crash log, `files/photos`, `files/safety`, the cache and the preferences (the language goes back to the phone's), then seeds the fresh settings row. `MainActivity` then starts a new task from the launcher entry, so the splash and onboarding run with no old back stack. Backups already in the user's folder are never touched.
+
+Settings shows one calm line under «پشتیبان» when the last good backup is `BackupRules.NUDGE_DAYS` (7) or more days old, or there is none; it opens the backup screen. Today keeps its own row (D134, after 10 days).
+
 A test exports, wipes, restores and compares every table and photo (`BackupRoundTripTest`, Robolectric on the real schema), plus an older backup with missing tables and columns, a newer one refused, and the phone's own settings kept. A manual round trip on the phone (backup, restore from the file) confirms the folder side.
 
 Android's own cloud backup (`allowBackup`) is **off**: it would send data to Google Drive, and it can't be trusted on phones without Google services anyway.
@@ -312,7 +320,7 @@ None in v1. The backup format still has a `photos/` folder, empty, so the format
 |---|---|---|
 | Unit, `:domain` (most tests) | Jalali; program date and the 04:00 rollover; week numbers; chapters and landmarks; "before the app"; comebacks; routine strength and fade/restore rules; milestones; recap content; ladder rung suggestion and "rungs reached"; lifetime totals and round-number crossings; letter opening dates; guess outcome; countdown; BuddyPicker (pose per state, outfit per chapter, no line repeated within 7 days, no pose outside the moment's set); due lists for every repeat type; interval due dates and "counts only on the first due day"; day level thresholds; weekly score with special days and the cap; reminder planner (both profiles, follow-ups, task alarm weekdays, absence rule, nothing in the past); reminder health (late, missed, device off); set pre-fill; progression suggestion; PRs and the in-session record; "since Day 0" deltas; check-in schedule; backup JSON round trip and reading older format versions | Any JVM: Android Studio on the laptop, or a cloud session (`:domain` needs no Android SDK) |
 | Unit, `:app` with Robolectric | DAOs on an in-memory database, the day snapshot writer, `AlarmScheduler.reconcile()` against a shadow AlarmManager, notification content | JVM |
-| Unit, `:app` with Robolectric | Room migrations (`MigrationTestHelper`, schemas from the debug assets, D98) | JVM, every `./gradlew check` |
+| Unit, `:app` with Robolectric | Room migrations for every exported schema (`MigrationTest`, `MigrationTestHelper`, schemas from the debug assets, D98, D213); a sample backup per shipped version restored into the newest schema (`BackupSamplesTest`) | JVM, every `./gradlew check` |
 | Instrumented | Backup → wipe → restore round trip | An emulator or the phone, before each release |
 | Manual, on the phone | A reminder checklist per release: fires at the right time with the screen off, after a reboot, after an update, with battery saver on | The user's Xiaomi |
 

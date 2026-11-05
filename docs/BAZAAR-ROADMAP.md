@@ -42,11 +42,11 @@ Each slice ends as in Phase 5: a build, "what works, what's next", your feedback
 - ✅ The debug menu was already out of release (`src/release/.../DebugMenu.kt`); `Log.d`/`Log.v` are stripped by R8 (`proguard-rules.pro`).
 - ✅ The signed release APK (R8 on) was walked on the emulator: splash, onboarding, Today (both layouts), add/edit/tick/hold-to-delete, History, Settings and its sub-screens, «درباره», backup and restore, the widget (shows and ticks), a test reminder and a task alarm with its «انجام شد» action. R8 broke nothing.
 
-### B3. Data that never gets lost
-- Migration tests from the 1.0.0 schema, run on every build.
-- A backup from every shipped version restores into the newest (keep one sample zip per version in test resources).
-- Settings → «پاک کردن همه‌چیز», with a backup offered first.
-- If no backup was made in 7 days, a calm line in Settings (not on Today, never red).
+### B3. Data that never gets lost ✅ (done 2026-11-05, D213)
+- ✅ `MigrationTest` (`MigrationTestHelper`, Robolectric): every schema in `app/schemas` migrates to the newest with real-looking rows and opens through Room; 1 → 2 has its own test. Runs in every `./gradlew check`.
+- ✅ `BackupSamplesTest`: one sample zip per shipped format and schema in `app/src/test/resources/backups/` (a real 0.9.4 backup, and a schema-1 one derived from it; its README says how). Each restores into the newest schema with every row intact. The test fails when a new schema or format ships without a sample.
+- ✅ Settings → «پاک کردن همه‌چیز»: a page that offers a backup first (status and «همین الان پشتیبان بگیر», or pick a folder), then a plain confirmation. Erases the database, preferences, crash log, alarms and notifications, then opens onboarding. Backups in the folder stay.
+- ✅ No good backup in 7 days: one calm line under «پشتیبان» in Settings. Today already has its own backup row (no folder, a failed try, or more than 10 days), unchanged.
 
 ### B4. Updates and the store links
 - BazaarUpdater: «نسخهٔ تازه آمده» as one quiet line in Settings and once on Today, with a button to the Bazaar page. Verify the library first; if it's gone, the button alone («بررسی به‌روزرسانی» opens the Bazaar page).

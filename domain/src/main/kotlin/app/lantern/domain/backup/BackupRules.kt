@@ -20,6 +20,9 @@ object BackupRules {
     /** Older than this, Settings and Today say so (SPEC §8). */
     const val OVERDUE_DAYS = 10L
 
+    /** Settings shows one calm line when the last good backup is this many days old, or there is none (B3). */
+    const val NUDGE_DAYS = 7L
+
     /** The automatic safety net: a backup on app open once this many days have passed (ARCHITECTURE §9). */
     const val AUTO_DAYS = 7L
 
@@ -54,6 +57,12 @@ object BackupRules {
         if (lastOk == null) return true
         return Duration.between(lastOk, now).toDays() >= AUTO_DAYS
     }
+
+    /**
+     * Settings' calm line (B3, D213): no good backup yet, or the last one [NUDGE_DAYS] or more calendar days
+     * ago. Settings only; Today keeps its own row (the [notice], after [OVERDUE_DAYS]).
+     */
+    fun nudge(lastOk: LocalDate?, today: LocalDate): Boolean = lastOk == null || !lastOk.plusDays(NUDGE_DAYS).isAfter(today)
 
     /** The notice for Today and Settings. A failed last try comes first: it means the folder needs a look. */
     fun notice(hasFolder: Boolean, lastOk: LocalDate?, lastFailed: Boolean, today: LocalDate): BackupNotice = when {
