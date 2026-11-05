@@ -156,7 +156,7 @@ private fun HealthLine(ok: Boolean, action: (@Composable () -> Unit)? = null) {
 
 // ---------------------------------------------------------------- 06 Settings
 
-enum class SettingsDestination { TASKS, REMINDERS, BACKUP, PHONE, ABOUT, DEBUG }
+enum class SettingsDestination { TASKS, REMINDERS, BACKUP, PHONE, ABOUT, ERASE, DEBUG }
 
 @Composable
 fun SettingsScreen(container: AppContainer, debugAvailable: Boolean, onBack: () -> Unit, onOpen: (SettingsDestination) -> Unit) {
@@ -269,6 +269,24 @@ fun SettingsScreen(container: AppContainer, debugAvailable: Boolean, onBack: () 
                 Text(stringResource(label), style = Ba.type.tile, color = c.text1, modifier = Modifier.weight(1f))
                 if (dest == SettingsDestination.BACKUP) backup?.let { b -> BackupTileLine(b) }
             }
+            // B3 (D213): one calm line after a week with no backup. Settings only; Today has its own row.
+            if (dest == SettingsDestination.BACKUP && backup?.nudge == true) BackupNudge(backup!!.daysSince) { onOpen(SettingsDestination.BACKUP) }
+        }
+        // «پاک کردن همه‌چیز» (B3, D213): quieter than the rows above; it opens a page that offers a backup first.
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 8.dp)
+                .clip(Px.Card)
+                .clickable(role = Role.Button) { onOpen(SettingsDestination.ERASE) }
+                .padding(horizontal = 14.dp, vertical = 13.dp),
+        ) {
+            Box(Modifier.size(30.dp), contentAlignment = Alignment.Center) {
+                Icon(BaIcons.Trash, null, tint = c.text3, modifier = Modifier.size(16.dp))
+            }
+            Text(stringResource(R.string.erase_row), style = Ba.type.body, color = c.text2, modifier = Modifier.weight(1f))
         }
         Text(
             stringResource(R.string.settings_version, "\u2066" + PersianDigits.format(BuildConfig.VERSION_NAME) + "\u2069"),
@@ -309,6 +327,22 @@ private fun BackupTileLine(status: app.lantern.backup.BackupStatus) {
     }
     val fine = status.notice == app.lantern.domain.backup.BackupNotice.NONE
     Text(text, style = Ba.type.caption, color = if (fine) c.text3 else c.amber)
+}
+
+/** «یه هفته از آخرین پشتیبان گذشته…»: plain text, never amber or red; a tap opens the backup screen (B3). */
+@Composable
+private fun BackupNudge(daysSince: Long?, onOpen: () -> Unit) {
+    val text = if (daysSince == null) stringResource(R.string.settings_backup_nudge_none) else stringResource(R.string.settings_backup_nudge, PersianDigits.format(daysSince))
+    Text(
+        text,
+        style = Ba.type.caption,
+        color = Ba.colors.text2,
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(Px.Small)
+            .clickable(role = Role.Button, onClick = onOpen)
+            .padding(start = 14.dp, end = 14.dp, top = 2.dp, bottom = 6.dp),
+    )
 }
 
 // ---------------------------------------------------------------- 09 Reminders

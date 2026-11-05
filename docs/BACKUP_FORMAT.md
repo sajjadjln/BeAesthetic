@@ -60,7 +60,7 @@ Each table is an array of rows; each row maps column names to values exactly as 
 - **Weekday sets** are bit sets, Saturday = bit 0 … Friday = bit 6.
 - Missing values are `null`. There are no binary columns.
 
-The tables and columns are the ones in `ARCHITECTURE.md` §8. Two things are left out on purpose: the `backup_record` table, and the phone's own settings `backupTreeUri`, `lastBackupAt` and `autoBackup`. Those describe this phone's backup folder, so a restore keeps the phone's own values (D132).
+The tables and columns are the ones in `ARCHITECTURE.md` §8. The `backup_record` table is left out on purpose. The phone's own settings `backupTreeUri`, `lastBackupAt` and `autoBackup` are written (the writer copies the whole row), but a restore never reads them: they describe this phone's backup folder, so it keeps its own values (D132).
 
 ## Restore rules
 
@@ -70,5 +70,7 @@ The tables and columns are the ones in `ARCHITECTURE.md` §8. Two things are lef
 4. Unpack the photos to a side folder first, and swap it in only after the data is in.
    `crashes/` is not unpacked: crash reports belong to the phone they happened on, so this phone keeps its own.
 5. Plan reminders again.
+
+**Samples (B3, D213):** `app/src/test/resources/backups/` keeps one backup per shipped format and schema; `BackupSamplesTest` restores each into the newest schema. Add one whenever the format or the schema changes.
 
 **Old backups restore into newer apps** because schema changes stay additive: new tables, and new columns that have defaults. A table the backup doesn't have ends up empty; a column it doesn't have takes its default. A change that renames or drops a column must add a mapping step here and raise `formatVersion`.

@@ -72,9 +72,9 @@ object BaIcons {
     val Calendar = stroke(roundRect(3f, 4f, 18f, 18f, 3f), "M16 2v4M8 2v4M3 10h18")
     // Slice 7a. The trend line rises toward the start in RTL, where time runs right → left.
     val Trend = stroke("M3 17l6-6 4 4 8-8", "M14 7h7v7", autoMirror = true)
-    val Camera = stroke("M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z", circle(12f, 13f, 3f))
     val Image = stroke(roundRect(3f, 3f, 18f, 18f, 2f), circle(9f, 9f, 2f), "m21 15-3.1-3.1a2 2 0 0 0-2.8 0L6 21")
     val Ruler = stroke("M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.4 2.4 0 0 1 0-3.4l2.6-2.6a2.4 2.4 0 0 1 3.4 0Z", "m14.5 12.5 2-2M11.5 9.5l2-2M8.5 6.5l2-2M17.5 15.5l2-2")
+    val Trash = stroke("M3 6h18", "M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6", "M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2")
     val ChevronDown = stroke("m6 9 6 6 6-6")
     /** Points "forward" (later in time): right in LTR, left in RTL (time flows right to left). */
     val ChevronForward = stroke("m9 18 6-6-6-6", autoMirror = true)

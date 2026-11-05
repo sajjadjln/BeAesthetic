@@ -49,6 +49,7 @@ import app.lantern.ui.settings.PhoneScreen
 import app.lantern.ui.settings.RemindersScreen
 import app.lantern.ui.settings.SettingsDestination
 import app.lantern.ui.settings.AboutScreen
+import app.lantern.ui.settings.EraseScreen
 import app.lantern.ui.settings.CrashScreen
 import app.lantern.ui.settings.SettingsScreen
 import app.lantern.ui.tasks.TasksRoute as TasksScreenRoute
@@ -95,6 +96,7 @@ import kotlinx.serialization.Serializable
 @Serializable object DebugRoute
 @Serializable object BackupRoute
 @Serializable object AboutRoute
+@Serializable object EraseRoute
 @Serializable data class CrashRoute(val name: String)
 @Serializable object GoalsTab
 @Serializable object OnboardingRoute
@@ -207,6 +209,7 @@ class MainActivity : ComponentActivity() {
                                 SettingsDestination.PHONE -> nav.navigate(PhoneRoute)
                                 SettingsDestination.BACKUP -> nav.navigate(BackupRoute)
                                 SettingsDestination.ABOUT -> nav.navigate(AboutRoute)
+                                SettingsDestination.ERASE -> nav.navigate(EraseRoute)
                                 SettingsDestination.DEBUG -> nav.navigate(DebugRoute)
                                 else -> Unit
                             }
@@ -221,6 +224,9 @@ class MainActivity : ComponentActivity() {
                     }
                     composable<TaskHistoryRoute> { entry ->
                         TaskHistoryScreenRoute(viewModel { HistoryViewModel(container) }, entry.toRoute<TaskHistoryRoute>().taskId, onBack = nav::popBackStack)
+                    }
+                    composable<EraseRoute> {
+                        EraseScreen(container, viewModel { BackupViewModel(container) }, onBack = nav::popBackStack, onErased = ::restartFresh)
                     }
                     composable<AboutRoute> { AboutScreen(container, onBack = nav::popBackStack, onOpenCrash = { nav.navigate(CrashRoute(it)) }) }
                     composable<CrashRoute> { entry -> CrashScreen(container, entry.toRoute<CrashRoute>().name, onBack = nav::popBackStack) }
@@ -302,6 +308,17 @@ class MainActivity : ComponentActivity() {
     }
 
     /** A tapped notification opens Today on its part of the day, or the phone screen for a health warning. */
+    /**
+     * After «پاک کردن همه‌چیز» (B3): a new task from the launcher entry, so the splash and onboarding start
+     * clean, with no back stack and no view model from before. The launcher alias may have just changed
+     * (the language went back to the phone's), so the intent is looked up again.
+     */
+    private fun restartFresh() {
+        val launch = packageManager.getLaunchIntentForPackage(packageName) ?: Intent(this, MainActivity::class.java)
+        startActivity(launch.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK))
+        finish()
+    }
+
     private fun handleIntent(intent: Intent?, nav: NavHostController?) {
         intent ?: return
         intent.getStringExtra(EXTRA_PART)?.let { name -> runCatching { Part.valueOf(name) }.getOrNull()?.let(today::selectPart) }

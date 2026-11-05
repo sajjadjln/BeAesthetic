@@ -49,4 +49,14 @@ class BackupRulesTest {
         assertEquals(BackupNotice.OVERDUE, BackupRules.notice(true, today.minusDays(11), false, today))
         assertEquals(BackupNotice.OVERDUE, BackupRules.notice(true, null, false, today))
     }
+
+    @Test
+    fun `Settings' calm line shows after a week without a backup, or with none`() {
+        val today = LocalDate.of(2026, 11, 5)
+        assertTrue(BackupRules.nudge(null, today))
+        assertFalse(BackupRules.nudge(today, today))
+        assertFalse(BackupRules.nudge(today.minusDays(6), today))
+        assertTrue(BackupRules.nudge(today.minusDays(7), today))
+        assertTrue(BackupRules.nudge(today.minusDays(30), today))
+    }
 }

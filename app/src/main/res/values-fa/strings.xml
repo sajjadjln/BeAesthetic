@@ -474,6 +474,23 @@
     <string name="about_clear_title">گزارش‌های خطا پاک بشن؟</string>
     <string name="about_clear_text">فقط برای درست کردن ایرادهای برنامه نگه داشته شدن.</string>
     <string name="about_clear_yes">پاک کن</string>
+
+    <!-- B3 (D213): erase everything, and Settings' calm backup line. Nothing red, no blame. -->
+    <string name="erase_row">پاک کردن همه‌چیز</string>
+    <string name="erase_title">پاک کردن همه‌چیز</string>
+    <string name="erase_intro">برنامه برمی‌گرده به روز اول: همه‌ی کارها، سابقه، یادآورها و تنظیمات از این گوشی پاک می‌شن. فایل‌های پشتیبانی که توی پوشه‌ت هست سر جاشون می‌مونن.</string>
+    <string name="erase_backup_first">اول یه پشتیبان</string>
+    <string name="erase_pick_folder">یه پوشه انتخاب کن و پشتیبان بگیر</string>
+    <string name="erase_then">بعد</string>
+    <string name="erase_button">پاک کردن همه‌چیز…</string>
+    <string name="erase_running">داره پاک می‌شه…</string>
+    <string name="erase_confirm_title">همه‌چی پاک بشه؟</string>
+    <string name="erase_confirm_text">کارها، سابقه، یادآورها و تنظیمات پاک می‌شن و برنامه از اول شروع می‌شه. فقط یه پشتیبان می‌تونه برشون گردونه.</string>
+    <string name="erase_confirm_backup_today">امروز پشتیبان گرفتی؛ توی پوشه‌ش می‌مونه.</string>
+    <string name="erase_confirm_no_backup_today">از امروز پشتیبانی نیست.</string>
+    <string name="erase_confirm_yes">پاک کن</string>
+    <string name="settings_backup_nudge">آخرین پشتیبان %1$s روز پیش بوده. با یه بار زدن همه‌چی امن می‌مونه.</string>
+    <string name="settings_backup_nudge_none">هنوز پشتیبانی نیست. با یه بار زدن همه‌چی امن می‌مونه.</string>
     <string name="crash_title">گزارش خطا</string>
     <string name="crash_copy">کپی</string>
     <string name="crash_copied">کپی شد</string>

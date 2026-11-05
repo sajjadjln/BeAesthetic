@@ -161,10 +161,13 @@ The scheduler has one switch (setting `alarmMode`), so we can move to `setExactA
 ### 7.3 Permissions
 
 - `USE_EXACT_ALARM` (API 33+): granted at install and can't be revoked. Google Play limits it to alarm and calendar apps, but that rule doesn't apply to a sideloaded APK.
-- `SCHEDULE_EXACT_ALARM` with `maxSdkVersion="32"` for Android 12–12L.
+- `SCHEDULE_EXACT_ALARM` on every version, so the system "Alarms and reminders" switch exists if a phone refuses the first.
 - `POST_NOTIFICATIONS` (API 33+), asked during onboarding.
 - `RECEIVE_BOOT_COMPLETED`.
 - `REQUEST_IGNORE_BATTERY_OPTIMIZATIONS`: opens the system "don't optimize" prompt directly. Also Play-restricted, also fine for an APK.
+- `VIBRATE`, for the reminder pattern.
+- From WorkManager's own manifest, kept on purpose (D212): `WAKE_LOCK`, `ACCESS_NETWORK_STATE`, `FOREGROUND_SERVICE`. All are normal permissions, with no prompt.
+- No `CAMERA` (removed in B2 with CameraX) and never `INTERNET` (§13).
 - If exact alarms are ever unavailable, the scheduler falls back to inexact alarms and Today shows the "Fix reminders" banner.
 
 ### 7.4 Receivers
@@ -235,7 +238,7 @@ A day the app never saw has no row, which is a gray gap, which is exactly right.
 
 - Schemas are exported to `app/schemas/` and committed.
 - Additive changes use Room auto-migrations; anything else gets a hand-written migration.
-- Every hand-written migration needs a test that opens the old schema with real-looking data. Lantern has only the auto-migration 1 → 2 so far; the v0.x migration tests went with the old schema.
+- `MigrationTest` (Robolectric, `MigrationTestHelper`, schemas from the debug assets) runs in every `check` (B3, D213). It migrates **every** exported schema to the newest with real-looking rows and opens the result through the app's own Room builder, so a new version is covered as soon as its schema is exported. Every hand-written migration also gets its own test there with the rows it changes. Lantern has only the auto-migration 1 → 2 so far; the v0.x migration tests went with the old schema.
 - **Never** `fallbackToDestructiveMigration`.
 
 ## 9. Backup and restore
@@ -273,6 +276,14 @@ db/lantern.db raw database copy, an emergency fallback only
 3. On confirm: **first make a backup of the current data**, then replace everything in one transaction, copy the photos, and re-plan reminders.
 4. Anything that fails rolls back; the old data stays.
 
+**Old backups (B3, D213):** `app/src/test/resources/backups/` keeps one sample zip per shipped backup format and database schema, with a README saying where each comes from. `BackupSamplesTest` restores each into the newest schema and compares every row; it fails when a new format or schema has no sample. When either changes, make a backup with the new build and add it there. «پیکر» (v0.x) backups come from another database and don't restore into Lantern.
+
+### Erase everything (B3, D213)
+
+Settings → «پاک کردن همه‌چیز» opens a page that offers a backup first (the status card and «همین الان پشتیبان بگیر», or a folder pick that backs up at once), then asks once in a plain dialog. `AppContainer.eraseEverything()` runs in the app's scope and holds the backup lock: it cancels every alarm still ahead and a queued backup, clears the notifications, lets go of the folder permission, empties every table (`clearAllTables`), the crash log, `files/photos`, `files/safety`, the cache and the preferences (the language goes back to the phone's), then seeds the fresh settings row. `MainActivity` then starts a new task from the launcher entry, so the splash and onboarding run with no old back stack. Backups already in the user's folder are never touched.
+
+Settings shows one calm line under «پشتیبان» when the last good backup is `BackupRules.NUDGE_DAYS` (7) or more days old, or there is none; it opens the backup screen. Today keeps its own row (D134, after 10 days).
+
 A test exports, wipes, restores and compares every table and photo (`BackupRoundTripTest`, Robolectric on the real schema), plus an older backup with missing tables and columns, a newer one refused, and the phone's own settings kept. A manual round trip on the phone (backup, restore from the file) confirms the folder side.
 
 Android's own cloud backup (`allowBackup`) is **off**: it would send data to Google Drive, and it can't be trusted on phones without Google services anyway.
@@ -309,7 +320,7 @@ None in v1. The backup format still has a `photos/` folder, empty, so the format
 |---|---|---|
 | Unit, `:domain` (most tests) | Jalali; program date and the 04:00 rollover; week numbers; chapters and landmarks; "before the app"; comebacks; routine strength and fade/restore rules; milestones; recap content; ladder rung suggestion and "rungs reached"; lifetime totals and round-number crossings; letter opening dates; guess outcome; countdown; BuddyPicker (pose per state, outfit per chapter, no line repeated within 7 days, no pose outside the moment's set); due lists for every repeat type; interval due dates and "counts only on the first due day"; day level thresholds; weekly score with special days and the cap; reminder planner (both profiles, follow-ups, task alarm weekdays, absence rule, nothing in the past); reminder health (late, missed, device off); set pre-fill; progression suggestion; PRs and the in-session record; "since Day 0" deltas; check-in schedule; backup JSON round trip and reading older format versions | Any JVM: Android Studio on the laptop, or a cloud session (`:domain` needs no Android SDK) |
 | Unit, `:app` with Robolectric | DAOs on an in-memory database, the day snapshot writer, `AlarmScheduler.reconcile()` against a shadow AlarmManager, notification content | JVM |
-| Unit, `:app` with Robolectric | Room migrations (`MigrationTestHelper`, schemas from the debug assets, D98) | JVM, every `./gradlew check` |
+| Unit, `:app` with Robolectric | Room migrations for every exported schema (`MigrationTest`, `MigrationTestHelper`, schemas from the debug assets, D98, D213); a sample backup per shipped version restored into the newest schema (`BackupSamplesTest`) | JVM, every `./gradlew check` |
 | Instrumented | Backup → wipe → restore round trip | An emulator or the phone, before each release |
 | Manual, on the phone | A reminder checklist per release: fires at the right time with the screen off, after a reboot, after an update, with battery saver on | The user's Xiaomi |
 
@@ -324,7 +335,7 @@ No UI screenshot tests in the MVP. Compose previews with fake state cover visual
 - **Signing:** Lantern uses the same release key as «پیکر» (a different app ID, so no clash). With the git-ignored `keystore.properties`, `./gradlew assembleRelease` signs on its own. The user created the release keystore once (`keytool`, at `~/peykar-release.jks`, alias `peykar`) and keeps it in a password manager and on a second disk. `scripts/release.sh` builds the signed APK: it asks for the password, passes it to Gradle as an environment variable for that one build (configuration cache off), and installs on a phone connected over USB. No password is ever stored in the repo or on disk. An update only installs over the app when it's signed with the same key, and that includes the later Bazaar release. Debug builds use the debug key and the `.debug` app ID, so they never clash with the real install.
 - **Flavors (D199, D207):** `personal` (`app.lantern.me`, both languages, the language switch and three launcher aliases) and `bazaar` (`app.lantern`, Persian only: the Persian strings are copied into `values/` at build time, `localeFilters = fa`, `BuildConfig.ONLY_LANGUAGE = "fa"`, one launcher alias). Flavor-only code and strings live in `src/personal/` and `src/bazaar/`; `BazaarStringsTest` (in `src/testBazaar/`) fails on any string with Latin letters. `scripts/release.sh` builds `personal` by default and installs it; `FLAVOR=bazaar` builds the Bazaar APK and never installs it, since it would replace an `app.lantern` install.
 - **Versions:** Lantern started at 0.1.0 (D191); 0.9.0 is the release candidate, 1.0.0 after the L9 checks. `versionCode` = major × 10000 + minor × 100 + patch.
-- R8 minify and resource shrinking on release builds, with keep rules for kotlinx.serialization.
+- R8 minify and resource shrinking on release builds, with keep rules for kotlinx.serialization. R8 also strips `Log.d` and `Log.v` (`app/proguard-rules.pro`); `Log.w` and `Log.e` stay. Walk the release APK on a phone or emulator before a store upload: R8 can break what debug never shows.
 - A **banned-dependency check** runs as part of `./gradlew check` (no Google Play Services, Firebase or analytics).
 - A **manifest check** fails the build if `android.permission.INTERNET` appears in the merged manifest (D60).
 
