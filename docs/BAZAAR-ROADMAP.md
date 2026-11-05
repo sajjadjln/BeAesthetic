@@ -56,10 +56,11 @@ _Done: flavors `personal` (`app.lantern.me`) and `bazaar` (`app.lantern`); the B
 - «امتیاز بده»: `ACTION_EDIT` on `bazaar://details?id=app.lantern`. One ask, after the 7th day with ticks, never after a gap, "don't ask again" honored.
 - No link to Google Play anywhere in the Bazaar build.
 
-### B5. «درباره» (About)
-- Version, a contact (an email or a channel you own), the privacy note in one paragraph.
-- ✅ **Crash log** (done 2026-11-05, D211): an `UncaughtExceptionHandler` keeps the last 20 stack traces, one file each; «درباره» shows them with «کپی». They go in the backup. Nothing is sent. The «درباره» screen exists now (version + crash reports); the contact, the privacy note and «مجوزها» are still to add.
-- «مجوزها»: Estedad (OFL) and every library's license.
+### B5. «درباره» (About) ✅ (done 2026-11-05, D211, D215)
+- ✅ Version, the privacy note in one paragraph, and a contact row. The row stays hidden until you put an email or a link in `about_contact` (`app/src/main/res/values/strings.xml`, not translated).
+- ✅ **Crash log** (D211): an `UncaughtExceptionHandler` keeps the last 20 stack traces, one file each; «درباره» shows them with «کپی». They go in the backup. Nothing is sent.
+- ✅ «مجوزها» (D215): Estedad (OFL), every library in the release build (Apache 2.0, and BSD 3-Clause for the Protocol Buffers copy inside Glance), each with its full text; the character pictures as "used with permission". The list is hand-kept in `LicensesScreen.kt`; refresh it when a dependency changes.
+- **You:** decide the contact address and set it. On `bazaar`, `BazaarStringsTest` flags Latin letters, so skip `about_contact` there when you set it.
 
 ### B6. Other people's phones
 - Phone setup for Samsung and Huawei/Honor next to Xiaomi (their battery and autostart screens).

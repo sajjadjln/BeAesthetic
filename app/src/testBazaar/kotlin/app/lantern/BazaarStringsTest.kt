@@ -21,6 +21,9 @@ class BazaarStringsTest {
 
     /** Names that stay as they are in Persian text. */
     private val allowed = listOf("Syncthing")
+
+    /** Not text: the contact address or link in «درباره» (D215) is Latin by nature. */
+    private val notText = setOf("about_contact")
     private val placeholder = Regex("%(\\d+\\$)?[sdf]")
     private val latin = Regex("[A-Za-z]")
 
@@ -39,7 +42,7 @@ class BazaarStringsTest {
     @Test
     fun noStringIsInEnglish() {
         val res = english.resources
-        val strings = R.string::class.java.fields.map { it.name to res.getString(it.getInt(null)) }
+        val strings = R.string::class.java.fields.filter { it.name !in notText }.map { it.name to res.getString(it.getInt(null)) }
         val arrays = R.array::class.java.fields.flatMap { f -> res.getStringArray(f.getInt(null)).map { f.name to it } }
         val found = (strings + arrays).filter { (_, text) -> hasEnglish(text) }
         assertTrue(found.joinToString("\n") { (name, text) -> "$name: $text" }, found.isEmpty())

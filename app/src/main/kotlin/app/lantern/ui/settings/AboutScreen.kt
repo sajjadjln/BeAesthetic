@@ -2,7 +2,13 @@ package app.lantern.ui.settings
 
 import android.content.ClipData
 import android.content.ClipboardManager
+import android.content.ActivityNotFoundException
 import android.content.Context
+import android.content.Intent
+import androidx.core.net.toUri
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.size
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
@@ -60,11 +66,11 @@ import java.time.ZoneId
 // ---------------------------------------------------------------- B5 About
 
 /**
- * «درباره» (B5): the version and the local crash log (D211). A crash opens its full text with «کپی».
- * Nothing here touches the network.
+ * «درباره» (B5): the version, the privacy note, a contact (when set), «مجوزها» and the local crash log
+ * (D211, D215). A crash opens its full text with «کپی». Nothing here touches the network.
  */
 @Composable
-fun AboutScreen(container: AppContainer, onBack: () -> Unit, onOpenCrash: (String) -> Unit) {
+fun AboutScreen(container: AppContainer, onBack: () -> Unit, onOpenCrash: (String) -> Unit, onOpenLicenses: () -> Unit) {
     val c = Ba.colors
     val scope = rememberCoroutineScope()
     var crashes by remember { mutableStateOf<List<CrashReport>?>(null) }
@@ -79,6 +85,23 @@ fun AboutScreen(container: AppContainer, onBack: () -> Unit, onOpenCrash: (Strin
             textAlign = TextAlign.Center,
             modifier = Modifier.fillMaxWidth().clip(Px.Card).background(c.surface).padding(16.dp),
         )
+
+        // The privacy note (D215). Keep it true to the code: no INTERNET permission (the build checks it),
+        // no accounts, no SDKs, allowBackup off, backups only to the folder the user picks (SAF). The Bazaar
+        // build's update check talks to the Bazaar app on the phone, so "this app sends nothing" stays true.
+        SectionLabel(R.string.about_privacy)
+        BaCard { Text(stringResource(R.string.about_privacy_text), style = Ba.type.body, color = c.text2) }
+
+        val context = LocalContext.current
+        BaCard(padding = PaddingValues(0.dp)) {
+            // The contact row shows only once res/values/strings.xml `about_contact` has an address or a link.
+            val contact = stringResource(R.string.about_contact).trim()
+            if (contact.isNotEmpty()) {
+                AboutRow(BaIcons.Mail, stringResource(R.string.about_contact_row), contact) { openContact(context, contact) }
+                HorizontalDivider(color = c.border)
+            }
+            AboutRow(BaIcons.Info, stringResource(R.string.about_licenses), null, onOpenLicenses)
+        }
 
         // B4: «امتیاز بده تو بازار», in the Bazaar build only.
         app.lantern.ui.store.AboutStoreRows()
@@ -173,6 +196,40 @@ fun CrashScreen(container: AppContainer, name: String, onBack: () -> Unit) {
                 }
             }
         }
+    }
+}
+
+/** A row in the About card: icon, label, an optional left-to-right detail (an address), a chevron. */
+@Composable
+private fun AboutRow(icon: ImageVector, label: String, detail: String?, onClick: () -> Unit) {
+    val c = Ba.colors
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
+        modifier = Modifier.fillMaxWidth().clickable(role = Role.Button, onClick = onClick).padding(horizontal = 14.dp, vertical = 13.dp),
+    ) {
+        Box(Modifier.size(30.dp).clip(Px.Small).background(c.glow.copy(alpha = 0.12f)), contentAlignment = Alignment.Center) {
+            Icon(icon, null, tint = c.glow, modifier = Modifier.size(16.dp))
+        }
+        Column(Modifier.weight(1f)) {
+            Text(label, style = Ba.type.tile, color = c.text1)
+            if (detail != null) Text("\u2066" + detail + "\u2069", style = Ba.type.caption, color = c.text3, maxLines = 1, overflow = TextOverflow.Ellipsis)
+        }
+        Icon(BaIcons.ChevronForward, null, tint = c.text3)
+    }
+}
+
+/** An email opens the mail app (ACTION_SENDTO, so only mail apps answer); a link opens the browser. */
+private fun openContact(context: Context, contact: String) {
+    val intent = if (contact.startsWith("http://") || contact.startsWith("https://")) {
+        Intent(Intent.ACTION_VIEW, contact.toUri())
+    } else {
+        Intent(Intent.ACTION_SENDTO, ("mailto:" + contact.removePrefix("mailto:")).toUri())
+    }
+    try {
+        context.startActivity(intent)
+    } catch (_: ActivityNotFoundException) {
+        // No mail app or browser: the address is on screen, so there is nothing else to do.
     }
 }
 
