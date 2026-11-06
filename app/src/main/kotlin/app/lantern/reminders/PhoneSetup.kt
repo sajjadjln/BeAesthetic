@@ -12,17 +12,19 @@ import android.os.PowerManager
 import android.os.Process
 import android.provider.Settings
 import androidx.core.net.toUri
+import app.lantern.domain.reminders.PhoneBrand
 
 /**
  * Opens the system screens that keep reminders alive (ARCHITECTURE §7.7). MIUI and HyperOS component names
  * differ between versions, so each action tries a list of known intents and ends with the app's own
- * system details page. HyperOS (the Poco X4 5G) is tried first.
+ * system details page. HyperOS (the Poco X4 5G) is tried first. Samsung and Huawei/Honor have their own
+ * steps too (B6); other phones get Android's own screens.
  */
 object PhoneSetup {
 
-    fun isXiaomi(): Boolean = listOf(Build.MANUFACTURER, Build.BRAND).any {
-        it.equals("xiaomi", ignoreCase = true) || it.equals("redmi", ignoreCase = true) || it.equals("poco", ignoreCase = true)
-    }
+    val brand: PhoneBrand by lazy { PhoneBrand.of(Build.MANUFACTURER, Build.BRAND) }
+
+    fun isXiaomi(): Boolean = brand == PhoneBrand.XIAOMI
 
     /**
      * Xiaomi's autostart switch, read through its app-op (10008). Not public API, so it may not work on every
@@ -65,16 +67,29 @@ object PhoneSetup {
 
     fun openAutostart(activity: Activity) = tryAll(
         activity,
+        *(if (brand == PhoneBrand.HUAWEI) huaweiAutostart() else xiaomiAutostart(activity)).toTypedArray(),
+        details(activity),
+    )
+
+    private fun xiaomiAutostart(activity: Activity) = listOf(
         Intent().setComponent(ComponentName("com.miui.securitycenter", "com.miui.permcenter.autostart.AutoStartManagementActivity")),
         Intent("miui.intent.action.OP_AUTO_START").addCategory(Intent.CATEGORY_DEFAULT),
         Intent().setComponent(ComponentName("com.miui.securitycenter", "com.miui.permcenter.permissions.PermissionsEditorActivity"))
             .putExtra("extra_pkgname", activity.packageName),
-        details(activity),
+    )
+
+    /** Huawei's «راه‌اندازی برنامه» (App launch); Honor ships the same screens under its own package. */
+    private fun huaweiAutostart() = listOf(
+        Intent().setComponent(ComponentName("com.huawei.systemmanager", "com.huawei.systemmanager.startupmgr.ui.StartupNormalAppListActivity")),
+        Intent().setComponent(ComponentName("com.hihonor.systemmanager", "com.hihonor.systemmanager.startupmgr.ui.StartupNormalAppListActivity")),
+        Intent().setComponent(ComponentName("com.huawei.systemmanager", "com.huawei.systemmanager.optimize.process.ProtectActivity")),
+        Intent().setComponent(ComponentName("com.huawei.systemmanager", "com.huawei.systemmanager.appcontrol.activity.StartupAppControlActivity")),
     )
 
     /**
      * Android's own "let it run in the background" prompt first: it really changes the state, and the screen
-     * can read it back. Once that's done, Xiaomi's per-app battery saver ("No restrictions") is next.
+     * can read it back. Once that's done: Xiaomi's per-app battery saver ("No restrictions"); on Samsung the
+     * app's own page, where «باتری» → «بدون محدودیت» lives; elsewhere Android's battery list.
      */
     @SuppressLint("BatteryLife") // Sideloaded APK; the reminders are the product (ARCHITECTURE §7.3).
     fun openBattery(activity: Activity) = tryAll(
@@ -88,6 +103,7 @@ object PhoneSetup {
             } else {
                 null
             },
+            if (brand == PhoneBrand.SAMSUNG) details(activity) else null,
             Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS),
             details(activity),
         ).toTypedArray(),

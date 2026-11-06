@@ -78,19 +78,25 @@ fun AboutScreen(container: AppContainer, onBack: () -> Unit, onOpenCrash: (Strin
     LaunchedEffect(Unit) { crashes = withContext(Dispatchers.IO) { container.crashes.list() } }
 
     SettingsPage(stringResource(R.string.settings_about), onBack) {
-        Text(
-            stringResource(R.string.settings_version, "\u2066" + PersianDigits.format(BuildConfig.VERSION_NAME) + "\u2069"),
-            style = Ba.type.subtitle,
-            color = c.text1,
-            textAlign = TextAlign.Center,
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.fillMaxWidth().clip(Px.Card).background(c.surface).padding(16.dp),
-        )
+        ) {
+            Text(
+                stringResource(R.string.settings_version, "\u2066" + PersianDigits.format(BuildConfig.VERSION_NAME) + "\u2069"),
+                style = Ba.type.subtitle,
+                color = c.text1,
+                textAlign = TextAlign.Center,
+            )
+            // The developer's name, as on the Bazaar listing («عنوان توسعه‌دهنده»).
+            Text(stringResource(R.string.about_maker, stringResource(R.string.developer_name)), style = Ba.type.caption, color = c.text3, textAlign = TextAlign.Center)
+        }
 
         // The privacy note (D215). Keep it true to the code: no INTERNET permission (the build checks it),
         // no accounts, no SDKs, allowBackup off, backups only to the folder the user picks (SAF). The Bazaar
         // build's update check talks to the Bazaar app on the phone, so "this app sends nothing" stays true.
         SectionLabel(R.string.about_privacy)
-        BaCard { Text(stringResource(R.string.about_privacy_text), style = Ba.type.body, color = c.text2) }
+        BaCard { Text(stringResource(R.string.about_privacy_text, stringResource(R.string.developer_name)), style = Ba.type.body, color = c.text2) }
 
         val context = LocalContext.current
         BaCard(padding = PaddingValues(0.dp)) {

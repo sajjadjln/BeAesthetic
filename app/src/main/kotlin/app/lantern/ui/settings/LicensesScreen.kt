@@ -125,7 +125,7 @@ internal object Licenses {
 fun LicensesScreen(onBack: () -> Unit, onOpenLicense: (String) -> Unit) {
     val c = Ba.colors
     SettingsPage(stringResource(R.string.about_licenses), onBack) {
-        Text(stringResource(R.string.licenses_help), style = Ba.type.caption, color = c.text3, modifier = Modifier.padding(horizontal = 4.dp))
+        Text(stringResource(R.string.licenses_help, stringResource(R.string.developer_name)), style = Ba.type.caption, color = c.text3, modifier = Modifier.padding(horizontal = 4.dp))
 
         SectionLabel(R.string.licenses_font)
         LicenseCard(Licenses.font, onOpenLicense)

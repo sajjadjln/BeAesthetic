@@ -29,4 +29,28 @@ object StoreRules {
         current > lastSeen -> current
         else -> null
     }
+
+    /** Bazaar 24.7.0. From here on Bazaar answers `getRemoteVersionCode`; older ones only `getVersionCode`. */
+    const val BAZAAR_REMOTE_CHECK_SINCE = 2_400_700L
+
+    /** Which update-check call the installed Bazaar ([bazaarVersionCode]) understands. Same rule as BazaarUpdater. */
+    fun updateCall(bazaarVersionCode: Long): UpdateCall =
+        if (bazaarVersionCode >= BAZAAR_REMOTE_CHECK_SINCE) UpdateCall.REMOTE_VERSION_CODE else UpdateCall.VERSION_CODE
+
+    /**
+     * Bazaar's [answer] as a newer version code, or null. Both calls use −1 (or 0 on an unknown call) for
+     * "nothing" or an error; `getVersionCode` already answers only when newer, `getRemoteVersionCode` answers
+     * the store's code, which may equal [installed].
+     */
+    fun newerVersion(answer: Long?, installed: Long): Long? = answer?.takeIf { it > 0 && it > installed }
+
+    /**
+     * Open Bazaar's in-app update sheet (`bazaar://details/modal`) rather than the app's page: only when a newer
+     * version is known and Bazaar is new enough to have the sheet (24.7.0 is the oldest we trust with it).
+     */
+    fun useUpdateSheet(bazaarVersionCode: Long?, newer: Long?): Boolean =
+        newer != null && bazaarVersionCode != null && bazaarVersionCode >= BAZAAR_REMOTE_CHECK_SINCE
 }
+
+/** The two methods of Bazaar's update-check service, in their binder order. */
+enum class UpdateCall { VERSION_CODE, REMOTE_VERSION_CODE }

@@ -1,6 +1,6 @@
 # Lantern on Cafe Bazaar: roadmap to the first release
 
-_Written 2026-11-03 on the `lantern` branch. Questions answered the same day (D199). Work happens on the `bazaar` branch (D207); B1 built 2026-11-04. The full list of items is `STORE-RELEASE-CHECKLIST.md`; this file puts them in order._
+_Written 2026-11-03 on the `lantern` branch. Questions answered the same day (D199). Work happens on the `bazaar` branch (D207); B1 built 2026-11-04. Updated 2026-11-06 from Bazaar's developer docs (D216). The full list of items is `STORE-RELEASE-CHECKLIST.md`; this file puts them in order. The listing text, reviewer notes and the art letter are in `BAZAAR-LISTING.md`._
 
 ## What the first Bazaar release is
 
@@ -60,27 +60,29 @@ _Done: flavors `personal` (`app.lantern.me`) and `bazaar` (`app.lantern`); the B
 - ✅ Version, the privacy note in one paragraph, and a contact row. The row stays hidden until you put an email or a link in `about_contact` (`app/src/main/res/values/strings.xml`, not translated).
 - ✅ **Crash log** (D211): an `UncaughtExceptionHandler` keeps the last 20 stack traces, one file each; «درباره» shows them with «کپی». They go in the backup. Nothing is sent.
 - ✅ «مجوزها» (D215): Estedad (OFL), every library in the release build (Apache 2.0, and BSD 3-Clause for the Protocol Buffers copy inside Glance), each with its full text; the character pictures as "used with permission". The list is hand-kept in `LicensesScreen.kt`; refresh it when a dependency changes.
-- **You:** decide the contact address and set it. On `bazaar`, `BazaarStringsTest` flags Latin letters, so skip `about_contact` there when you set it.
+- ✅ Contact set 2026-11-06: `donniedoorkar@gmail.com` (already skipped by `BazaarStringsTest`). «درباره» names the maker, «ساخته‌ی دانی دورکار» / “Made by Donnie Doorkar”, and so do the privacy note and «مجوزها» (D216).
 
-### B6. Other people's phones
-- Phone setup for Samsung and Huawei/Honor next to Xiaomi (their battery and autostart screens).
-- Test on Android 8 (an emulator is fine), the newest Android, and a real Samsung.
-- TalkBack labels on everything tappable; font scale 1.3× on Today and the task sheet.
-- Reminder health check: confirm it notices when a non-Xiaomi phone blocks alarms.
+### B6. Other people's phones (code done 2026-11-06, D216)
+- ✅ Phone setup for Samsung and Huawei/Honor next to Xiaomi (`PhoneBrand` in `:domain`): Huawei/Honor get the autostart row («راه‌اندازی برنامه»: search the app, turn off automatic management); Samsung's battery row opens the app's page («باتری» → «بدون محدودیت»). The onboarding step no longer names Xiaomi; the autostart row says to search for the app's name; the battery row ends with «بذارش روی «بدون محدودیت»».
+- ✅ TalkBack: no tappable item without a spoken name on onboarding, Today, the task sheet, Settings, «رسیدن یادآورها» and «درباره» (a UI dump on the emulator found none; not tried with TalkBack itself).
+- ✅ Font scale 1.3× on Today and the task sheet: fine in Persian on the emulator (chips wrap, nothing cut).
+- **Needs a device:** a real Samsung and a Huawei/Honor (the component names of their autostart screens are not public and change between versions; the fallback is the app's details page). Android 8 on an emulator; the newest Android.
+- **Needs a device:** reminder health check on a non-Xiaomi phone that blocks alarms.
 
-### B7. Beta (Q5)
-- Send the signed Bazaar APK to 3–5 people. Two weeks.
+### B7. Beta (Q5), through Bazaar's alpha release (D216)
+- Needs the Bazaar account first (B8's first step moves here).
+- Upload the signed Bazaar APK as an **alpha release** («رهانش آلفا»): a group of 3–5 testers by mobile number (≤100 per group); they log in to Bazaar with that number and install and update through Bazaar. It is reviewed like any release. Two weeks. This also tests the real update check and the rating intent, which a hand-sent APK can't.
 - Watch for: reminders that didn't arrive, onboarding steps people didn't understand, crashes they paste from «درباره».
-- Fix, bump the version, repeat once if needed.
+- Fix, bump the version, upload again to the same alpha group; repeat once if needed. Then switch the release to «عمومی» (it can't go back to alpha).
 
-### B8. Listing and publish
-- **You:** the developer account on the Bazaar panel (national ID check), and confirm `app.lantern` is free.
-- **You:** written confirmation that the character art and the per-character fonts may be shipped publicly.
-- Privacy policy page in Persian at a URL you own.
-- Listing: 512×512 icon, Persian screenshots (Today both layouts, the four characters, the task sheet, History, the splash), a cover image, a Persian title with search words («فانوس | لیست کارهای روزانه و یادآور»), description, category «بهره‌وری», age rating.
-- Notes for the reviewers: why exact alarms and the battery exception are needed.
-- Upload the signed APK from `scripts/release.sh`. Use a staged rollout if the panel offers one.
-- After launch: read Bazaar's crash and ANR panel weekly for the first month.
+### B8. Listing and publish (text ready in `BAZAAR-LISTING.md`)
+- **You:** the developer account on the Bazaar panel (national ID, a mobile in your own name, two-step login, the yearly subscription), and confirm `app.lantern` is free. Developer title «دانی دورکار» / “Donnie Doorkar”. Do this before B7.
+- **You:** the signed character-art letter in Bazaar's format (drafted in `BAZAAR-LISTING.md` §6: developer email, `app.lantern`, the owner's ID details and ID copies). Only Estedad ships, so no font letter.
+- No privacy-policy URL for Bazaar (the in-app note is enough); keep it for Google Play.
+- Listing: title **«فانوس»** only (it must equal the launcher label); search words in the short description; description ≤800 chars with no future features; category **«ابزارها»**; support email `donniedoorkar@gmail.com`; 512×512 square icon with no rounded corners or shadow; 5–6 screenshots (not the Goals tab); a 5:2 header image.
+- Notes for the reviewers: a reason for every permission, WorkManager's three included, and the «در دست ساخت» Goals tab (`BAZAAR-LISTING.md` §5).
+- Upload the signed APK from `FLAVOR=bazaar scripts/release.sh`, publish mode «انتشار دستی». No staged rollout (it needs 5,000 active installs).
+- After launch: read install health and reviews weekly for the first month; check whether the panel has a crash view. The local crash log in «درباره» stays the main source.
 
 ## After 1.0 (not in this roadmap)
 1. The goal flow (SPEC v1.0) replaces the «در دست ساخت» page.
