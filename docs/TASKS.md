@@ -1,6 +1,6 @@
 # Tasks and status
 
-_Last updated: 2026-10-27 (Today redesign with the characters, the character pick, Settings, the new-task sheet, the splash and the name «فانوس» / Lantern, D186–D190)_
+_Last updated: 2026-11-06 (Bazaar: ready to upload, D217)_
 
 ## Lantern v1 (branch `lantern`, 2026-10-28)
 
@@ -19,6 +19,8 @@ _Last updated: 2026-10-27 (Today redesign with the characters, the character pic
 **Bazaar B2 (2026-11-05, D212):** clean release build. `CAMERA` and CameraX gone, every permission explained, `Log.d`/`Log.v` stripped by R8. The signed release APK was walked on the emulator end to end; R8 broke nothing. Not merged into `lantern` or `bazaar` yet.
 
 **Bazaar B3 (2026-11-05, D213):** migration tests for every schema, a sample backup per shipped version restored in a test, Settings → «پاک کردن همه‌چیز» (backup first, then one calm confirmation, then onboarding), and a calm line in Settings after 7 days with no backup. Checked on the emulator. On the same branch as B2, not merged yet. **Next:** B4.
+
+**Bazaar, ready to upload (2026-11-06, D217, 0.9.12):** contact `donniedoorkar@gmail.com` and the maker «دانی دورکار» in «درباره»; onboarding's reminders step for any phone, with «جستجو کن» for autostart and «بدون محدودیت» for the battery; phone setup for Samsung and Huawei/Honor; the update check falls back to `getVersionCode` on old Bazaar and opens Bazaar's update sheet on new; `docs/BAZAAR-LISTING.md` has the listing text, reviewer notes and the art letter. Roadmap B7 is now Bazaar's alpha release. On branch `claude/bazaar-finish-a0e614`, not merged. **Next (you):** the Bazaar account and subscription, the signed art letter, screenshots and the header image, then upload as alpha (B7). **Needs a device:** a real Samsung and a Huawei/Honor for their setup screens.
 
 **Launcher polish (2026-10-28, D192):** revised adaptive foreground, background and monochrome artwork; comparison in `docs/design/launcher-icon-preview.png`. Debug APK build and Android lint passed; the rendered comparison was visually checked at 48 px and under circle, squircle and rounded-square masks. User approved the proposed icon on 2026-10-29; the adaptive resources are wired to both launcher icon references. Still needs a look on the Poco.
 

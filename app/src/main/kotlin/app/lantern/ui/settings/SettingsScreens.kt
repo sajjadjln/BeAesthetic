@@ -80,6 +80,7 @@ import app.lantern.domain.reminders.Attention
 import app.lantern.domain.reminders.Health
 import app.lantern.domain.reminders.LogRow
 import app.lantern.domain.reminders.Outcome
+import app.lantern.domain.reminders.PhoneBrand
 import app.lantern.domain.reminders.ReminderHealth
 import app.lantern.domain.text.PersianDigits
 import app.lantern.domain.time.Part
@@ -531,7 +532,7 @@ fun PhoneScreen(container: AppContainer, onBack: () -> Unit) {
         exactOk = container.scheduler.canScheduleExact()
         batteryOk = PhoneSetup.isIgnoringBattery(context)
         autostart = PhoneSetup.autostartState(context)
-        // Back from Xiaomi's autostart screen and the phone can't tell us: ask, never assume.
+        // Back from the autostart screen (Xiaomi, Huawei/Honor) and the phone can't tell us: ask, never assume.
         if (openedAutostart && autostart == null) ask = Ask.AUTOSTART
         openedAutostart = false
         // Re-plan with whatever is allowed now (exact alarms may have just been switched on).
@@ -546,7 +547,8 @@ fun PhoneScreen(container: AppContainer, onBack: () -> Unit) {
     LaunchedEffect(Unit) {
         container.db.settings().get()?.let { container.db.settings().upsert(it.copy(healthSeenAt = container.clock.now())) }
     }
-    val xiaomi = remember { PhoneSetup.isXiaomi() }
+    val brand = PhoneSetup.brand
+    val appName = stringResource(R.string.app_name)
     val now = container.clock.now()
     val logRows = rows.map { it.toLogRow() }
     val health = ReminderHealth.check(logRows, now)
@@ -570,23 +572,33 @@ fun PhoneScreen(container: AppContainer, onBack: () -> Unit) {
             CheckRow(stringResource(R.string.row_notifications), notifOk, stringResource(R.string.row_notifications_help)) { PhoneSetup.openNotifications(activity) }
             HorizontalDivider(color = c.border)
             CheckRow(stringResource(R.string.row_exact), exactOk, stringResource(R.string.row_exact_help)) { PhoneSetup.openExactAlarms(activity) }
-            if (xiaomi) {
+            if (brand.hasAutostart) {
                 HorizontalDivider(color = c.border)
                 val known = autostart
+                val help = when {
+                    brand == PhoneBrand.HUAWEI -> R.string.row_autostart_help_huawei
+                    known == null -> R.string.row_autostart_help_unknown
+                    else -> R.string.row_autostart_help
+                }
                 CheckRow(
                     stringResource(R.string.row_autostart),
                     known ?: (settings?.autostartConfirmed == true),
-                    stringResource(if (known == null) R.string.row_autostart_help_unknown else R.string.row_autostart_help),
+                    stringResource(help, appName),
                 ) {
                     openedAutostart = true
                     PhoneSetup.openAutostart(activity)
                 }
             }
             HorizontalDivider(color = c.border)
-            CheckRow(stringResource(R.string.row_battery), batteryOk, stringResource(if (xiaomi) R.string.row_battery_help_xiaomi else R.string.row_battery_help)) {
+            val batteryHelp = when (brand) {
+                PhoneBrand.XIAOMI -> stringResource(R.string.row_battery_help_xiaomi)
+                PhoneBrand.SAMSUNG -> stringResource(R.string.row_battery_help_samsung)
+                else -> stringResource(R.string.row_battery_help, appName)
+            }
+            CheckRow(stringResource(R.string.row_battery), batteryOk, batteryHelp) {
                 PhoneSetup.openBattery(activity)
             }
-            if (xiaomi) {
+            if (brand.hasRecentsLock) {
                 HorizontalDivider(color = c.border)
                 CheckRow(stringResource(R.string.row_recents), settings?.recentsLockConfirmed == true, stringResource(R.string.row_recents_help)) {
                     ask = Ask.RECENTS

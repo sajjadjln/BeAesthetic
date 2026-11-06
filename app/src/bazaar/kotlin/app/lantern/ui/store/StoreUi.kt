@@ -36,7 +36,8 @@ import app.lantern.ui.theme.Px
 import kotlinx.coroutines.flow.first
 
 /**
- * Settings → «بررسی به‌روزرسانی» (B4): opens the Bazaar page. When Bazaar knows a newer version the row
+ * Settings → «بررسی به‌روزرسانی» (B4): opens Bazaar's update sheet when a newer version is known (newer
+ * Bazaar), else the app's page. When Bazaar knows a newer version the row
  * says so, quietly: «نسخه‌ی تازه اومده».
  */
 @Composable
@@ -54,7 +55,7 @@ internal fun SettingsStoreRow(container: AppContainer) {
             .background(Color.White.copy(alpha = 0.04f))
             .clickable(role = Role.Button) {
                 newer?.let { container.store.updateLineClosedFor = it }
-                BazaarStore.openPage(context)
+                BazaarStore.openUpdate(context, newer)
             }
             .padding(horizontal = 14.dp, vertical = 13.dp),
     ) {
@@ -121,7 +122,7 @@ internal fun TodayStore(container: AppContainer, quiet: Boolean, modifier: Modif
                 .padding(horizontal = 16.dp, vertical = 8.dp)
                 .clip(Px.Card)
                 .background(c.surface)
-                .clickable(role = Role.Button) { close(); BazaarStore.openPage(context) }
+                .clickable(role = Role.Button) { close(); BazaarStore.openUpdate(context, version) }
                 .padding(start = 14.dp, top = 6.dp, bottom = 6.dp, end = 4.dp),
         ) {
             Text(stringResource(R.string.update_new), style = Ba.type.body, color = c.text1, modifier = Modifier.weight(1f))

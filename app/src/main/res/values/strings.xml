@@ -116,10 +116,12 @@
     <string name="row_recents">Locked in recent apps</string>
     <string name="row_notifications_help">Keep Lantern\'s notifications on.</string>
     <string name="row_exact_help">In settings it\'s called “Alarms &amp; reminders”.</string>
-    <string name="row_autostart_help">So reminders start again after a restart. In settings it\'s called “Autostart”.</string>
-    <string name="row_autostart_help_unknown">The phone doesn\'t say; I\'ll ask you after a restart.</string>
-    <string name="row_battery_help">So battery saving doesn\'t close Lantern. In settings: Battery → “No restrictions”.</string>
-    <string name="row_battery_help_xiaomi">First “Allow”, then “No restrictions” in battery saver.</string>
+    <string name="row_autostart_help">So reminders start again after a restart. In the screen that opens, search for “%1$s” and switch it on.</string>
+    <string name="row_autostart_help_unknown">In the screen that opens, search for “%1$s” and switch it on. The phone doesn\'t say; I\'ll ask you after.</string>
+    <string name="row_battery_help">So battery saving doesn\'t close %1$s.\nSet it to “No restrictions” (on some phones “Unrestricted”).</string>
+    <string name="row_battery_help_xiaomi">First “Allow”, then the battery saver screen opens.\nSet it to “No restrictions”.</string>
+    <string name="row_battery_help_samsung">Lantern\'s app page opens: tap “Battery”.\nSet it to “Unrestricted”.</string>
+    <string name="row_autostart_help_huawei">In the screen that opens, search for “%1$s”, turn off “Manage automatically” and leave all three switches on.</string>
     <string name="row_recents_help">So “Clear all” doesn\'t close Lantern.</string>
     <string name="ask_autostart_title">Autostart</string>
     <string name="ask_autostart_text">Did you turn it on for Lantern?</string>
@@ -327,10 +329,10 @@
     <string name="onb_notifications">Allow notifications</string>
     <string name="onb_notifications_on">Notifications are on</string>
     <string name="onb_phone_title">Getting reminders</string>
-    <string name="onb_phone_body">Xiaomi phones put apps to sleep. These few settings make sure no reminder gets lost.</string>
+    <string name="onb_phone_body">These few settings make sure no reminder gets lost.</string>
     <string name="onb_phone_open">Set up the phone</string>
     <string name="onb_backup_title">Backup</string>
-    <string name="onb_backup_body">Pick a folder and I\'ll back up there every week. The app has no internet; nothing leaves your phone.</string>
+    <string name="onb_backup_body">Pick a folder and I\'ll back up there every week.</string>
     <string name="onb_backup_open">Pick a folder</string>
     <string name="onb_done_title">All set!</string>
     <string name="onb_done_body">Add your tasks with the “+” button. Every day I\'ll tell you here what\'s next.</string>
@@ -476,13 +478,15 @@
     <string name="about_clear_yes">Clear</string>
     <!-- Privacy, contact and licenses (B5, D215) -->
     <string name="about_privacy">Privacy</string>
-    <string name="about_privacy_text">Lantern collects nothing about you. It has no internet permission, so it sends nothing anywhere: no accounts, no ads, no analytics. Your tasks and settings stay on this phone. Backups go only to the folder you pick. Crash reports stay on the phone, and in your backups, until you copy one yourself.</string>
+    <string name="about_privacy_text">Lantern is made by %1$s and collects nothing about you. It has no internet permission, so it sends nothing anywhere: no accounts, no ads, no analytics. Your tasks and settings stay on this phone. Backups go only to the folder you pick. Crash reports stay on the phone, and in your backups, until you copy one yourself.</string>
     <!-- The developer's email address, or a link (https://…). Empty hides the row. Set it here only: it is
          not translated. Note: the bazaar branch's BazaarStringsTest flags Latin letters, so skip this name there. -->
-    <string name="about_contact" translatable="false"></string>
+    <string name="about_contact" translatable="false">donniedoorkar@gmail.com</string>
     <string name="about_contact_row">Contact the developer</string>
+    <string name="developer_name">Donnie Doorkar</string>
+    <string name="about_maker">Made by %1$s</string>
     <string name="about_licenses">Licenses</string>
-    <string name="licenses_help">Lantern is built with these open-source parts. Tap a license to read it in full.</string>
+    <string name="licenses_help">%1$s built Lantern with these open-source parts. Tap a license to read it in full.</string>
     <string name="licenses_read">Read the license</string>
     <string name="licenses_font">Font</string>
     <string name="licenses_libraries">Libraries</string>
@@ -521,6 +525,7 @@
     <string name="whats_new_909">• Settings now checks Bazaar for a new version, with one tap to update.\n• «Erase everything» in Settings: start over; your backups stay where they are.\n• Your data opens from every older version, and old backups restore too.\n• No camera access any more.\n• If the app ever closes by itself, the report is in «About». Tap «Copy» and send it to us. Nothing is sent on its own.</string>
     <string name="whats_new_910">• «About» now has a privacy note: nothing leaves your phone.\n• «Licenses» lists the font and the open-source parts Lantern is built with.</string>
     <string name="whats_new_911">• The companions talk in a new voice, and the knight has a new name.\n• Their lines on Today are shorter; the «Now» card shows what to do next.</string>
+    <string name="whats_new_912">• «About» now has a way to contact the developer.\n• Phone setup now covers Samsung and Huawei/Honor too, not only Xiaomi.\n• «Getting reminders» says where to tap: search for Lantern\'s name, and set the battery to “No restrictions”.</string>
     <string name="rate_title">Is Lantern helping?</string>
     <string name="rate_text">If you like it, a rating on Bazaar helps others find it. We only ask this once.</string>
     <string name="rate_yes">Rate</string>

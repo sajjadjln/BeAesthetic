@@ -116,10 +116,12 @@
     <string name="row_recents">قفل توی اپ‌های اخیر</string>
     <string name="row_notifications_help">اعلان‌های فانوس روشن باشه.</string>
     <string name="row_exact_help">توی تنظیمات اسمش «زنگ‌ها و یادآورها»ست.</string>
-    <string name="row_autostart_help">بعد از خاموش‌روشن، یادآورها دوباره راه بیفتن. توی تنظیمات اسمش «اجرای خودکار»ه.</string>
-    <string name="row_autostart_help_unknown">گوشی وضعیتش رو نمی‌گه؛ بعد از روشن کردن ازت می‌پرسم.</string>
-    <string name="row_battery_help">صرفه‌جویی باتری فانوس رو نبنده. توی تنظیمات: باتری ← «بدون محدودیت».</string>
-    <string name="row_battery_help_xiaomi">اول «اجازه بده»، بعد توی صرفه‌جویی باتری «بدون محدودیت».</string>
+    <string name="row_autostart_help">بعد از خاموش‌روشن، یادآورها دوباره راه بیفتن. توی صفحه‌ای که باز می‌شه «%1$s» رو جستجو کن و روشنش کن.</string>
+    <string name="row_autostart_help_unknown">توی صفحه‌ای که باز می‌شه «%1$s» رو جستجو کن و روشنش کن. گوشی وضعیتش رو نمی‌گه؛ بعدش ازت می‌پرسم.</string>
+    <string name="row_battery_help">صرفه‌جویی باتری %1$s رو نبنده.\nبذارش روی «بدون محدودیت».</string>
+    <string name="row_battery_help_xiaomi">اول «اجازه بده»، بعد صفحه‌ی صرفه‌جویی باتری باز می‌شه.\nبذارش روی «بدون محدودیت».</string>
+    <string name="row_battery_help_samsung">صفحه‌ی فانوس باز می‌شه: «باتری».\nبذارش روی «بدون محدودیت».</string>
+    <string name="row_autostart_help_huawei">توی صفحه‌ای که باز می‌شه «%1$s» رو جستجو کن، «مدیریت خودکار» رو خاموش کن و هر سه گزینه رو روشن بذار.</string>
     <string name="row_recents_help">«پاک کردن همه» فانوس رو نبنده.</string>
     <string name="ask_autostart_title">اجرای خودکار</string>
     <string name="ask_autostart_text">برای فانوس روشنش کردی؟</string>
@@ -327,10 +329,10 @@
     <string name="onb_notifications">اجازه‌ی اعلان</string>
     <string name="onb_notifications_on">اعلان‌ها روشنه</string>
     <string name="onb_phone_title">رسیدن یادآورها</string>
-    <string name="onb_phone_body">شیائومی‌ها اپ‌ها رو می‌خوابونن. این چند تا تنظیم مطمئن می‌کنه هیچ یادآوری گم نشه.</string>
+    <string name="onb_phone_body">این چند تا تنظیم مطمئن می‌کنه هیچ یادآوری گم نشه.</string>
     <string name="onb_phone_open">تنظیم گوشی</string>
     <string name="onb_backup_title">پشتیبان</string>
-    <string name="onb_backup_body">یه پوشه انتخاب کن تا هر هفته خودکار پشتیبان بگیرم. اپ اینترنت نداره؛ چیزی از گوشیت بیرون نمی‌ره.</string>
+    <string name="onb_backup_body">یه پوشه انتخاب کن تا هر هفته خودکار پشتیبان بگیرم.</string>
     <string name="onb_backup_open">انتخاب پوشه</string>
     <string name="onb_done_title">آماده‌ایم!</string>
     <string name="onb_done_body">کارهاتو از دکمه‌ی «+» بساز. هر روز همین‌جا می‌گم الان نوبت چیه.</string>
@@ -476,10 +478,12 @@
     <string name="about_clear_yes">پاک کن</string>
     <!-- Privacy, contact and licenses (B5, D215). about_contact is only in values/ (not translated). -->
     <string name="about_privacy">حریم خصوصی</string>
-    <string name="about_privacy_text">فانوس هیچ اطلاعاتی ازت جمع نمی‌کنه. اجازه‌ی اینترنت نداره، پس چیزی جایی نمی‌فرسته: نه حساب کاربری، نه تبلیغ، نه آمارگیری. کارها و تنظیماتت فقط روی همین گوشی می‌مونن. پشتیبان‌ها فقط می‌رن توی پوشه‌ای که خودت انتخاب کردی. گزارش‌های خطا هم روی گوشی (و توی پشتیبان‌هات) می‌مونن، تا وقتی خودت یکی رو کپی کنی.</string>
+    <string name="about_privacy_text">فانوس رو %1$s ساخته و هیچ اطلاعاتی ازت جمع نمی‌کنه. اجازه‌ی اینترنت نداره، پس چیزی جایی نمی‌فرسته: نه حساب کاربری، نه تبلیغ، نه آمارگیری. کارها و تنظیماتت فقط روی همین گوشی می‌مونن. پشتیبان‌ها فقط می‌رن توی پوشه‌ای که خودت انتخاب کردی. گزارش‌های خطا هم روی گوشی (و توی پشتیبان‌هات) می‌مونن، تا وقتی خودت یکی رو کپی کنی.</string>
     <string name="about_contact_row">تماس با سازنده</string>
+    <string name="developer_name">دانی دورکار</string>
+    <string name="about_maker">ساخته‌ی %1$s</string>
     <string name="about_licenses">مجوزها</string>
-    <string name="licenses_help">فانوس با این بخش‌های متن‌باز ساخته شده. روی هر مجوز بزنی، متن کاملش رو می‌بینی.</string>
+    <string name="licenses_help">%1$s فانوس رو با این بخش‌های متن‌باز ساخته. روی هر مجوز بزنی، متن کاملش رو می‌بینی.</string>
     <string name="licenses_read">خوندن متن مجوز</string>
     <string name="licenses_font">فونت</string>
     <string name="licenses_libraries">کتابخانه‌ها</string>
@@ -518,6 +522,7 @@
     <string name="whats_new_909">• تنظیمات حالا از بازار می‌پرسه نسخه‌ی تازه اومده یا نه؛ با یه بار زدن به‌روز می‌شی.\n• «پاک کردن همه‌چیز» تو تنظیمات: از اول شروع کن، پشتیبان‌هات سر جاشون می‌مونن.\n• داده‌هات از هر نسخه‌ی قبلی سالم باز می‌شن، پشتیبان‌های قدیمی هم.\n• دیگه دسترسی دوربین نمی‌خواد.\n• اگه برنامه یهو بسته شد، گزارشش تو «درباره» هست. با «کپی» برامون بفرست. هیچی خودبه‌خود فرستاده نمی‌شه.</string>
     <string name="whats_new_910">• «درباره» حالا یه یادداشت حریم خصوصی داره: هیچی از گوشیت بیرون نمی‌ره.\n• «مجوزها» فونت و بخش‌های متن‌بازی که فانوس باهاشون ساخته شده رو نشون می‌ده.</string>
     <string name="whats_new_911">• همراه‌ها با یه لحن تازه حرف می‌زنن و شوالیه اسمش شده دلاور.\n• حرف‌هاشون تو صفحه‌ی امروز کوتاه‌تر شده؛ کار بعدی رو کارت «الان» نشون می‌ده.</string>
+    <string name="whats_new_912">• «درباره» حالا راه تماس با سازنده رو داره.\n• راهنمای تنظیم گوشی برای سامسونگ و هواوی/آنر هم هست، نه فقط شیائومی.\n• تو «رسیدن یادآورها» گفته کجا رو بزنی: اسم فانوس رو جستجو کن، باتری رو بذار روی «بدون محدودیت».</string>
     <string name="rate_title">فانوس به کارت اومده؟</string>
     <string name="rate_text">اگه دوستش داری، یه امتیاز تو بازار کمک می‌کنه بقیه هم پیداش کنن. فقط همین یه بار می‌پرسیم.</string>
     <string name="rate_yes">امتیاز بده</string>
