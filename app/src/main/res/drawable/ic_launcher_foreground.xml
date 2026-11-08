@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Placeholder (D218): the old launcher art is removed; the user will supply the new icon. -->
-<vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="108dp" android:height="108dp"
-    android:viewportWidth="108" android:viewportHeight="108">
-    <path android:fillColor="#00000000" android:pathData="M0,0h1v1h-1z"/>
-</vector>
+<!-- Launcher icon foreground (D219): The knight's sword, centered in the 66 dp safe zone. Pixel art on a 108 grid (1 px = 1 dp);
+     filter off so the pixels stay sharp. Drawn in docs/design/launcher-icon.html (option B). -->
+<bitmap xmlns:android="http://schemas.android.com/apk/res/android"
+    android:src="@drawable/ic_launcher_sword"
+    android:filter="false"
+    android:antialias="false"
+    android:gravity="fill" />

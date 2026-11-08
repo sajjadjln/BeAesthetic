@@ -84,6 +84,7 @@ import app.lantern.ui.theme.BaMotion
 import app.lantern.ui.theme.LanternTheme
 import app.lantern.ui.theme.Motion
 import app.lantern.ui.today.TodayRoute
+import app.lantern.ui.splash.Splash
 import androidx.compose.runtime.saveable.rememberSaveable
 import app.lantern.ui.today.TodayViewModel
 import app.lantern.ui.goals.GoalsPlaceholder
@@ -142,6 +143,8 @@ class MainActivity : ComponentActivity() {
         // The first run seeds the settings row the start route waits for (onboarding has no Today view model).
         lifecycleScope.launch { container.ensureReady() }
 
+        // The splash plays once per cold start, not after a rotation or a theme change.
+        val coldStart = savedInstanceState == null
         setContent {
             val settings by container.db.settings().observe().collectAsStateWithLifecycle(null)
             val character = LanternCharacter.of(settings?.character)
@@ -264,9 +267,11 @@ class MainActivity : ComponentActivity() {
                         onAdd = { today.requestAdd(); selectTab(Tab.TODAY, shown, nav) },
                     )
                 }
-                // No splash for now (D218): the old one is removed until the new art arrives.
-                // Today's entrance (T10, D196) waits for this flag, so set it at once.
-                LaunchedEffect(Unit) { Motion.splashDone.value = true }
+                // The pixel castle (D219), in full on every cold start, over everything, so the app loads under it.
+                var splash by rememberSaveable { mutableStateOf(coldStart) }
+                // Today's entrance (T10, D196) waits for the hand-over.
+                LaunchedEffect(splash) { if (!splash) Motion.splashDone.value = true }
+                if (splash) Splash { splash = false }
               }
               }
             }

@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pikar Launcher Icons</title>
+<link href="https://fonts.googleapis.com/css2?family=Estedad:wght@400;800&display=swap" rel="stylesheet">
+<style>
+  :root { --bg:#050b12; --card:#0b1622; --fg:#e2f7fb; --muted:#7fa3b0; --accent:#5fd3e6; --line:#1b3d55; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg:#050b12; } }
+  :root[data-theme="dark"] { --bg:#050b12; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--fg); font-family:Estedad, system-ui, sans-serif; padding:24px 16px 48px; }
+  h1 { font-size:20px; margin:0 0 4px; text-align:center; }
+  .sub { color:var(--muted); font-size:13px; text-align:center; margin:0 0 24px; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:16px; max-width:1040px; margin:0 auto; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:18px; padding:18px; display:flex; flex-direction:column; gap:12px; }
+  .card.rec { border-color:var(--accent); }
+  .tag { font-size:11px; color:var(--bg); background:var(--accent); border-radius:6px; padding:2px 8px; align-self:flex-start; }
+  h2 { margin:0; font-size:16px; }
+  .card p { margin:0; color:var(--muted); font-size:13px; line-height:1.8; }
+  .shapes { display:flex; gap:14px; align-items:flex-end; justify-content:center; padding:8px 0; flex-wrap:wrap; }
+  .shapes canvas { image-rendering:pixelated; display:block; }
+  .big { width:192px; height:192px; border-radius:24%; }
+  .circle { width:80px; height:80px; border-radius:50%; }
+  .tiny { width:44px; height:44px; border-radius:30%; }
+  .home { max-width:1040px; margin:28px auto 0; background:linear-gradient(#0d2233,#081420); border:1px solid var(--line); border-radius:22px; padding:20px; }
+  .home h3 { margin:0 0 14px; font-size:14px; color:var(--muted); font-weight:400; text-align:center; }
+  .row { display:flex; gap:22px; justify-content:center; flex-wrap:wrap; }
+  .app { display:flex; flex-direction:column; align-items:center; gap:6px; font-size:11px; color:#cfe6ec; }
+  .app canvas { width:54px; height:54px; border-radius:50%; image-rendering:pixelated; }
+  .app .dummy { width:54px; height:54px; border-radius:50%; background:#2a3a46; }
+</style>
+</head>
+<body>
+<h1>آیکون لانچر «پیکر»: شمشیر جادویی</h1>
+<p class="sub">پیکسل‌آرت ۶۴×۶۴ بر اساس طرح مرجع: شمشیر آهنی تیره با سنگ‌های فیروزه‌ای، هالهٔ پیچان، ستاره و ابر.</p>
+<div class="grid" id="grid"></div>
+<div class="home"><h3>کنار آیکون‌های دیگر روی صفحهٔ اصلی</h3><div class="row" id="home"></div></div>
+
+<script>
+const N = 64;
+const C = { void:'#03080d', night:'#071520', deep:'#0b2230', teal:'#103746', sea:'#17505f', mist:'#22707f',
+  cyan:'#5fd3e6', glow:'#8fe6f2', pale:'#c9f5fb', white:'#eefcff',
+  iron0:'#07090c', iron1:'#161b21', iron2:'#2a323b', iron3:'#46525e', iron4:'#7a8894', steel:'#b8c4cc',
+  cloud0:'#3e6672', cloud1:'#7d9ea6', cloud2:'#bcd2d6', cloud3:'#e6f1f2' };
+const B=[[0,8,2,10],[12,4,14,6],[3,11,1,9],[15,7,13,5]];
+const D=(x,y,t)=>(B[y&3][x&3]+.5)/16<t;
+let g;
+const P=(x,y,c)=>{ x|=0; y|=0; if(x<0||y<0||x>=N||y>=N) return; g.fillStyle=c; g.fillRect(x,y,1,1); };
+const R=(x,y,w,h,c)=>{ g.fillStyle=c; g.fillRect(x|0,y|0,w|0,h|0); };
+function hash(x,y){ let h=x*374761393+y*668265263; h=(h^(h>>13))*1274126177; return ((h^(h>>16))>>>0)/4294967295; }
+
+function sky(streaks){
+  const pal=[C.void,C.night,C.deep,C.teal,C.sea];
+  for(let y=0;y<N;y++) for(let x=0;x<N;x++){
+    const d=Math.hypot((x-31.5)*1.1,(y-30))/40;
+    let v=(1-d)*3.2;
+    if(streaks){ const s=Math.sin((x-32)*.35 + y*.12*Math.sign(x-32)); v += s*.35*(Math.abs(x-32)/32); }
+    v=Math.max(0,Math.min(3.99,v)); const i=Math.floor(v);
+    P(x,y, D(x,y,v-i)?pal[i+1]:pal[i]);
+  }
+}
+function cloud(cx,cy,w,dir){
+  const bumps=[[.2,3],[.45,5],[.7,4],[.9,2.5]];
+  for(let i=0;i<w;i++){
+    const f=dir>0?i/w:1-i/w; let top=0;
+    for(const [p,h] of bumps){ const dx=(f-p)*w; top=Math.max(top,h*h-dx*dx>0?Math.sqrt(h*h-dx*dx):0); }
+    const x=cx+i, t=Math.round(top);
+    for(let y=-t;y<=2;y++){
+      const k=(y+t)/(t+3);
+      P(x,cy+y, k<.25?C.cloud3: k<.5?(D(x,cy+y,.5)?C.cloud2:C.cloud3): k<.75?C.cloud1 : C.cloud0);
+    }
+  }
+  const tx = dir>0? cx+w : cx-10;
+  for(let i=0;i<10;i++){ const f=dir>0?1-i/10:i/10; if(D(tx+i,cy+2,f)) P(tx+i,cy+2,C.cloud1); }
+}
+function star(x,y,big){
+  P(x,y,C.white);
+  if(big){ for(let i=1;i<=2;i++){ const c=i==1?C.glow:C.mist; P(x+i,y,c);P(x-i,y,c);P(x,y+i,c);P(x,y-i,c);} }
+  else { P(x+1,y,C.mist);P(x-1,y,C.mist);P(x,y+1,C.mist);P(x,y-1,C.mist); }
+}
+function dust(n,seed){ for(let i=0;i<n;i++){ P(hash(i,seed)*N, hash(seed,i)*N, hash(i,i+seed)>.5?C.mist:C.glow); } }
+
+function aura(strength, noWisps){
+  for(let y=2;y<62;y++) for(let x=14;x<50;x++){
+    const dx=Math.abs(x-32), w = y<26? 12 : 9-(y-26)*.12;
+    const v=Math.max(0,1-dx/w)*strength;
+    if(D(x,y,v*.55)) P(x,y, v>.7?C.mist:C.sea);
+  }
+  const wisps=[{a:7,f:.19,p:0,y0:10,y1:58},{a:9,f:.15,p:2.2,y0:16,y1:60},{a:5,f:.23,p:4,y0:8,y1:52}];
+  wisps.slice(0, noWisps?0:strength>.8?3:2).forEach(w=>{
+    for(let y=w.y0;y<w.y1;y+=.5){
+      const amp=w.a*(0.6+0.4*Math.sin(y*.05)), x=32+Math.sin(y*w.f+w.p)*amp;
+      P(x-1,y,C.sea); P(x,y,C.glow); if(D(x|0,y|0,.6)) P(x+1,y,C.cyan);
+    }
+  });
+}
+
+function sword(){
+  const cx=32;
+  // blade
+  for(let y=27;y<=60;y++){
+    const hw = y<52?3.5: 3.5*(60-y)/8;
+    const L=Math.round(cx-hw), Rr=Math.round(cx+hw)-1;
+    for(let x=L;x<=Rr;x++){
+      let c = x<cx? C.steel : C.iron3;
+      if(x===L) c=C.white; if(x===Rr) c=C.iron2;
+      if(x===cx-1||x===cx) c = y<50? C.cyan : C.glow;
+      if(x===cx-1 && y%5===0) c=C.white;
+      P(x,y,c);
+    }
+    P(L-1,y,C.iron0); P(Rr+1,y,C.iron0);
+  }
+  P(cx-1,61,C.iron0); P(cx,61,C.iron0);
+  // under-guard
+  R(cx-4,25,8,3,C.iron1); R(cx-3,25,6,1,C.iron3);
+  for(const s of [-1,1]){ P(cx+s*6,26,C.iron2); P(cx+s*6,27,C.iron1); P(cx+s*7,28,C.iron0); P(cx+s*5,26,C.iron1); }
+  // cross guard with spiky ends
+  for(let x=cx-16;x<cx+16;x++){
+    const dx=Math.abs(x+.5-cx);
+    const top = 20-(dx>12?1:0)-(dx>14?1:0), bot = 23+(dx<6?1:0)+(dx>13?2:0);
+    for(let y=top;y<=bot;y++) P(x,y, y===top? C.iron4 : y===bot? C.iron0 : y===top+1? C.iron3 : C.iron2);
+  }
+  for(const s of [-1,1]){
+    const o = s>0?1:0;
+    P(cx+s*16-o,17,C.iron3); P(cx+s*16-o,18,C.iron2);
+    P(cx+s*10,18,C.iron3); P(cx+s*10,19,C.iron3);
+    P(cx+s*15-o,26,C.iron2);
+    P(cx+s*12-o,21,C.cyan); P(cx+s*12-o,22,C.glow);
+  }
+  // center gem
+  R(cx-4,18,8,8,C.iron1); R(cx-3,18,6,1,C.iron4);
+  [[0,-2],[-1,-1],[0,-1],[1,-1],[-2,0],[-1,0],[0,0],[1,0],[2,0],[-1,1],[0,1],[1,1],[0,2]]
+    .forEach(([x,y])=>P(cx+x,22+y,(y<0&&x<=0)?C.pale:C.cyan));
+  P(cx-1,21,C.white);
+  // grip, wrapped
+  for(let y=9;y<18;y++){ R(cx-2,y,4,1,C.iron1); P(cx-2,y,C.iron0); P(cx+1,y,C.iron0); P((y%2)?cx-1:cx,y,C.iron3); }
+  // pommel with gem
+  [[0,1,2],[1,0,4],[2,-1,6],[3,-1,6],[4,-1,6],[5,-1,6],[6,0,4],[7,1,2]].forEach(([dy,dx,w])=>{
+    R(cx-2+dx,1+dy,w,1,C.iron2); P(cx-2+dx,1+dy,C.iron0); P(cx-2+dx+w-1,1+dy,C.iron0); });
+  R(cx-1,3,2,4,C.cyan); P(cx-1,3,C.white); P(cx,6,C.glow); R(cx-1,1,2,1,C.iron4);
+}
+
+function border(c){
+  const r=12;
+  for(let x=r;x<N-r;x++){ P(x,0,c);P(x,1,c);P(x,N-1,c);P(x,N-2,c); }
+  for(let y=r;y<N-r;y++){ P(0,y,c);P(1,y,c);P(N-1,y,c);P(N-2,y,c); }
+  for(let a=0;a<=60;a++){ const t=a/60*Math.PI/2, dx=Math.round(r-r*Math.cos(t)), dy=Math.round(r-r*Math.sin(t));
+    for(const k of [0,1]) [[dx+k,dy],[N-1-dx-k,dy],[dx+k,N-1-dy],[N-1-dx-k,N-1-dy]].forEach(([x,y])=>P(x,y,c)); }
+}
+
+const ICONS=[
+  { id:'A', name:'کامل، مثل مرجع',
+    why:'همهٔ لایه‌ها: آسمان با رگه‌ها، ابرهای دو طرف، ستاره‌ها، هالهٔ پیچان و شمشیر آهنی با سنگ‌ها. در اندازهٔ بزرگ عالی است و در کوچک هم شمشیر روشن وسط خوانده می‌شود.',
+    draw(){ sky(true); dust(40,3);
+      cloud(-2,20,18,1); cloud(48,22,18,-1); cloud(-4,40,16,1); cloud(50,42,16,-1); cloud(-2,58,22,1); cloud(44,59,22,-1);
+      star(12,10,true); star(50,9,false); star(9,30,false); star(55,32,true); star(14,48,false); star(48,50,false);
+      aura(1); sword(); } },
+  { id:'B', name:'ساده‌شده (انتخاب شده)', rec:true,
+    why:'بدون ابر و بدون خط‌های آبی پیچان پشت شمشیر؛ فقط هالهٔ نرم، دو ستاره و گرد ستاره. شمشیر در ۴۰ پیکسل روی گوشی تیز دیده می‌شود.',
+    draw(){ sky(false); dust(18,9); star(12,12,true); star(52,46,true); aura(.75,true); sword(); } },
+  { id:'C', name:'کامل با قاب روشن',
+    why:'مثل A، با قاب پیکسلی روشنِ طرح مرجع. اندروید خودش آیکون را برش می‌دهد و قاب در شکل دایره نصفه می‌ماند؛ برای صفحهٔ فروشگاه (کافه‌بازار) مناسب است، نه لانچر.',
+    draw(){ ICONS[0].draw(); border('#d6e3e6'); } },
+];
+
+const grid=document.getElementById('grid'), home=document.getElementById('home');
+function canvasFor(ic,cls){ const c=document.createElement('canvas'); c.width=c.height=N; c.className=cls||''; g=c.getContext('2d'); ic.draw(); return c; }
+ICONS.forEach(ic=>{
+  const card=document.createElement('div'); card.className='card'+(ic.rec?' rec':'');
+  card.innerHTML=(ic.rec?'<span class="tag">پیشنهاد من</span>':'')+`<h2>${ic.id} · ${ic.name}</h2>`;
+  const sh=document.createElement('div'); sh.className='shapes';
+  sh.append(canvasFor(ic,'big'),canvasFor(ic,'circle'),canvasFor(ic,'tiny'));
+  card.append(sh); const p=document.createElement('p'); p.textContent=ic.why; card.append(p); grid.append(card);
+  const a=document.createElement('div'); a.className='app'; a.append(canvasFor(ic)); a.append(document.createTextNode('پیکر '+ic.id)); home.append(a);
+});
+['تقویم','پیام','دوربین'].forEach(n=>{ const a=document.createElement('div'); a.className='app'; a.innerHTML='<div class="dummy"></div>'+n; home.append(a); });
+</script>
+</body>
+</html>
