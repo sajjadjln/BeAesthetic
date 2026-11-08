@@ -3,7 +3,7 @@
 <resources>
     <!-- The launcher labels when the language is picked in Settings (D194): fixed, whatever the phone's language. -->
     <string name="app_name_en" translatable="false">Lantern</string>
-    <string name="app_name_fa" translatable="false">هماوند</string>
+    <string name="app_name_fa" translatable="false">پیکر</string>
     <string name="settings_language">Language</string>
     <string name="lang_system">Like the phone</string>
     <string name="lang_fa">فارسی</string>
