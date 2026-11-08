@@ -1,4 +1,4 @@
-# «فانوس» on Cafe Bazaar: the listing
+# «پیکر» on Cafe Bazaar: the listing
 
 _Written 2026-11-06 on branch `claude/bazaar-finish-a0e614` (from `bazaar`), for the first upload (B8, D217). Rules and limits come from `docs/research/bazaar-developer-guide.md` §3 and §16. Paste the Persian text into the panel as it is; the character counts were checked with a script._
 
@@ -15,7 +15,7 @@ _Written 2026-11-06 on branch `claude/bazaar-finish-a0e614` (from `bazaar`), for
 
 ## 2. App info («اطلاعات برنامه»)
 
-**«نام فارسی برنامه»:** `فانوس`
+**«نام فارسی برنامه»:** `پیکر`
 
 It must equal the launcher label (`app_name` in the Bazaar build, tested by `BazaarStringsTest.theLauncherSaysFanus`). No keywords in the name.
 
@@ -28,7 +28,7 @@ It must equal the launcher label (`app_name` in the Bazaar build, tested by `Baz
 **«توضیحات فارسی»** (≤800 chars; this one is 784). Only what 1.0 does: no goals, no plugins, no "soon".
 
 ```
-فانوس هر روز بهت می‌گه الان نوبت چه کاریه.
+پیکر هر روز بهت می‌گه الان نوبت چه کاریه.
 
 • کارهات رو بساز: یک بار، هر روز، روزهای خاص هفته، یا «هر وقت».
 • روز چهار بخش داره: صبح، ظهر، عصر و شب، هر کدوم با یادآور خودش. هر کار هم می‌تونه زنگ خودش رو داشته باشه.
@@ -40,7 +40,7 @@ It must equal the launcher label (`app_name` in the Bazaar build, tested by `Baz
 • پشتیبان خودکار هفتگی توی پوشه‌ای که خودت انتخاب می‌کنی.
 • تاریخ شمسی، هفته از شنبه.
 
-فانوس اجازه‌ی اینترنت نداره؛ نه حساب کاربری، نه تبلیغ، نه آمارگیری. همه‌چیز فقط روی گوشی خودت می‌مونه.
+پیکر اجازه‌ی اینترنت نداره؛ نه حساب کاربری، نه تبلیغ، نه آمارگیری. همه‌چیز فقط روی گوشی خودت می‌مونه.
 ```
 
 English name and description are optional; leave them empty (the Bazaar build is Persian only, D207).
@@ -70,7 +70,7 @@ The guide says to use a support email **different from the developer account ema
 Paste as is. No attachment: the character art is the developer's own work (D218).
 
 ```
-سلام. فانوس یه برنامه‌ی لیست کارهای روزانه با یادآوره که کاملاً آفلاین کار می‌کنه. اجازه‌ی INTERNET نداره و هیچ اطلاعاتی از گوشی بیرون نمی‌فرسته. حساب کاربری، تبلیغ و کیت آمارگیری نداره.
+سلام. پیکر یه برنامه‌ی لیست کارهای روزانه با یادآوره که کاملاً آفلاین کار می‌کنه. اجازه‌ی INTERNET نداره و هیچ اطلاعاتی از گوشی بیرون نمی‌فرسته. حساب کاربری، تبلیغ و کیت آمارگیری نداره.
 
 دلیل هر دسترسی:
 • POST_NOTIFICATIONS: نشون دادن یادآورها. در شروع برنامه پرسیده می‌شه و اگه کاربر رد کنه، برنامه بدون اعلان کار می‌کنه.

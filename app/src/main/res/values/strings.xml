@@ -523,6 +523,7 @@
     <string name="whats_new_910">• «About» now has a privacy note: nothing leaves your phone.\n• «Licenses» lists the font and the open-source parts Lantern is built with.</string>
     <string name="whats_new_911">• The companions talk in a new voice, and the knight has a new name.\n• Their lines on Today are shorter; the «Now» card shows what to do next.</string>
     <string name="whats_new_912">• «About» now has a way to contact the developer.\n• Phone setup now covers Samsung and Huawei/Honor too, not only Xiaomi.\n• «Getting reminders» says where to tap: search for Lantern\'s name, and set the battery to “No restrictions”.</string>
+    <string name="whats_new_913">• A new splash: a castle under the moon.\n• A new icon: the knight\'s sword.</string>
     <string name="rate_title">Is Lantern helping?</string>
     <string name="rate_text">If you like it, a rating on Bazaar helps others find it. We only ask this once.</string>
     <string name="rate_yes">Rate</string>
