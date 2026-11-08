@@ -120,7 +120,13 @@ internal object Licenses {
     fun byAsset(asset: String): License? = all.firstOrNull { it.asset == asset }
 }
 
-/** «مجوزها»: the font, the libraries and the character art, each license opening its full text. */
+/**
+ * «مجوزها»: the font and the libraries, each license opening its full text.
+ *
+ * Hidden for now (D218): nothing opens this screen. To bring it back, uncomment the «مجوزها» row in
+ * AboutScreen.kt and the two routes in MainActivity.kt, and drop `tools:ignore="UnusedResources"`
+ * from the `about_licenses` / `licenses_*` strings.
+ */
 @Composable
 fun LicensesScreen(onBack: () -> Unit, onOpenLicense: (String) -> Unit) {
     val c = Ba.colors
@@ -132,14 +138,6 @@ fun LicensesScreen(onBack: () -> Unit, onOpenLicense: (String) -> Unit) {
 
         SectionLabel(R.string.licenses_libraries)
         Licenses.libraries.forEach { LicenseCard(it, onOpenLicense) }
-
-        // The character pictures (res/drawable-nodpi/char_*). Not open source: shipped with the
-        // artist's permission, which the owner confirms in writing before release (BAZAAR-ROADMAP B8).
-        SectionLabel(R.string.licenses_art)
-        BaCard {
-            Text(stringResource(R.string.licenses_art_name), style = Ba.type.tile, color = c.text1)
-            Text(stringResource(R.string.licenses_art_note), style = Ba.type.caption, color = c.text3)
-        }
     }
 }
 

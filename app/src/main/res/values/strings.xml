@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- English, the default (D174). Persian is in values-fa/; every string lives in both. -->
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Lantern</string>
 
     <!-- Calendar -->
@@ -485,14 +485,11 @@
     <string name="about_contact_row">Contact the developer</string>
     <string name="developer_name">Donnie Doorkar</string>
     <string name="about_maker">Made by %1$s</string>
-    <string name="about_licenses">Licenses</string>
-    <string name="licenses_help">%1$s built Lantern with these open-source parts. Tap a license to read it in full.</string>
-    <string name="licenses_read">Read the license</string>
-    <string name="licenses_font">Font</string>
-    <string name="licenses_libraries">Libraries</string>
-    <string name="licenses_art">Pictures</string>
-    <string name="licenses_art_name">The character pictures</string>
-    <string name="licenses_art_note">Used with permission. Not open source.</string>
+    <string name="about_licenses" tools:ignore="UnusedResources">Licenses</string>
+    <string name="licenses_help" tools:ignore="UnusedResources">%1$s built Lantern with these open-source parts. Tap a license to read it in full.</string>
+    <string name="licenses_read" tools:ignore="UnusedResources">Read the license</string>
+    <string name="licenses_font" tools:ignore="UnusedResources">Font</string>
+    <string name="licenses_libraries" tools:ignore="UnusedResources">Libraries</string>
 
     <!-- B3 (D213): erase everything, and Settings' calm backup line. Nothing red, no blame. -->
     <string name="erase_row">Erase everything</string>

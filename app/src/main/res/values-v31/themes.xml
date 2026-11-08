@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Android 12+: the system splash is only the night and the lantern, held until the first frame;
-         the Compose "Gather" splash (D190) takes over from there. -->
+    <!-- Android 12+: the system splash is the night color and the launcher icon (D218: no own splash art
+         for now; the new art comes from the user). -->
     <style name="Theme.Lantern" parent="android:Theme.Material.NoActionBar">
         <item name="android:windowBackground">@color/window_bg</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
         <item name="android:windowSplashScreenBackground">@color/window_bg</item>
-        <item name="android:windowSplashScreenAnimatedIcon">@drawable/ic_splash_lantern</item>
     </style>
 </resources>

@@ -55,8 +55,8 @@ import app.lantern.ui.settings.SettingsDestination
 import app.lantern.ui.settings.AboutScreen
 import app.lantern.ui.settings.EraseScreen
 import app.lantern.ui.settings.CrashScreen
-import app.lantern.ui.settings.LicenseTextScreen
-import app.lantern.ui.settings.LicensesScreen
+// import app.lantern.ui.settings.LicenseTextScreen
+// import app.lantern.ui.settings.LicensesScreen
 import app.lantern.ui.settings.SettingsScreen
 import app.lantern.ui.tasks.TasksRoute as TasksScreenRoute
 import app.lantern.ui.tasks.TasksViewModel
@@ -84,7 +84,6 @@ import app.lantern.ui.theme.BaMotion
 import app.lantern.ui.theme.LanternTheme
 import app.lantern.ui.theme.Motion
 import app.lantern.ui.today.TodayRoute
-import app.lantern.ui.splash.Splash
 import androidx.compose.runtime.saveable.rememberSaveable
 import app.lantern.ui.today.TodayViewModel
 import app.lantern.ui.goals.GoalsPlaceholder
@@ -104,8 +103,10 @@ import kotlinx.serialization.Serializable
 @Serializable object AboutRoute
 @Serializable object EraseRoute
 @Serializable data class CrashRoute(val name: String)
-@Serializable object LicensesRoute
-@Serializable data class LicenseTextRoute(val asset: String)
+// The licenses page is hidden for now (D218). To bring it back, uncomment these routes, the imports,
+// the two composable<> lines below and the row in AboutScreen.kt.
+// @Serializable object LicensesRoute
+// @Serializable data class LicenseTextRoute(val asset: String)
 @Serializable object GoalsTab
 @Serializable object OnboardingRoute
 @Serializable object HistoryRoute
@@ -141,8 +142,6 @@ class MainActivity : ComponentActivity() {
         // The first run seeds the settings row the start route waits for (onboarding has no Today view model).
         lifecycleScope.launch { container.ensureReady() }
 
-        // The splash plays once per cold start, not after a rotation or a theme change.
-        val coldStart = savedInstanceState == null
         setContent {
             val settings by container.db.settings().observe().collectAsStateWithLifecycle(null)
             val character = LanternCharacter.of(settings?.character)
@@ -242,10 +241,10 @@ class MainActivity : ComponentActivity() {
                         EraseScreen(container, viewModel { BackupViewModel(container) }, onBack = nav::popBackStack, onErased = ::restartFresh)
                     }
                     composable<AboutRoute> {
-                        AboutScreen(container, onBack = nav::popBackStack, onOpenCrash = { nav.navigate(CrashRoute(it)) }, onOpenLicenses = { nav.navigate(LicensesRoute) })
+                        AboutScreen(container, onBack = nav::popBackStack, onOpenCrash = { nav.navigate(CrashRoute(it)) })
                     }
-                    composable<LicensesRoute> { LicensesScreen(onBack = nav::popBackStack, onOpenLicense = { nav.navigate(LicenseTextRoute(it)) }) }
-                    composable<LicenseTextRoute> { entry -> LicenseTextScreen(entry.toRoute<LicenseTextRoute>().asset, onBack = nav::popBackStack) }
+                    // composable<LicensesRoute> { LicensesScreen(onBack = nav::popBackStack, onOpenLicense = { nav.navigate(LicenseTextRoute(it)) }) }
+                    // composable<LicenseTextRoute> { entry -> LicenseTextScreen(entry.toRoute<LicenseTextRoute>().asset, onBack = nav::popBackStack) }
                     composable<CrashRoute> { entry -> CrashScreen(container, entry.toRoute<CrashRoute>().name, onBack = nav::popBackStack) }
                     composable<DebugRoute> { DebugMenu.Screen(container, onClose = nav::popBackStack) }
                 }
@@ -265,11 +264,9 @@ class MainActivity : ComponentActivity() {
                         onAdd = { today.requestAdd(); selectTab(Tab.TODAY, shown, nav) },
                     )
                 }
-                // In full on every cold start (D194, which reverses D191 ③); over everything, so the app loads under it.
-                var splash by rememberSaveable { mutableStateOf(coldStart) }
-                // Today's entrance (T10, D196) waits for the hand-over.
-                LaunchedEffect(splash) { if (!splash) Motion.splashDone.value = true }
-                if (splash) Splash { splash = false }
+                // No splash for now (D218): the old one is removed until the new art arrives.
+                // Today's entrance (T10, D196) waits for this flag, so set it at once.
+                LaunchedEffect(Unit) { Motion.splashDone.value = true }
               }
               }
             }

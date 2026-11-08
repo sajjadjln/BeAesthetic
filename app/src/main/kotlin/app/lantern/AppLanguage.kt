@@ -39,7 +39,7 @@ object AppLanguage {
     /**
      * The launcher shows the label of whichever launcher alias is on (D194), and launchers read labels in
      * the phone's language only. So the alias follows the choice: the phone's language, or a fixed
-     * «فانوس» / "Lantern". The new one is turned on before the old ones go off, so there is always an entry.
+     * «هماوند» / "Lantern". The new one is turned on before the old ones go off, so there is always an entry.
      * Some launchers move the icon once when this happens. A one-language build has only the one alias.
      */
     fun syncLauncher(context: Context) {

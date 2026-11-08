@@ -70,7 +70,7 @@ import java.time.ZoneId
  * (D211, D215). A crash opens its full text with «کپی». Nothing here touches the network.
  */
 @Composable
-fun AboutScreen(container: AppContainer, onBack: () -> Unit, onOpenCrash: (String) -> Unit, onOpenLicenses: () -> Unit) {
+fun AboutScreen(container: AppContainer, onBack: () -> Unit, onOpenCrash: (String) -> Unit) {
     val c = Ba.colors
     val scope = rememberCoroutineScope()
     var crashes by remember { mutableStateOf<List<CrashReport>?>(null) }
@@ -99,14 +99,16 @@ fun AboutScreen(container: AppContainer, onBack: () -> Unit, onOpenCrash: (Strin
         BaCard { Text(stringResource(R.string.about_privacy_text, stringResource(R.string.developer_name)), style = Ba.type.body, color = c.text2) }
 
         val context = LocalContext.current
-        BaCard(padding = PaddingValues(0.dp)) {
-            // The contact row shows only once res/values/strings.xml `about_contact` has an address or a link.
-            val contact = stringResource(R.string.about_contact).trim()
-            if (contact.isNotEmpty()) {
+        // The contact row shows only once res/values/strings.xml `about_contact` has an address or a link.
+        val contact = stringResource(R.string.about_contact).trim()
+        if (contact.isNotEmpty()) {
+            BaCard(padding = PaddingValues(0.dp)) {
                 AboutRow(BaIcons.Mail, stringResource(R.string.about_contact_row), contact) { openContact(context, contact) }
-                HorizontalDivider(color = c.border)
+                // The licenses page is hidden for now (D218). To bring it back, add `onOpenLicenses: () -> Unit`
+                // to AboutScreen, uncomment these two lines and the routes in MainActivity.kt:
+                // HorizontalDivider(color = c.border)
+                // AboutRow(BaIcons.Info, stringResource(R.string.about_licenses), null, onOpenLicenses)
             }
-            AboutRow(BaIcons.Info, stringResource(R.string.about_licenses), null, onOpenLicenses)
         }
 
         // B4: «امتیاز بده تو بازار», in the Bazaar build only.

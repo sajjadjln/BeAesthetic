@@ -67,7 +67,7 @@ The guide says to use a support email **different from the developer account ema
 
 ## 5. Notes for the reviewer («توضیحات بیشتر برای بررسی‌کننده»)
 
-Paste as is. Upload the signed art letter (§6) as the attached file.
+Paste as is. No attachment: the character art is the developer's own work (D218).
 
 ```
 سلام. فانوس یه برنامه‌ی لیست کارهای روزانه با یادآوره که کاملاً آفلاین کار می‌کنه. اجازه‌ی INTERNET نداره و هیچ اطلاعاتی از گوشی بیرون نمی‌فرسته. حساب کاربری، تبلیغ و کیت آمارگیری نداره.
@@ -84,43 +84,16 @@ Paste as is. Upload the signed art letter (§6) as the attached file.
 
 بخش «هدف‌ها»: این تب عمداً با برچسب «در دست ساخت» گذاشته شده و توضیح می‌ده که این بخش در نسخه‌های بعد میاد. بقیه‌ی برنامه (امروز، کارها، یادآورها، سابقه، ویجت، پشتیبان، تنظیمات) کامل است. در توضیحات و تصویرهای صفحه‌ی برنامه به این بخش اشاره نشده.
 
-تصویرهای شخصیت‌ها با اجازه‌ی کتبی صاحب اثر استفاده شده‌اند؛ نامه‌ی اجازه پیوست است. تنها فونت برنامه «استعداد» با مجوز SIL OFL 1.1 است و متن مجوزها در «تنظیمات ← درباره ← مجوزها» هست.
+تصویرهای شخصیت‌ها کار خود توسعه‌دهنده است. تنها فونت برنامه «استعداد» با مجوز SIL OFL 1.1 است.
 
 راه تماس: donniedoorkar@gmail.com (در برنامه: تنظیمات ← درباره ← تماس با سازنده).
 ```
 
 Check the list against the merged release manifest before each upload (`app/build/intermediates/merged_manifests/bazaarRelease/.../AndroidManifest.xml`). On 0.9.11 it has exactly the nine permissions above, plus `app.lantern.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION`, which AndroidX Core declares for the app itself (signature-level, not shown to users); add a line for it if the reviewer asks.
 
-## 6. Permission letter for the character art
+## 6. Character art
 
-Bazaar's copyright rule (guide §9): using someone else's work needs a written confirmation **sent to Bazaar**, naming **the developer email used on Bazaar** and **the package name**. From a private person it must also carry their **ID details**, with **images of their ID documents** attached. From a company: on letterhead with date, stamp and the manager's signature, or sent from an address on its own domain. A forged letter means removal.
-
-What it covers: the four characters (knight, vampire, wizard, goth woman with her cat), each in three moods, as shipped in `app/src/main/res/drawable-nodpi/char_*.jpg`, and their use in the store screenshots. **Fonts:** the APK ships only Estedad (SIL OFL 1.1, licence text in «مجوزها»); no per-character font is in the APK, so no font letter is needed. If a font is added later, it needs its own licence or letter.
-
-If the art is yours (you drew it, or you own it outright), no letter: say so in the reviewer notes instead («تصویرهای شخصیت‌ها کار خود توسعه‌دهنده است») and change `licenses_art_note` in the app to match.
-
-Fill the brackets, print, sign, scan as PDF with the ID copies, and upload it at the last step of the panel.
-
-```
-به نام خدا
-
-تاریخ: [تاریخ شمسی]
-
-به: کافه‌بازار، واحد بررسی برنامه‌ها
-
-موضوع: اجازه‌ی استفاده از تصویرهای شخصیت‌ها در برنامه‌ی «فانوس»
-
-اینجانب [نام و نام خانوادگی صاحب اثر]، فرزند [نام پدر]، به کد ملی [کد ملی]، شماره‌ی شناسنامه‌ی [شماره]، ساکن [نشانی]، تلفن [شماره‌ی تماس]، صاحب حقوق مادی و معنوی تصویرهای چهار شخصیت (شوالیه، خون‌آشام، جادوگر و دختر گوتیک با گربه‌اش) هستم.
-
-به این وسیله به «دانی دورکار»، توسعه‌دهنده‌ی کافه‌بازار با ایمیل [ایمیل حساب توسعه‌دهنده در بازار]، اجازه می‌دهم این تصویرها را در برنامه‌ی «فانوس» با نام بسته‌ی app.lantern و در تصویرهای صفحه‌ی این برنامه در کافه‌بازار، به صورت رایگان و بدون محدودیت زمانی، منتشر و استفاده کند.
-
-تصویر کارت ملی و شناسنامه‌ی اینجانب پیوست این نامه است.
-
-نام و نام خانوادگی: [ ]
-امضا: [ ]
-```
-
-Attach: front and back of the national card, and the ID-booklet page with the photo.
+No permission letter: the user drew the four characters, so the art is the developer's own work (D218). The reviewer notes say so.
 
 ## 7. Release steps (summary)
 

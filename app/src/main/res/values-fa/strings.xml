@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Persian (D174). English is the default in values/; every string lives in both. -->
-<resources>
-    <string name="app_name">فانوس</string>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="app_name">هماوند</string>
 
     <!-- Calendar -->
     <string-array name="weekdays">
@@ -80,7 +80,7 @@
     <string name="settings_reminders">یادآورها</string>
     <string name="settings_backup">پشتیبان</string>
     <string name="settings_phone">رسیدن یادآورها</string>
-    <string name="settings_version">نسخه‌ی %1$s · فانوس</string>
+    <string name="settings_version">نسخه‌ی %1$s · هماوند</string>
 
     <!-- Reminders (09) -->
     <string name="reminders_title">یادآورها</string>
@@ -112,21 +112,21 @@
     <string name="row_notifications">اجازه‌ی اعلان</string>
     <string name="row_exact">یادآور سر دقیقه</string>
     <string name="row_autostart">شروع با روشن شدن گوشی</string>
-    <string name="row_battery">باتری، فانوس رو نبنده</string>
+    <string name="row_battery">باتری، هماوند رو نبنده</string>
     <string name="row_recents">قفل توی اپ‌های اخیر</string>
-    <string name="row_notifications_help">اعلان‌های فانوس روشن باشه.</string>
+    <string name="row_notifications_help">اعلان‌های هماوند روشن باشه.</string>
     <string name="row_exact_help">توی تنظیمات اسمش «زنگ‌ها و یادآورها»ست.</string>
     <string name="row_autostart_help">بعد از خاموش‌روشن، یادآورها دوباره راه بیفتن. توی صفحه‌ای که باز می‌شه «%1$s» رو جستجو کن و روشنش کن.</string>
     <string name="row_autostart_help_unknown">توی صفحه‌ای که باز می‌شه «%1$s» رو جستجو کن و روشنش کن. گوشی وضعیتش رو نمی‌گه؛ بعدش ازت می‌پرسم.</string>
     <string name="row_battery_help">صرفه‌جویی باتری %1$s رو نبنده.\nبذارش روی «بدون محدودیت».</string>
     <string name="row_battery_help_xiaomi">اول «اجازه بده»، بعد صفحه‌ی صرفه‌جویی باتری باز می‌شه.\nبذارش روی «بدون محدودیت».</string>
-    <string name="row_battery_help_samsung">صفحه‌ی فانوس باز می‌شه: «باتری».\nبذارش روی «بدون محدودیت».</string>
+    <string name="row_battery_help_samsung">صفحه‌ی هماوند باز می‌شه: «باتری».\nبذارش روی «بدون محدودیت».</string>
     <string name="row_autostart_help_huawei">توی صفحه‌ای که باز می‌شه «%1$s» رو جستجو کن، «مدیریت خودکار» رو خاموش کن و هر سه گزینه رو روشن بذار.</string>
-    <string name="row_recents_help">«پاک کردن همه» فانوس رو نبنده.</string>
+    <string name="row_recents_help">«پاک کردن همه» هماوند رو نبنده.</string>
     <string name="ask_autostart_title">اجرای خودکار</string>
-    <string name="ask_autostart_text">برای فانوس روشنش کردی؟</string>
+    <string name="ask_autostart_text">برای هماوند روشنش کردی؟</string>
     <string name="ask_recents_title">قفل در اپ‌های اخیر</string>
-    <string name="ask_recents_text">صفحه‌ی اپ‌های اخیر رو باز کن (از پایین صفحه بکش بالا و نگه دار). کارت فانوس رو نگه دار و آیکن قفل رو بزن. با قفل، «پاک کردن همه» و پاک‌کننده‌ی گوشی فانوس رو نمی‌بندن، پس یادآورها سر جاشون می‌مونن.</string>
+    <string name="ask_recents_text">صفحه‌ی اپ‌های اخیر رو باز کن (از پایین صفحه بکش بالا و نگه دار). کارت هماوند رو نگه دار و آیکن قفل رو بزن. با قفل، «پاک کردن همه» و پاک‌کننده‌ی گوشی هماوند رو نمی‌بندن، پس یادآورها سر جاشون می‌مونن.</string>
     <string name="ask_yes_autostart">آره، روشنه</string>
     <string name="ask_yes_recents">قفلش کردم</string>
     <string name="ask_not_yet">هنوز نه</string>
@@ -276,11 +276,11 @@
     <string name="backup_reason_auto">خودکار</string>
     <string name="backup_reason_before_restore">پیش از بازگردانی</string>
     <string name="backup_restore">بازگردانی از فایل</string>
-    <string name="backup_privacy">همه‌چی روی همین گوشیه و فانوس اجازه‌ی اینترنت نداره. Syncthing پوشه رو به کامپیوترت می‌بره.</string>
+    <string name="backup_privacy">همه‌چی روی همین گوشیه و هماوند اجازه‌ی اینترنت نداره. Syncthing پوشه رو به کامپیوترت می‌بره.</string>
     <string name="backup_saved">پشتیبان گرفته شد.</string>
     <string name="backup_restored">بازگردانی شد. همه‌چی سر جاشه.</string>
-    <string name="backup_not_ours">این فایل پشتیبان فانوس نیست.</string>
-    <string name="backup_newer">این پشتیبان مال نسخه‌ی جدیدتر فانوسه؛ اول اپ رو به‌روز کن.</string>
+    <string name="backup_not_ours">این فایل پشتیبان هماوند نیست.</string>
+    <string name="backup_newer">این پشتیبان مال نسخه‌ی جدیدتر هماونده؛ اول اپ رو به‌روز کن.</string>
     <string name="backup_damaged">این فایل خرابه و نمی‌شه ازش بازگردانی کرد.</string>
     <string name="backup_restore_failed">بازگردانی نشد؛ داده‌ها همون‌طور که بودن موندن.</string>
     <string name="size_mb">%1$s مگ</string>
@@ -339,7 +339,7 @@
     <string name="onb_done_go">بریم سراغ امروز</string>
 
     <!-- Slice 10: the Today widget (D67, D143). -->
-    <string name="widget_label">امروز فانوس</string>
+    <string name="widget_label">امروز هماوند</string>
     <string name="widget_description">کارهای این بخش روز، با یه تیک.</string>
     <string name="widget_count">%1$s از %2$s</string>
     <string name="widget_empty">هنوز کاری نساختی. از اپ اضافه کن.</string>
@@ -456,7 +456,7 @@
     <string name="color_vampire">قرمز</string>
     <string name="color_wizard">نقره‌ای</string>
     <string name="color_goth">بنفش</string>
-    <string name="onb_look_title">فانوس رو چطور می‌خوای؟</string>
+    <string name="onb_look_title">هماوند رو چطور می‌خوای؟</string>
     <string name="onb_look_sub">بعداً هم توی تنظیمات عوضش می‌کنی.</string>
     <string name="onb_color_title">یه رنگ انتخاب کن</string>
     <string name="simple_of">از %1$s</string>
@@ -478,18 +478,15 @@
     <string name="about_clear_yes">پاک کن</string>
     <!-- Privacy, contact and licenses (B5, D215). about_contact is only in values/ (not translated). -->
     <string name="about_privacy">حریم خصوصی</string>
-    <string name="about_privacy_text">فانوس رو %1$s ساخته و هیچ اطلاعاتی ازت جمع نمی‌کنه. اجازه‌ی اینترنت نداره، پس چیزی جایی نمی‌فرسته: نه حساب کاربری، نه تبلیغ، نه آمارگیری. کارها و تنظیماتت فقط روی همین گوشی می‌مونن. پشتیبان‌ها فقط می‌رن توی پوشه‌ای که خودت انتخاب کردی. گزارش‌های خطا هم روی گوشی (و توی پشتیبان‌هات) می‌مونن، تا وقتی خودت یکی رو کپی کنی.</string>
+    <string name="about_privacy_text">هماوند رو %1$s ساخته و هیچ اطلاعاتی ازت جمع نمی‌کنه. اجازه‌ی اینترنت نداره، پس چیزی جایی نمی‌فرسته: نه حساب کاربری، نه تبلیغ، نه آمارگیری. کارها و تنظیماتت فقط روی همین گوشی می‌مونن. پشتیبان‌ها فقط می‌رن توی پوشه‌ای که خودت انتخاب کردی. گزارش‌های خطا هم روی گوشی (و توی پشتیبان‌هات) می‌مونن، تا وقتی خودت یکی رو کپی کنی.</string>
     <string name="about_contact_row">تماس با سازنده</string>
     <string name="developer_name">دانی دورکار</string>
     <string name="about_maker">ساخته‌ی %1$s</string>
-    <string name="about_licenses">مجوزها</string>
-    <string name="licenses_help">%1$s فانوس رو با این بخش‌های متن‌باز ساخته. روی هر مجوز بزنی، متن کاملش رو می‌بینی.</string>
-    <string name="licenses_read">خوندن متن مجوز</string>
-    <string name="licenses_font">فونت</string>
-    <string name="licenses_libraries">کتابخانه‌ها</string>
-    <string name="licenses_art">تصویرها</string>
-    <string name="licenses_art_name">تصویرهای شخصیت‌ها</string>
-    <string name="licenses_art_note">با اجازه استفاده شده. متن‌باز نیست.</string>
+    <string name="about_licenses" tools:ignore="UnusedResources">مجوزها</string>
+    <string name="licenses_help" tools:ignore="UnusedResources">%1$s هماوند رو با این بخش‌های متن‌باز ساخته. روی هر مجوز بزنی، متن کاملش رو می‌بینی.</string>
+    <string name="licenses_read" tools:ignore="UnusedResources">خوندن متن مجوز</string>
+    <string name="licenses_font" tools:ignore="UnusedResources">فونت</string>
+    <string name="licenses_libraries" tools:ignore="UnusedResources">کتابخانه‌ها</string>
 
     <!-- B3 (D213): erase everything, and Settings' calm backup line. Nothing red, no blame. -->
     <string name="erase_row">پاک کردن همه‌چیز</string>
@@ -520,10 +517,10 @@
     <string name="whats_new_ok">باشه</string>
     <string name="whats_new_908">• نسخه‌ی نهایی تمیزتر و سبک‌تر شد؛ دیگه دسترسی دوربین نمی‌خواد.\n• «پاک کردن همه‌چیز» تو تنظیمات: از اول شروع کن، پشتیبان‌هات سر جاشون می‌مونن.\n• داده‌هات از هر نسخه‌ی قبلی سالم باز می‌شن، پشتیبان‌های قدیمی هم.\n• اگه برنامه یهو بسته شد، گزارشش تو «درباره» هست. با «کپی» برامون بفرست. هیچی خودبه‌خود فرستاده نمی‌شه.</string>
     <string name="whats_new_909">• تنظیمات حالا از بازار می‌پرسه نسخه‌ی تازه اومده یا نه؛ با یه بار زدن به‌روز می‌شی.\n• «پاک کردن همه‌چیز» تو تنظیمات: از اول شروع کن، پشتیبان‌هات سر جاشون می‌مونن.\n• داده‌هات از هر نسخه‌ی قبلی سالم باز می‌شن، پشتیبان‌های قدیمی هم.\n• دیگه دسترسی دوربین نمی‌خواد.\n• اگه برنامه یهو بسته شد، گزارشش تو «درباره» هست. با «کپی» برامون بفرست. هیچی خودبه‌خود فرستاده نمی‌شه.</string>
-    <string name="whats_new_910">• «درباره» حالا یه یادداشت حریم خصوصی داره: هیچی از گوشیت بیرون نمی‌ره.\n• «مجوزها» فونت و بخش‌های متن‌بازی که فانوس باهاشون ساخته شده رو نشون می‌ده.</string>
+    <string name="whats_new_910">• «درباره» حالا یه یادداشت حریم خصوصی داره: هیچی از گوشیت بیرون نمی‌ره.\n• «مجوزها» فونت و بخش‌های متن‌بازی که هماوند باهاشون ساخته شده رو نشون می‌ده.</string>
     <string name="whats_new_911">• همراه‌ها با یه لحن تازه حرف می‌زنن و شوالیه اسمش شده دلاور.\n• حرف‌هاشون تو صفحه‌ی امروز کوتاه‌تر شده؛ کار بعدی رو کارت «الان» نشون می‌ده.</string>
-    <string name="whats_new_912">• «درباره» حالا راه تماس با سازنده رو داره.\n• راهنمای تنظیم گوشی برای سامسونگ و هواوی/آنر هم هست، نه فقط شیائومی.\n• تو «رسیدن یادآورها» گفته کجا رو بزنی: اسم فانوس رو جستجو کن، باتری رو بذار روی «بدون محدودیت».</string>
-    <string name="rate_title">فانوس به کارت اومده؟</string>
+    <string name="whats_new_912">• «درباره» حالا راه تماس با سازنده رو داره.\n• راهنمای تنظیم گوشی برای سامسونگ و هواوی/آنر هم هست، نه فقط شیائومی.\n• تو «رسیدن یادآورها» گفته کجا رو بزنی: اسم هماوند رو جستجو کن، باتری رو بذار روی «بدون محدودیت».</string>
+    <string name="rate_title">هماوند به کارت اومده؟</string>
     <string name="rate_text">اگه دوستش داری، یه امتیاز تو بازار کمک می‌کنه بقیه هم پیداش کنن. فقط همین یه بار می‌پرسیم.</string>
     <string name="rate_yes">امتیاز بده</string>
     <string name="rate_later">الان نه</string>

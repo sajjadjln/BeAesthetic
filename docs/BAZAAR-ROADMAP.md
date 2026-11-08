@@ -77,7 +77,7 @@ _Done: flavors `personal` (`app.lantern.me`) and `bazaar` (`app.lantern`); the B
 
 ### B8. Listing and publish (text ready in `BAZAAR-LISTING.md`)
 - **You:** the developer account on the Bazaar panel (national ID, a mobile in your own name, two-step login, the yearly subscription), and confirm `app.lantern` is free. Developer title «دانی دورکار» / “Donnie Doorkar”. Do this before B7.
-- **You:** the signed character-art letter in Bazaar's format (drafted in `BAZAAR-LISTING.md` §6: developer email, `app.lantern`, the owner's ID details and ID copies). Only Estedad ships, so no font letter.
+- No art letter: the character art is the user's own work (D218). Only Estedad ships, so no font letter.
 - No privacy-policy URL for Bazaar (the in-app note is enough); keep it for Google Play.
 - Listing: title **«فانوس»** only (it must equal the launcher label); search words in the short description; description ≤800 chars with no future features; category **«ابزارها»**; support email `donniedoorkar@gmail.com`; 512×512 square icon with no rounded corners or shadow; 5–6 screenshots (not the Goals tab); a 5:2 header image.
 - Notes for the reviewers: a reason for every permission, WorkManager's three included, and the «در دست ساخت» Goals tab (`BAZAAR-LISTING.md` §5).

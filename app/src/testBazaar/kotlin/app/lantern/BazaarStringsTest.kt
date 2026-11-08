@@ -50,6 +50,6 @@ class BazaarStringsTest {
 
     @Test
     fun theLauncherSaysFanus() {
-        assertEquals("فانوس", english.getString(R.string.app_name))
+        assertEquals("هماوند", english.getString(R.string.app_name))
     }
 }

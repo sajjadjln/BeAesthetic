@@ -36,7 +36,7 @@ Lantern is personal for now (D49, D173). This is the list to work through when i
 
 ### Legal and content
 
-- [ ] **Rights to the character art** (`characters/`) and the per-character fonts (`characters/fonts/`): confirm each may be shipped in a public, possibly paid, app.
+- [x] **Rights to the character art** (`characters/`): the user's own work, no letter (D218). Still check the per-character fonts (`characters/fonts/`): confirm each may be shipped in a public, possibly paid, app.
 - [x] Estedad is under the OFL: ship its license. An «مجوزها» screen in Settings → «درباره» lists Estedad and every open-source library (AndroidX, Kotlin, Room…), with the full texts (D215).
 - [x] Settings → «پاک کردن همه‌چیز» (erase all data), with a backup offered first (B3).
 - [x] Settings → «درباره»: version, contact, privacy note (D215). **You:** set the contact address in `about_contact` (`res/values/strings.xml`); the row is hidden while it's empty.
@@ -69,7 +69,6 @@ Lantern is personal for now (D49, D173). This is the list to work through when i
 - [x] _(docs)_ **Listing name «فانوس» only**: it must equal the launcher label. Search words go in «توضیحات کوتاه فارسی» (≤60 chars) and the description (≤800 chars). No future features (goals, plugins) in the description.
 - [x] _(docs)_ Category **«ابزارها»** (Bazaar has no «بهره‌وری»; «ابزارها» names reminders and task apps).
 - [ ] _(docs; specs in `BAZAAR-LISTING.md` §4, images still to make)_ Asset specs: icon PNG 512×512, ≤3 MB, square with no rounded corners or shadow, same as the launcher icon; 1–12 screenshots ≤1 MB each; header image PNG ≥720×288 at 5:2, ≤1 MB; optional promo images JPG 1152×648; optional Aparat video ≤10 min.
-- [ ] _(docs; drafted in `BAZAAR-LISTING.md` §6, needs signing)_ **Character art letter in Bazaar's format**: written confirmation naming the developer email and `app.lantern`; from a private person also their ID details and ID copies. Upload it with the reviewer notes. Same check for the per-character fonts.
 - [x] _(docs; written in `BAZAAR-LISTING.md` §5)_ Reviewer notes («توضیحات بیشتر برای بررسی‌کننده») with a reason for every permission, including WorkManager's `ACCESS_NETWORK_STATE`, `WAKE_LOCK`, `FOREGROUND_SERVICE`; mention the clearly labelled «در دست ساخت» Goals tab.
 - [ ] _(docs; planned in B7, D217)_ Beta through Bazaar's **alpha release** (≤100 testers per group by mobile number) instead of hand-sent APKs. Staged rollout needs 5,000 active installs, so not for 1.0.
 - [ ] _(docs)_ Account (you): mobile number in your own name; the email is permanent; pay the 400,000-rial yearly subscription before publishing; developer title ≤32 chars; turn on two-step login. Max 10 publish requests a day; review takes up to 3 working days.
