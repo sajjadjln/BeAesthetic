@@ -11,7 +11,7 @@ _Written 2026-11-06 on branch `claude/bazaar-finish-a0e614` (from `bazaar`), for
 | Type | برنامه (app) | |
 | Category | **ابزارها** | one only; Bazaar has no «بهره‌وری» (D217) |
 | Pricing | رایگان (free), no in-app purchase | can't change after publishing |
-| Package | `app.lantern` | permanent; check it is free on the panel |
+| Package | `app.peykar` | permanent; check it is free on the panel |
 
 ## 2. App info («اطلاعات برنامه»)
 
@@ -80,7 +80,7 @@ Paste as is. No attachment: the character art is the developer's own work (D218)
 • VIBRATE: لرزش هنگام یادآور.
 • WAKE_LOCK، FOREGROUND_SERVICE و ACCESS_NETWORK_STATE: این سه تا رو کتابخانه‌ی WorkManager اندروید خودش اضافه می‌کنه (برای کار پس‌زمینه‌ی تنظیم دوباره‌ی یادآورها و پشتیبان هفتگی). برنامه اجازه‌ی INTERNET نداره و از شبکه هیچ استفاده‌ای نمی‌کنه.
 
-بررسی به‌روزرسانی فقط با سرویس خود اپ بازار روی گوشی حرف می‌زنه (IUpdateCheckService) و امتیازدهی با ACTION_EDIT روی bazaar://details?id=app.lantern باز می‌شه.
+بررسی به‌روزرسانی فقط با سرویس خود اپ بازار روی گوشی حرف می‌زنه (IUpdateCheckService) و امتیازدهی با ACTION_EDIT روی bazaar://details?id=app.peykar باز می‌شه.
 
 بخش «هدف‌ها»: این تب عمداً با برچسب «در دست ساخت» گذاشته شده و توضیح می‌ده که این بخش در نسخه‌های بعد میاد. بقیه‌ی برنامه (امروز، کارها، یادآورها، سابقه، ویجت، پشتیبان، تنظیمات) کامل است. در توضیحات و تصویرهای صفحه‌ی برنامه به این بخش اشاره نشده.
 

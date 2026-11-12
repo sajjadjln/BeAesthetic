@@ -20,7 +20,7 @@ What it is **not**: the goal flow, plugins, the workout, accounts, a backend, Go
 | Q1 | The Goals tab in 1.0 | ✅ **Keep it**, with the «در دست ساخت» page | Your call: it shows where the app is going. |
 | Q2 | Force update in 1.0 | ✅ **Soft only** (BazaarUpdater, no network) | A hard flag needs the network; nothing in 1.0 depends on a server. |
 | Q3 | Server for 1.0 | ✅ **None** | Nothing in 1.0 needs one. The privacy page can live on a free static host. |
-| Q4 | Your own install | ✅ **The personal build gets its own ID** (`app.lantern.me`); you move your data once with backup → restore. Bazaar gets `app.lantern` | Otherwise Bazaar sees your phone has `app.lantern`, offers an "update", and turns your build into the Persian-only one. |
+| Q4 | Your own install | ✅ **The personal build gets its own ID** (`app.lantern.me`); you move your data once with backup → restore. Bazaar gets `app.peykar` | Otherwise Bazaar sees your phone has `app.peykar`, offers an "update", and turns your build into the Persian-only one. |
 | Q5 | Testing before going public | ✅ **3–5 people on different phones for 2 weeks**, with the Bazaar APK sent by hand | Reminders on phones you don't own are the biggest unknown. |
 | — | The goth woman | ✅ **Stays on Bazaar** (reverses that part of D195) | Your call. |
 
@@ -33,7 +33,7 @@ Each slice ends as in Phase 5: a build, "what works, what's next", your feedback
 - Tag the signed 1.0.0. **The Room schema at 1.0.0 is the baseline**: from here on every change needs a tested migration.
 
 ### B1. Flavors ✅ built 2026-11-04 on branch `bazaar` (D207)
-_Done: flavors `personal` (`app.lantern.me`) and `bazaar` (`app.lantern`); the Bazaar build has Persian as `values/` (copied from `values-fa/` at build time), `fa` only, the language fixed (`BuildConfig.ONLY_LANGUAGE`), no language switch, one launcher alias; `BazaarStringsTest` fails on any string with Latin letters (only "Syncthing" is allowed). `check` lints both; `FLAVOR=bazaar scripts/release.sh` builds the signed Bazaar APK without installing it. Not yet seen on a phone._
+_Done: flavors `personal` (`app.lantern.me`) and `bazaar` (`app.peykar`); the Bazaar build has Persian as `values/` (copied from `values-fa/` at build time), `fa` only, the language fixed (`BuildConfig.ONLY_LANGUAGE`), no language switch, one launcher alias; `BazaarStringsTest` fails on any string with Latin letters (only "Syncthing" is allowed). `check` lints both; `FLAVOR=bazaar scripts/release.sh` builds the signed Bazaar APK without installing it. Not yet seen on a phone._
 - Product flavors `personal` and `bazaar` (`play` later). `personal` keeps today's build; it gets its own ID (Q4).
 - `bazaar`: `localeFilters = ["fa"]`, Persian becomes `values/`; the language switch is hidden; one launcher alias; `app_name` «فانوس» only, no "Lantern" in any string.
 - `check` builds and lints both flavors; a test reads the Bazaar APK and fails if an English string is inside.
@@ -53,7 +53,7 @@ _Done: flavors `personal` (`app.lantern.me`) and `bazaar` (`app.lantern`); the B
 - ✅ **Done 2026-11-05 (D214).** Bazaar's update service is called directly over its AIDL (no library, no `INTERNET`); «بررسی به‌روزرسانی» in Settings, a once-per-version line on Today, «تازه‌ها» from `whats_new_<versionCode>`, the rating ask (`StoreRules` in `:domain`), «امتیاز بده تو بازار» in «درباره».
 - BazaarUpdater: «نسخهٔ تازه آمده» as one quiet line in Settings and once on Today, with a button to the Bazaar page. Verify the library first; if it's gone, the button alone («بررسی به‌روزرسانی» opens the Bazaar page).
 - «تازه‌ها» (what's new) sheet, once after each update. The text lives in resources per version.
-- «امتیاز بده»: `ACTION_EDIT` on `bazaar://details?id=app.lantern`. One ask, after the 7th day with ticks, never after a gap, "don't ask again" honored.
+- «امتیاز بده»: `ACTION_EDIT` on `bazaar://details?id=app.peykar`. One ask, after the 7th day with ticks, never after a gap, "don't ask again" honored.
 - No link to Google Play anywhere in the Bazaar build.
 
 ### B5. «درباره» (About) ✅ (done 2026-11-05, D211, D215)
@@ -76,7 +76,7 @@ _Done: flavors `personal` (`app.lantern.me`) and `bazaar` (`app.lantern`); the B
 - Fix, bump the version, upload again to the same alpha group; repeat once if needed. Then switch the release to «عمومی» (it can't go back to alpha).
 
 ### B8. Listing and publish (text ready in `BAZAAR-LISTING.md`)
-- **You:** the developer account on the Bazaar panel (national ID, a mobile in your own name, two-step login, the yearly subscription), and confirm `app.lantern` is free. Developer title «دانی دورکار» / “Donnie Doorkar”. Do this before B7.
+- **You:** the developer account on the Bazaar panel (national ID, a mobile in your own name, two-step login, the yearly subscription), and confirm `app.peykar` is free. Developer title «دانی دورکار» / “Donnie Doorkar”. Do this before B7.
 - No art letter: the character art is the user's own work (D218). Only Estedad ships, so no font letter.
 - No privacy-policy URL for Bazaar (the in-app note is enough); keep it for Google Play.
 - Listing: title **«فانوس»** only (it must equal the launcher label); search words in the short description; description ≤800 chars with no future features; category **«ابزارها»**; support email `donniedoorkar@gmail.com`; 512×512 square icon with no rounded corners or shadow; 5–6 screenshots (not the Goals tab); a 5:2 header image.

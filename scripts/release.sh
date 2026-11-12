@@ -8,7 +8,7 @@ cd "$(dirname "$0")/.."
 FLAVOR="${FLAVOR:-personal}"
 case "$FLAVOR" in
   personal) PACKAGE=app.lantern.me; TASK=assemblePersonalRelease ;;
-  bazaar)   PACKAGE=app.lantern;    TASK=assembleBazaarRelease ;;
+  bazaar)   PACKAGE=app.peykar;     TASK=assembleBazaarRelease ;;
   *) echo "FLAVOR is personal or bazaar"; exit 1 ;;
 esac
 
@@ -31,7 +31,7 @@ APK="app/build/outputs/apk/$FLAVOR/release/app-$FLAVOR-release.apk"
 "$JAVA_HOME/bin/keytool" -printcert -jarfile "$APK" | grep -m1 "SHA256" || true
 echo "Signed: $APK"
 if [ "$FLAVOR" = bazaar ]; then
-  echo "Bazaar build: not installed here (it would replace your own app.lantern install). Upload it or send it to the beta."
+  echo "Bazaar build: not installed here (keep your phone for your own build). Upload it or send it to the beta."
   exit 0
 fi
 

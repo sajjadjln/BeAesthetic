@@ -20,10 +20,10 @@ import kotlin.coroutines.resume
 
 /**
  * Cafe Bazaar (B4, D214). The update check binds to the Bazaar app's own service, the same one the
- * BazaarUpdater library uses, so this app needs no INTERNET. Store id is fixed: the listing is `app.lantern`.
+ * BazaarUpdater library uses, so this app needs no INTERNET. Store id is fixed: the listing is `app.peykar` (D220).
  */
 object BazaarStore {
-    private const val STORE_ID = "app.lantern"
+    private const val STORE_ID = "app.peykar"
     private const val BAZAAR = "com.farsitel.bazaar"
     private const val BIND = "com.farsitel.bazaar.service.UpdateCheckService.BIND"
     private val details = "bazaar://details?id=$STORE_ID".toUri()

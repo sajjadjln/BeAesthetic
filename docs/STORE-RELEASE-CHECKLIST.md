@@ -41,7 +41,7 @@ Lantern is personal for now (D49, D173). This is the list to work through when i
 - [x] Settings → «پاک کردن همه‌چیز» (erase all data), with a backup offered first (B3).
 - [x] Settings → «درباره»: version, contact, privacy note (D215). **You:** set the contact address in `about_contact` (`res/values/strings.xml`); the row is hidden while it's empty.
 - [x] Turn off any debug logging in release (`Log.d` and `Log.v` stripped by R8 rules, B2).
-- [ ] `applicationId` `app.lantern` is permanent once published. Check it's free on Bazaar before the first upload.
+- [ ] `applicationId` `app.peykar` is permanent once published. Check it's free on Bazaar before the first upload.
 - [ ] The release key: two backups in two places (the file and the password). Losing it means a new app and every user starting over.
 
 ## Cafe Bazaar
@@ -53,7 +53,7 @@ Lantern is personal for now (D49, D173). This is the list to work through when i
 - [x] Check Bazaar's current rules on target SDK and on `USE_EXACT_ALARM` / `SCHEDULE_EXACT_ALARM` and `REQUEST_IGNORE_BATTERY_OPTIMIZATIONS`. _(2026-11-06: target SDK ≥ 32; the three permissions aren't mentioned; every permission needs a reason for the reviewer. See below.)_
 - [ ] Bazaar takes an APK; the signed APK from `scripts/release.sh` is the upload.
 - [ ] Developer account on the Bazaar panel (identity check with a national ID; done by you).
-- [x] Store links go to Bazaar only: the update button and «امتیاز بده» open `bazaar://details?id=app.lantern` (rating: `ACTION_EDIT` on the same URI, package `com.farsitel.bazaar`). No link or mention of Google Play anywhere in the Bazaar build.
+- [x] Store links go to Bazaar only: the update button and «امتیاز بده» open `bazaar://details?id=app.peykar` (rating: `ACTION_EDIT` on the same URI, package `com.farsitel.bazaar`). No link or mention of Google Play anywhere in the Bazaar build.
 - [x] A rating ask, at most once, after a good moment (e.g. the 7th day with ticks), never after a gap. Easy to dismiss forever.
 - [ ] Privacy policy page in Persian at a URL you own (a static page is enough).
 - [ ] Listing assets: 512×512 icon, Persian screenshots, a cover image, category (likely «بهره‌وری» or «سبک زندگی»), age rating.
@@ -63,8 +63,8 @@ Lantern is personal for now (D49, D173). This is the list to work through when i
 
 ### From Bazaar's developer docs (read 2026-11-06, `docs/research/bazaar-developer-guide.md` §16)
 
-- [x] _(docs)_ Target SDK ≥ 32 (we're on 36); no min SDK rule; APK ≤150 MB accepted; `app.lantern` is a valid package name. Exact alarms, battery exception and "no internet" have no rule of their own.
-- [x] _(docs)_ Rating intent (`ACTION_EDIT`, `bazaar://details?id=app.lantern`, package `com.farsitel.bazaar`) and the update-check bind action match the docs; the AIDL's first two methods match BazaarUpdater 1.2.0's order.
+- [x] _(docs)_ Target SDK ≥ 32 (we're on 36); no min SDK rule; APK ≤150 MB accepted; `app.peykar` is a valid package name. Exact alarms, battery exception and "no internet" have no rule of their own.
+- [x] _(docs)_ Rating intent (`ACTION_EDIT`, `bazaar://details?id=app.peykar`, package `com.farsitel.bazaar`) and the update-check bind action match the docs; the AIDL's first two methods match BazaarUpdater 1.2.0's order.
 - [x] _(docs; done 2026-11-06, `donniedoorkar@gmail.com`)_ **Set `about_contact` before the first upload.** The contract (6-11 ز) calls missing in-app contact channels a violation; the panel requires a support email. Use the same address for both; add `about_contact` to `BazaarStringsTest`'s skip list.
 - [x] _(docs)_ **Listing name «فانوس» only**: it must equal the launcher label. Search words go in «توضیحات کوتاه فارسی» (≤60 chars) and the description (≤800 chars). No future features (goals, plugins) in the description.
 - [x] _(docs)_ Category **«ابزارها»** (Bazaar has no «بهره‌وری»; «ابزارها» names reminders and task apps).
@@ -73,7 +73,7 @@ Lantern is personal for now (D49, D173). This is the list to work through when i
 - [ ] _(docs; planned in B7, D217)_ Beta through Bazaar's **alpha release** (≤100 testers per group by mobile number) instead of hand-sent APKs. Staged rollout needs 5,000 active installs, so not for 1.0.
 - [ ] _(docs)_ Account (you): mobile number in your own name; the email is permanent; pay the 400,000-rial yearly subscription before publishing; developer title ≤32 chars; turn on two-step login. Max 10 publish requests a day; review takes up to 3 working days.
 - [ ] _(docs)_ After launch: Bazaar documents install health and reviews, **not** a crash/ANR view; check the panel for one, and keep the local crash log as the main source.
-- [x] _(docs, optional)_ Update check on Bazaar older than 24.7.0 (`versionCode < 2400700`): fall back to `getVersionCode` (returns the newer code or −1). `bazaar://details/modal?id=app.lantern` opens Bazaar's in-app update sheet on newer Bazaar.
+- [x] _(docs, optional)_ Update check on Bazaar older than 24.7.0 (`versionCode < 2400700`): fall back to `getVersionCode` (returns the newer code or −1). `bazaar://details/modal?id=app.peykar` opens Bazaar's in-app update sheet on newer Bazaar.
 - [x] _(docs)_ Age rating: documented for games only (ESRA, optional). Skip for the app unless the panel asks. A privacy-policy URL isn't required by Bazaar (the in-app note is); keep it for Play.
 - [ ] _(docs, later)_ Plugin store on Bazaar: paid content must use Bazaar billing; apps may not offer access to apps from other sources or update outside Bazaar, nor change their nature after publishing. Ask Bazaar support before shipping `:store` in the `bazaar` flavor.
 

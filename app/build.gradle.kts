@@ -26,7 +26,7 @@ android {
 
     // One codebase, one build per place it's installed from (D195, D199, D207). `personal` is the
     // user's own phone: both languages, its own ID so a store build never "updates" it. `bazaar` is
-    // Persian only and keeps `app.lantern`, which is permanent once published.
+    // Persian only, as `app.peykar` (D220), which is permanent once published.
     flavorDimensions += "store"
     productFlavors {
         create("personal") {
@@ -36,6 +36,7 @@ android {
         }
         create("bazaar") {
             dimension = "store"
+            applicationId = "app.peykar"
             buildConfigField("String", "ONLY_LANGUAGE", "\"fa\"")
         }
     }
