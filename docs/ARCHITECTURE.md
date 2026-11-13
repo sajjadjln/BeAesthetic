@@ -241,6 +241,26 @@ A day the app never saw has no row, which is a gray gap, which is exactly right.
 - `MigrationTest` (Robolectric, `MigrationTestHelper`, schemas from the debug assets) runs in every `check` (B3, D213). It migrates **every** exported schema to the newest with real-looking rows and opens the result through the app's own Room builder, so a new version is covered as soon as its schema is exported. Every hand-written migration also gets its own test there with the rows it changes. Lantern has only the auto-migration 1 → 2 so far; the v0.x migration tests went with the old schema.
 - **Never** `fallbackToDestructiveMigration`.
 
+### Goals (slices G1–G4; D223)
+
+Database version 3, an auto-migration 2 → 3 (all additive). Goal logic lives in `:domain/goals` (pure Kotlin, tested).
+
+| Table | Columns | Notes |
+|---|---|---|
+| `goal` | id, title, state (IDEA·ACTIVE·REACHED·SET_ASIDE), startDate, endDate?, triedBefore?, minutesPerWeek?, triedWhat?, stopReason?, flexDays (0–2, default 1), why?, whyAt?, quietOfferedAt?, sortOrder, createdAt, reachedAt?, setAsideAt? | An idea («فعلاً فقط یه ایده») is a goal with only a title. `why` is required to go ACTIVE (D217). Set aside → back to IDEA in the UI, no failed state. |
+| `goal_month` | goalId, monthIndex (0 = the start month), milestone? | One row per Jalali month the goal touches. Only month 0 is required; the rest may be empty («هنوز نمی‌دونم»). Key (goalId, monthIndex). |
+| `task` + `goalId?` | new nullable column, index | A weekly action **is a task** (SPEC §3): WEEKDAYS repeat on the picked days, in a part of the day, on Today, one tap. 1–3 per goal. Its completions feed the goal's week. |
+
+Rules in `:domain/goals`:
+- **Slider mapping:** position v ∈ [0,1000] → days = max(1, round(365·(v/1000)^1.5)); snaps within 14 to 3 / 6 / 9 months, 1 year and Nowruz; past a year, a Jalali calendar.
+- **Week:** Saturday-start week of the logical day (04:00 rollover). Per day: DONE (any goal action ticked), GAP (past, none), AHEAD. The range = (picked days − flexDays) … picked days, summed over actions.
+- **Month bar:** month k of n, and the share of goal days gone (calm, no target-vs-actual red).
+- **Gone quiet:** an ACTIVE goal with no goal-action completion for 5 logical days (and older than 5 days); offered once per quiet spell (`quietOfferedAt` later than the last completion means already offered).
+
+Backup: `data.json` formatVersion +1 with `goal` and `goal_month` and `task.goalId`; older backups restore with no goals. A new sample zip goes into `app/src/test/resources/backups/`, and `MigrationTest` covers 2 → 3.
+
+Slices: **G1** the flow (steps ①–⑥, writes goal + months + tasks) · **G2** the wall (W2 notes, flip, «هدف تازه», idea slips, empty wall) · **G3** the detail (week, path, why, «رسیدم!», «بذارش کنار», the «رسیده‌ها» shelf) · **G4** the bad day (hold a note; the companion's one offer).
+
 ## 9. Backup and restore
 
 ### Format

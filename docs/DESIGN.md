@@ -119,8 +119,12 @@ The flat layout from `simple-mode.html`, in every look. At the top, the title «
 
 The screens it opens keep their v0.x layout on the night sky, with pixel cards, buttons and calendar.
 
-### Goals (D191)
-The character with a «در دست ساخت» tag and one line; in Simple, the tab's icon, the tag and a plain line. The goal flow (`goal-step*.html`) comes after v1.
+### Goals (D217, D218; build D223)
+Built in the app's current look, not the mockups' looks: the night sky, pixel cards (`Px` shapes) per character, rounded in Simple, the character's color, Estedad, the existing motion rules and «حذف انیمیشن‌ها». «+» in the bar still opens a new task.
+- **Flow:** six full-screen steps in onboarding's pattern (character + dialog on top, back/next row with progress blocks): ① the goal or «فعلاً فقط یه ایده», ② by when (the curved slider, Jalali end date), ③ tried before?, ④ months last-first and this week's 1–3 actions with weekdays, ⑤ the summary and flex days, ⑥ the why, then «بچسبون به دیوار». In Simple, no character: the dialog line as a plain title.
+- **Wall:** one note per active goal; front = this month's milestone and a bar, a tap flips to this week (7 squares: green done, gray gap, outline ahead; the range). A dashed «هدف تازه» note; ideas as slips under the wall; empty wall = the character and one button.
+- **Detail:** this week, the path of months, the why on paper (always open), «رسیدم!» and «بذارش کنار». Reached goals on a «رسیده‌ها» shelf.
+- **Bad day:** long-press a note, or the companion offers it once for a quiet goal: the why unrolls, then «یه قدم کوچیک بردار» / «بعداً».
 
 ### Widget
 Today's tasks for the current part, one tap each, in the character's colors.
