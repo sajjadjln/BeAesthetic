@@ -89,6 +89,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import app.lantern.ui.today.TodayViewModel
 import app.lantern.ui.goals.GoalFlowScreen
 import app.lantern.ui.goals.GoalDetailScreen
+import app.lantern.ui.goals.GoalBadDayScreen
 import app.lantern.ui.goals.GoalsRoute
 import app.lantern.ui.onboarding.OnboardingScreen
 import androidx.compose.runtime.remember
@@ -113,6 +114,7 @@ import kotlinx.serialization.Serializable
 @Serializable object GoalsTab
 /** The goal flow; [ideaId] −1 for a new goal, else the idea slip it starts from. */
 @Serializable data class GoalDetailRoute(val goalId: Long)
+@Serializable data class GoalBadDayRoute(val goalId: Long)
 @Serializable data class GoalFlowRoute(val ideaId: Long = -1)
 @Serializable object OnboardingRoute
 @Serializable object HistoryRoute
@@ -218,9 +220,18 @@ class MainActivity : ComponentActivity() {
                                 onNew = { nav.navigate(GoalFlowRoute()) },
                                 onOpenIdea = { nav.navigate(GoalFlowRoute(it)) },
                                 onOpenGoal = { nav.navigate(GoalDetailRoute(it)) },
-                                onHold = { },
+                                onHold = { nav.navigate(GoalBadDayRoute(it)) },
                             )
                         }
+                    }
+                    composable<GoalBadDayRoute> { entry ->
+                        GoalBadDayScreen(
+                            container,
+                            entry.toRoute<GoalBadDayRoute>().goalId,
+                            onLater = nav::popBackStack,
+                            // A small step: Today, where the goal's actions are (D223).
+                            onStep = { nav.popBackStack(HomeRoute, inclusive = false) },
+                        )
                     }
                     composable<GoalDetailRoute> { entry ->
                         GoalDetailScreen(container, entry.toRoute<GoalDetailRoute>().goalId, onBack = nav::popBackStack)

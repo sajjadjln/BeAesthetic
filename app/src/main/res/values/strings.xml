@@ -634,4 +634,11 @@
     <string name="goal_detail_aside_help">It goes back to your ideas. You can pick it up again any time.</string>
     <string name="goal_detail_reached_on">Reached %1$s</string>
     <string name="goal_detail_save">Save</string>
+    <string name="goal_bad_say">Remember why you started? You wrote this yourself.</string>
+    <string name="goal_bad_why_of">The why of «⁨%1$s⁩»</string>
+    <string name="goal_bad_tap">Tap to open</string>
+    <string name="goal_bad_step">Take one small step</string>
+    <string name="goal_bad_later">Later</string>
+    <string name="goal_quiet_offer">«⁨%1$s⁩» has been quiet for a few days. Want to read your why?</string>
+    <string name="goal_quiet_read">Read it</string>
 </resources>

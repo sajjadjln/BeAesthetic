@@ -207,14 +207,14 @@ private fun Path(g: GoalView, end: LocalDate, today: LocalDate, editable: Boolea
 
 /** The why from step ⑥ (D221), on paper, never folded away: the date it was written, then the words. */
 @Composable
-internal fun Why(why: String, writtenOn: LocalDate?, modifier: Modifier = Modifier) {
+internal fun Why(why: String, writtenOn: LocalDate?, modifier: Modifier = Modifier, title: Boolean = true) {
     val c = Ba.colors
     Column(
         verticalArrangement = Arrangement.spacedBy(8.dp),
         modifier = modifier.fillMaxWidth().clip(Px.Card).background(c.surface2)
             .padding(16.dp),
     ) {
-        Text(stringResource(R.string.goal_detail_why), style = Ba.type.subtitle, color = c.glow)
+        if (title) Text(stringResource(R.string.goal_detail_why), style = Ba.type.subtitle, color = c.glow)
         writtenOn?.let { Text(goalDate(it), style = Ba.type.caption, color = c.text3) }
         Text(why, style = Ba.type.body, color = c.text1)
     }

@@ -631,4 +631,11 @@
     <string name="goal_detail_aside_help">برمی‌گرده پیش ایده‌هات. هر وقت خواستی دوباره برش می‌داری.</string>
     <string name="goal_detail_reached_on">رسیدی، %1$s</string>
     <string name="goal_detail_save">ذخیره</string>
+    <string name="goal_bad_say">یادته چرا شروع کردی؟ اینو خودت نوشتی.</string>
+    <string name="goal_bad_why_of">چرای «⁨%1$s⁩»</string>
+    <string name="goal_bad_tap">لمس کن تا باز شه</string>
+    <string name="goal_bad_step">یه قدم کوچیک بردار</string>
+    <string name="goal_bad_later">بعداً</string>
+    <string name="goal_quiet_offer">«⁨%1$s⁩» چند روزه آرومه. می‌خوای چرات رو بخونی؟</string>
+    <string name="goal_quiet_read">بخونمش</string>
 </resources>

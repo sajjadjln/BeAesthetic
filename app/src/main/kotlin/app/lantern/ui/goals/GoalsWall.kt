@@ -82,6 +82,9 @@ fun GoalsWall(
     onOpenIdea: (Long) -> Unit,
     onOpenGoal: (Long) -> Unit,
     onHold: (Long) -> Unit,
+    offer: GoalView? = null,
+    onOfferRead: () -> Unit = {},
+    onOfferDismiss: () -> Unit = {},
 ) {
     val c = Ba.colors
     val active = goals.filter { it.state == GoalState.ACTIVE }
@@ -107,6 +110,7 @@ fun GoalsWall(
                 Text(line, style = Ba.type.body, color = c.text2)
             }
         }
+        offer?.let { QuietOffer(it.goal.title, onOfferRead, onOfferDismiss) }
         // Two notes a row, each tilted a little like a real pinned note (none when animations are off is fine: the tilt is still).
         val cells: List<GoalView?> = active + listOf(null)
         cells.chunked(2).forEachIndexed { row, pair ->
