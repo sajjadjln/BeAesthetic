@@ -97,6 +97,7 @@ fun GoalFlowScreen(container: AppContainer, ideaId: Long?, onClose: () -> Unit, 
     val scope = rememberCoroutineScope()
     val today = remember { container.clock.programDate(ProgramCalendar.DEFAULT_ROLLOVER_HOUR) }
     var step by rememberSaveable { mutableIntStateOf(0) }
+    val cal = monthCalendar()
     var draft by remember { mutableStateOf(GoalDraft()) }
     LaunchedEffect(ideaId) {
         val idea = if (ideaId != null) container.goals.get(ideaId) else null
@@ -162,7 +163,7 @@ fun GoalFlowScreen(container: AppContainer, ideaId: Long?, onClose: () -> Unit, 
                                     .padding(8.dp),
                             )
                         }
-                        1 -> PrimaryButton(stringResource(R.string.goal_next), { draft = draft.withMonthsFor(today); next() }, Modifier.fillMaxWidth(), enabled = draft.step2Ok(today))
+                        1 -> PrimaryButton(stringResource(R.string.goal_next), { draft = draft.withMonthsFor(today, cal); next() }, Modifier.fillMaxWidth(), enabled = draft.step2Ok(today))
                         2 -> PrimaryButton(stringResource(R.string.goal_next), { next() }, Modifier.fillMaxWidth(), enabled = draft.step3Ok)
                         3 -> PrimaryButton(stringResource(R.string.goal_next), { next() }, Modifier.fillMaxWidth(), enabled = draft.step4Ok)
                         4 -> PrimaryButton(stringResource(R.string.goal_next), { next() }, Modifier.fillMaxWidth())
@@ -248,7 +249,7 @@ private fun StepWhen(d: GoalDraft, today: LocalDate, onChange: (GoalDraft) -> Un
         style = Ba.type.headline,
         color = if (d.endDate == null) c.text3 else c.text1,
     )
-    Text(goalDate(today.plusDays(pick.days.toLong())), style = Ba.type.body, color = c.text2)
+    if (d.endDate != null) Text(goalDate(today.plusDays(pick.days.toLong())), style = Ba.type.body, color = c.text2)
     Slider(
         value = position,
         onValueChange = {
@@ -379,8 +380,9 @@ private fun Label(text: Int) {
 @Composable
 private fun StepWeek(d: GoalDraft, today: LocalDate, onChange: (GoalDraft) -> Unit) {
     val c = Ba.colors
-    val months = remember(d.endDate) { d.endDate?.let { GoalRules.months(today, it) }.orEmpty() }
-    val names = stringArrayResource(R.array.jalali_months)
+    val cal = monthCalendar()
+    val months = remember(d.endDate, cal) { d.endDate?.let { GoalRules.months(today, it, cal) }.orEmpty() }
+    val names = monthNames()
     val first = d.months.firstOrNull().orEmpty()
     GoalTitle(d.title)
     Say(stringResource(if (first.isBlank()) R.string.goal_s4_say else R.string.goal_s4_say_week), if (first.isBlank()) Mood.CALM else Mood.HAPPY)
@@ -532,3 +534,13 @@ internal fun NoteBox(value: String, hint: String, onChange: (String) -> Unit) {
         },
     )
 }
+
+/** Goal months follow the language: Jalali in Persian, Gregorian in English (D176). */
+@Composable
+internal fun monthCalendar(): app.lantern.domain.goals.MonthCalendar =
+    if (app.lantern.domain.text.PersianDigits.latin) app.lantern.domain.goals.MonthCalendar.GREGORIAN else app.lantern.domain.goals.MonthCalendar.JALALI
+
+@Composable
+internal fun monthNames(): Array<String> = androidx.compose.ui.res.stringArrayResource(
+    if (app.lantern.domain.text.PersianDigits.latin) R.array.gregorian_months else R.array.jalali_months,
+)

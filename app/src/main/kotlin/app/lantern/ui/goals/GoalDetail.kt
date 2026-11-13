@@ -107,8 +107,7 @@ private fun GoalDetail(
                     if (active) add(stringResource(R.string.goal_detail_left, PersianDigits.format(GoalRules.daysLeft(end, today))))
                     if (active) add(stringResource(R.string.goal_detail_flex, PersianDigits.format(g.goal.flexDays)))
                 }
-                // RLM around the dots keeps Persian numbers from running together (D223).
-                Text(bits.joinToString("‏ · ‏"), style = Ba.type.label, color = c.text2)
+                Text(bits.joinToString(stringResource(R.string.goal_sep)), style = Ba.type.label, color = c.text2)
             }
             g.goal.reachedAt?.let {
                 Text(
@@ -125,7 +124,7 @@ private fun GoalDetail(
                         WeekSquares(week.days, Modifier.fillMaxWidth(), letters = true)
                         Text(
                             stringResource(if (week.inRange) R.string.goals_ticks_in else R.string.goals_ticks, PersianDigits.format(week.ticks)) +
-                                "‏ · ‏" + stringResource(R.string.goals_range, PersianDigits.format(week.low), PersianDigits.format(week.high)),
+                                stringResource(R.string.goal_sep) + stringResource(R.string.goals_range, PersianDigits.format(week.low), PersianDigits.format(week.high)),
                             style = Ba.type.caption,
                             color = if (week.inRange) c.accent else c.text2,
                         )
@@ -156,9 +155,10 @@ private fun GoalDetail(
 @Composable
 private fun Path(g: GoalView, end: LocalDate, today: LocalDate, editable: Boolean, onMilestone: (Int, String) -> Unit) {
     val c = Ba.colors
-    val months = GoalRules.months(g.goal.startDate, end)
-    val now = GoalRules.monthIndex(g.goal.startDate, end, today)
-    val names = stringArrayResource(R.array.jalali_months)
+    val cal = monthCalendar()
+    val months = GoalRules.months(g.goal.startDate, end, cal)
+    val now = if (editable) GoalRules.monthIndex(g.goal.startDate, end, today, cal) else -1
+    val names = monthNames()
     var editing by rememberSaveable { mutableIntStateOf(-1) }
     var text by rememberSaveable { mutableStateOf("") }
     Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
@@ -167,7 +167,7 @@ private fun Path(g: GoalView, end: LocalDate, today: LocalDate, editable: Boolea
         Spacer(Modifier.height(6.dp))
         months.forEachIndexed { i, m ->
             val step = g.months.firstOrNull { it.monthIndex == i }?.milestone
-            val past = i < now
+            val past = editable && i < now
             Row(Modifier.fillMaxWidth().height(androidx.compose.foundation.layout.IntrinsicSize.Min)) {
                 // The path line and its dot: full for this month, outlined ahead, soft behind.
                 Box(Modifier.width(24.dp).fillMaxHeight(), contentAlignment = Alignment.TopCenter) {

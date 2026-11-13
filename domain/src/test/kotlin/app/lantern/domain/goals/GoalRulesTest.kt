@@ -72,7 +72,11 @@ class GoalRulesTest {
     fun `months run from the start month to the end month`() {
         val m = GoalRules.months(today, LocalDate.of(2027, 3, 20)) // to 29 Esfand
         assertEquals(listOf(8, 9, 10, 11, 12), m.map { it.month })
-        assertEquals(JalaliMonth(1405, 8), m.first())
+        assertEquals(JalaliMonth(1405, 8).firstDay, m.first().first)
+        val g = GoalRules.months(today, LocalDate.of(2027, 3, 20), MonthCalendar.GREGORIAN)
+        assertEquals(listOf(11, 12, 1, 2, 3), g.map { it.month })
+        assertEquals(LocalDate.of(2026, 11, 1), g.first().first)
+        assertEquals(2, GoalRules.monthIndex(today, LocalDate.of(2027, 3, 20), LocalDate.of(2027, 1, 9), MonthCalendar.GREGORIAN))
         assertEquals(1, GoalRules.monthIndex(today, LocalDate.of(2027, 3, 20), LocalDate.of(2026, 11, 25)))
         assertEquals(4, GoalRules.monthIndex(today, LocalDate.of(2027, 3, 20), LocalDate.of(2027, 5, 1)))
         assertEquals(1, GoalRules.months(today, today).size)

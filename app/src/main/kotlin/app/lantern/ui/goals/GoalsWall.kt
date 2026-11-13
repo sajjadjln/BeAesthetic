@@ -172,8 +172,9 @@ private fun GoalNote(g: GoalView, today: LocalDate, tilt: Float, onOpen: () -> U
 private fun NoteFront(g: GoalView, today: LocalDate) {
     val c = Ba.colors
     val end = g.goal.endDate ?: today
-    val months = GoalRules.months(g.goal.startDate, end)
-    val at = GoalRules.monthIndex(g.goal.startDate, end, today)
+    val cal = monthCalendar()
+    val months = GoalRules.months(g.goal.startDate, end, cal)
+    val at = GoalRules.monthIndex(g.goal.startDate, end, today, cal)
     val milestone = g.months.firstOrNull { it.monthIndex == at }?.milestone
     Column(verticalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.padding(top = 14.dp)) {
         Text(
@@ -210,7 +211,7 @@ private fun NoteBack(g: GoalView, onOpen: () -> Unit) {
             style = Ba.type.caption,
             color = if (week.inRange) c.accent else c.text2,
         )
-        Text(stringResource(R.string.goals_range, PersianDigits.format(week.low), PersianDigits.format(week.high)), style = Ba.type.caption, color = c.text3)
+        if (week.high > 0) Text(stringResource(R.string.goals_range, PersianDigits.format(week.low), PersianDigits.format(week.high)), style = Ba.type.caption, color = c.text3)
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.clip(Px.Small).clickable(role = Role.Button, onClick = onOpen).padding(vertical = 4.dp),

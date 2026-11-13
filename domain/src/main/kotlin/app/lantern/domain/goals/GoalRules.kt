@@ -5,6 +5,7 @@ import app.lantern.domain.time.JalaliMonth
 import app.lantern.domain.time.ProgramCalendar
 import app.lantern.domain.time.Weekdays
 import java.time.LocalDate
+import java.time.YearMonth
 import java.time.temporal.ChronoUnit
 import kotlin.math.abs
 import kotlin.math.pow
@@ -69,6 +70,13 @@ object GoalTimeline {
     }
 }
 
+enum class MonthCalendar { JALALI, GREGORIAN }
+
+/** One month of a goal: its days and its number in its calendar (1..12), for the name. */
+data class GoalMonth(val first: LocalDate, val last: LocalDate, val month: Int) {
+    operator fun contains(date: LocalDate): Boolean = date in first..last
+}
+
 /** One weekly action (step ④): a task on [weekdays] (Saturday = bit 0). */
 data class GoalAction(val taskId: Long, val weekdays: Int)
 
@@ -77,7 +85,7 @@ enum class WeekDay { DONE, GAP, AHEAD, BEFORE }
 
 /** This week of a goal: 7 squares from Saturday, ticks so far, and the calm range (picked − flex … picked). */
 data class GoalWeek(val start: LocalDate, val days: List<WeekDay>, val ticks: Int, val low: Int, val high: Int) {
-    val inRange: Boolean get() = ticks >= low
+    val inRange: Boolean get() = high > 0 && ticks >= low
 }
 
 object GoalRules {
@@ -113,18 +121,31 @@ object GoalRules {
         return GoalWeek(start, days, inWeek.size, low, high)
     }
 
-    /** The Jalali months a goal touches, start month first. */
-    fun months(start: LocalDate, end: LocalDate): List<JalaliMonth> {
-        val first = JalaliMonth.of(start)
-        val last = JalaliMonth.of(maxOf(start, end))
-        val out = mutableListOf(first)
-        while (out.last() != last) out += out.last().plus(1)
-        return out
+    /**
+     * The months a goal touches, start month first: Jalali months in Persian, Gregorian months in English
+     * (the language's calendar, D176). Milestones are stored by index, so the plan reads in either.
+     */
+    fun months(start: LocalDate, end: LocalDate, calendar: MonthCalendar = MonthCalendar.JALALI): List<GoalMonth> {
+        val stop = maxOf(start, end)
+        return when (calendar) {
+            MonthCalendar.JALALI -> {
+                val last = JalaliMonth.of(stop)
+                val out = mutableListOf(JalaliMonth.of(start))
+                while (out.last() != last) out += out.last().plus(1)
+                out.map { GoalMonth(it.firstDay, it.lastDay, it.month) }
+            }
+            MonthCalendar.GREGORIAN -> {
+                val last = YearMonth.from(stop)
+                val out = mutableListOf(YearMonth.from(start))
+                while (out.last() != last) out += out.last().plusMonths(1)
+                out.map { GoalMonth(it.atDay(1), it.atEndOfMonth(), it.monthValue) }
+            }
+        }
     }
 
     /** 0-based month of [today] within the goal, clamped to the goal's months. */
-    fun monthIndex(start: LocalDate, end: LocalDate, today: LocalDate): Int {
-        val months = months(start, end)
+    fun monthIndex(start: LocalDate, end: LocalDate, today: LocalDate, calendar: MonthCalendar = MonthCalendar.JALALI): Int {
+        val months = months(start, end, calendar)
         val at = months.indexOfFirst { today in it }
         return when {
             at >= 0 -> at

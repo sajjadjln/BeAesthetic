@@ -55,8 +55,8 @@ data class GoalDraft(
     fun range(): Pair<Int, Int> = GoalRules.range(actions.map { GoalAction(0, it.weekdays) }, flexDays)
 
     /** Keeps one month row per Jalali month from [today] to [endDate], keeping what was typed. */
-    fun withMonthsFor(today: LocalDate): GoalDraft {
-        val n = endDate?.let { GoalRules.months(today, it).size } ?: 1
+    fun withMonthsFor(today: LocalDate, calendar: MonthCalendar = MonthCalendar.JALALI): GoalDraft {
+        val n = endDate?.let { GoalRules.months(today, it, calendar).size } ?: 1
         return copy(months = List(n) { months.getOrElse(it) { "" } })
     }
 
