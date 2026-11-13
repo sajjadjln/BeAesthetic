@@ -34,6 +34,8 @@ _Last updated: 2026-11-06 (Bazaar: ready to upload, D217)_
 
 **Old-world English typography preview (2026-10-29):** `docs/design/today-old-world-fonts.html` compares Romantic Manor (Cormorant Garamond + EB Garamond), Victorian Journal (Libre Baskerville), and Gothic Court (UnifrakturCook headings + EB Garamond). True italic dialogue, optional italic tasks, vampire palette, embedded fonts and licenses. HTML and control checks passed; Chrome was disconnected, so browser visual QA is pending. App typography unchanged; awaiting visual feedback.
 
+**Goals G1 + G2 (2026-11-13, D221–D223, branch `claude/goals-ca6e74`, on top of `claude/rename-peykar-f937a0`):** the 6-step goal flow and the wall are built in the app's look. Domain rules in `domain/goals/` with tests (slider mapping and snaps, Nowruz = 29 Esfand, week squares, range, months, gone quiet). Schema 3 (auto-migration), backup sample `peykar-goals-schema3.zip` (derived; replace with a real one). `check` green. Seen on the emulator in Persian with the knight (flow, wall, flip) and the goth girl (empty wall). **Not yet:** English, Simple, a second character on the flow; G3 detail, G4 bad day.
+
 ## New identity: to-do + goals (2026-10-21)
 
 The app is no longer a workout program. It has two parts: the to-do list (as built) and goals (set, break down, monitor). Decisions D148–D171; the spec is `SPEC.md` v1.0 (draft). The workout tables below describe the v0.x build, which stays installed and in use until the migration ships.

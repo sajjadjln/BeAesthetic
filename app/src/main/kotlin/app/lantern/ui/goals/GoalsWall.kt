@@ -225,10 +225,11 @@ internal fun WeekSquares(days: List<WeekDay>, modifier: Modifier = Modifier, let
     val done = stringResource(R.string.cd_goal_day_done)
     val gap = stringResource(R.string.cd_goal_day_gap)
     val ahead = stringResource(R.string.cd_goal_day_ahead)
+    val before = stringResource(R.string.cd_goal_day_before)
     Row(horizontalArrangement = Arrangement.spacedBy(4.dp), modifier = modifier) {
         days.forEachIndexed { i, d ->
             Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.weight(1f)) {
-                val label = names[i] + ": " + when (d) { WeekDay.DONE -> done; WeekDay.GAP -> gap; WeekDay.AHEAD -> ahead }
+                val label = names[i] + ": " + when (d) { WeekDay.DONE -> done; WeekDay.GAP -> gap; WeekDay.AHEAD -> ahead; WeekDay.BEFORE -> before }
                 Box(
                     Modifier.fillMaxWidth().aspectRatio(1f).clip(Px.Small)
                         .then(
@@ -236,6 +237,7 @@ internal fun WeekSquares(days: List<WeekDay>, modifier: Modifier = Modifier, let
                                 WeekDay.DONE -> Modifier.background(c.accent)
                                 WeekDay.GAP -> Modifier.background(c.grid.first())
                                 WeekDay.AHEAD -> Modifier.border(1.5.dp, c.text3, Px.Small)
+                                WeekDay.BEFORE -> Modifier.border(1.dp, c.text3.copy(alpha = 0.25f), Px.Small)
                             },
                         )
                         .semantics { contentDescription = label },

@@ -587,7 +587,7 @@
     <string name="goal_s5_by">تا کِی</string>
     <string name="goal_s5_now">الان</string>
     <string name="goal_s5_each_week">هر هفته</string>
-    <string name="goal_s5_by_value">%1$s · %2$s روز</string>
+    <string name="goal_s5_by_value">%1$s‏ · ‏%2$s روز</string>
     <string name="goal_s5_first">اولین باره</string>
     <string name="goal_s5_range">%1$s تا %2$s بار</string>
     <string name="goal_s5_flex">روز انعطاف</string>
@@ -604,7 +604,7 @@
     <string name="goals_new">هدف تازه</string>
     <string name="goals_flip_hint">یه یادداشت رو لمس کن تا برگرده و هفته رو نشون بده</string>
     <string name="goals_ideas">ایده‌ها · %1$s</string>
-    <string name="goals_note_meta">تا %1$s · ماه %2$s از %3$s</string>
+    <string name="goals_note_meta">تا %1$s‏ · ‏ماه %2$s از %3$s</string>
     <string name="goals_note_no_milestone">این ماه هنوز قدمی ننوشتی</string>
     <string name="goals_week">این هفته</string>
     <string name="goals_ticks">%1$s بار</string>
@@ -618,4 +618,5 @@
     <string name="cd_goal_day_done">انجام شد</string>
     <string name="cd_goal_day_gap">بدون تیک</string>
     <string name="cd_goal_day_ahead">پیش رو</string>
+    <string name="cd_goal_day_before">قبل از این هدف</string>
 </resources>

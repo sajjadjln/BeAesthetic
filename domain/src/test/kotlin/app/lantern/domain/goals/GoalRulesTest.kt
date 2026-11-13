@@ -63,6 +63,12 @@ class GoalRulesTest {
     }
 
     @Test
+    fun `days before the goal began are not gaps`() {
+        val w = GoalRules.week(today, listOf(GoalAction(1, Weekdays.ALL)), emptyList(), 1, goalStart = today)
+        assertEquals(List(6) { WeekDay.BEFORE } + WeekDay.AHEAD, w.days)
+    }
+
+    @Test
     fun `months run from the start month to the end month`() {
         val m = GoalRules.months(today, LocalDate.of(2027, 3, 20)) // to 29 Esfand
         assertEquals(listOf(8, 9, 10, 11, 12), m.map { it.month })

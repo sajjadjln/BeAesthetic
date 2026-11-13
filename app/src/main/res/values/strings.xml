@@ -621,4 +621,5 @@
     <string name="cd_goal_day_done">done</string>
     <string name="cd_goal_day_gap">no tick</string>
     <string name="cd_goal_day_ahead">ahead</string>
+    <string name="cd_goal_day_before">before this goal</string>
 </resources>

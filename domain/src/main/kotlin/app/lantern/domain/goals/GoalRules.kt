@@ -72,7 +72,8 @@ object GoalTimeline {
 /** One weekly action (step ④): a task on [weekdays] (Saturday = bit 0). */
 data class GoalAction(val taskId: Long, val weekdays: Int)
 
-enum class WeekDay { DONE, GAP, AHEAD }
+/** BEFORE: the goal didn't exist yet that day. Drawn faint, never as a gap. */
+enum class WeekDay { DONE, GAP, AHEAD, BEFORE }
 
 /** This week of a goal: 7 squares from Saturday, ticks so far, and the calm range (picked − flex … picked). */
 data class GoalWeek(val start: LocalDate, val days: List<WeekDay>, val ticks: Int, val low: Int, val high: Int) {
@@ -92,9 +93,9 @@ object GoalRules {
 
     /**
      * [ticks] are completion dates of the goal's actions (a date may repeat, one per action). Days before
-     * [goalStart] in the first week are gaps too, drawn gray: never a miss.
+     * [goalStart] are BEFORE, not gaps: a goal pinned on Friday has no week to look back on.
      */
-    fun week(today: LocalDate, actions: List<GoalAction>, ticks: List<LocalDate>, flexDays: Int): GoalWeek {
+    fun week(today: LocalDate, actions: List<GoalAction>, ticks: List<LocalDate>, flexDays: Int, goalStart: LocalDate = LocalDate.MIN): GoalWeek {
         val start = ProgramCalendar.weekStart(today)
         val end = start.plusDays(6)
         val inWeek = ticks.filter { it in start..end }
@@ -103,6 +104,7 @@ object GoalRules {
             val d = start.plusDays(i.toLong())
             when {
                 d in doneDays -> WeekDay.DONE
+                d < goalStart -> WeekDay.BEFORE
                 d < today -> WeekDay.GAP
                 else -> WeekDay.AHEAD
             }

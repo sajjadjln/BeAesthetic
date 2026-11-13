@@ -47,7 +47,7 @@ class GoalRepository(private val db: AppDatabase, private val tasks: TaskReposit
         goals.map { g ->
             val acts = actionsBy[g.id].orEmpty()
             val week = if (g.state == GoalState.ACTIVE.name) {
-                GoalRules.week(today, acts.map { GoalAction(it.id, it.weekdays) }, ticksBy[g.id].orEmpty(), g.flexDays)
+                GoalRules.week(today, acts.map { GoalAction(it.id, it.weekdays) }, ticksBy[g.id].orEmpty(), g.flexDays, g.startDate)
             } else null
             GoalView(g, monthsBy[g.id].orEmpty(), acts, week, lastBy[g.id])
         }
