@@ -606,7 +606,7 @@
     <string name="goals_line_one">One goal on the wall. %1$s steps this week.</string>
     <string name="goals_new">New goal</string>
     <string name="goals_flip_hint">Tap a note to flip it and see the week</string>
-    <string name="goals_ideas">Ideas · %1$s</string>
+    <string name="goals_ideas">Ideas (%1$s)</string>
     <string name="goals_note_meta">By %1$s · month %2$s of %3$s</string>
     <string name="goals_note_no_milestone">No milestone this month yet</string>
     <string name="goals_week">This week</string>
@@ -617,9 +617,21 @@
     <string name="goals_empty_say">The wall is still empty. Shall we pin the first goal?</string>
     <string name="goals_empty_sub">One sentence is enough. We build the rest step by step together.</string>
     <string name="goals_empty_go">Set a goal</string>
-    <string name="goals_reached">Reached · %1$s</string>
+    <string name="goals_reached">Reached (%1$s)</string>
     <string name="cd_goal_day_done">done</string>
     <string name="cd_goal_day_gap">no tick</string>
     <string name="cd_goal_day_ahead">ahead</string>
     <string name="cd_goal_day_before">before this goal</string>
+    <string name="goal_detail_by">By %1$s</string>
+    <string name="goal_detail_left">%1$s days left</string>
+    <string name="goal_detail_flex">Flex days %1$s</string>
+    <string name="goal_detail_path">The path</string>
+    <string name="goal_detail_now">now</string>
+    <string name="goal_detail_tap_month">Tap a month to write its step</string>
+    <string name="goal_detail_why">Why this goal</string>
+    <string name="goal_detail_reached">Reached!</string>
+    <string name="goal_detail_aside">Set it aside</string>
+    <string name="goal_detail_aside_help">It goes back to your ideas. You can pick it up again any time.</string>
+    <string name="goal_detail_reached_on">Reached %1$s</string>
+    <string name="goal_detail_save">Save</string>
 </resources>

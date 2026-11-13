@@ -88,6 +88,7 @@ import app.lantern.ui.splash.Splash
 import androidx.compose.runtime.saveable.rememberSaveable
 import app.lantern.ui.today.TodayViewModel
 import app.lantern.ui.goals.GoalFlowScreen
+import app.lantern.ui.goals.GoalDetailScreen
 import app.lantern.ui.goals.GoalsRoute
 import app.lantern.ui.onboarding.OnboardingScreen
 import androidx.compose.runtime.remember
@@ -111,6 +112,7 @@ import kotlinx.serialization.Serializable
 // @Serializable data class LicenseTextRoute(val asset: String)
 @Serializable object GoalsTab
 /** The goal flow; [ideaId] −1 for a new goal, else the idea slip it starts from. */
+@Serializable data class GoalDetailRoute(val goalId: Long)
 @Serializable data class GoalFlowRoute(val ideaId: Long = -1)
 @Serializable object OnboardingRoute
 @Serializable object HistoryRoute
@@ -215,10 +217,13 @@ class MainActivity : ComponentActivity() {
                                 container,
                                 onNew = { nav.navigate(GoalFlowRoute()) },
                                 onOpenIdea = { nav.navigate(GoalFlowRoute(it)) },
-                                onOpenGoal = { },
+                                onOpenGoal = { nav.navigate(GoalDetailRoute(it)) },
                                 onHold = { },
                             )
                         }
+                    }
+                    composable<GoalDetailRoute> { entry ->
+                        GoalDetailScreen(container, entry.toRoute<GoalDetailRoute>().goalId, onBack = nav::popBackStack)
                     }
                     composable<GoalFlowRoute> { entry ->
                         val idea = entry.toRoute<GoalFlowRoute>().ideaId.takeIf { it > 0 }

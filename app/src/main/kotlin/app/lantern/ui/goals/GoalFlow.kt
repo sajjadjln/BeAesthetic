@@ -100,7 +100,8 @@ fun GoalFlowScreen(container: AppContainer, ideaId: Long?, onClose: () -> Unit, 
     var draft by remember { mutableStateOf(GoalDraft()) }
     LaunchedEffect(ideaId) {
         val idea = if (ideaId != null) container.goals.get(ideaId) else null
-        if (idea != null) draft = draft.copy(title = idea.title)
+        // A goal set aside keeps its why and flex days for when it comes back.
+        if (idea != null) draft = draft.copy(title = idea.title, why = idea.why.orEmpty(), flexDays = idea.flexDays)
     }
 
     val back: () -> Unit = { if (step == 0) onClose() else step -= 1 }

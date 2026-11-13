@@ -603,7 +603,7 @@
     <string name="goals_line_one">یه هدف روی دیوار. این هفته %1$s قدم برداشتی.</string>
     <string name="goals_new">هدف تازه</string>
     <string name="goals_flip_hint">یه یادداشت رو لمس کن تا برگرده و هفته رو نشون بده</string>
-    <string name="goals_ideas">ایده‌ها · %1$s</string>
+    <string name="goals_ideas">ایده‌ها (%1$s)</string>
     <string name="goals_note_meta">تا %1$s‏ · ‏ماه %2$s از %3$s</string>
     <string name="goals_note_no_milestone">این ماه هنوز قدمی ننوشتی</string>
     <string name="goals_week">این هفته</string>
@@ -614,9 +614,21 @@
     <string name="goals_empty_say">دیوار هنوز خالیه. اولین هدف رو بچسبونیم؟</string>
     <string name="goals_empty_sub">یه جمله کافیه. بقیه‌ش رو قدم به قدم با هم می‌چینیم.</string>
     <string name="goals_empty_go">یه هدف بذار</string>
-    <string name="goals_reached">رسیده‌ها · %1$s</string>
+    <string name="goals_reached">رسیده‌ها (%1$s)</string>
     <string name="cd_goal_day_done">انجام شد</string>
     <string name="cd_goal_day_gap">بدون تیک</string>
     <string name="cd_goal_day_ahead">پیش رو</string>
     <string name="cd_goal_day_before">قبل از این هدف</string>
+    <string name="goal_detail_by">تا %1$s</string>
+    <string name="goal_detail_left">%1$s روز مونده</string>
+    <string name="goal_detail_flex">روز انعطاف %1$s</string>
+    <string name="goal_detail_path">مسیر</string>
+    <string name="goal_detail_now">الان</string>
+    <string name="goal_detail_tap_month">یه ماه رو لمس کن تا قدمش رو بنویسی</string>
+    <string name="goal_detail_why">چرا این هدف</string>
+    <string name="goal_detail_reached">رسیدم!</string>
+    <string name="goal_detail_aside">بذارش کنار</string>
+    <string name="goal_detail_aside_help">برمی‌گرده پیش ایده‌هات. هر وقت خواستی دوباره برش می‌داری.</string>
+    <string name="goal_detail_reached_on">رسیدی، %1$s</string>
+    <string name="goal_detail_save">ذخیره</string>
 </resources>
