@@ -87,7 +87,8 @@ import app.lantern.ui.today.TodayRoute
 import app.lantern.ui.splash.Splash
 import androidx.compose.runtime.saveable.rememberSaveable
 import app.lantern.ui.today.TodayViewModel
-import app.lantern.ui.goals.GoalsPlaceholder
+import app.lantern.ui.goals.GoalFlowScreen
+import app.lantern.ui.goals.GoalsRoute
 import app.lantern.ui.onboarding.OnboardingScreen
 import androidx.compose.runtime.remember
 import kotlinx.coroutines.launch
@@ -109,6 +110,8 @@ import kotlinx.serialization.Serializable
 // @Serializable object LicensesRoute
 // @Serializable data class LicenseTextRoute(val asset: String)
 @Serializable object GoalsTab
+/** The goal flow; [ideaId] −1 for a new goal, else the idea slip it starts from. */
+@Serializable data class GoalFlowRoute(val ideaId: Long = -1)
 @Serializable object OnboardingRoute
 @Serializable object HistoryRoute
 @Serializable data class TaskHistoryRoute(val taskId: Long)
@@ -206,7 +209,21 @@ class MainActivity : ComponentActivity() {
                             TodayStore(container, quiet = whatsNew != 0, modifier = Modifier.align(Alignment.BottomCenter))
                         }
                     }
-                    composable<GoalsTab> { WithTabs { GoalsPlaceholder() } }
+                    composable<GoalsTab> {
+                        WithTabs {
+                            GoalsRoute(
+                                container,
+                                onNew = { nav.navigate(GoalFlowRoute()) },
+                                onOpenIdea = { nav.navigate(GoalFlowRoute(it)) },
+                                onOpenGoal = { },
+                                onHold = { },
+                            )
+                        }
+                    }
+                    composable<GoalFlowRoute> { entry ->
+                        val idea = entry.toRoute<GoalFlowRoute>().ideaId.takeIf { it > 0 }
+                        GoalFlowScreen(container, idea, onClose = nav::popBackStack, onPinned = { nav.popBackStack() })
+                    }
                     composable<OnboardingRoute> {
                         OnboardingScreen(
                             container,

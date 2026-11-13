@@ -15,7 +15,7 @@ import java.time.LocalDate
 
 enum class RepeatType { DAILY, WEEKDAYS, EVERY_N_DAYS, ONCE, MIN_DAY_ONLY, ANYTIME }
 
-@Entity(tableName = "task")
+@Entity(tableName = "task", indices = [Index("goalId")])
 data class TaskEntity(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
     val title: String,
@@ -38,6 +38,8 @@ data class TaskEntity(
     val sortOrder: Int = 0,
     val createdAt: Instant,
     val archivedAt: Instant? = null,
+    /** Schema 3 (D221): a goal's weekly action is a task with its goal's id. */
+    @ColumnInfo(defaultValue = "NULL") val goalId: Long? = null,
 )
 
 @Entity(tableName = "completion", primaryKeys = ["taskId", "date"], indices = [Index("date")])
@@ -177,3 +179,36 @@ data class BackupRecordEntity(
 )
 
 // v7 (slice 7a): progress (ARCHITECTURE §8, D100, D106, D73).
+
+/**
+ * A goal (D221, ARCHITECTURE §8). An IDEA has only a title. The plan fields come from the flow's steps;
+ * [why] is required to go ACTIVE (D219). [quietOfferedOn] is the day the companion last offered the why.
+ */
+@Entity(tableName = "goal", indices = [Index("state")])
+data class GoalEntity(
+    @PrimaryKey(autoGenerate = true) val id: Long = 0,
+    val title: String,
+    val state: String,
+    val startDate: LocalDate,
+    val endDate: LocalDate? = null,
+    val triedBefore: Boolean? = null,
+    val minutesPerWeek: Int? = null,
+    val triedWhat: String? = null,
+    val stopReason: String? = null,
+    val flexDays: Int = 1,
+    val why: String? = null,
+    val whyAt: Instant? = null,
+    val quietOfferedOn: LocalDate? = null,
+    val sortOrder: Int = 0,
+    val createdAt: Instant,
+    val reachedAt: Instant? = null,
+    val setAsideAt: Instant? = null,
+)
+
+/** One Jalali month of a goal, month 0 = the start month. Only month 0 must have a milestone. */
+@Entity(tableName = "goal_month", primaryKeys = ["goalId", "monthIndex"])
+data class GoalMonthEntity(
+    val goalId: Long,
+    val monthIndex: Int,
+    val milestone: String? = null,
+)

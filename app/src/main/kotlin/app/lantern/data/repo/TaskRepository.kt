@@ -112,7 +112,7 @@ class TaskRepository(private val db: AppDatabase) {
             db.tasks().insert(task.toEntity(createdAt = now))
         } else {
             val existing = checkNotNull(db.tasks().get(task.id))
-            db.tasks().update(task.toEntity(createdAt = existing.createdAt).copy(fadeOfferedAt = existing.fadeOfferedAt, remindersSilencedAt = existing.remindersSilencedAt))
+            db.tasks().update(task.toEntity(createdAt = existing.createdAt).copy(fadeOfferedAt = existing.fadeOfferedAt, remindersSilencedAt = existing.remindersSilencedAt, goalId = existing.goalId))
             task.id
         }
         writeEditableSnapshots(today)

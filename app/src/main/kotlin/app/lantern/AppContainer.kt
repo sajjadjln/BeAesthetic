@@ -8,6 +8,7 @@ import app.lantern.backup.BackupService
 import app.lantern.crash.crashLog
 import app.lantern.data.db.AppDatabase
 import app.lantern.data.repo.Seed
+import app.lantern.data.repo.GoalRepository
 import app.lantern.data.repo.TaskRepository
 import app.lantern.domain.reminders.BlockContent
 import app.lantern.domain.time.Part
@@ -37,6 +38,7 @@ class AppContainer(context: Context) {
     val clock = ProgramClock()
     val db = AppDatabase.build(appContext)
     val tasks = TaskRepository(db)
+    val goals = GoalRepository(db, tasks)
     val events = EventLog(db.events(), clock)
     val notifier = Notifier(appContext)
     val scheduler = AlarmScheduler(appContext, db, tasks, clock)

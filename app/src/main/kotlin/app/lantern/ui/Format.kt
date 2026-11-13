@@ -25,3 +25,10 @@ fun jalaliDayMonth(date: LocalDate): String {
 fun clockText(minuteOfDay: Int): String =
     PersianDigits.format("%02d:%02d".format(java.util.Locale.ROOT, minuteOfDay / 60, minuteOfDay % 60))
 
+
+/** A goal's date with its year: «۲۹ اسفند ۱۴۰۵» in Persian (Jalali), "20 March 2027" in English (D176). */
+@Composable
+fun goalDate(date: LocalDate): String {
+    val year = if (PersianDigits.latin) date.year.toString() else PersianDigits.format(Jalali.fromGregorian(date).year)
+    return stringResource(R.string.goal_date_year, jalaliDayMonth(date), year)
+}

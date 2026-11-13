@@ -260,6 +260,51 @@ interface EventDao {
     suspend fun countSince(type: String, ref: String, since: Instant): Int
 }
 
+@Dao
+interface GoalDao {
+    @Query("SELECT * FROM goal ORDER BY sortOrder, id")
+    fun observeAll(): Flow<List<GoalEntity>>
+
+    @Query("SELECT * FROM goal WHERE id = :id")
+    fun observe(id: Long): Flow<GoalEntity?>
+
+    @Query("SELECT * FROM goal WHERE id = :id")
+    suspend fun get(id: Long): GoalEntity?
+
+    @Insert
+    suspend fun insert(goal: GoalEntity): Long
+
+    @androidx.room.Update
+    suspend fun update(goal: GoalEntity)
+
+    @Query("SELECT COALESCE(MAX(sortOrder), 0) FROM goal")
+    suspend fun maxSort(): Int
+
+    @Query("SELECT * FROM goal_month WHERE goalId = :goalId ORDER BY monthIndex")
+    fun observeMonths(goalId: Long): Flow<List<GoalMonthEntity>>
+
+    @Query("SELECT * FROM goal_month ORDER BY goalId, monthIndex")
+    fun observeAllMonths(): Flow<List<GoalMonthEntity>>
+
+    @Upsert
+    suspend fun upsertMonths(months: List<GoalMonthEntity>)
+
+    @Query("SELECT * FROM task WHERE goalId IS NOT NULL AND archivedAt IS NULL ORDER BY sortOrder, id")
+    fun observeActions(): Flow<List<TaskEntity>>
+
+    /** Completions of goal actions, archived ones too, so a week keeps its ticks. */
+    @Query("SELECT task.goalId AS goalId, completion.date AS date FROM completion JOIN task ON task.id = completion.taskId WHERE task.goalId IS NOT NULL AND completion.date >= :since")
+    fun observeTicks(since: LocalDate): Flow<List<GoalTick>>
+
+    @Query("SELECT task.goalId AS goalId, MAX(completion.date) AS date FROM completion JOIN task ON task.id = completion.taskId WHERE task.goalId IS NOT NULL GROUP BY task.goalId")
+    fun observeLastTicks(): Flow<List<GoalTick>>
+
+    @Query("UPDATE task SET archivedAt = :at WHERE goalId = :goalId AND archivedAt IS NULL")
+    suspend fun archiveActions(goalId: Long, at: Instant)
+}
+
+data class GoalTick(val goalId: Long, val date: LocalDate)
+
 @Database(
     entities = [
         TaskEntity::class,
@@ -270,10 +315,12 @@ interface EventDao {
         SettingsEntity::class,
         EventEntity::class,
         BackupRecordEntity::class,
+        GoalEntity::class,
+        GoalMonthEntity::class,
     ],
-    version = 2,
+    version = 3,
     exportSchema = true,
-    autoMigrations = [AutoMigration(from = 1, to = 2)],
+    autoMigrations = [AutoMigration(from = 1, to = 2), AutoMigration(from = 2, to = 3)],
 )
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
@@ -285,6 +332,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun settings(): SettingsDao
     abstract fun events(): EventDao
     abstract fun backups(): BackupRecordDao
+    abstract fun goals(): GoalDao
 
     companion object {
         const val NAME = "lantern.db"
