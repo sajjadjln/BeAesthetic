@@ -69,7 +69,7 @@ import app.lantern.ui.theme.sky
 import java.time.LocalDate
 
 /**
- * The goals wall (W2, D220): a pinned note per active goal, this month on the front, a tap flips it to
+ * The goals wall (W2, D222): a pinned note per active goal, this month on the front, a tap flips it to
  * this week. A dashed «هدف تازه» note starts the flow; ideas are slips under the wall. With no goal yet,
  * the empty wall: the companion and one button.
  */

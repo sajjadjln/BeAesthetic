@@ -30,7 +30,7 @@ data class GoalView(
     val state: GoalState get() = runCatching { GoalState.valueOf(goal.state) }.getOrDefault(GoalState.IDEA)
 }
 
-/** Goals (D221): the flow writes a goal, its months and its weekly actions (tasks with a goalId) in one go. */
+/** Goals (D223): the flow writes a goal, its months and its weekly actions (tasks with a goalId) in one go. */
 class GoalRepository(private val db: AppDatabase, private val tasks: TaskRepository) {
 
     fun observe(today: LocalDate): Flow<List<GoalView>> = combine(
@@ -117,7 +117,7 @@ class GoalRepository(private val db: AppDatabase, private val tasks: TaskReposit
         tasks.writeSnapshot(today)
     }
 
-    /** The companion offered this goal's why today (D221: once per quiet spell). */
+    /** The companion offered this goal's why today (D223: once per quiet spell). */
     suspend fun markQuietOffered(goalId: Long, today: LocalDate) {
         db.goals().get(goalId)?.let { db.goals().update(it.copy(quietOfferedOn = today)) }
     }

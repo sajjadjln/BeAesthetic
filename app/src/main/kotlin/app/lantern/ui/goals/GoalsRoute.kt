@@ -7,7 +7,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.lantern.AppContainer
 import app.lantern.domain.time.ProgramCalendar
 
-/** The Goals tab: the wall over the goals in the database (D220). */
+/** The Goals tab: the wall over the goals in the database (D222). */
 @Composable
 fun GoalsRoute(
     container: AppContainer,

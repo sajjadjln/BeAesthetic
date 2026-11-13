@@ -525,7 +525,7 @@
     <string name="rate_never">دیگه نپرس</string>
     <string name="about_rate">امتیاز بده تو بازار</string>
 
-    <!-- Goals (D219–D221) -->
+    <!-- Goals (D221–D223) -->
     <string name="goal_flow_close">بستن</string>
     <string name="goal_next">بعدی</string>
     <string name="goal_s1_say">چی می‌خوای بهش برسی؟ یه جمله، به زبون خودت.</string>

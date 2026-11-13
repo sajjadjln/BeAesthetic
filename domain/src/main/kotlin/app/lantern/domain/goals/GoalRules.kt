@@ -10,7 +10,7 @@ import kotlin.math.abs
 import kotlin.math.pow
 import kotlin.math.roundToInt
 
-/** Where a goal is (D221). An idea has only a title; set aside goes back to the ideas, never "failed". */
+/** Where a goal is (D223). An idea has only a title; set aside goes back to the ideas, never "failed". */
 enum class GoalState { IDEA, ACTIVE, REACHED, SET_ASIDE }
 
 /**
@@ -80,7 +80,7 @@ data class GoalWeek(val start: LocalDate, val days: List<WeekDay>, val ticks: In
 }
 
 object GoalRules {
-    /** A goal has gone quiet after this many logical days with no tick (D221). */
+    /** A goal has gone quiet after this many logical days with no tick (D223). */
     const val QUIET_DAYS = 5
     const val MAX_ACTIONS = 3
     const val MAX_FLEX = 2
@@ -140,7 +140,7 @@ object GoalRules {
     fun daysLeft(end: LocalDate, today: LocalDate): Int = ChronoUnit.DAYS.between(today, end).toInt().coerceAtLeast(0)
 
     /**
-     * Gone quiet (D221): an active goal, at least [QUIET_DAYS] logical days since its last tick (or its
+     * Gone quiet (D223): an active goal, at least [QUIET_DAYS] logical days since its last tick (or its
      * start), and not yet offered in this quiet spell.
      */
     fun isQuiet(start: LocalDate, lastTick: LocalDate?, offeredOn: LocalDate?, today: LocalDate): Boolean {

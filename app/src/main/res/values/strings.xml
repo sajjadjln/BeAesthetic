@@ -528,7 +528,7 @@
     <string name="rate_never">Don\'t ask again</string>
     <string name="about_rate">Rate on Bazaar</string>
 
-    <!-- Goals (D219–D221) -->
+    <!-- Goals (D221–D223) -->
     <string name="goal_flow_close">Close</string>
     <string name="goal_next">Next</string>
     <string name="goal_s1_say">What do you want to reach? One sentence, in your own words.</string>

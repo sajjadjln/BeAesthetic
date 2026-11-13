@@ -87,7 +87,7 @@ import java.time.temporal.ChronoUnit
 private const val STEPS = 6
 
 /**
- * The goal flow (goal-step1…6, D219), in onboarding's layout: back and the progress blocks on top, the
+ * The goal flow (goal-step1…6, D221), in onboarding's layout: back and the progress blocks on top, the
  * companion and its line (in Simple, the line as a title), the step, the buttons at the bottom.
  * [ideaId] starts from an idea slip; its title is filled in and pinning turns it into this goal.
  */

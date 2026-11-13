@@ -11,7 +11,7 @@ data class ActionDraft(val title: String = "", val weekdays: Int = 0, val part: 
 enum class StopReason { BORED, NO_CHANGE, ROUTINE, NO_TIME, OWN }
 
 /**
- * The goal flow's answers (goal-step1…6, D219). Each step's `ok` says whether «بعدی» is on; nothing is
+ * The goal flow's answers (goal-step1…6, D221). Each step's `ok` says whether «بعدی» is on; nothing is
  * scored or judged. Step ④'s months: index 0 is this month (required), the rest may stay empty.
  */
 data class GoalDraft(

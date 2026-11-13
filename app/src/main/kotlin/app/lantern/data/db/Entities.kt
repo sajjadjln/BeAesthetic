@@ -38,7 +38,7 @@ data class TaskEntity(
     val sortOrder: Int = 0,
     val createdAt: Instant,
     val archivedAt: Instant? = null,
-    /** Schema 3 (D221): a goal's weekly action is a task with its goal's id. */
+    /** Schema 3 (D223): a goal's weekly action is a task with its goal's id. */
     @ColumnInfo(defaultValue = "NULL") val goalId: Long? = null,
 )
 
@@ -181,8 +181,8 @@ data class BackupRecordEntity(
 // v7 (slice 7a): progress (ARCHITECTURE §8, D100, D106, D73).
 
 /**
- * A goal (D221, ARCHITECTURE §8). An IDEA has only a title. The plan fields come from the flow's steps;
- * [why] is required to go ACTIVE (D219). [quietOfferedOn] is the day the companion last offered the why.
+ * A goal (D223, ARCHITECTURE §8). An IDEA has only a title. The plan fields come from the flow's steps;
+ * [why] is required to go ACTIVE (D221). [quietOfferedOn] is the day the companion last offered the why.
  */
 @Entity(tableName = "goal", indices = [Index("state")])
 data class GoalEntity(
