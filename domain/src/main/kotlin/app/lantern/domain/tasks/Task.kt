@@ -52,4 +52,6 @@ data class Task(
     /** Left out of notifications, still in Today and the score (D57). */
     val remindersSilenced: Boolean = false,
     val sortOrder: Int = 0,
+    val goalId: Long? = null,
+    val endDate: LocalDate? = null,
 )

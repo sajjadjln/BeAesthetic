@@ -221,11 +221,9 @@ class BackupRoundTripTest {
         sql.execSQL("INSERT INTO day (date, special, minimumMode, dueCount, doneCount, floorDone) VALUES ('2026-10-10', NULL, 0, 16, 9, 1), ('2026-10-11', 'TRAVEL', 1, 4, 4, 1)")
         sql.execSQL("INSERT INTO event (at, type, ref, valueMinutes) VALUES (1791660000000, 'APP_OPEN', NULL, NULL), (1791660100000, 'BUDDY_LINE', 'TICK:3', 4)")
         sql.execSQL("INSERT INTO reminder_log (key, kind, scheduledAt, firedAt, outcome) VALUES ('block:2026-10-10:MORNING', 'BLOCK', 1791640000000, 1791640003000, 'SHOWN')")
-        // Schema 3 (D223): a goal with its why, its months (one empty) and a weekly action ticked once.
-        sql.execSQL("INSERT INTO goal (id, title, state, startDate, endDate, triedBefore, minutesPerWeek, triedWhat, stopReason, flexDays, why, whyAt, quietOfferedOn, sortOrder, createdAt, reachedAt, setAsideAt) VALUES (1, 'آیلتس ۷ بگیرم', 'ACTIVE', '2026-11-13', '2027-03-20', 1, 60, 'یه ماه کلاس', 'BORED', 1, 'چون می‌خوام یه زندگی تازه بسازم', 1794500000000, NULL, 1, 1794500000000, NULL, NULL), (2, 'گیتار', 'IDEA', '2026-11-13', NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, 2, 1794500000000, NULL, NULL)")
-        sql.execSQL("INSERT INTO goal_month (goalId, monthIndex, milestone) VALUES (1, 0, 'لغت'), (1, 1, NULL)")
-        sql.execSQL("INSERT INTO task (id, title, icon, part, repeat, weekdays, startDate, isImportant, inMinimumDay, action, alarmWeekdays, alarmEnabled, sortOrder, createdAt, goalId) VALUES (3, '۲۵ دقیقه تمرین', 'CHECK', 'EVENING', 'WEEKDAYS', 21, '2026-11-13', 0, 0, 'NONE', 0, 0, 1000, 1794500000000, 1)")
-        sql.execSQL("INSERT INTO completion (taskId, date, completedAt) VALUES (3, '2026-11-14', 1794600000000)")
+        sql.execSQL("INSERT INTO goal (id, creationKey, title, why, startDate, finishDate, triedBefore, baselineMinutes, triedWhat, obstacle, flexDays, weeklyLow, weeklyHigh, status, sortOrder, createdAt) VALUES (1, 'backup-fixture-goal', 'کتاب', 'برای یاد گرفتن', '2026-10-10', '2027-03-20', 0, 0, '', '', 1, 2, 3, 'ACTIVE', 0, 1791600000000)")
+        sql.execSQL("INSERT INTO goal_milestone (goalId, startDate, endDate, statement) VALUES (1, '2026-10-10', '2026-11-21', 'کتاب اول')")
+        sql.execSQL("UPDATE task SET goalId = 1, endDate = '2027-03-20' WHERE id = 2")
         val empty = BackupArchive.tables(sql).filter { t -> sql.query("SELECT COUNT(*) FROM `$t`").use { it.moveToFirst(); it.getInt(0) == 0 } }
         assertEquals("every table has rows", emptyList<String>(), empty)
     }

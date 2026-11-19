@@ -87,10 +87,8 @@ import app.lantern.ui.today.TodayRoute
 import app.lantern.ui.splash.Splash
 import androidx.compose.runtime.saveable.rememberSaveable
 import app.lantern.ui.today.TodayViewModel
-import app.lantern.ui.goals.GoalFlowScreen
-import app.lantern.ui.goals.GoalDetailScreen
-import app.lantern.ui.goals.GoalBadDayScreen
-import app.lantern.ui.goals.GoalsRoute
+import app.lantern.ui.goals.*
+import androidx.lifecycle.createSavedStateHandle
 import app.lantern.ui.onboarding.OnboardingScreen
 import androidx.compose.runtime.remember
 import kotlinx.coroutines.launch
@@ -111,11 +109,9 @@ import kotlinx.serialization.Serializable
 // the two composable<> lines below and the row in AboutScreen.kt.
 // @Serializable object LicensesRoute
 // @Serializable data class LicenseTextRoute(val asset: String)
-@Serializable object GoalsTab
-/** The goal flow; [ideaId] −1 for a new goal, else the idea slip it starts from. */
+@Serializable object GoalCreateRoute
 @Serializable data class GoalDetailRoute(val goalId: Long)
-@Serializable data class GoalBadDayRoute(val goalId: Long)
-@Serializable data class GoalFlowRoute(val ideaId: Long = -1)
+@Serializable object GoalsTab
 @Serializable object OnboardingRoute
 @Serializable object HistoryRoute
 @Serializable data class TaskHistoryRoute(val taskId: Long)
@@ -214,31 +210,16 @@ class MainActivity : ComponentActivity() {
                         }
                     }
                     composable<GoalsTab> {
-                        WithTabs {
-                            GoalsRoute(
-                                container,
-                                onNew = { nav.navigate(GoalFlowRoute()) },
-                                onOpenIdea = { nav.navigate(GoalFlowRoute(it)) },
-                                onOpenGoal = { nav.navigate(GoalDetailRoute(it)) },
-                                onHold = { nav.navigate(GoalBadDayRoute(it)) },
-                            )
-                        }
+                        WithTabs { GoalsWallRoute(viewModel { GoalsViewModel(container) }, onCreate = { nav.navigate(GoalCreateRoute) }, onDetail = { nav.navigate(GoalDetailRoute(it)) }, onToday = { nav.popBackStack(HomeRoute, inclusive = false) }) }
                     }
-                    composable<GoalBadDayRoute> { entry ->
-                        GoalBadDayScreen(
-                            container,
-                            entry.toRoute<GoalBadDayRoute>().goalId,
-                            onLater = nav::popBackStack,
-                            // A small step: Today, where the goal's actions are (D223).
-                            onStep = { nav.popBackStack(HomeRoute, inclusive = false) },
+                    composable<GoalCreateRoute> {
+                        app.lantern.ui.goals.GoalCreateRoute(
+                            viewModel(factory = viewModelFactory { initializer { GoalCreateViewModel(container, createSavedStateHandle()) } }),
+                            onBack = { nav.popBackStack() }, onPinned = { nav.popBackStack() },
                         )
                     }
                     composable<GoalDetailRoute> { entry ->
-                        GoalDetailScreen(container, entry.toRoute<GoalDetailRoute>().goalId, onBack = nav::popBackStack)
-                    }
-                    composable<GoalFlowRoute> { entry ->
-                        val idea = entry.toRoute<GoalFlowRoute>().ideaId.takeIf { it > 0 }
-                        GoalFlowScreen(container, idea, onClose = nav::popBackStack, onPinned = { nav.popBackStack() })
+                        app.lantern.ui.goals.GoalDetailRoute(viewModel { GoalsViewModel(container) }, entry.toRoute<GoalDetailRoute>().goalId, onBack = { nav.popBackStack() }, onToday = { nav.popBackStack(HomeRoute, inclusive = false) })
                     }
                     composable<OnboardingRoute> {
                         OnboardingScreen(

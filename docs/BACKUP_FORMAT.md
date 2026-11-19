@@ -1,12 +1,12 @@
 # Backup format
 
-_Format version 1, written by app 0.6.0 (database schema 6). Decisions: D39, D132–D135. Code: `app/.../backup/BackupArchive.kt`._
+_Format version 1, now used by Lantern (database schema 3 with Goals, 2026-11-17). Decisions: D39, D132–D135. Code: `app/.../backup/BackupArchive.kt`._
 
 A backup is one zip file. It is meant to be read by the app on any phone, and later by other tools (a .NET backend, a script on the PC).
 
 ## File name
 
-`beaesthetic-1405-07-22-214201.zip`: the Jalali date (year, month, day) and the local time to the second, all ASCII digits. Names sort by time. The app keeps the newest 8 in the folder and never touches other files there. A file ending in `.zip.partial` is a backup that was cut off while being written: it is never valid, and the next backup deletes it.
+`lantern-1405-07-22-214201.zip`: the Jalali date (year, month, day) and the local time to the second, all ASCII digits. Names sort by time. The app keeps the newest 8 in the folder and never touches other files there. A file ending in `.zip.partial` is a backup that was cut off while being written: it is never valid, and the next backup deletes it.
 
 ## Inside the zip
 
@@ -16,15 +16,15 @@ A backup is one zip file. It is meant to be read by the app on any phone, and la
 | `data.json` | Every table, row by row. **The source of truth for restore.** |
 | `photos/…` | The app's photos, same paths as in the app's `files/photos/` folder: `<checkIn>-<pose>.jpg` (slice 7a, schema 7). |
 | `crashes/…` | Optional (added with the crash log, D211). The local crash log as plain text files, `crash-<epoch ms>.txt`, the newest 20. For people to read; restore never reads it, so a backup without it is fine. |
-| `db/beaesthetic.db` | A raw copy of the SQLite database, checkpointed first. An emergency fallback only; restore never reads it. |
+| `db/lantern.db` | A raw copy of the SQLite database, checkpointed first. An emergency fallback only; restore never reads it. |
 
 ## manifest.json
 
 ```json
 {
   "formatVersion": 1,
-  "appVersion": "0.6.0",
-  "dbSchemaVersion": 6,
+  "appVersion": "0.9.4",
+  "dbSchemaVersion": 3,
   "createdAt": "2026-10-14T18:12:01.461Z",
   "reason": "MANUAL",
   "counts": { "task": 21, "completion": 3, "day": 4, "...": 0 },
@@ -42,7 +42,7 @@ A backup is one zip file. It is meant to be read by the app on any phone, and la
 ```json
 {
   "formatVersion": 1,
-  "dbSchemaVersion": 6,
+  "dbSchemaVersion": 3,
   "tables": {
     "task": [ { "id": 1, "title": "مسواک", "icon": "TOOTH", "part": "MORNING", "repeat": "DAILY", "startDate": "2026-10-10", "isImportant": 0, "...": null } ],
     "completion": [ { "taskId": 1, "date": "2026-10-10", "completedAt": 1791660000000 } ]
@@ -74,3 +74,6 @@ The tables and columns are the ones in `ARCHITECTURE.md` §8. The `backup_record
 **Samples (B3, D213):** `app/src/test/resources/backups/` keeps one backup per shipped format and schema; `BackupSamplesTest` restores each into the newest schema. Add one whenever the format or the schema changes.
 
 **Old backups restore into newer apps** because schema changes stay additive: new tables, and new columns that have defaults. A table the backup doesn't have ends up empty; a column it doesn't have takes its default. A change that renames or drops a column must add a mapping step here and raise `formatVersion`.
+
+
+**Goals (schema 3):** `goal` carries the title, required why, dates, baseline, weekly range, flex days, state, unique creation key and one-time why-offer timestamp. `goal_milestone` carries monthly statements and reached dates. `task.goalId` and `task.endDate` link ordinary actions without copying completions. All are included automatically by the table/column writer. Schema-1/2 backups restore with empty goal tables and null task links. Restoring never deletes the phone’s local backup records. Lantern does not restore the separate BeAesthetic app’s databases.

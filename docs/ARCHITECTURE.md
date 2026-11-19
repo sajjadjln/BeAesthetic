@@ -238,28 +238,20 @@ A day the app never saw has no row, which is a gray gap, which is exactly right.
 
 - Schemas are exported to `app/schemas/` and committed.
 - Additive changes use Room auto-migrations; anything else gets a hand-written migration.
-- `MigrationTest` (Robolectric, `MigrationTestHelper`, schemas from the debug assets) runs in every `check` (B3, D213). It migrates **every** exported schema to the newest with real-looking rows and opens the result through the app's own Room builder, so a new version is covered as soon as its schema is exported. Every hand-written migration also gets its own test there with the rows it changes. Lantern has only the auto-migration 1 → 2 so far; the v0.x migration tests went with the old schema.
+- `MigrationTest` (Robolectric, `MigrationTestHelper`, schemas from the debug assets) runs in every `check` (B3, D213). It migrates **every** exported schema to the newest with real-looking rows and opens the result through the app's own Room builder, so a new version is covered as soon as its schema is exported. Every hand-written migration also gets its own test there with the rows it changes. Lantern has auto-migrations 1 → 2 → 3; the v0.x migration tests went with the old schema.
 - **Never** `fallbackToDestructiveMigration`.
 
-### Goals (slices G1–G4; D223)
+### Goals (Bazaar 1.0.1, D224)
 
-Database version 3, an auto-migration 2 → 3 (all additive). Goal logic lives in `:domain/goals` (pure Kotlin, tested).
+Room schema 3 is an additive migration from the shipped schema 2. `goal` stores the title, required why, dates, baseline, flex days, range, state, creation key and why-offer timestamp. `goal_milestone` stores each chapter’s start/end dates, statement and explicit reached date. Nullable indexed `task.goalId` and `task.endDate` make weekly actions ordinary Today tasks.
 
-| Table | Columns | Notes |
-|---|---|---|
-| `goal` | id, title, state (IDEA·ACTIVE·REACHED·SET_ASIDE), startDate, endDate?, triedBefore?, minutesPerWeek?, triedWhat?, stopReason?, flexDays (0–2, default 1), why?, whyAt?, quietOfferedAt?, sortOrder, createdAt, reachedAt?, setAsideAt? | An idea («فعلاً فقط یه ایده») is a goal with only a title. `why` is required to go ACTIVE (D217). Set aside → back to IDEA in the UI, no failed state. |
-| `goal_month` | goalId, monthIndex (0 = the start month), milestone? | One row per Jalali month the goal touches. Only month 0 is required; the rest may be empty («هنوز نمی‌دونم»). Key (goalId, monthIndex). |
-| `task` + `goalId?` | new nullable column, index | A weekly action **is a task** (SPEC §3): WEEKDAYS repeat on the picked days, in a part of the day, on Today, one tap. 1–3 per goal. Its completions feed the goal's week. |
+The six-step flow commits the goal, milestones and tasks in one transaction. A unique creation key protects repeated pin requests. Draft and step survive recreation in `SavedStateHandle`; text fields use their own input buffer, with stable action identities, so fast input and removing another action retain the correct text. The wall has no Ideas section. Setting aside keeps the plan on its own shelf; achieved goals have their shelf, and both can resume without losing ticks.
 
-Rules in `:domain/goals`:
-- **Slider mapping:** position v ∈ [0,1000] → days = max(1, round(365·(v/1000)^1.5)); snaps within 14 to 3 / 6 / 9 months, 1 year and Nowruz; past a year, a Jalali calendar.
-- **Week:** Saturday-start week of the logical day (04:00 rollover). Per day: DONE (any goal action ticked), GAP (past, none), AHEAD. The range = (picked days − flexDays) … picked days, summed over actions.
-- **Month bar:** month k of n, and the share of goal days gone (calm, no target-vs-actual red).
-- **Gone quiet:** an ACTIVE goal with no goal-action completion for 5 logical days (and older than 5 days); offered once per quiet spell (`quietOfferedAt` later than the last completion means already offered).
+Weeks start Saturday, with the 04:00 logical-day rollover. Task completions drive both Today and the wall; the chapter bar counts completed actions against scheduled actions, and a milestone is marked reached explicitly. Actions stop after the finish date. Archived actions remain in historical counts but are not editable or tickable from detail.
 
-Backup: `data.json` formatVersion +1 with `goal` and `goal_month` and `task.goalId`; older backups restore with no goals. A new sample zip goes into `app/src/test/resources/backups/`, and `MigrationTest` covers 2 → 3.
+New plans use Jalali boundaries in Persian and Gregorian boundaries in English. Short goals (≤42 days) omit chapters; a first chapter under fourteen days joins the next. Later milestones can stay undecided. The five-day quiet-spell rule from D223 is retained; a new tick permits a later offer, and the small-step button opens Today.
 
-Slices: **G1** the flow (steps ①–⑥, writes goal + months + tasks) · **G2** the wall (W2 notes, flip, «هدف تازه», idea slips, empty wall) · **G3** the detail (week, path, why, «رسیدم!», «بذارش کنار», the «رسیده‌ها» shelf) · **G4** the bad day (hold a note; the companion's one offer).
+Backup format remains 1. The generic writer includes the goal/milestone tables and task links automatically; schema-1/2 backups restore into the current schema with empty goal tables and null links. Migration and backup tests cover every shipped schema and current goal data. The earlier schema-3 test build was not a published release; the 1.0.1 migration target and fixtures describe this finalized schema.
 
 ## 9. Backup and restore
 

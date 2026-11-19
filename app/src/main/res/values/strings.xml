@@ -513,7 +513,7 @@
     <string name="update_open">Open</string>
     <string name="update_later">Later</string>
     <string name="store_open_failed">Couldn\'t open Bazaar. Try again later.</string>
-    <string name="whats_new_10100">• Goals are here! Set a goal in six short steps, then pin it to the wall.\n• A goal\'s weekly actions show up on Today and fill in with one tick.\n• Your why is always on the goal\'s note; hold a note to read it again.</string>
+    <string name="whats_new_10001">• Goals are here! Set a goal in six short steps, then pin it to the wall.\n• A goal\'s weekly actions show up on Today and fill in with one tick.\n• Your why is always on the goal\'s note; hold a note to read it again.</string>
     <string name="whats_new_title">What\'s new</string>
     <string name="whats_new_ok">Got it</string>
     <string name="whats_new_908">• A cleaner release build: no camera access, smaller.\n• «Erase everything» in Settings: start over; your backups stay where they are.\n• Your data opens from every older version, and old backups restore too.\n• If the app ever closes by itself, the report is in «About». Tap «Copy» and send it to us. Nothing is sent on its own.</string>
@@ -644,4 +644,94 @@
     <string name="goal_quiet_read">Read it</string>
     <!-- Between items on one line; in Persian, RLMs keep numbers on either side apart (D223). -->
     <string name="goal_sep">" · "</string>
+    <string name="goal_create">New goal</string>
+    <string name="goal_first">Set a goal</string>
+    <string name="goal_pin">Pin to wall</string>
+    <string name="goal_saving">Pinning…</string>
+    <string name="goal_step_count">Step %1$s of 6</string>
+    <string name="goal_title_hint">For example: run 5 km without stopping</string>
+    <string name="goal_why_hint">Why I truly want this, and how it will make my life better…</string>
+    <string name="goal_why_help">You can read this again in your goal details, whenever you need it.</string>
+    <string name="goal_save_error">Couldn’t save that change. Your plan is still here; try again.</string>
+    <string name="goal_discard_title">Leave this plan?</string>
+    <string name="goal_discard_body">This goal hasn’t been pinned yet. Leaving will discard this draft.</string>
+    <string name="goal_discard">Discard draft</string>
+    <string name="goal_keep_writing">Keep writing</string>
+    <string name="goal_days">%1$s days</string>
+    <string name="goal_choose_date">Choose from calendar</string>
+    <string name="goal_tried_yes">Yes</string>
+    <string name="goal_tried_no">First time</string>
+    <string name="goal_baseline">Time each week so far</string>
+    <string name="goal_minutes">%1$s minutes a week</string>
+    <string name="goal_minutes_hint">Minutes per week</string>
+    <string name="goal_tried_what">What have you tried?</string>
+    <string name="goal_obstacle">What got in the way?</string>
+    <string name="goal_obstacle_hint">Or write your own</string>
+    <string name="goal_backward">Work backward from the last month</string>
+    <string name="goal_this_month_required">This month · required</string>
+    <string name="goal_later_optional">Later month · optional</string>
+    <string name="goal_milestone_hint">What will be true by this month’s end?</string>
+    <string name="goal_not_sure">Not sure yet</string>
+    <string name="goal_this_week">This week</string>
+    <string name="goal_action_days_help">Choose 1–3 small actions and the days you can do them. They repeat on Today until your finish date.</string>
+    <string name="goal_action_hint">For example: practise for 25 minutes</string>
+    <string name="goal_cue_hint">After… (optional cue)</string>
+    <string name="goal_remove_action">Remove action</string>
+    <string name="goal_add_action">+ Another action</string>
+    <string name="goal_until">Until %1$s</string>
+    <string name="goal_week_range">%1$s–%2$s steps a week</string>
+    <string name="goal_flex_days">Flex days</string>
+    <string name="goal_flex_help">Your chosen action days set the upper target. Each flex day lowers the minimum by one step. They’re part of the plan.</string>
+    <string name="goal_empty">The wall is empty. Shall we pin your first goal?</string>
+    <string name="goal_empty_help">One sentence is enough. We’ll build the rest step by step.</string>
+    <string name="goal_wall_summary">On your wall: %1$s · Steps this week: %2$s</string>
+    <string name="goal_flip_help">Tap a note to flip month/week. Hold it to read your why.</string>
+    <string name="goal_achieved_shelf">Reached</string>
+    <string name="goal_aside_shelf">Set aside</string>
+    <string name="goal_achieved">You reached it</string>
+    <string name="goal_aside">Set aside for now</string>
+    <string name="goal_flip">Flip month and week</string>
+    <string name="goal_read_why">Read my why</string>
+    <string name="goal_week_progress">%1$s of %2$s–%3$s steps</string>
+    <string name="goal_this_month">This month</string>
+    <string name="goal_whole">The whole goal</string>
+    <string name="goal_open_detail">Open goal</string>
+    <string name="goal_why_reminder">Remember why you started? You wrote this.</string>
+    <string name="goal_small_step">Take a small step</string>
+    <string name="goal_later">Later</string>
+    <string name="goal_why_title">Why I want this</string>
+    <string name="goal_unavailable">This goal is no longer available.</string>
+    <string name="goal_remaining">%1$s days to go</string>
+    <string name="goal_flex_count">Flex days each week: %1$s</string>
+    <string name="goal_edit_action">Edit action</string>
+    <string name="goal_edit_milestone">Edit milestone</string>
+    <string name="goal_path">The path</string>
+    <string name="goal_reached">I reached it!</string>
+    <string name="goal_set_aside">Set it aside</string>
+    <string name="goal_resume">Pin it again</string>
+    <string name="goal_status_help">The actions will leave Today. Your plan and all your progress stay here.</string>
+    <string name="goal_confirm">Save</string>
+    <string name="goal_cancel">Cancel</string>
+    <string name="goal_close">Close</string>
+    <string name="goal_action_badge">Goal action</string>
+    <string-array name="goal_questions">
+        <item>What do you want to make true?</item>
+        <item>By when?</item>
+        <item>Have you tried this before?</item>
+        <item>What’s your plan, from the end backward?</item>
+        <item>This is your plan, in your own words.</item>
+        <item>Why do you truly want this?</item>
+    </string-array>
+    <string-array name="goal_obstacles">
+        <item>I got bored</item>
+        <item>Change was slow</item>
+        <item>My routine changed</item>
+        <item>I ran out of time</item>
+    </string-array>
+    <string-array name="goal_parts">
+        <item>Morning</item>
+        <item>Midday</item>
+        <item>Evening</item>
+        <item>Night</item>
+    </string-array>
 </resources>

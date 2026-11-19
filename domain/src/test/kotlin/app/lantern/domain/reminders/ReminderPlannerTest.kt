@@ -38,6 +38,18 @@ class ReminderPlannerTest {
     )
 
     @Test
+    fun `goal task alarms stop after the inclusive finish date`() {
+        val date = LocalDate.of(2026, 10, 14)
+        val now = at(2026, 10, 14, 6)
+        val task = Task(99, "Read", TaskIcon.CHECK, Part.MORNING, Repeat.Daily, date,
+            goalId = 1, endDate = date, alarm = TaskAlarm(9 * 60, Weekdays.ALL, true))
+        val plan = ReminderPlanner.plan(PlannerInput(now, zone, slots, 4, now, tasks = listOf(task)))
+        val own = plan.filter { it.taskId == task.id }
+        assertEquals(1, own.size)
+        assertEquals(date, own.single().programDate)
+    }
+
+    @Test
     fun `plans the next 48 hours and nothing in the past`() {
         val now = at(2026, 10, 14, 12, 0) // Wednesday noon
         val plan = ReminderPlanner.plan(now, zone, slots, 4, lastOpenedAt = now)

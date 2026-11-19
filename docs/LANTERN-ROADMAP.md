@@ -10,7 +10,7 @@ _Written 2026-10-28 on the `lantern` branch._
 2. **Onboarding**: the character pick, then the Today layout (D186, D188).
 3. **Today**: both layouts, list and parts slider (D186–D188), with the new-task sheet (D189).
 4. **Settings** (D189), with the screens it opens: tasks, reminders, backup, phone setup.
-5. **Goals**: a tab that shows «در دست ساخت» (in development). No goal flow yet.
+5. **Goals**: originally a placeholder in L8. The approved six-step flow and wall are now implemented in G1 below (2026-11-17).
 6. **No workout.** No plan, session, check-in, metrics, progress, letters or recaps.
 
 What stays from «پیکر» under the hood: tasks and their rules, reminders and the health check, backups, the Jalali calendar, the 04:00 day rollover. These work on the Poco today, so we keep the code and change the look.
@@ -129,10 +129,26 @@ Each slice ends with a build on the Poco, a short "what works, what's next", and
   3. Back up, uninstall, reinstall, restore: everything comes back.
   4. Then: version 1.0.0 (`versionCode 10000`), `scripts/release.sh` for the signed APK.
 
-## After v1 (not now)
+## G1. Approved Goals implementation (2026-11-17)
 
-Goals (the goal flow, already designed in `goal-step*.html`), the goals wall, the dashboard, plugins, the workout as a plugin, the store. They come back from `main` one by one.
+Authorized after the wall approval (D217–D218); L8 above remains the historical placeholder slice.
+
+- **Built:** six steps: title → finish timeline/calendar → previous attempts and obstacle → backward monthly milestones and 1–3 weekly actions → summary/flex days → required personal why and **Pin to wall**. No if-then field and no Ideas section.
+- **Built:** local goal and milestone tables in Room schema 3; additive 2 → 3 auto-migration, no destructive migration. Pin commits the goal, plan and linked tasks together. A creation key makes a retried pin idempotent.
+- **Built:** pinned wall notes with month/week flip, a new-goal note, detail with the week, editable monthly milestones and actions, the always-readable why, achieved and set-aside shelves, and resume. Holding a note opens its why. A quiet goal gets one calm why offer after five logical days without an action, in companion mode.
+- **Built:** chosen weekdays and parts become ordinary Today tasks, with optional cues. Today ticks and detail ticks share completion rows. Actions stop after the goal finish date; setting aside or achieving removes linked actions from Today/reminders and retains history.
+- **Built:** English/Persian resources, localized dates/digits, Saturday-first weeks, 04:00 rollover, all companion palettes and rounded Simple shapes.
+- **Verified in automated tests:** pin → close database → reopen, Today completion sharing, task editing preserving its goal link, pin retries, goal states, migrations from every exported schema, and backup/restore including why and milestones. `check :app:assembleDebug` passes (136 tests; lint and both dependency/network guards). Emulator creation, required-why gating, exact text preservation, note flip, Today ticks and restart persistence have been checked (2026-11-18). English companion and Persian Simple wall/detail layouts were inspected; all 74 Goals resources match between the two languages.
+- **Before shipping:** exercise the feature on the Poco in both languages and looks; export a real schema-3 backup to replace the documented derived development sample. The original Lantern slice did not include a release. The later Bazaar 1.0.1 build is recorded in D224; commit and push were requested on 2026-11-19; no store upload was requested.
+
+The weekly upper target is the number of selected action days; the lower target subtracts flex days, with a minimum of one. The summary explains this. The month bar counts completed actions against scheduled actions in that chapter; it does not claim a milestone was reached merely because time passed.
+
+## After Goals
+
+The dashboard, structured weekly/monthly reviews, plugin platform, the workout plugin, and the store remain future work. Drag reordering of wall notes is also deferred; holding a note currently opens the approved why reminder.
 
 ## Order and size
 
 L0 → L1 → L2 → L3 → L4 → L5 → L6 → L7 → L8 → L9. L1 is the base for everything after it. L4 is the biggest slice. L2 and L8 are small.
+
+**Bazaar release, 2026-11-18:** the current Goals changes are integrated into `bazaar` for version 1.0.1 (`10001`), package `app.peykar`, retaining its branding, store behavior and Persian-only resources. D224 records this release scope.

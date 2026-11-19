@@ -38,6 +38,7 @@ object DueRules {
             .mapNotNull { task -> itemFor(date, task, completions[task.id].orEmpty()) }
 
     fun itemFor(date: LocalDate, task: Task, doneDates: Collection<LocalDate>): DayItem? {
+        if (task.endDate != null && date > task.endDate) return null
         val doneToday = date in doneDates
         return when (val repeat = task.repeat) {
             Repeat.Daily ->
@@ -91,7 +92,7 @@ object DueRules {
      */
     fun anytime(date: LocalDate, tasks: List<Task>, completions: Map<Long, Collection<LocalDate>>): List<DayItem> =
         tasks
-            .filter { it.repeat == Repeat.Anytime }
+            .filter { it.repeat == Repeat.Anytime && (it.endDate == null || date <= it.endDate) }
             .mapNotNull { task ->
                 val done = completions[task.id].orEmpty()
                 if (done.any { it < date }) null else DayItem(task, done = date in done, countsInScore = false)

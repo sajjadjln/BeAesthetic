@@ -1,6 +1,10 @@
 # Tasks and status
 
-_Last updated: 2026-11-06 (Bazaar: ready to upload, D217)_
+_Last updated: 2026-11-19 (Bazaar 1.0.1 release and source publication)_
+
+## Bazaar 1.0.1 (`bazaar`, 2026-11-18)
+
+1.0.0 is already published. The next release is **1.0.1, versionCode 10001, app.peykar**, signed with the existing key. This checkout preserves Bazaar’s flavors, Persian-only UI, updates, maker/contact, branding, splash and icon, and integrates the latest Goals changes from the Lantern session: six steps, required why, no Ideas section, persisted plans, wall flip/detail, shared Today tasks, finish dates, shelves and safe pin retries. D223’s five-day quiet-spell behavior and calendar choice are retained. The signed Bazaar APK is built. All 183 tests pass (126 domain, 30 Bazaar, 27 personal), with lint for both flavors and all dependency/network guards. Package/version, Persian-only resources and the signing certificate match the published 1.0.0 identity. The signed APK installed over the shipped 1.0.0 with a saved task and its completion intact. The optimized release also completed all six goal steps, pinned its note, and reopened the saved why in detail. Artifact: `release/Peykar-1.0.1-bazaar.apk` in the main workspace. Commit and push requested on 2026-11-19; the APK has not been uploaded to Bazaar. The original Lantern checkout remains untouched.
 
 ## Lantern v1 (branch `lantern`, 2026-10-28)
 

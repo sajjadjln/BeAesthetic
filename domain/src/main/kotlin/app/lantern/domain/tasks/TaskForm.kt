@@ -171,6 +171,8 @@ object TaskForms {
             alarm = if (keepAlarm) TaskAlarm(form.alarmMinute, form.alarmWeekdays and Weekdays.ALL, alarmOn) else null,
             remindersSilenced = original?.remindersSilenced ?: false,
             sortOrder = sortOrder,
+            goalId = original?.goalId,
+            endDate = original?.endDate,
         )
     }
 

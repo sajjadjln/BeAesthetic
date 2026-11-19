@@ -26,10 +26,10 @@ class Converters {
 
 @Dao
 interface TaskDao {
-    @Query("SELECT * FROM task WHERE archivedAt IS NULL ORDER BY part, sortOrder, id")
+    @Query("SELECT * FROM task WHERE archivedAt IS NULL AND (goalId IS NULL OR goalId IN (SELECT id FROM goal WHERE status = 'ACTIVE')) ORDER BY part, sortOrder, id")
     fun observeActive(): Flow<List<TaskEntity>>
 
-    @Query("SELECT * FROM task WHERE archivedAt IS NULL ORDER BY part, sortOrder, id")
+    @Query("SELECT * FROM task WHERE archivedAt IS NULL AND (goalId IS NULL OR goalId IN (SELECT id FROM goal WHERE status = 'ACTIVE')) ORDER BY part, sortOrder, id")
     suspend fun active(): List<TaskEntity>
 
     /** Archived tasks too, so history keeps their names. */
@@ -260,51 +260,6 @@ interface EventDao {
     suspend fun countSince(type: String, ref: String, since: Instant): Int
 }
 
-@Dao
-interface GoalDao {
-    @Query("SELECT * FROM goal ORDER BY sortOrder, id")
-    fun observeAll(): Flow<List<GoalEntity>>
-
-    @Query("SELECT * FROM goal WHERE id = :id")
-    fun observe(id: Long): Flow<GoalEntity?>
-
-    @Query("SELECT * FROM goal WHERE id = :id")
-    suspend fun get(id: Long): GoalEntity?
-
-    @Insert
-    suspend fun insert(goal: GoalEntity): Long
-
-    @androidx.room.Update
-    suspend fun update(goal: GoalEntity)
-
-    @Query("SELECT COALESCE(MAX(sortOrder), 0) FROM goal")
-    suspend fun maxSort(): Int
-
-    @Query("SELECT * FROM goal_month WHERE goalId = :goalId ORDER BY monthIndex")
-    fun observeMonths(goalId: Long): Flow<List<GoalMonthEntity>>
-
-    @Query("SELECT * FROM goal_month ORDER BY goalId, monthIndex")
-    fun observeAllMonths(): Flow<List<GoalMonthEntity>>
-
-    @Upsert
-    suspend fun upsertMonths(months: List<GoalMonthEntity>)
-
-    @Query("SELECT * FROM task WHERE goalId IS NOT NULL AND archivedAt IS NULL ORDER BY sortOrder, id")
-    fun observeActions(): Flow<List<TaskEntity>>
-
-    /** Completions of goal actions, archived ones too, so a week keeps its ticks. */
-    @Query("SELECT task.goalId AS goalId, completion.date AS date FROM completion JOIN task ON task.id = completion.taskId WHERE task.goalId IS NOT NULL AND completion.date >= :since")
-    fun observeTicks(since: LocalDate): Flow<List<GoalTick>>
-
-    @Query("SELECT task.goalId AS goalId, MAX(completion.date) AS date FROM completion JOIN task ON task.id = completion.taskId WHERE task.goalId IS NOT NULL GROUP BY task.goalId")
-    fun observeLastTicks(): Flow<List<GoalTick>>
-
-    @Query("UPDATE task SET archivedAt = :at WHERE goalId = :goalId AND archivedAt IS NULL")
-    suspend fun archiveActions(goalId: Long, at: Instant)
-}
-
-data class GoalTick(val goalId: Long, val date: LocalDate)
-
 @Database(
     entities = [
         TaskEntity::class,
@@ -316,7 +271,7 @@ data class GoalTick(val goalId: Long, val date: LocalDate)
         EventEntity::class,
         BackupRecordEntity::class,
         GoalEntity::class,
-        GoalMonthEntity::class,
+        GoalMilestoneEntity::class,
     ],
     version = 3,
     exportSchema = true,
@@ -324,6 +279,7 @@ data class GoalTick(val goalId: Long, val date: LocalDate)
 )
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
+    abstract fun goals(): GoalDao
     abstract fun tasks(): TaskDao
     abstract fun completions(): CompletionDao
     abstract fun days(): DayDao
@@ -332,7 +288,6 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun settings(): SettingsDao
     abstract fun events(): EventDao
     abstract fun backups(): BackupRecordDao
-    abstract fun goals(): GoalDao
 
     companion object {
         const val NAME = "lantern.db"
@@ -341,4 +296,37 @@ abstract class AppDatabase : RoomDatabase() {
         fun build(context: Context): AppDatabase =
             Room.databaseBuilder(context, AppDatabase::class.java, NAME).build()
     }
+}
+
+@Dao
+interface GoalDao {
+    @Query("SELECT * FROM goal WHERE creationKey = :key")
+    suspend fun findCreation(key: String): GoalEntity?
+
+    @Query("UPDATE goal SET whyOfferedAt = :at WHERE id = :id")
+    suspend fun setWhyOffered(id: Long, at: Instant)
+
+    @Query("SELECT * FROM goal ORDER BY sortOrder, id")
+    fun observeAll(): Flow<List<GoalEntity>>
+
+    @Query("SELECT * FROM goal WHERE id = :id")
+    suspend fun get(id: Long): GoalEntity?
+
+    @Query("SELECT * FROM goal_milestone ORDER BY startDate, id")
+    fun observeMilestones(): Flow<List<GoalMilestoneEntity>>
+
+    @Insert
+    suspend fun insert(goal: GoalEntity): Long
+
+    @Insert
+    suspend fun insertMilestones(rows: List<GoalMilestoneEntity>)
+
+    @Query("UPDATE goal SET status = :status, achievedAt = :achievedAt WHERE id = :id")
+    suspend fun setStatus(id: Long, status: String, achievedAt: Instant?)
+
+    @Query("UPDATE goal_milestone SET reachedAt = :at WHERE id = :id")
+    suspend fun setReached(id: Long, at: Instant?)
+
+    @Query("UPDATE goal_milestone SET statement = :statement WHERE id = :id")
+    suspend fun setStatement(id: Long, statement: String)
 }

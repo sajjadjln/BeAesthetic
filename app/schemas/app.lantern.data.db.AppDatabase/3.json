@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 3,
-    "identityHash": "28e268fe905c82237dfb1e4f40599467",
+    "identityHash": "f0683c70597c9fe6d072a6f0398cde9d",
     "entities": [
       {
         "tableName": "task",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `title` TEXT NOT NULL, `icon` TEXT NOT NULL, `part` TEXT NOT NULL, `repeat` TEXT NOT NULL, `weekdays` INTEGER NOT NULL, `everyNDays` INTEGER, `onceDate` TEXT, `startDate` TEXT NOT NULL, `isImportant` INTEGER NOT NULL, `inMinimumDay` INTEGER NOT NULL, `action` TEXT NOT NULL, `alarmTime` INTEGER, `alarmWeekdays` INTEGER NOT NULL, `alarmEnabled` INTEGER NOT NULL, `anchor` TEXT, `remindersSilencedAt` INTEGER, `fadeOfferedAt` INTEGER, `sortOrder` INTEGER NOT NULL, `createdAt` INTEGER NOT NULL, `archivedAt` INTEGER, `goalId` INTEGER DEFAULT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `title` TEXT NOT NULL, `icon` TEXT NOT NULL, `part` TEXT NOT NULL, `repeat` TEXT NOT NULL, `weekdays` INTEGER NOT NULL, `everyNDays` INTEGER, `onceDate` TEXT, `startDate` TEXT NOT NULL, `isImportant` INTEGER NOT NULL, `inMinimumDay` INTEGER NOT NULL, `action` TEXT NOT NULL, `alarmTime` INTEGER, `alarmWeekdays` INTEGER NOT NULL, `alarmEnabled` INTEGER NOT NULL, `anchor` TEXT, `remindersSilencedAt` INTEGER, `fadeOfferedAt` INTEGER, `sortOrder` INTEGER NOT NULL, `createdAt` INTEGER NOT NULL, `archivedAt` INTEGER, `goalId` INTEGER, `endDate` TEXT)",
         "fields": [
           {
             "fieldPath": "id",
@@ -130,8 +130,12 @@
           {
             "fieldPath": "goalId",
             "columnName": "goalId",
-            "affinity": "INTEGER",
-            "defaultValue": "NULL"
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "endDate",
+            "columnName": "endDate",
+            "affinity": "TEXT"
           }
         ],
         "primaryKey": {
@@ -668,12 +672,18 @@
       },
       {
         "tableName": "goal",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `title` TEXT NOT NULL, `state` TEXT NOT NULL, `startDate` TEXT NOT NULL, `endDate` TEXT, `triedBefore` INTEGER, `minutesPerWeek` INTEGER, `triedWhat` TEXT, `stopReason` TEXT, `flexDays` INTEGER NOT NULL, `why` TEXT, `whyAt` INTEGER, `quietOfferedOn` TEXT, `sortOrder` INTEGER NOT NULL, `createdAt` INTEGER NOT NULL, `reachedAt` INTEGER, `setAsideAt` INTEGER)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `creationKey` TEXT NOT NULL, `title` TEXT NOT NULL, `why` TEXT NOT NULL, `startDate` TEXT NOT NULL, `finishDate` TEXT NOT NULL, `triedBefore` INTEGER NOT NULL, `baselineMinutes` INTEGER NOT NULL, `triedWhat` TEXT NOT NULL, `obstacle` TEXT NOT NULL, `flexDays` INTEGER NOT NULL, `weeklyLow` INTEGER NOT NULL, `weeklyHigh` INTEGER NOT NULL, `status` TEXT NOT NULL, `sortOrder` INTEGER NOT NULL, `createdAt` INTEGER NOT NULL, `achievedAt` INTEGER, `whyOfferedAt` INTEGER)",
         "fields": [
           {
             "fieldPath": "id",
             "columnName": "id",
             "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "creationKey",
+            "columnName": "creationKey",
+            "affinity": "TEXT",
             "notNull": true
           },
           {
@@ -683,8 +693,8 @@
             "notNull": true
           },
           {
-            "fieldPath": "state",
-            "columnName": "state",
+            "fieldPath": "why",
+            "columnName": "why",
             "affinity": "TEXT",
             "notNull": true
           },
@@ -695,29 +705,34 @@
             "notNull": true
           },
           {
-            "fieldPath": "endDate",
-            "columnName": "endDate",
-            "affinity": "TEXT"
+            "fieldPath": "finishDate",
+            "columnName": "finishDate",
+            "affinity": "TEXT",
+            "notNull": true
           },
           {
             "fieldPath": "triedBefore",
             "columnName": "triedBefore",
-            "affinity": "INTEGER"
+            "affinity": "INTEGER",
+            "notNull": true
           },
           {
-            "fieldPath": "minutesPerWeek",
-            "columnName": "minutesPerWeek",
-            "affinity": "INTEGER"
+            "fieldPath": "baselineMinutes",
+            "columnName": "baselineMinutes",
+            "affinity": "INTEGER",
+            "notNull": true
           },
           {
             "fieldPath": "triedWhat",
             "columnName": "triedWhat",
-            "affinity": "TEXT"
+            "affinity": "TEXT",
+            "notNull": true
           },
           {
-            "fieldPath": "stopReason",
-            "columnName": "stopReason",
-            "affinity": "TEXT"
+            "fieldPath": "obstacle",
+            "columnName": "obstacle",
+            "affinity": "TEXT",
+            "notNull": true
           },
           {
             "fieldPath": "flexDays",
@@ -726,19 +741,22 @@
             "notNull": true
           },
           {
-            "fieldPath": "why",
-            "columnName": "why",
-            "affinity": "TEXT"
+            "fieldPath": "weeklyLow",
+            "columnName": "weeklyLow",
+            "affinity": "INTEGER",
+            "notNull": true
           },
           {
-            "fieldPath": "whyAt",
-            "columnName": "whyAt",
-            "affinity": "INTEGER"
+            "fieldPath": "weeklyHigh",
+            "columnName": "weeklyHigh",
+            "affinity": "INTEGER",
+            "notNull": true
           },
           {
-            "fieldPath": "quietOfferedOn",
-            "columnName": "quietOfferedOn",
-            "affinity": "TEXT"
+            "fieldPath": "status",
+            "columnName": "status",
+            "affinity": "TEXT",
+            "notNull": true
           },
           {
             "fieldPath": "sortOrder",
@@ -753,13 +771,13 @@
             "notNull": true
           },
           {
-            "fieldPath": "reachedAt",
-            "columnName": "reachedAt",
+            "fieldPath": "achievedAt",
+            "columnName": "achievedAt",
             "affinity": "INTEGER"
           },
           {
-            "fieldPath": "setAsideAt",
-            "columnName": "setAsideAt",
+            "fieldPath": "whyOfferedAt",
+            "columnName": "whyOfferedAt",
             "affinity": "INTEGER"
           }
         ],
@@ -771,20 +789,26 @@
         },
         "indices": [
           {
-            "name": "index_goal_state",
-            "unique": false,
+            "name": "index_goal_creationKey",
+            "unique": true,
             "columnNames": [
-              "state"
+              "creationKey"
             ],
             "orders": [],
-            "createSql": "CREATE INDEX IF NOT EXISTS `index_goal_state` ON `${TABLE_NAME}` (`state`)"
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_goal_creationKey` ON `${TABLE_NAME}` (`creationKey`)"
           }
         ]
       },
       {
-        "tableName": "goal_month",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`goalId` INTEGER NOT NULL, `monthIndex` INTEGER NOT NULL, `milestone` TEXT, PRIMARY KEY(`goalId`, `monthIndex`))",
+        "tableName": "goal_milestone",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `goalId` INTEGER NOT NULL, `startDate` TEXT NOT NULL, `endDate` TEXT NOT NULL, `statement` TEXT NOT NULL, `reachedAt` INTEGER)",
         "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
           {
             "fieldPath": "goalId",
             "columnName": "goalId",
@@ -792,29 +816,51 @@
             "notNull": true
           },
           {
-            "fieldPath": "monthIndex",
-            "columnName": "monthIndex",
-            "affinity": "INTEGER",
+            "fieldPath": "startDate",
+            "columnName": "startDate",
+            "affinity": "TEXT",
             "notNull": true
           },
           {
-            "fieldPath": "milestone",
-            "columnName": "milestone",
-            "affinity": "TEXT"
+            "fieldPath": "endDate",
+            "columnName": "endDate",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "statement",
+            "columnName": "statement",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "reachedAt",
+            "columnName": "reachedAt",
+            "affinity": "INTEGER"
           }
         ],
         "primaryKey": {
-          "autoGenerate": false,
+          "autoGenerate": true,
           "columnNames": [
-            "goalId",
-            "monthIndex"
+            "id"
           ]
-        }
+        },
+        "indices": [
+          {
+            "name": "index_goal_milestone_goalId",
+            "unique": false,
+            "columnNames": [
+              "goalId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_goal_milestone_goalId` ON `${TABLE_NAME}` (`goalId`)"
+          }
+        ]
       }
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '28e268fe905c82237dfb1e4f40599467')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'f0683c70597c9fe6d072a6f0398cde9d')"
     ]
   }
 }

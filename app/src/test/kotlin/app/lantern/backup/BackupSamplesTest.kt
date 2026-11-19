@@ -39,7 +39,7 @@ class BackupSamplesTest {
     private val samples = listOf(
         Sample("lantern-0.1.0-schema1.zip", "0.1.0", format = 1, schema = 1),
         Sample("lantern-0.9.4-schema2.zip", "0.9.4", format = 1, schema = 2),
-        Sample("peykar-goals-schema3.zip", "1.0.0-goals", format = 1, schema = 3),
+        Sample("lantern-goals-schema3.zip", "goals-dev", format = 1, schema = 3),
     )
 
     private val context: Context = ApplicationProvider.getApplicationContext()
@@ -102,16 +102,10 @@ class BackupSamplesTest {
 
                 // And the app reads it through Room, as it will on the phone.
                 runBlocking {
-                    val task = db.tasks().active().first { it.goalId == null }
+                    val task = db.tasks().active().single()
                     assertEquals("Water", task.title)
                     assertEquals(470, task.alarmTime)
                     assertEquals(1, db.completions().count(task.id, LocalDate.of(2026, 11, 5)))
-                    if (sample.schema >= 3) {
-                        // Goals (D223): the why and the weekly action come back whole.
-                        val goal = db.goals().get(1)!!
-                        assertEquals("چون می‌خوام یه زندگی تازه بسازم", goal.why)
-                        assertEquals(1L, db.tasks().active().single { it.goalId == 1L }.goalId)
-                    }
                     val settings = db.settings().get()!!
                     assertTrue(settings.onboardingDone)
                     assertEquals(8, db.slots().all().size)

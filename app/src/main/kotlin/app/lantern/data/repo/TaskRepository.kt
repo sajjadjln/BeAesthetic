@@ -112,7 +112,7 @@ class TaskRepository(private val db: AppDatabase) {
             db.tasks().insert(task.toEntity(createdAt = now))
         } else {
             val existing = checkNotNull(db.tasks().get(task.id))
-            db.tasks().update(task.toEntity(createdAt = existing.createdAt).copy(fadeOfferedAt = existing.fadeOfferedAt, remindersSilencedAt = existing.remindersSilencedAt, goalId = existing.goalId))
+            db.tasks().update(task.toEntity(createdAt = existing.createdAt).copy(fadeOfferedAt = existing.fadeOfferedAt, remindersSilencedAt = existing.remindersSilencedAt))
             task.id
         }
         writeEditableSnapshots(today)
@@ -194,6 +194,8 @@ fun Task.toEntity(createdAt: Instant): TaskEntity {
         remindersSilencedAt = null,
         sortOrder = sortOrder,
         createdAt = createdAt,
+        goalId = goalId,
+        endDate = endDate,
     )
 }
 
@@ -220,4 +222,6 @@ fun TaskEntity.toDomain(): Task = Task(
     alarm = alarmTime?.let { TaskAlarm(it, alarmWeekdays, alarmEnabled) },
     remindersSilenced = remindersSilencedAt != null,
     sortOrder = sortOrder,
+    goalId = goalId,
+    endDate = endDate,
 )

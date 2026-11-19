@@ -93,7 +93,7 @@ object ReminderPlanner {
             // A task's own alarm (D25, D130); it is skipped at fire time if already done.
             for (task in input.tasks) {
                 val alarm = task.alarm ?: continue
-                if (!alarm.enabled || date < task.startDate || !alarmRings(task, alarm.weekdays, date, input.completions)) continue
+                if (!alarm.enabled || date < task.startDate || (task.endDate != null && date > task.endDate) || !alarmRings(task, alarm.weekdays, date, input.completions)) continue
                 val time = LocalTime.of(alarm.minuteOfDay / 60, alarm.minuteOfDay % 60)
                 val calendarDate = if (alarm.minuteOfDay < input.rolloverHour * 60) date.plusDays(1) else date
                 val at = LocalDateTime.of(calendarDate, time).atZone(input.zone).toInstant()

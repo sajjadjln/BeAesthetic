@@ -46,6 +46,8 @@ data class TileUi(
     /** An "every N days" or one-off task that is due: «موعدش رسیده». */
     val due: Boolean,
     val part: Part = Part.MORNING,
+    val goalId: Long? = null,
+    val cue: String? = null,
 )
 
 /** One «هر وقت» item (D127). A done one stays, ticked, until the day ends. */
@@ -218,6 +220,6 @@ class TodayViewModel(private val container: AppContainer) : ViewModel() {
     }
 
     private fun tile(item: DayItem) = TileUi(
-        item.task.id, item.task.title, item.task.icon, item.done, item.task.isImportant, due = item.dueSince != null, part = item.task.part,
+        item.task.id, item.task.title, item.task.icon, item.done, item.task.isImportant, due = item.dueSince != null, part = item.task.part, goalId = item.task.goalId, cue = item.task.anchor,
     )
 }

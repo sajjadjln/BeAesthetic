@@ -501,6 +501,8 @@ internal fun PixelTile(tile: TileUi, modifier: Modifier = Modifier, fresh: Boole
     ) {
         Column(Modifier.weight(1f)) {
             Text(tile.title, style = Ba.type.tile.copy(fontSize = 17.sp, lineHeight = 26.sp), color = if (tile.done) c.text2 else c.text1)
+            if (tile.goalId != null) Text(stringResource(R.string.goal_action_badge), style = Ba.type.caption, color = c.glow)
+            tile.cue?.let { Text(it, style = Ba.type.caption, color = c.text2) }
             // No «موعدش رسیده» label: being on Today already says it's due (user, 2026-11-04).
             if (!tile.done && tile.important) Text(stringResource(R.string.tag_important), style = Ba.type.label, color = c.amber)
         }

@@ -510,7 +510,7 @@
     <string name="update_open">ببین</string>
     <string name="update_later">بعداً</string>
     <string name="store_open_failed">بازار باز نشد. یه وقت دیگه امتحان کن.</string>
-    <string name="whats_new_10100">• هدف‌ها اومدن! یه هدف بذار، شش قدم کوتاه، بعد بچسبونش به دیوار.\n• کارهای هر هفته‌ی هدف تو صفحه‌ی امروز میان و با یه تیک پر می‌شن.\n• چرات همیشه روی یادداشت هدف هست؛ یه یادداشت رو نگه دار تا دوباره بخونیش.</string>
+    <string name="whats_new_10001">• هدف‌ها اومدن! یه هدف بذار، شش قدم کوتاه، بعد بچسبونش به دیوار.\n• کارهای هر هفته‌ی هدف تو صفحه‌ی امروز میان و با یه تیک پر می‌شن.\n• چرات همیشه روی یادداشت هدف هست؛ یه یادداشت رو نگه دار تا دوباره بخونیش.</string>
     <string name="whats_new_title">تازه‌ها</string>
     <string name="whats_new_ok">باشه</string>
     <string name="whats_new_908">• نسخه‌ی نهایی تمیزتر و سبک‌تر شد؛ دیگه دسترسی دوربین نمی‌خواد.\n• «پاک کردن همه‌چیز» تو تنظیمات: از اول شروع کن، پشتیبان‌هات سر جاشون می‌مونن.\n• داده‌هات از هر نسخه‌ی قبلی سالم باز می‌شن، پشتیبان‌های قدیمی هم.\n• اگه برنامه یهو بسته شد، گزارشش تو «درباره» هست. با «کپی» برامون بفرست. هیچی خودبه‌خود فرستاده نمی‌شه.</string>
@@ -641,4 +641,94 @@
     <string name="goal_quiet_read">بخونمش</string>
     <!-- Between items on one line; in Persian, RLMs keep numbers on either side apart (D223). -->
     <string name="goal_sep">"‏ · ‏"</string>
+    <string name="goal_create">هدف تازه</string>
+    <string name="goal_first">یه هدف بذار</string>
+    <string name="goal_pin">بچسبون به دیوار</string>
+    <string name="goal_saving">دارم می‌چسبونمش…</string>
+    <string name="goal_step_count">قدم %1$s از ۶</string>
+    <string name="goal_title_hint">مثلاً: ۵ کیلومتر بی‌وقفه بدوم</string>
+    <string name="goal_why_hint">چرا واقعاً اینو می‌خوام و چطور زندگی‌م رو بهتر می‌کنه…</string>
+    <string name="goal_why_help">هر وقت حالت خوب نبود یا خواستی ول کنی، از روی یادداشت هدف می‌تونی دوباره بخونیش.</string>
+    <string name="goal_save_error">این تغییر ذخیره نشد. برنامه‌ت همین‌جاست؛ دوباره امتحان کن.</string>
+    <string name="goal_discard_title">از این برنامه بیای بیرون؟</string>
+    <string name="goal_discard_body">این هدف هنوز روی دیوار نرفته. اگه بیای بیرون، این پیش‌نویس پاک می‌شه.</string>
+    <string name="goal_discard">پاک کردن پیش‌نویس</string>
+    <string name="goal_keep_writing">ادامه می‌دم</string>
+    <string name="goal_days">%1$s روز</string>
+    <string name="goal_choose_date">از تقویم انتخاب کن</string>
+    <string name="goal_tried_yes">آره</string>
+    <string name="goal_tried_no">نه، اولین باره</string>
+    <string name="goal_baseline">تا الان چقدر در هفته وقت گذاشتی؟</string>
+    <string name="goal_minutes">هفته‌ای %1$s دقیقه</string>
+    <string name="goal_minutes_hint">دقیقه در هفته</string>
+    <string name="goal_tried_what">چی امتحان کردی؟</string>
+    <string name="goal_obstacle">چی باعث شد ادامه پیدا نکنه؟</string>
+    <string name="goal_obstacle_hint">یا خودت بنویس</string>
+    <string name="goal_backward">از آخر به اول</string>
+    <string name="goal_this_month_required">این ماه · حتماً پرش کن</string>
+    <string name="goal_later_optional">ماه بعد · اختیاری</string>
+    <string name="goal_milestone_hint">تا آخر این ماه چی کار می‌کنی یا چی بلدی؟</string>
+    <string name="goal_not_sure">هنوز نمی‌دونم</string>
+    <string name="goal_this_week">این هفته</string>
+    <string name="goal_action_days_help">۱ تا ۳ کار کوچیک و روزهایی که می‌رسی رو انتخاب کن. تا روز پایان روی امروز تکرار می‌شن.</string>
+    <string name="goal_action_hint">مثلاً: ۲۵ دقیقه تمرین</string>
+    <string name="goal_cue_hint">بعد از… (اختیاری)</string>
+    <string name="goal_remove_action">این کار رو بردار</string>
+    <string name="goal_add_action">+ کار دیگه</string>
+    <string name="goal_until">تا %1$s</string>
+    <string name="goal_week_range">هفته‌ای %1$s تا %2$s قدم</string>
+    <string name="goal_flex_days">روز انعطاف</string>
+    <string name="goal_flex_help">روزهایی که انتخاب کردی، سقف برنامه‌ان. هر روز انعطاف یه قدم از کمینه کم می‌کنه. این روزها جزو برنامه‌ان.</string>
+    <string name="goal_empty">دیوار هنوز خالیه. اولین هدف رو بچسبونیم؟</string>
+    <string name="goal_empty_help">یه جمله کافیه. بقیه‌ش رو قدم به قدم با هم می‌چینیم.</string>
+    <string name="goal_wall_summary">%1$s هدف روی دیوار · این هفته %2$s قدم برداشتی</string>
+    <string name="goal_flip_help">یه یادداشت رو لمس کن تا ماه و هفته رو نشون بده. نگهش دار تا چرای خودت رو بخونی.</string>
+    <string name="goal_achieved_shelf">رسیده‌ها</string>
+    <string name="goal_aside_shelf">کنارگذاشته‌ها</string>
+    <string name="goal_achieved">رسیدی!</string>
+    <string name="goal_aside">فعلاً کنار گذاشتی</string>
+    <string name="goal_flip">ماه و هفته رو عوض کن</string>
+    <string name="goal_read_why">چرای خودم رو بخونم</string>
+    <string name="goal_week_progress">%1$s از %2$s تا %3$s قدم</string>
+    <string name="goal_this_month">این ماه</string>
+    <string name="goal_whole">کل هدف</string>
+    <string name="goal_open_detail">باز کردن هدف</string>
+    <string name="goal_why_reminder">یادته چرا شروع کردی؟ اینو خودت نوشتی.</string>
+    <string name="goal_small_step">یه قدم کوچیک بردار</string>
+    <string name="goal_later">بعداً</string>
+    <string name="goal_why_title">چرا این هدف</string>
+    <string name="goal_unavailable">این هدف دیگه اینجا نیست.</string>
+    <string name="goal_remaining">%1$s روز مونده</string>
+    <string name="goal_flex_count">هفته‌ای %1$s روز انعطاف</string>
+    <string name="goal_edit_action">ویرایش کار</string>
+    <string name="goal_edit_milestone">ویرایش قدم ماه</string>
+    <string name="goal_path">مسیر</string>
+    <string name="goal_reached">رسیدم!</string>
+    <string name="goal_set_aside">بذارش کنار</string>
+    <string name="goal_resume">دوباره بچسبونش</string>
+    <string name="goal_status_help">کارها از امروز کنار می‌رن. برنامه و همه‌ی قدم‌هایی که برداشتی همین‌جا می‌مونن.</string>
+    <string name="goal_confirm">ذخیره</string>
+    <string name="goal_cancel">بی‌خیال</string>
+    <string name="goal_close">بستن</string>
+    <string name="goal_action_badge">کار هدف</string>
+    <string-array name="goal_questions">
+        <item>دوست داری چی واقعیت شده باشه؟</item>
+        <item>تا کِی؟</item>
+        <item>قبلاً امتحانش کردی؟</item>
+        <item>از آخر شروع کنیم: ماه آخر چی کار می‌کنی یا چی بلدی؟</item>
+        <item>این برنامه‌ی توئه، به قلم خودت.</item>
+        <item>چرا واقعاً اینو می‌خوای؟</item>
+    </string-array>
+    <string-array name="goal_obstacles">
+        <item>حوصله‌ام سر رفت</item>
+        <item>تغییر رو زود ندیدم</item>
+        <item>روالم به هم ریخت</item>
+        <item>وقت نداشتم</item>
+    </string-array>
+    <string-array name="goal_parts">
+        <item>صبح</item>
+        <item>ظهر</item>
+        <item>عصر</item>
+        <item>شب</item>
+    </string-array>
 </resources>

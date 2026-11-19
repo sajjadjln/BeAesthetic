@@ -94,6 +94,18 @@ class MigrationTest {
         }
     }
 
+    @Test
+    fun `2 to 3 keeps Today data and adds empty goals with nullable links`() {
+        helper.createDatabase("goals-migration.db", 2).use { fillVersion1(it) }
+        helper.runMigrationsAndValidate("goals-migration.db", 3, true).use { db ->
+            assertRowsOfVersion1(db)
+            db.query("SELECT goalId, endDate FROM task").use { c -> while (c.moveToNext()) { assertTrue(c.isNull(0)); assertTrue(c.isNull(1)) } }
+            listOf("goal", "goal_milestone").forEach { table ->
+                db.query("SELECT COUNT(*) FROM `$table`").use { c -> c.moveToFirst(); assertEquals(0, c.getInt(0)) }
+            }
+        }
+    }
+
     /** Real-looking rows in every table of schema 1, with NULLs and Persian text (as 0.1.0 wrote them). */
     private fun fillVersion1(db: SupportSQLiteDatabase) {
         db.execSQL(
